@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Speaking Board — B2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --ink-mid: #3d2e1a;
+    --ink-light: #7a6650;
+    --ink-faint: #c4b49e;
+    --paper: #f9f5ee;
+    --paper-warm: #f2ead8;
+    --paper-deep: #e8ddc8;
+    --gold: #b8860b;
+    --gold-bright: #d4a017;
+    --rust: #9b3a1f;
+    --green-deep: #1e4038;
+    --green-mid: #2d6b57;
+    --teal: #1d6b72;
+    --navy: #1a2744;
+    --border: rgba(90,65,35,0.18);
+    --shadow-card: 0 2px 8px rgba(26,18,8,0.08), 0 8px 24px rgba(26,18,8,0.05);
+    --shadow-hover: 0 8px 32px rgba(26,18,8,0.14), 0 2px 8px rgba(26,18,8,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .masthead {
+    background: var(--ink);
+    padding: 40px 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  }
+
+  .masthead::after {
+    content: 'BUSINESS';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 160px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    letter-spacing: -4px;
+    pointer-events: none;
+    white-space: nowrap;
+    line-height: 1;
+  }
+
+  .masthead-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+  }
+
+  .masthead-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.05;
+    letter-spacing: -1px;
+  }
+
+  .masthead-title em {
+    font-style: italic;
+    color: var(--gold-bright);
+  }
+
+  .masthead-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .masthead-level {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .masthead-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.15);
+    line-height: 1;
+  }
+
+  /* ── SECTION NAVIGATION ── */
+  .section-nav {
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    overflow-x: auto;
+  }
+
+  .section-nav-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 14px 20px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 180ms ease-out;
+  }
+
+  .nav-btn:hover {
+    color: var(--ink);
+  }
+
+  .nav-btn.active {
+    color: var(--ink);
+    border-bottom-color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 48px 80px;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    display: none;
+    animation: sectionIn 280ms ease-out forwards;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  @keyframes sectionIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 0.85;
+    color: var(--paper-deep);
+    flex-shrink: 0;
+    user-select: none;
+    margin-top: 6px;
+  }
+
+  .section-text {}
+
+  .section-category {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    margin-bottom: 10px;
+  }
+
+  .section-intro {
+    font-family: 'Source Serif 4', serif;
+    font-size: 14px;
+    color: var(--ink-light);
+    font-style: italic;
+    line-height: 1.55;
+    max-width: 560px;
+  }
+
+  /* ── QUESTION GRID ── */
+  .question-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow-card);
+    cursor: pointer;
+    transition: transform 180ms ease-out, box-shadow 180ms ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--paper-deep);
+    transition: background 180ms ease-out;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .card:hover::before {
+    background: var(--gold);
+  }
+
+  .card.flipped::before {
+    background: var(--green-mid);
+  }
+
+  .card-inner {
+    position: relative;
+    padding: 24px 24px 20px;
+  }
+
+  .card-q-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .card-question {
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .card-question strong {
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* Grammar tags */
+  .grammar-tag {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-top: 12px;
+    background: var(--paper-warm);
+    color: var(--ink-light);
+    border: 1px solid var(--paper-deep);
+  }
+
+  .card-flip-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--paper-deep);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .flip-icon {
+    width: 12px;
+    height: 12px;
+    opacity: 0.5;
+  }
+
+  /* Flip reveal */
+  .card-back {
+    display: none;
+    padding: 20px 24px 24px;
+    background: var(--green-deep);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .card.flipped .card-back {
+    display: block;
+  }
+
+  .card-back-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+
+  .card-back-prompt {
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    font-style: italic;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.55;
+  }
+
+  /* ── TIMER STRIP ── */
+  .timer-strip {
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--paper-warm);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+
+  .timer-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .timer-display {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.05em;
+    min-width: 64px;
+    text-align: center;
+  }
+
+  .timer-display.running {
+    color: var(--rust);
+  }
+
+  .timer-display.warning {
+    color: var(--rust);
+    animation: pulse 0.7s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .timer-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--ink);
+    padding: 7px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+  }
+
+  .timer-btn:hover {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  .timer-presets {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  .preset-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--ink-light);
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+  }
+
+  .preset-btn:hover, .preset-btn.active {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  /* ── RANDOM MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,18,8,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--ink);
+    border-radius: 6px;
+    max-width: 520px;
+    width: 90%;
+    padding: 48px;
+    position: relative;
+    animation: modalIn 250ms cubic-bezier(0.34,1.56,0.64,1) forwards;
+    border-top: 3px solid var(--gold);
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .modal-q-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.06);
+    line-height: 0.9;
+    margin-bottom: 24px;
+  }
+
+  .modal-question {
+    font-family: 'Source Serif 4', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1.55;
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .modal-grammar {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.07);
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 32px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .modal-btn-primary {
+    flex: 1;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 150ms;
+  }
+
+  .modal-btn-primary:hover { opacity: 0.85; }
+
+  .modal-btn-close {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: transparent;
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 12px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+  }
+
+  .modal-btn-close:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* ── RANDOM BTN ── */
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .btn-random {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 150ms;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-random:hover { opacity: 0.8; }
+
+  .btn-reset {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--ink-light);
+    border: 1px solid var(--border);
+    padding: 9px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 150ms;
+  }
+
+  .btn-reset:hover {
+    background: var(--paper-warm);
+    color: var(--ink);
+  }
+
+  .progress-text {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--border);
+    padding: 20px 48px;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .footer-tip {
+    font-family: 'Source Serif 4', serif;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--ink-light);
+  }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    .masthead, .main, .section-nav { padding-left: 24px; padding-right: 24px; }
+    .masthead-title { font-size: 36px; }
+    .masthead-count { font-size: 32px; }
+    .masthead-inner { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .masthead-meta { text-align: left; }
+    .question-grid { grid-template-columns: 1fr; }
+    .section-number { font-size: 52px; }
+    .timer-strip { flex-wrap: wrap; }
+    .timer-presets { margin-left: 0; }
+    .footer-inner { flex-direction: column; gap: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-inner">
+    <div>
+      <div class="masthead-label">Speaking Board · B2 English</div>
+      <h1 class="masthead-title">The World of<br><em>Business</em></h1>
+    </div>
+    <div class="masthead-meta">
+      <div class="masthead-level">Level B2 · Discussion</div>
+      <div class="masthead-count">20</div>
+    </div>
+  </div>
+</header>
+
+<!-- SECTION NAV -->
+<nav class="section-nav">
+  <div class="section-nav-inner">
+    <button class="nav-btn active" onclick="showSection(0)">Business Life</button>
+    <button class="nav-btn" onclick="showSection(1)">Workplace & Ethics</button>
+    <button class="nav-btn" onclick="showSection(2)">Economic Trends</button>
+    <button class="nav-btn" onclick="showSection(3)">Personal Experience</button>
+    <button class="nav-btn" onclick="showSection(4)">Future of Business</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <!-- TIMER -->
+    <div class="timer-strip" style="flex:1; margin-bottom:0;">
+      <div class="timer-label">Timer</div>
+      <div class="timer-display" id="timerDisplay">02:00</div>
+      <button class="timer-btn" id="timerStartBtn" onclick="timerToggle()">Start</button>
+      <button class="timer-btn" onclick="timerReset()">Reset</button>
+      <div class="timer-presets">
+        <button class="preset-btn active" onclick="setPreset(120, this)">2 min</button>
+        <button class="preset-btn" onclick="setPreset(180, this)">3 min</button>
+        <button class="preset-btn" onclick="setPreset(300, this)">5 min</button>
+      </div>
+    </div>
+    <button class="btn-random" onclick="openRandom()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 1H11V3.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 1L7 5" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M8.5 11H11V8.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 11L7 7" stroke="white" stroke-width="1.2" stroke-linecap="round"/><path d="M1 5.5L4 2.5H5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 8.5L4 5.5H5.5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Random question
+    </button>
+    <button class="btn-reset" onclick="resetAllCards()">Reset cards</button>
+  </div>
+
+  <!-- SECTION 0: BUSINESS LIFE & START-UPS -->
+  <section class="section active" id="section-0">
+    <div class="section-header">
+      <div class="section-number">01</div>
+      <div class="section-text">
+        <div class="section-category">Topic Focus</div>
+        <h2 class="section-title">Business Life &amp; Start-ups</h2>
+        <p class="section-intro">Entrepreneurship, risk, and the allure of building something of your own. Do you have what it takes?</p>
+      </div>
+    </div>
+    <div class="question-grid">
+      <div class="card" data-q="1" data-section="Business Life" data-grammar="Would rather · Prefer" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 01</div>
+          <p class="card-question">Have you ever <strong>dreamt of</strong> setting up your own business, or do you prefer the security of being an employee?</p>
+          <span class="grammar-tag">Would rather · Prefer</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">What kind of business would it be, and what would be the biggest risk you'd face in the first year?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="2" data-section="Business Life" data-grammar="Second conditional" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 02</div>
+          <p class="card-question">If you <strong>were to launch</strong> a new app tomorrow, what problem would it solve for people in Catalonia?</p>
+          <span class="grammar-tag">Second conditional</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">How would you fund it? Angel investment, crowdfunding, or a bank loan — and why?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="3" data-section="Business Life" data-grammar="Reason & contrast" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 03</div>
+          <p class="card-question">Why do you think some small businesses become <strong>market leaders</strong> while others fold within the first year?</p>
+          <span class="grammar-tag">Reason &amp; contrast</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Can you think of a local business that went from nothing to a household name? What do you think made the difference?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="4" data-section="Business Life" data-grammar="Opinion · Comparison" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 04</div>
+          <p class="card-question">In your opinion, is it better for a company to <strong>expand quickly</strong> or to grow slowly and steadily?</p>
+          <span class="grammar-tag">Opinion · Comparison</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Have you ever seen a business grow too fast and collapse? What lessons could be drawn from that?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: WORKPLACE & ETHICS -->
+  <section class="section" id="section-1">
+    <div class="section-header">
+      <div class="section-number">02</div>
+      <div class="section-text">
+        <div class="section-category">Topic Focus</div>
+        <h2 class="section-title">The Workplace &amp; Ethics</h2>
+        <p class="section-intro">Pay, power, principles. Where do you draw the line between pragmatism and personal values?</p>
+      </div>
+    </div>
+    <div class="question-grid">
+      <div class="card" data-q="5" data-section="Workplace & Ethics" data-grammar="Even though · Concession" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 05</div>
+          <p class="card-question"><strong>Even though</strong> some big multinationals pay well, would you rather work for a small local firm? Why?</p>
+          <span class="grammar-tag">Even though · Concession</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Is salary the most important factor when choosing a job, or does company culture matter more to you?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="6" data-section="Workplace & Ethics" data-grammar="Modals of permission" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 06</div>
+          <p class="card-question">Do you think companies <strong>should be allowed to</strong> advertise products to children, or should there be stricter laws?</p>
+          <span class="grammar-tag">Modals of permission</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Can you think of an advert aimed at children that you found particularly manipulative or clever? What made it effective?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="7" data-section="Workplace & Ethics" data-grammar="Past perfect · In order to" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 07</div>
+          <p class="card-question">Have you ever <strong>boycotted</strong> a brand in order to protest against their unethical business practices?</p>
+          <span class="grammar-tag">Past perfect · In order to</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Do consumer boycotts actually work, or do companies continue regardless? Can you think of a case where public pressure changed a company's behaviour?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="8" data-section="Workplace & Ethics" data-grammar="Feel · Passive voice" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 08</div>
+          <p class="card-question">In your job or studies, do you feel you are <strong>underpaid</strong> for the amount of responsibility you have?</p>
+          <span class="grammar-tag">Feel · Passive voice</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Have you ever asked for a pay rise, or considered doing so? What stopped you — or what did you say?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: ECONOMIC TRENDS -->
+  <section class="section" id="section-2">
+    <div class="section-header">
+      <div class="section-number">03</div>
+      <div class="section-text">
+        <div class="section-category">Topic Focus</div>
+        <h2 class="section-title">Economic Trends &amp; Personal Finance</h2>
+        <p class="section-intro">Markets boom and bust. How do economic forces shape the daily choices you make with your money?</p>
+      </div>
+    </div>
+    <div class="question-grid">
+      <div class="card" data-q="9" data-section="Economic Trends" data-grammar="Past simple · Used to" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 09</div>
+          <p class="card-question">How did your spending habits change <strong>during the last recession</strong>? Did you have to cut back on anything?</p>
+          <span class="grammar-tag">Past simple · Used to</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Did the experience change your attitude to saving and spending permanently, or did you return to old habits once things improved?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="10" data-section="Economic Trends" data-grammar="Second conditional" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 10</div>
+          <p class="card-question">If you had a lot of money to invest, which sector do you think is <strong>currently booming</strong>?</p>
+          <span class="grammar-tag">Second conditional</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Would you be prepared to take a financial risk, or would you prefer a guaranteed but lower return? What does that say about your attitude to risk?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="11" data-section="Economic Trends" data-grammar="Despite the fact that" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 11</div>
+          <p class="card-question">Why do some people prefer to buy "big brands" <strong>despite the fact that</strong> cheaper versions are often identical?</p>
+          <span class="grammar-tag">Despite the fact that</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Is there a brand you genuinely believe is worth paying more for? What makes it different — quality, identity, or something else?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="12" data-section="Economic Trends" data-grammar="Opinion · Enough for" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 12</div>
+          <p class="card-question">Do you think it's a good idea for banks to have so many branches, or is <strong>online banking enough</strong> for you?</p>
+          <span class="grammar-tag">Opinion · Enough for</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Who is most disadvantaged when bank branches close? Is there a responsibility to protect access to financial services for everyone?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: PERSONAL EXPERIENCES -->
+  <section class="section" id="section-3">
+    <div class="section-header">
+      <div class="section-number">04</div>
+      <div class="section-text">
+        <div class="section-category">Topic Focus</div>
+        <h2 class="section-title">Personal Experiences &amp; Opinions</h2>
+        <p class="section-intro">Your stories are the best raw material. What has the world of commerce done to you — for better and for worse?</p>
+      </div>
+    </div>
+    <div class="question-grid">
+      <div class="card" data-q="13" data-section="Personal Experiences" data-grammar="Past simple · Turn out" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 13</div>
+          <p class="card-question">Have you ever bought a product that <strong>turned out to be</strong> a total flop? What happened?</p>
+          <span class="grammar-tag">Past simple · Turn out</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Did you complain, ask for a refund, or simply accept it? What would you do differently next time?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="14" data-section="Personal Experiences" data-grammar="Second conditional" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 14</div>
+          <p class="card-question">If two companies <strong>merged</strong> in your industry, would you be worried about job security?</p>
+          <span class="grammar-tag">Second conditional</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Are mergers generally good for employees, consumers, or only for shareholders? Can you think of a real-world example?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="15" data-section="Personal Experiences" data-grammar="Superlatives · Present perfect" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 15</div>
+          <p class="card-question">What is the <strong>most famous</strong> commercial (advert) in your country? Why has it stayed in your memory?</p>
+          <span class="grammar-tag">Superlatives · Present perfect</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">What techniques did it use — humour, emotion, a catchy jingle? Did it actually make you want to buy the product?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="16" data-section="Personal Experiences" data-grammar="Although · Present perfect" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 16</div>
+          <p class="card-question"><strong>Although</strong> many people complain about customer service today, have you had any surprisingly positive experiences recently?</p>
+          <span class="grammar-tag">Although · Present perfect</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Is good customer service becoming rarer? What do you think companies could do better — and what would make you truly loyal to a brand?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: FUTURE OF BUSINESS -->
+  <section class="section" id="section-4">
+    <div class="section-header">
+      <div class="section-number">05</div>
+      <div class="section-text">
+        <div class="section-category">Topic Focus</div>
+        <h2 class="section-title">The Future of Business</h2>
+        <p class="section-intro">Automation, sustainability, leadership. What kind of business world do we want — and what are we prepared to do about it?</p>
+      </div>
+    </div>
+    <div class="question-grid">
+      <div class="card" data-q="17" data-section="Future of Business" data-grammar="Ethics · Gerund subject" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 17</div>
+          <p class="card-question">Do you think it is <strong>ethical</strong> for a company to make a profit by selling "disposable" products that break easily?</p>
+          <span class="grammar-tag">Ethics · Gerund subject</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Should governments legislate against planned obsolescence, or is it the consumer's responsibility to demand better? Who holds the power here?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="18" data-section="Future of Business" data-grammar="Passive modal · Should be forced" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 18</div>
+          <p class="card-question">Some companies manufacture their products abroad to save money. <strong>Should they be forced</strong> to bring production back home?</p>
+          <span class="grammar-tag">Passive modal · Should be forced</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Would you pay more for a product that was made locally, even if an identical imported version cost half the price? Is "made in Spain" a meaningful label to you?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="19" data-section="Future of Business" data-grammar="Would like to · Prefer" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 19</div>
+          <p class="card-question"><strong>Would you like</strong> to be the head of a large department, or do you prefer working without managing others?</p>
+          <span class="grammar-tag">Would like to · Prefer</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">What qualities make a truly great manager? Have you ever had a boss who inspired you — or one who didn't? What was the difference?</p>
+        </div>
+      </div>
+
+      <div class="card" data-q="20" data-section="Future of Business" data-grammar="Find it easy to · Take into account" onclick="flipCard(this)">
+        <div class="card-inner">
+          <div class="card-q-num">Q · 20</div>
+          <p class="card-question">In a business meeting, do you find it easy to <strong>take into account</strong> everyone's opinion before making a decision?</p>
+          <span class="grammar-tag">Find it easy to · Take into account</span>
+          <div class="card-flip-hint">
+            <svg class="flip-icon" viewBox="0 0 12 12" fill="none"><path d="M2 6C2 3.79 3.79 2 6 2c1.2 0 2.28.53 3.03 1.36" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round"/><path d="M9.5 1.5v2.5H7" stroke="#7a6650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Tap for a follow-up prompt
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="card-back-label">Follow-up</div>
+          <p class="card-back-prompt">Is consensus always the best approach, or are there times when a decisive leader should simply make the call? Can you think of a situation where one approach was clearly better?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-text">B2 · Speaking Practice · 20 questions · 5 themes</div>
+    <div class="footer-tip">Tap any card to reveal a follow-up prompt</div>
+    <div class="footer-text">Escola Oficial d'Idiomes</div>
+  </div>
+</footer>
+
+<!-- RANDOM MODAL -->
+<div class="modal-overlay" id="randomModal" onclick="handleModalOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-section-tag" id="modalSectionTag"></div>
+    <div class="modal-q-num" id="modalQNum"></div>
+    <p class="modal-question" id="modalQuestion"></p>
+    <div class="modal-grammar" id="modalGrammar"></div>
+    <div class="modal-actions">
+      <button class="modal-btn-primary" onclick="openRandom()">Next question →</button>
+      <button class="modal-btn-close" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── DATA ──
+  const allQuestions = [];
+  document.querySelectorAll('.card').forEach(card => {
+    allQuestions.push({
+      q: card.dataset.q,
+      section: card.dataset.section,
+      grammar: card.dataset.grammar,
+      question: card.querySelector('.card-question').innerText,
+    });
+  });
+
+  // ── SECTION NAV ──
+  function showSection(idx) {
+    document.querySelectorAll('.section').forEach((s, i) => {
+      s.classList.toggle('active', i === idx);
+    });
+    document.querySelectorAll('.nav-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === idx);
+    });
+  }
+
+  // ── FLIP CARD ──
+  function flipCard(card) {
+    card.classList.toggle('flipped');
+  }
+
+  // ── RESET CARDS ──
+  function resetAllCards() {
+    document.querySelectorAll('.card.flipped').forEach(c => c.classList.remove('flipped'));
+  }
+
+  // ── RANDOM MODAL ──
+  function openRandom() {
+    const q = allQuestions[Math.floor(Math.random() * allQuestions.length)];
+    document.getElementById('modalSectionTag').textContent = q.section;
+    document.getElementById('modalQNum').textContent = 'Q' + q.q.padStart(2, '0');
+    document.getElementById('modalQuestion').textContent = q.question;
+    document.getElementById('modalGrammar').textContent = q.grammar;
+    document.getElementById('randomModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('randomModal').classList.remove('open');
+  }
+
+  function handleModalOverlayClick(e) {
+    if (e.target === e.currentTarget) closeModal();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ── TIMER ──
+  let timerDuration = 120;
+  let timerRemaining = 120;
+  let timerInterval = null;
+  let timerRunning = false;
+
+  function setPreset(secs, btn) {
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    timerDuration = secs;
+    timerRemaining = secs;
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('timerStartBtn').textContent = 'Start';
+    renderTimer();
+  }
+
+  function timerToggle() {
+    if (timerRunning) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      document.getElementById('timerStartBtn').textContent = 'Resume';
+      document.getElementById('timerDisplay').classList.remove('running', 'warning');
+    } else {
+      if (timerRemaining <= 0) timerRemaining = timerDuration;
+      timerRunning = true;
+      document.getElementById('timerStartBtn').textContent = 'Pause';
+      timerInterval = setInterval(() => {
+        timerRemaining--;
+        renderTimer();
+        if (timerRemaining <= 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          document.getElementById('timerStartBtn').textContent = 'Start';
+          document.getElementById('timerDisplay').classList.remove('running');
+          document.getElementById('timerDisplay').classList.add('warning');
+        }
+      }, 1000);
+    }
+  }
+
+  function timerReset() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    timerRemaining = timerDuration;
+    document.getElementById('timerStartBtn').textContent = 'Start';
+    document.getElementById('timerDisplay').classList.remove('running', 'warning');
+    renderTimer();
+  }
+
+  function renderTimer() {
+    const m = Math.floor(timerRemaining / 60).toString().padStart(2, '0');
+    const s = (timerRemaining % 60).toString().padStart(2, '0');
+    const el = document.getElementById('timerDisplay');
+    el.textContent = `${m}:${s}`;
+    if (timerRunning) {
+      el.classList.add('running');
+      if (timerRemaining <= 20) {
+        el.classList.add('warning');
+      }
+    }
+  }
+</script>
+</body>
+</html>

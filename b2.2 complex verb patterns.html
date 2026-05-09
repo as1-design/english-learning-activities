@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Hollywood Scandal: Grammar Detective</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #1e1e2f; color: #f0f2f5; max-width: 700px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+        h1 { color: #ff6b6b; text-align: center; font-size: 32px; letter-spacing: 1px; }
+        p.intro { text-align: center; font-size: 18px; color: #a9b0c0; margin-bottom: 30px; }
+        .card { background: #2a2a40; padding: 25px; border-radius: 10px; box-shadow: 0 8px 16px rgba(0,0,0,0.4); margin-bottom: 25px; border-left: 5px solid #ff6b6b; }
+        .chapter { font-size: 14px; text-transform: uppercase; color: #ffb86c; font-weight: bold; margin-bottom: 5px; }
+        .grammar-focus { font-size: 19px; color: #8be9fd; font-weight: bold; background: #383854; padding: 4px 8px; border-radius: 5px; }
+        .story-text { font-size: 17px; margin-bottom: 15px; }
+        .question { margin-top: 15px; font-weight: bold; color: #f1fa8c; }
+        .btn { padding: 10px 15px; margin: 5px; background-color: #6272a4; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 15px; transition: 0.3s; }
+        .btn:hover { background-color: #50fa7b; color: #282a36; font-weight: bold; }
+        .btn:disabled { background-color: #44475a; color: #6272a4; cursor: not-allowed; }
+        .feedback { margin-top: 15px; padding: 15px; border-radius: 5px; display: none; font-size: 15px; }
+        .correct { background-color: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; display: block; }
+        .incorrect { background-color: #f2dede; color: #a94442; border: 1px solid #ebccd1; display: block; }
+        
+        /* Hidden ending section */
+        #finale { display: none; background: #f8f9fa; color: #333; padding: 30px; border-radius: 10px; border-left: 5px solid #50fa7b; margin-top: 40px; }
+        #finale h2 { color: #28a745; margin-top: 0; }
+        .grammar-box { background: #e9ecef; padding: 15px; border-radius: 8px; margin-top: 20px; font-family: monospace; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+    <h1>🕵️ The Case of the Missing Actor</h1>
+    <p class="intro">Leo Vance, Hollywood's golden boy, disappeared three days ago. As a private investigator, you are interviewing witnesses to trace his final steps. Analyze the clues carefully!</p>
+
+    <!-- Question 1: Passive Gerund -->
+    <div class="card">
+        <div class="chapter">Clue 1: The Motive</div>
+        <p class="story-text">You speak to Leo's bodyguard. "It started last Friday. Leo was paranoid and exhausted. He hates <span class="grammar-focus">being followed</span> by the paparazzi everywhere he goes, so he wanted to escape the city."</p>
+        <p class="question">Who is doing the following in this sentence?</p>
+        <button class="btn q1-btn" onclick="checkAnswer('q1', false, this)">Leo is following someone.</button>
+        <button class="btn q1-btn" onclick="checkAnswer('q1', true, this)">The paparazzi are following Leo.</button>
+        <div id="q1-feedback" class="feedback"></div>
+    </div>
+
+    <!-- Question 2: Perfect Infinitive -->
+    <div class="card">
+        <div class="chapter">Clue 2: The Incident</div>
+        <p class="story-text">You talk to the local police chief. "Later that night, Leo's Ferrari was found completely destroyed at the bottom of a cliff. He is believed <span class="grammar-focus">to have crashed</span> it while driving dangerously in the dark."</p>
+        <p class="question">According to the police, when did the crash happen?</p>
+        <button class="btn q2-btn" onclick="checkAnswer('q2', false, this)">He is crashing it right now.</button>
+        <button class="btn q2-btn" onclick="checkAnswer('q2', true, this)">He crashed it in the past.</button>
+        <div id="q2-feedback" class="feedback"></div>
+    </div>
+
+    <!-- Question 3: Perfect Gerund -->
+    <div class="card">
+        <div class="chapter">Clue 3: The Twist</div>
+        <p class="story-text">Something doesn't add up. You track down Leo's ex-girlfriend. "I didn't believe the crash story, so I confronted him before he vanished. He finally admitted <span class="grammar-focus">having lied</span> about his whereabouts. He wasn't even in the car that night!"</p>
+        <p class="question">What is the timeline of events?</p>
+        <button class="btn q3-btn" onclick="checkAnswer('q3', true, this)">First he lied. Later, he admitted it.</button>
+        <button class="btn q3-btn" onclick="checkAnswer('q3', false, this)">He admitted it, and then he lied.</button>
+        <div id="q3-feedback" class="feedback"></div>
+    </div>
+
+    <!-- Question 4: Continuous Infinitive -->
+    <div class="card">
+        <div class="chapter">Clue 4: The Discovery</div>
+        <p class="story-text">Using his credit card records, you track him to a secret resort in Mexico. You show a photo to the hotel clerk. "Oh yes, that's the man in Cabana 4. Look at him over there. He seems <span class="grammar-focus">to be enjoying</span> a margarita by the pool!"</p>
+        <p class="question">When is he enjoying his drink?</p>
+        <button class="btn q4-btn" onclick="checkAnswer('q4', true, this)">Right now, at this exact moment.</button>
+        <button class="btn q4-btn" onclick="checkAnswer('q4', false, this)">In the past, before he arrived.</button>
+        <div id="q4-feedback" class="feedback"></div>
+    </div>
+
+    <!-- Hidden Finale (Reveals when all 4 are correct) -->
+    <div id="finale">
+        <h2>💼 Case Closed! The Full Story:</h2>
+        <p><strong>Brilliant detective work!</strong> You've pieced the story together: Leo was tired of the paparazzi tracking him (<em>Passive</em>). To escape, he paid someone else to destroy his car, creating a fake accident in the past (<em>Perfect</em>). His ex-girlfriend caught him, forcing him to confess to his earlier lies (<em>Perfect</em>). Now, while the world thinks he's missing, he's currently relaxing at a secret resort (<em>Continuous</em>).</p>
+        
+        <div class="grammar-box">
+            <h3>Your Grammar Briefcase:</h3>
+            <ul>
+                <li><strong>Passive Gerund:</strong> <em>being + past participle</em> (Actions done TO you)</li>
+                <li><strong>Perfect Infinitive/Gerund:</strong> <em>(to) have / having + past participle</em> (Focuses on an action completed in the PAST)</li>
+                <li><strong>Continuous Infinitive:</strong> <em>to be + -ing</em> (Actions happening right NOW)</li>
+            </ul>
+            <p style="margin-top: 15px; font-weight: bold; color: #d9534f;">👉 Agent, your next mission: Go to the Test-English website provided by your teacher to read the official case files (grammar rules) and complete the practice exercises!</p>
+        </div>
+    </div>
+
+    <script>
+        // Track correct answers
+        let progress = { q1: false, q2: false, q3: false, q4: false };
+
+        function checkAnswer(questionId, isCorrect, btnElement) {
+            const feedbackDiv = document.getElementById(questionId + '-feedback');
+            const allButtons = document.querySelectorAll('.' + questionId + '-btn');
+
+            if (isCorrect) {
+                feedbackDiv.className = 'feedback correct';
+                
+                // Set specific feedback text
+                if (questionId === 'q1') feedbackDiv.innerHTML = "<strong>Correct!</strong> <em>Passive Gerund</em>. Leo isn't doing the action; he is receiving it from the paparazzi.";
+                if (questionId === 'q2') feedbackDiv.innerHTML = "<strong>Correct!</strong> <em>Perfect Infinitive</em>. Using 'to have + crashed' pushes the action backward in time.";
+                if (questionId === 'q3') feedbackDiv.innerHTML = "<strong>Correct!</strong> <em>Perfect Gerund</em>. The 'having + past participle' shows the lying happened before the admitting.";
+                if (questionId === 'q4') feedbackDiv.innerHTML = "<strong>Correct!</strong> <em>Continuous Infinitive</em>. The 'to be + -ing' shows it is an ongoing action right now.";
+                
+                // Mark progress and disable buttons so they don't lose the correct state
+                progress[questionId] = true;
+                allButtons.forEach(b => b.disabled = true);
+                btnElement.style.backgroundColor = "#50fa7b";
+                btnElement.style.color = "#282a36";
+
+                // Check if all answers are correct to reveal the ending
+                checkCompletion();
+            } else {
+                feedbackDiv.className = 'feedback incorrect';
+                feedbackDiv.innerHTML = "<strong>Not quite!</strong> Read the clue again. Think about the timeline or who is actually doing the action.";
+            }
+        }
+
+        function checkCompletion() {
+            if (progress.q1 && progress.q2 && progress.q3 && progress.q4) {
+                // Add a small delay for dramatic effect
+                setTimeout(() => {
+                    document.getElementById('finale').style.display = 'block';
+                    // Scroll to the finale
+                    document.getElementById('finale').scrollIntoView({ behavior: 'smooth' });
+                }, 500);
+            }
+        }
+    </script>
+</body>
+</html>

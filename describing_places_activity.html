@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Describing Places – Interactive Activity (B2)</title>
+<style>
+    body {
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
+        color: #333;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: rgba(255,255,255,0.95);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .instructions {
+        background: #f0f7fa;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 120px;
+        padding: 5px;
+        margin: 3px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    input.correct {
+        background: #c8f7c5;
+        border-color: green;
+    }
+
+    input.incorrect {
+        background: #f7c5c5;
+        border-color: red;
+    }
+
+    button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .check { background: #4CAF50; color: white; }
+    .reset { background: #f39c12; color: white; }
+    .answers { background: #e74c3c; color: white; }
+
+    .score {
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .wordbank {
+        margin-top: 20px;
+        padding: 10px;
+        background: #eef;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Describing places (B2)</h1>
+
+<div class="instructions">
+Complete the text with appropriate vocabulary. Click “Check answers” when ready.
+</div>
+
+<p>
+Last summer, I visited a small <input id="1"> located on the <input id="2"> of a large city.
+Unlike the busy <input id="3">, this area was quiet and surprisingly <input id="4">.
+</p>
+
+<p>
+Most people lived in a <input id="5"> of <input id="6">, although there were a few
+<input id="7"> houses surrounded by gardens. Near my accommodation, there was a lovely
+<input id="8"> where locals often sat in the evening.
+</p>
+
+<p>
+The place was full of natural beauty: a wide <input id="9"> ran through the area, and beyond it
+there were green fields with <input id="10">, <input id="11">, and long <input id="12">.
+In the distance, you could see a <input id="13">, which made the landscape truly <input id="14">.
+</p>
+
+<p>
+In the centre, there was a small <input id="15"> and a historic <input id="16">.
+However, the area was not too <input id="17">, which made it feel authentic and <input id="18">.
+</p>
+
+<p>
+Overall, it was a <input id="19"> place to stay—much less <input id="20"> and <input id="21">
+than the city centre.
+</p>
+
+<button class="check" onclick="checkAnswers()">Check answers</button>
+<button class="reset" onclick="resetAnswers()">Reset</button>
+<button class="answers" onclick="showAnswers()">Show answers</button>
+
+<div class="score" id="score"></div>
+
+<div class="wordbank" id="wordbank">
+<strong>Word bank:</strong><br>
+village, outskirts, city centre, lively, block, flats, detached, square,
+river, trees, grass, hedges, mountain, picturesque, market, church,
+touristy, unspoilt, peaceful, crowded, noisy
+</div>
+
+<button onclick="toggleWordbank()">Toggle word bank</button>
+
+</div>
+
+<script>
+const answers = {
+1:"village", 2:"outskirts", 3:"city centre", 4:"peaceful",
+5:"block", 6:"flats", 7:"detached", 8:"square",
+9:"river", 10:"trees", 11:"grass", 12:"hedges",
+13:"mountain", 14:"picturesque",
+15:"market", 16:"church",
+17:"touristy", 18:"unspoilt",
+19:"peaceful", 20:"crowded", 21:"noisy"
+};
+
+function checkAnswers() {
+    let score = 0;
+    for (let i in answers) {
+        let input = document.getElementById(i);
+        let value = input.value.toLowerCase().trim();
+
+        if (value === answers[i]) {
+            input.classList.add("correct");
+            input.classList.remove("incorrect");
+            score++;
+        } else {
+            input.classList.add("incorrect");
+            input.classList.remove("correct");
+        }
+    }
+    document.getElementById("score").innerText =
+        "Score: " + score + " / 21";
+}
+
+function resetAnswers() {
+    for (let i in answers) {
+        let input = document.getElementById(i);
+        input.value = "";
+        input.classList.remove("correct", "incorrect");
+    }
+    document.getElementById("score").innerText = "";
+}
+
+function showAnswers() {
+    for (let i in answers) {
+        document.getElementById(i).value = answers[i];
+    }
+}
+
+function toggleWordbank() {
+    let wb = document.getElementById("wordbank");
+    wb.style.display = wb.style.display === "none" ? "block" : "none";
+}
+</script>
+
+</body>
+</html>

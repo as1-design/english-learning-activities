@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Speaking Board – Crime & Media</title>
+<style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
+    text-align: center;
+    padding: 30px;
+}
+
+h1 {
+    color: #333;
+}
+
+button {
+    background: #6c63ff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+button:hover {
+    background: #574fd6;
+}
+
+.card {
+    display: none;
+    margin: 20px auto;
+    max-width: 400px;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    font-size: 18px;
+}
+
+.type {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.statement { border-left: 6px solid #ff8a65; }
+.past { border-left: 6px solid #4db6ac; }
+.preference { border-left: 6px solid #9575cd; }
+
+</style>
+</head>
+
+<body>
+
+<h1>🎲 Crime & Media Speaking Game</h1>
+<button onclick="showCard()">Show a Card</button>
+
+<div id="card" class="card"></div>
+
+<script>
+const cards = [
+    {type:"statement", text:"Social media spreads fake news faster than TV."},
+    {type:"statement", text:"Crime shows make people more paranoid."},
+    {type:"statement", text:"Journalists exaggerate stories to get attention."},
+    {type:"statement", text:"Online crime is more dangerous than physical crime."},
+    {type:"statement", text:"The media often manipulates public opinion."},
+    {type:"statement", text:"People should always fact-check news before sharing."},
+
+    {type:"past", text:"Have you ever believed fake news? What happened?"},
+    {type:"past", text:"Did you use to follow the news regularly?"},
+    {type:"past", text:"Have you ever shared a news story that wasn’t true?"},
+    {type:"past", text:"When was the last time you read about a crime?"},
+    {type:"past", text:"Have you ever been the victim of a scam?"},
+    {type:"past", text:"Did you watch crime documentaries as a child?"},
+
+    {type:"preference", text:"Do you prefer TV news or social media news? Why?"},
+    {type:"preference", text:"Would you rather be a journalist or a detective?"},
+    {type:"preference", text:"Do you prefer reading or watching crime stories?"},
+    {type:"preference", text:"Would you rather solve a crime or report it?"},
+    {type:"preference", text:"Do you prefer serious or sensational news?"},
+    {type:"preference", text:"Would you trust online news sources?"},
+
+    {type:"statement", text:"Cybercrime will be the biggest problem in the future."},
+    {type:"past", text:"Have you ever checked if a viral story was true?"}
+];
+
+let remaining = [...cards];
+
+function showCard() {
+    if (remaining.length === 0) {
+        remaining = [...cards];
+        alert("All cards used! Starting again 🔄");
+    }
+
+    const index = Math.floor(Math.random() * remaining.length);
+    const selected = remaining.splice(index, 1)[0];
+
+    const cardDiv = document.getElementById("card");
+    cardDiv.style.display = "block";
+    cardDiv.className = "card " + selected.type;
+    cardDiv.innerHTML = '<div class="type">' + selected.type.toUpperCase() + '</div>' + selected.text;
+}
+</script>
+
+</body>
+</html>

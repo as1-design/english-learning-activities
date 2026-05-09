@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Similes: Bridge or Surprise?</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --accent:#2563eb;
+      --ok:#166534;
+      --okbg:#dcfce7;
+      --warn:#92400e;
+      --warnbg:#fef3c7;
+      --bad:#991b1b;
+      --badbg:#fee2e2;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#eef2ff 0%, var(--bg) 25%, #f9fafb 100%);
+      color:var(--ink);
+      line-height:1.45;
+    }
+    .wrap{max-width:1100px;margin:0 auto;padding:24px;}
+    .hero,.panel{
+      background:var(--card);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:24px;
+      margin-bottom:20px;
+    }
+    h1,h2{margin:0 0 10px 0}
+    h1{font-size:2rem}
+    h2{font-size:1.35rem}
+    .sub{color:var(--muted);max-width:900px}
+    .pillbar,.chips,.actions{display:flex;flex-wrap:wrap;gap:10px}
+    .pill,.chip{
+      background:#eef2ff;
+      color:#3730a3;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.95rem;
+      border:1px solid #c7d2fe;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:14px;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:18px;
+    }
+    @media (max-width: 860px){.row{grid-template-columns:1fr}}
+    .card{
+      border:1px solid #e5e7eb;
+      border-radius:16px;
+      padding:14px;
+      background:#fff;
+    }
+    .simile{font-weight:700;margin-bottom:8px;font-size:1.05rem;}
+    .small{font-size:.92rem;color:var(--muted)}
+    select, button, input[type="text"]{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid #cbd5e1;
+      font-size:1rem;
+      background:#fff;
+    }
+    button{
+      background:var(--accent);
+      color:#fff;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      width:auto;
+      padding:10px 16px;
+    }
+    button.secondary{background:#e5e7eb;color:#111827;}
+    button.ghost{background:#fff;color:var(--accent);border:1px solid #bfdbfe;}
+    .result{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      display:none;
+      white-space:pre-line;
+    }
+    .ok{background:#dcfce7; color:#166534}
+    .warn{background:#fef3c7; color:#92400e}
+    .bad{background:#fee2e2; color:#991b1b}
+    details{
+      border:1px dashed #cbd5e1;
+      border-radius:14px;
+      padding:10px 12px;
+      background:#fafafa;
+      margin-top:10px;
+    }
+    summary{cursor:pointer;font-weight:700}
+    .badge{
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .same{background:#dcfce7;color:#166534}
+    .partial{background:#fef3c7;color:#92400e}
+    .different{background:#fee2e2;color:#991b1b}
+    .sentence{
+      padding:10px 12px;
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:12px;
+      margin:8px 0;
+    }
+    .footer-note{font-size:.9rem;color:var(--muted);margin-top:8px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>Similes: Bridge or Surprise?</h1>
+    <p class="sub">An interactive activity for B2 students. Use Spanish and Catalan as a bridge to notice which English similes feel familiar and which ones use a completely different image.</p>
+    <div class="pillbar">
+      <span class="pill">Work autonomously</span>
+      <span class="pill">Notice patterns</span>
+      <span class="pill">Compare languages</span>
+      <span class="pill">Check your answers</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>1) Bridge, partial match, or different image?</h2>
+    <p class="sub">For each English simile, choose whether it is <strong>very similar</strong> to Spanish/Catalan, <strong>partly similar</strong>, or a <strong>different image</strong>. Then check your answers.</p>
+    <div class="grid" id="bridgeGrid"></div>
+    <div class="actions">
+      <button onclick="checkBridge()">Check answers</button>
+      <button class="secondary" onclick="resetBridge()">Reset</button>
+    </div>
+    <div id="bridgeResult" class="result"></div>
+  </section>
+
+  <section class="panel">
+    <div class="row">
+      <div>
+        <h2>2) Match the meaning</h2>
+        <p class="sub">Choose the best meaning for each simile.</p>
+        <div id="meaningGrid" class="grid"></div>
+        <div class="actions">
+          <button onclick="checkMeaning()">Check meanings</button>
+          <button class="secondary" onclick="resetMeaning()">Reset</button>
+        </div>
+        <div id="meaningResult" class="result"></div>
+      </div>
+      <div>
+        <h2>Bridge map</h2>
+        <p class="sub">Open the cards after you guess. They show how English compares with Spanish and Catalan.</p>
+        <div id="bridgeMap"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>3) Complete the sentence</h2>
+    <p class="sub">Type the missing simile. You can use the word bank.</p>
+    <div class="chips" id="wordBank"></div>
+    <div id="gapArea"></div>
+    <div class="actions">
+      <button onclick="checkGaps()">Check sentences</button>
+      <button class="secondary" onclick="resetGaps()">Reset</button>
+    </div>
+    <div id="gapResult" class="result"></div>
+  </section>
+
+  <section class="panel">
+    <h2>4) Quick recap</h2>
+    <p class="sub">Click a button for a random challenge.</p>
+    <div class="actions">
+      <button class="ghost" onclick="randomChallenge('translate')">Cross-linguistic challenge</button>
+      <button class="ghost" onclick="randomChallenge('context')">Context challenge</button>
+      <button class="ghost" onclick="randomChallenge('opinion')">Reflection challenge</button>
+    </div>
+    <div id="randomBox" class="result" style="display:block;background:#eff6ff;color:#1e3a8a;"></div>
+    <p class="footer-note">Notice which similes are easy because they are similar in Spanish or Catalan, and which ones are memorable because the image is different.</p>
+  </section>
+</div>
+
+<script>
+const bridgeItems = [
+  { simile:"as deaf as a post", answer:"same", es:"sordo como una tapia", ca:"sord com una tàpia", note:"Very close in both languages: the structure and the image are nearly the same." },
+  { simile:"as stubborn as a mule", answer:"same", es:"terco como una mula", ca:"tossut com una mula", note:"Same animal and same idea." },
+  { simile:"as blind as a bat", answer:"different", es:"más ciego que un topo", ca:"cec com un talp", note:"English uses a bat, while Spanish and Catalan use a mole." },
+  { simile:"as fit as a fiddle", answer:"different", es:"rebosante de salud", ca:"com una rosa", note:"The meaning is similar, but the image changes completely." },
+  { simile:"as good as gold", answer:"different", es:"como un ángel", ca:"més bo que un sant", note:"Positive behaviour, but a different image in both languages." },
+  { simile:"as thin as a rake", answer:"different", es:"estar en los huesos", ca:"prim com un fideu", note:"Different image in each language." },
+  { simile:"as tough as old boots", answer:"different", es:"fuerte como un roble", ca:"dur com una pedra", note:"Same idea, completely different image." },
+  { simile:"as quick as a flash", answer:"partial", es:"como un rayo", ca:"ràpid com un llampec", note:"Catalan is especially close. Spanish is conceptually similar." },
+  { simile:"drink like a fish", answer:"different", es:"beber como una esponja", ca:"beure com una esponja", note:"English uses an animal, while Spanish and Catalan use an object." },
+  { simile:"sleep like a log", answer:"same", es:"dormir como un tronco", ca:"dormir com un soc", note:"Spanish and Catalan are both very close here." }
+];
+
+const meaningItems = [
+  {simile:"as blind as a bat", answer:"can’t see well", options:["can’t see well","is very stubborn","feels very sick and pale"]},
+  {simile:"as fit as a fiddle", answer:"very healthy", options:["very healthy","very old but strong","very thin"]},
+  {simile:"as thin as a rake", answer:"extremely thin", options:["extremely thin","very fast","very quiet"]},
+  {simile:"as tough as old boots", answer:"strong and resilient", options:["strong and resilient","very well-behaved","drinks a lot"]},
+  {simile:"drink like a fish", answer:"drink a lot of alcohol", options:["drink a lot of alcohol","eat a lot","sleep deeply"]},
+  {simile:"sleep like a log", answer:"sleep very deeply", options:["sleep very deeply","be hard of hearing","work perfectly"]}
+];
+
+const gapItems = [
+  {sentence:"My grandad never hears the doorbell. He’s ________.", answer:"as deaf as a post"},
+  {sentence:"After the marathon, she was tired, but still ________ the next morning.", answer:"as fit as a fiddle"},
+  {sentence:"Don’t argue with him about politics. He’s ________.", answer:"as stubborn as a mule"},
+  {sentence:"Since he’s been ill, he’s become ________.", answer:"as thin as a rake"},
+  {sentence:"I didn’t hear a thing last night. I ________.", answer:"slept like a log"},
+  {sentence:"That medicine is brilliant. It ________.", answer:"works like a dream"}
+];
+
+function makeBridge(){
+  const grid = document.getElementById('bridgeGrid');
+  grid.innerHTML = "";
+  bridgeItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="simile">${item.simile}</div>
+      <select id="bridge_${i}">
+        <option value="">Choose…</option>
+        <option value="same">Very similar</option>
+        <option value="partial">Partly similar</option>
+        <option value="different">Different image</option>
+      </select>
+      <details>
+        <summary>Reveal Spanish/Catalan</summary>
+        <div class="small">ES: ${item.es}<br>CA: ${item.ca}</div>
+      </details>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function checkBridge(){
+  let correct = 0;
+  bridgeItems.forEach((item, i) => {
+    const val = document.getElementById(`bridge_${i}`).value;
+    if (val === item.answer) correct++;
+  });
+  const box = document.getElementById('bridgeResult');
+  box.style.display = 'block';
+  box.className = `result ${correct >= 8 ? 'ok' : correct >= 5 ? 'warn' : 'bad'}`;
+  box.textContent = `Score: ${correct}/${bridgeItems.length}
+
+Which similes are easier because Spanish or Catalan helps?
+Which ones are more memorable because the image is different?`;
+}
+
+function resetBridge(){
+  bridgeItems.forEach((item, i) => {
+    document.getElementById(`bridge_${i}`).value = '';
+  });
+  document.getElementById('bridgeResult').style.display = 'none';
+}
+
+function makeMeaning(){
+  const grid = document.getElementById('meaningGrid');
+  grid.innerHTML = "";
+  meaningItems.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    let opts = '<option value="">Choose…</option>';
+    item.options.forEach(o => {
+      opts += `<option value="${o}">${o}</option>`;
+    });
+    card.innerHTML = `
+      <div class="simile">${item.simile}</div>
+      <select id="meaning_${i}">${opts}</select>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function checkMeaning(){
+  let correct = 0;
+  meaningItems.forEach((item, i) => {
+    const val = document.getElementById(`meaning_${i}`).value;
+    if (val === item.answer) correct++;
+  });
+  const box = document.getElementById('meaningResult');
+  box.style.display = 'block';
+  box.className = `result ${correct >= 4 ? 'ok' : 'warn'}`;
+  box.textContent = `Score: ${correct}/${meaningItems.length}`;
+}
+
+function resetMeaning(){
+  meaningItems.forEach((item, i) => {
+    document.getElementById(`meaning_${i}`).value = '';
+  });
+  document.getElementById('meaningResult').style.display = 'none';
+}
+
+function makeMap(){
+  const map = document.getElementById('bridgeMap');
+  map.innerHTML = "";
+  bridgeItems.forEach(item => {
+    const badgeClass = item.answer === 'same' ? 'same' : item.answer === 'partial' ? 'partial' : 'different';
+    const badgeText = item.answer === 'same' ? 'Very similar' : item.answer === 'partial' ? 'Partly similar' : 'Different image';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <span class="badge ${badgeClass}">${badgeText}</span>
+      <div class="simile">${item.simile}</div>
+      <div class="small">ES: ${item.es}<br>CA: ${item.ca}</div>
+      <div class="sentence small" style="margin-top:8px;">${item.note}</div>
+    `;
+    map.appendChild(card);
+  });
+}
+
+function makeGaps(){
+  const area = document.getElementById('gapArea');
+  area.innerHTML = "";
+  gapItems.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="sentence">${i+1}. ${item.sentence}</div>
+      <input type="text" id="gap_${i}" placeholder="Type the missing simile" />
+    `;
+    area.appendChild(div);
+  });
+
+  const bankWords = [
+    "as deaf as a post",
+    "as fit as a fiddle",
+    "as stubborn as a mule",
+    "as thin as a rake",
+    "slept like a log",
+    "works like a dream"
+  ];
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = "";
+  bankWords.forEach(w => {
+    const span = document.createElement('span');
+    span.className = 'chip';
+    span.textContent = w;
+    bank.appendChild(span);
+  });
+}
+
+function norm(s){
+  return s.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, ' ').trim();
+}
+
+function checkGaps(){
+  let correct = 0;
+  gapItems.forEach((item, i) => {
+    const val = norm(document.getElementById(`gap_${i}`).value);
+    if (val === norm(item.answer)) correct++;
+  });
+  const box = document.getElementById('gapResult');
+  box.style.display = 'block';
+  box.className = `result ${correct >= 5 ? 'ok' : correct >= 3 ? 'warn' : 'bad'}`;
+  box.textContent = `Score: ${correct}/${gapItems.length}`;
+}
+
+function resetGaps(){
+  gapItems.forEach((item, i) => {
+    document.getElementById(`gap_${i}`).value = '';
+  });
+  document.getElementById('gapResult').style.display = 'none';
+}
+
+const challenges = {
+  translate: [
+    "Find one English simile that is very close to Spanish or Catalan and one that is completely different.",
+    "Which simile is easiest to remember because the image is similar in all three languages?",
+    "Which simile could confuse Spanish or Catalan speakers because English uses a different image?"
+  ],
+  context: [
+    "Write one funny sentence with as tough as old boots.",
+    "Write one realistic sentence with sleep like a log.",
+    "Write one health-related sentence with as fit as a fiddle."
+  ],
+  opinion: [
+    "Which simile sounds most natural in everyday speech? Which sounds a bit old-fashioned?",
+    "Would you say drink like a fish about a friend? Why or why not?",
+    "Which similes feel formal, informal, or humorous?"
+  ]
+};
+
+function randomChallenge(type){
+  const list = challenges[type];
+  const text = list[Math.floor(Math.random() * list.length)];
+  document.getElementById('randomBox').textContent = text;
+}
+
+makeBridge();
+makeMeaning();
+makeMap();
+makeGaps();
+randomChallenge('translate');
+</script>
+</body>
+</html>

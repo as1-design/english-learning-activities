@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Speaking Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --surface: #ffffff;
+    --border: #e0d9cf;
+    --text: #2c2825;
+    --muted: #8a7f74;
+    --accent: #3d6b5e;
+    --accent-light: #e8f0ed;
+    --used: #2e7d52;
+    --used-bg: #d4edda;
+    --used-border: #86efac;
+    --want: #b45309;
+    --want-bg: #fef3c7;
+    --want-border: #fcd34d;
+    --strength-high: #c0392b;
+    --strength-mid: #2980b9;
+    --strength-low: #7f8c8d;
+    --tab-h: 64px;
+    --header-h: 56px;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: calc(var(--tab-h) + 16px);
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--accent);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .top-bar h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .top-stats {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .stat-pill:active { opacity: 0.7; }
+  .stat-pill.used-pill { background: rgba(46,125,82,0.35); }
+  .stat-pill.want-pill { background: rgba(180,83,9,0.35); }
+
+  /* ── LEGEND ── */
+  .legend {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .legend::-webkit-scrollbar { display: none; }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .legend-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-used  { background: #4ade80; }
+  .dot-want  { background: #fbbf24; }
+  .dot-clear { background: #d1c9bf; border: 1px solid #bbb4aa; }
+
+  .clear-all {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── CONTENT ── */
+  .content { padding: 0; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── ACCORDION ── */
+  .accordion {
+    margin: 10px 12px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 16px;
+    cursor: pointer;
+    user-select: none;
+    gap: 10px;
+  }
+  .accordion-header:active { background: var(--bg); }
+
+  .accordion-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem;
+    font-weight: 400;
+    color: var(--accent);
+    flex: 1;
+  }
+
+  .accordion-arrow {
+    font-size: 0.7rem;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .accordion.open .accordion-arrow { transform: rotate(180deg); }
+
+  .accordion-body {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+  .accordion.open .accordion-body { display: block; }
+
+  /* ── CARD WITHIN ACCORDION ── */
+  .acc-card {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--bg);
+  }
+  .acc-card:last-child { border-bottom: none; }
+
+  .card-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .strength-bar {
+    display: inline-block;
+    height: 5px;
+    border-radius: 3px;
+  }
+  .strength-high { background: var(--strength-high); width: 28px; }
+  .strength-mid  { background: var(--strength-mid);  width: 18px; }
+  .strength-low  { background: var(--strength-low);  width: 10px; }
+
+  .label-high  { color: var(--strength-high); }
+  .label-mid   { color: var(--strength-mid); }
+  .label-low   { color: var(--strength-low); }
+  .label-plain { color: var(--muted); }
+
+  /* ── PHRASE ── */
+  .phrases { display: flex; flex-direction: column; gap: 6px; }
+
+  .phrase {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    background: var(--bg);
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    min-height: 48px;
+  }
+  .phrase:active { opacity: 0.75; }
+
+  .phrase.used { background: var(--used-bg); border-color: var(--used-border); }
+  .phrase.want { background: var(--want-bg); border-color: var(--want-border); }
+
+  .phrase-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid #ccc4b8;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    background: white;
+    transition: all 0.15s;
+    margin-top: 1px;
+  }
+
+  .phrase.used .phrase-icon { background: var(--used); border-color: var(--used); color: white; }
+  .phrase.want .phrase-icon { background: var(--want); border-color: var(--want); color: white; }
+
+  .phrase-text { flex: 1; }
+
+  .phrase-note {
+    font-size: 0.76rem;
+    color: var(--muted);
+    font-style: italic;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* ── MY PHRASES PANEL ── */
+  #panel-myphrases {
+    padding: 12px;
+  }
+
+  .myphrases-empty {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--muted);
+  }
+
+  .myphrases-empty .empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  .myphrases-empty p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .myphrases-empty strong { color: var(--text); }
+
+  .myphrases-section {
+    margin-bottom: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .myphrases-section-header {
+    padding: 11px 16px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .myphrases-section-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .myphrases-group {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .myphrases-group-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .myphrases-group-label.used-label { color: var(--used); }
+  .myphrases-group-label.want-label { color: var(--want); }
+
+  .myphrases-phrase {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-bottom: 5px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .myphrases-phrase:last-child { margin-bottom: 0; }
+  .myphrases-phrase:active { opacity: 0.65; }
+
+  .myphrases-phrase.used { background: var(--used-bg); }
+  .myphrases-phrase.want { background: var(--want-bg); }
+
+  .mp-icon {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.68rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: white;
+  }
+  .mp-icon.used-icon { background: var(--used); }
+  .mp-icon.want-icon { background: var(--want); }
+
+  .clear-my {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  /* ── BOTTOM TAB BAR ── */
+  .tab-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--tab-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  }
+
+  .tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 8px 2px;
+    transition: color 0.2s;
+    user-select: none;
+    border-top: 2px solid transparent;
+    position: relative;
+  }
+
+  .tab.active { color: var(--accent); border-top-color: var(--accent); }
+  .tab-icon { font-size: 1.2rem; line-height: 1; }
+
+  /* badge on My Phrases tab */
+  .tab-badge {
+    position: absolute;
+    top: 6px;
+    right: calc(50% - 18px);
+    background: var(--accent);
+    color: white;
+    border-radius: 10px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 5px;
+    min-width: 16px;
+    text-align: center;
+    display: none;
+  }
+  .tab-badge.visible { display: block; }
+
+  .panel > .accordion:last-child { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>Speaking Reference</h1>
+  <div class="top-stats">
+    <div class="stat-pill used-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">✓ <span id="count-used">0</span></div>
+    <div class="stat-pill want-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">★ <span id="count-want">0</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot dot-used"></div> Used ✓ — tap once</div>
+  <div class="legend-item"><div class="legend-dot dot-want"></div> Want to try ★ — tap twice</div>
+  <div class="legend-item"><div class="legend-dot dot-clear"></div> Clear — tap three times</div>
+  <button class="clear-all" onclick="clearAll()">Clear all</button>
+</div>
+
+<div class="content">
+
+  <!-- ══════════════════════════════════
+       OPINIONS & DISCUSSION
+  ══════════════════════════════════ -->
+  <div class="panel active" id="panel-opinions">
+
+    <div class="accordion open">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Expressing Opinions</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Strong conviction</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I believe… / I have no doubt that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm convinced that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm sure that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">There's no doubt in my mind that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm quite certain that…</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Moderate opinion</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I think…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Well, if you ask me…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'd like to point out that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">As I see it,…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">In my opinion…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Personally,…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">As far as I'm concerned…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">From my perspective…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">It seems to me that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">To my mind…</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-low"><span class="strength-bar strength-low"></span> Tentative / uncertain</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I feel that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">My impression is that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm not sure, but I'm leaning towards…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I tend to think…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Asking for Opinions</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-plain">Open to the group</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">How do you feel about that?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">What is your point of view?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">What's your take on this?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Have you got any thoughts on this?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Do you have any views on this?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Does anyone have any other comments?</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-plain">Directed at a specific person</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">[Name], I'd really appreciate your view on this.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I think this is a good option — don't you think?</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Agreeing</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Full agreement</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Absolutely. / Exactly.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I totally agree with you.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I have exactly the same opinion as you.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Couldn't agree more.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">You've hit the nail on the head.<span class="phrase-note">idiom</span></div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Partial agreement</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I agree to a certain extent.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm with you up to a point.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I agree partly.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I guess you're right.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">That's a fair point.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Fair enough.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Disagreeing</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Strong disagreement</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">We don't seem to agree here.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm afraid I can't agree with you there.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">With respect, I have to say I don't agree.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I can't go along with that at all.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">It's out of the question.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I beg to differ.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">That's not how I see it.</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Partial disagreement</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I understand what you're saying, but I see it differently.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I agree with you up to a point, but I disagree about…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I know what you mean, but…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I don't really agree with you.</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I think it might be better to…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'd be inclined to think the opposite.</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-low"><span class="strength-bar strength-low"></span> Expressing reservations</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Don't you think that…?</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm concerned that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm not entirely convinced that…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">You could say that; however…</div></div>
+            <div class="phrase" data-section="Opinions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm not sure that's such a good idea.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-opinions -->
+
+
+  <!-- ══════════════════════════════════
+       SUGGESTIONS
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-suggestions">
+
+    <div class="accordion open">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Making Suggestions</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-plain">Inviting the other person</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Would you like to</strong> + verb…?<span class="phrase-note">Would you like to try a different approach?</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Shall</strong> I/we + bare infinitive?<span class="phrase-note">Shall we take a short break?</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Why don't/doesn't</strong> + subject + bare infinitive?<span class="phrase-note">Why don't we ask for more information?</span></div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-plain">Collaborative — "we" focused</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Let's</strong> + bare infinitive.<span class="phrase-note">Let's consider this second option.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>What about</strong> + -ing?<span class="phrase-note">What about trying a different route?</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>How about</strong> + -ing?<span class="phrase-note">How about meeting earlier?</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>How about</strong> + subject + verb?<span class="phrase-note">How about we meet earlier?</span></div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-plain">Tentative / softened</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Maybe we could</strong> + bare infinitive.<span class="phrase-note">Maybe we could split into two groups.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>I suggest</strong> + -ing.<span class="phrase-note">I suggest starting with the budget.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>Have you thought about</strong> + -ing?<span class="phrase-note">Have you thought about doing it online?</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>It might be worth</strong> + -ing.<span class="phrase-note">It might be worth checking the timetable first.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text"><strong>You might want to consider</strong> + -ing.<span class="phrase-note">You might want to consider the cost first.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Accepting a Suggestion</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Enthusiastic</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Yes, I'd love to!</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Yes, with pleasure!</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Count me in!<span class="phrase-note">informal</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sounds like a plan!<span class="phrase-note">idiom</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">This is just what we need.</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Neutral / open</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Yes, that's not a bad idea.</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Why not?</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sounds good to me.</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">It might work.</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">That may be worth trying.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Rejecting a Suggestion</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Direct</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">That's not a good idea, I'm afraid.</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Politely</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I don't really feel like it.</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm not very keen on + -ing.<span class="phrase-note">I'm not very keen on eating out.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Well, I'd rather + bare infinitive.<span class="phrase-note">Well, I'd rather stay in tonight.</span></div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'm not really convinced / sure.</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Well, the only problem is…</div></div>
+            <div class="phrase" data-section="Suggestions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I'd prefer to + infinitive.<span class="phrase-note">I'd prefer to leave earlier.</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-suggestions -->
+
+
+  <!-- ══════════════════════════════════
+       INTERRUPTIONS
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-interruptions">
+
+    <div class="accordion open">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Interrupting Politely</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-plain">Asking permission</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Can / May I say something here?</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Is it okay if I jump in for a moment?</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">If I might add something…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">If I may interrupt…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Do you mind if I add something?</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-plain">Announcing the interruption</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sorry to interrupt, but…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Excuse me for interrupting, but…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Excuse me for a second, but…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sorry to cut you off, but…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">I don't mean to intrude, but…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Just a moment — I'd like to add something here.</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Before you go on, I'd like to say something…</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-plain">Reacting / redirecting</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Are you saying that…?</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">So, you're telling me…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Well, that reminds me that…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Well, if that is the case…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Wait a minute…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Excuse me, but in my opinion…</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <div class="accordion-header" onclick="toggleAcc(this)">
+        <div class="accordion-title">Keeping the Floor</div>
+        <span class="accordion-arrow">▼</span>
+      </div>
+      <div class="accordion-body">
+        <div class="acc-card">
+          <div class="card-label label-mid"><span class="strength-bar strength-mid"></span> Polite</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sorry, but could you let me finish?</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">If you could just let me finish…</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Please, let me make my point.</div></div>
+          </div>
+        </div>
+        <div class="acc-card">
+          <div class="card-label label-high"><span class="strength-bar strength-high"></span> Direct</div>
+          <div class="phrases">
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Sorry, but I'm not done yet.</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Let me finish what I was saying first.</div></div>
+            <div class="phrase" data-section="Interruptions" onclick="toggle(this)"><div class="phrase-icon"></div><div class="phrase-text">Hold on, I haven't finished yet.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel-interruptions -->
+
+
+  <!-- ══════════════════════════════════
+       MY PHRASES
+  ══════════════════════════════════ -->
+  <div class="panel" id="panel-myphrases">
+    <div id="myphrases-content"></div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- BOTTOM TAB BAR -->
+<nav class="tab-bar">
+  <div class="tab active" onclick="showTab('opinions', this)">
+    <span class="tab-icon">💬</span>
+    <span>Opinions</span>
+  </div>
+  <div class="tab" onclick="showTab('suggestions', this)">
+    <span class="tab-icon">💡</span>
+    <span>Suggestions</span>
+  </div>
+  <div class="tab" onclick="showTab('interruptions', this)">
+    <span class="tab-icon">✋</span>
+    <span>Interruptions</span>
+  </div>
+  <div class="tab" id="tab-myphrases" onclick="showTab('myphrases', this)">
+    <span class="tab-icon">📌</span>
+    <span>My Phrases</span>
+    <span class="tab-badge" id="tab-badge">0</span>
+  </div>
+</nav>
+
+<script>
+  const SECTIONS = ['Opinions', 'Suggestions', 'Interruptions'];
+
+  function toggle(el) {
+    const states = ['', 'used', 'want'];
+    const icons  = ['', '✓', '★'];
+    let current = states.indexOf(el.dataset.state || '');
+    let next = (current + 1) % states.length;
+    el.dataset.state = states[next];
+    el.classList.remove('used', 'want');
+    if (states[next]) el.classList.add(states[next]);
+    el.querySelector('.phrase-icon').textContent = icons[next];
+    updateStats();
+    if (document.getElementById('panel-myphrases').classList.contains('active')) {
+      renderMyPhrases();
+    }
+  }
+
+  function updateStats() {
+    const used = document.querySelectorAll('.phrase.used').length;
+    const want = document.querySelectorAll('.phrase.want').length;
+    const total = used + want;
+    document.getElementById('count-used').textContent = used;
+    document.getElementById('count-want').textContent = want;
+    const badge = document.getElementById('tab-badge');
+    badge.textContent = total;
+    badge.classList.toggle('visible', total > 0);
+  }
+
+  function clearAll() {
+    document.querySelectorAll('.phrase').forEach(p => {
+      p.classList.remove('used', 'want');
+      p.dataset.state = '';
+      p.querySelector('.phrase-icon').textContent = '';
+    });
+    updateStats();
+    if (document.getElementById('panel-myphrases').classList.contains('active')) {
+      renderMyPhrases();
+    }
+  }
+
+  function toggleAcc(headerEl) {
+    headerEl.closest('.accordion').classList.toggle('open');
+  }
+
+  function showTab(name, tabEl) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    tabEl.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (name === 'myphrases') renderMyPhrases();
+  }
+
+  function renderMyPhrases() {
+    const container = document.getElementById('myphrases-content');
+    const used = [...document.querySelectorAll('.phrase.used')];
+    const want = [...document.querySelectorAll('.phrase.want')];
+    const total = used.length + want.length;
+
+    if (total === 0) {
+      container.innerHTML = `
+        <div class="myphrases-empty">
+          <div class="empty-icon">📌</div>
+          <p>No phrases marked yet.<br><br>
+          Tap any phrase <strong>once</strong> to mark it as used ✓,<br>
+          or <strong>twice</strong> to mark it as want to try ★.</p>
+        </div>`;
+      return;
+    }
+
+    // Group by section
+    let html = '';
+    SECTIONS.forEach(section => {
+      const secUsed = used.filter(p => p.dataset.section === section);
+      const secWant = want.filter(p => p.dataset.section === section);
+      if (secUsed.length === 0 && secWant.length === 0) return;
+
+      html += `<div class="myphrases-section">
+        <div class="myphrases-section-header">
+          <span class="myphrases-section-title">${section}</span>
+        </div>`;
+
+      if (secUsed.length > 0) {
+        html += `<div class="myphrases-group">
+          <div class="myphrases-group-label used-label">✓ Used</div>`;
+        secUsed.forEach(p => {
+          const text = p.querySelector('.phrase-text').innerHTML;
+          html += `<div class="myphrases-phrase used" onclick="jumpTo(this, '${section}', '${escapeTxt(p.querySelector('.phrase-text').textContent)}')" data-ref-text="${escapeTxt(p.querySelector('.phrase-text').textContent)}">
+            <div class="mp-icon used-icon">✓</div>
+            <div class="phrase-text">${text}</div>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+
+      if (secWant.length > 0) {
+        html += `<div class="myphrases-group">
+          <div class="myphrases-group-label want-label">★ Want to try</div>`;
+        secWant.forEach(p => {
+          const text = p.querySelector('.phrase-text').innerHTML;
+          html += `<div class="myphrases-phrase want" onclick="jumpTo(this, '${section}', '${escapeTxt(p.querySelector('.phrase-text').textContent)}')" data-ref-text="${escapeTxt(p.querySelector('.phrase-text').textContent)}">
+            <div class="mp-icon want-icon">★</div>
+            <div class="phrase-text">${text}</div>
+          </div>`;
+        });
+        html += `</div>`;
+      }
+
+      html += `</div>`;
+    });
+
+    html += `<button class="clear-my" onclick="clearAll()">Clear all marked phrases</button>`;
+    container.innerHTML = html;
+  }
+
+  function escapeTxt(str) {
+    return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').trim().substring(0, 60);
+  }
+
+  // Tapping a phrase in My Phrases navigates back to it in context
+  function jumpTo(el, section, textSnippet) {
+    const tabMap = { Opinions: 0, Suggestions: 1, Interruptions: 2 };
+    const tabName = section.toLowerCase();
+    const tabEl = document.querySelectorAll('.tab')[tabMap[section]];
+    showTab(tabName, tabEl);
+    // Find and highlight the source phrase
+    setTimeout(() => {
+      const all = document.querySelectorAll('#panel-' + tabName + ' .phrase');
+      for (const p of all) {
+        if (p.querySelector('.phrase-text').textContent.trim().substring(0, 60) === textSnippet) {
+          p.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          p.style.outline = '2px solid var(--accent)';
+          setTimeout(() => p.style.outline = '', 1500);
+          break;
+        }
+      }
+    }, 150);
+  }
+</script>
+</body>
+</html>

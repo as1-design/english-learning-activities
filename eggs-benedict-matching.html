@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eggs Benedict — Vocabulary Match</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FFF8F0;
+    --yolk: #F5C518;
+    --yolk-dark: #D4A800;
+    --green: #3DB87A;
+    --green-light: #E6F9EF;
+    --red: #E8472A;
+    --red-light: #FDECEA;
+    --blue: #2D5FAA;
+    --blue-light: #EEF3FB;
+    --charcoal: #1E1E1E;
+    --mid: #5A5A5A;
+    --card-bg: #FFFFFF;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-hover: 0 8px 32px rgba(0,0,0,0.13);
+    --radius: 18px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(245,197,24,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 85% 80%, rgba(61,184,122,0.10) 0%, transparent 50%);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--charcoal);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--charcoal);
+    color: white;
+    text-align: center;
+    padding: 48px 24px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: "🥚 🍳 🧈 🫙 🥄 🧅 🌿 🍋 🥓 🧂 🥚 🍳 🧈 🫙 🥄 🧅 🌿 🍋 🥓 🧂 🥚 🍳 🧈 🫙 🥄";
+    position: absolute;
+    top: 8px;
+    left: 0;
+    right: 0;
+    font-size: 20px;
+    letter-spacing: 8px;
+    opacity: 0.12;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: "🥚 🍳 🧈 🫙 🥄 🧅 🌿 🍋 🥓 🧂 🥚 🍳 🧈 🫙 🥄 🧅 🌿 🍋 🥓 🧂 🥚 🍳 🧈 🫙 🥄";
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    font-size: 20px;
+    letter-spacing: 8px;
+    opacity: 0.12;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 span {
+    color: var(--yolk);
+  }
+
+  header p {
+    margin-top: 12px;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+    position: relative;
+    z-index: 1;
+    font-weight: 500;
+  }
+
+  /* ── CONTAINER ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-top: 36px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 28px 18px;
+    border-bottom: 2px dashed #F0E8DC;
+  }
+
+  .section-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .section-header-text h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+
+  .section-header-text p {
+    font-size: 0.85rem;
+    color: var(--mid);
+    margin-top: 2px;
+  }
+
+  .section-body {
+    padding: 24px 28px;
+  }
+
+  /* Colour accents per section */
+  .accent-yolk .section-header { border-left: 6px solid var(--yolk); }
+  .accent-blue .section-header  { border-left: 6px solid var(--blue); }
+  .accent-green .section-header { border-left: 6px solid var(--green); }
+  .accent-red .section-header   { border-left: 6px solid var(--red); }
+  .accent-purple .section-header { border-left: 6px solid #9B5DE5; }
+  .accent-orange .section-header { border-left: 6px solid #F77F00; }
+
+  /* ── MATCHING GAME ── */
+  .match-arena {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 20px;
+  }
+
+  .match-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .match-col-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 4px;
+  }
+
+  .match-card {
+    background: #FAFAFA;
+    border: 2px solid #EAEAEA;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+    line-height: 1.4;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+  }
+
+  .match-card:hover:not(.matched):not(.wrong) {
+    border-color: var(--yolk);
+    background: #FFFBEE;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245,197,24,0.2);
+  }
+
+  .match-card.selected {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    box-shadow: 0 0 0 3px rgba(45,95,170,0.15);
+  }
+
+  .match-card.matched {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: #1a6640;
+    cursor: default;
+    font-weight: 600;
+  }
+
+  .match-card.matched::after {
+    content: " ✓";
+    color: var(--green);
+    font-weight: 700;
+  }
+
+  .match-card.wrong {
+    border-color: var(--red);
+    background: var(--red-light);
+    animation: shake 0.35s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* ── SCORE BAR ── */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #F0E8DC;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .score-display {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--mid);
+  }
+
+  .score-display span {
+    color: var(--charcoal);
+    font-size: 1.05rem;
+  }
+
+  .progress-track {
+    flex: 1;
+    min-width: 120px;
+    height: 8px;
+    background: #EAEAEA;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--yolk), var(--green));
+    border-radius: 99px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .btn-reset {
+    background: var(--charcoal);
+    color: white;
+    border: none;
+    border-radius: 99px;
+    padding: 8px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+
+  .btn-reset:hover {
+    background: #3a3a3a;
+    transform: scale(1.03);
+  }
+
+  .congrats-msg {
+    display: none;
+    text-align: center;
+    padding: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--green);
+    animation: popIn 0.4s ease;
+  }
+
+  @keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* ── DIVIDER ── */
+  .cutting-board-divider {
+    text-align: center;
+    margin: 10px 0 0;
+    color: #CCBBAA;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .match-arena {
+      grid-template-columns: 1fr;
+    }
+    .section-body { padding: 18px 16px; }
+    .section-header { padding: 18px 16px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍳 Eggs Benedict<br><span>Vocabulary Match</span></h1>
+  <p>Click a word, then click its matching definition to pair them up.</p>
+  <a href="https://www.youtube.com/watch?v=0dvBHDdvpCI" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:#F5C518;color:#1E1E1E;text-decoration:none;font-family:'DM Sans',sans-serif;font-weight:700;font-size:0.9rem;padding:10px 22px;border-radius:99px;transition:transform 0.15s,box-shadow 0.15s;position:relative;z-index:1;" onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 6px 20px rgba(245,197,24,0.4)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">▶ Watch the Video</a>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════════
+       INTRO — MIXED BASIC VOCABULARY
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-yolk" id="sec-intro">
+    <div class="section-header">
+      <span class="section-icon">🌟</span>
+      <div class="section-header-text">
+        <h2>Warm-Up: Mixed Vocabulary</h2>
+        <p>Match each word from across all categories to its meaning.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Word</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Definition</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-intro">0</span> / <span id="total-intro">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-intro"></div></div>
+        <button class="btn-reset" onclick="resetGame('intro')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-intro">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       I. COOKING TECHNIQUES
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-blue" id="sec-techniques">
+    <div class="section-header">
+      <span class="section-icon">🍳</span>
+      <div class="section-header-text">
+        <h2>I. Cooking Techniques &amp; Processes</h2>
+        <p>Match each technique to what it means.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Technique</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Meaning</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-techniques">0</span> / <span id="total-techniques">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-techniques"></div></div>
+        <button class="btn-reset" onclick="resetGame('techniques')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-techniques">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       II. FOOD ITEMS & INGREDIENTS
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-orange" id="sec-ingredients">
+    <div class="section-header">
+      <span class="section-icon">🥚</span>
+      <div class="section-header-text">
+        <h2>II. Food Items &amp; Ingredients</h2>
+        <p>Match each ingredient to its description.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Ingredient</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Description</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-ingredients">0</span> / <span id="total-ingredients">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-ingredients"></div></div>
+        <button class="btn-reset" onclick="resetGame('ingredients')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-ingredients">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       III. KITCHEN UTENSILS
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-green" id="sec-utensils">
+    <div class="section-header">
+      <span class="section-icon">🔪</span>
+      <div class="section-header-text">
+        <h2>III. Kitchen Utensils &amp; Equipment</h2>
+        <p>Match each tool to its function.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Utensil</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Function</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-utensils">0</span> / <span id="total-utensils">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-utensils"></div></div>
+        <button class="btn-reset" onclick="resetGame('utensils')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-utensils">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       IV. ADJECTIVES
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-red" id="sec-adjectives">
+    <div class="section-header">
+      <span class="section-icon">✨</span>
+      <div class="section-header-text">
+        <h2>IV. Adjectives Describing Food &amp; Texture</h2>
+        <p>Match each adjective to its meaning.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Adjective</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Meaning</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-adjectives">0</span> / <span id="total-adjectives">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-adjectives"></div></div>
+        <button class="btn-reset" onclick="resetGame('adjectives')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-adjectives">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       V. GENERAL VOCABULARY
+  ══════════════════════════════════════════ -->
+  <div class="section-card accent-purple" id="sec-general">
+    <div class="section-header">
+      <span class="section-icon">💬</span>
+      <div class="section-header-text">
+        <h2>V. General Vocabulary &amp; Phrases</h2>
+        <p>Match each word or phrase to its definition.</p>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="match-arena">
+        <div class="match-col">
+          <div class="match-col-label">Word / Phrase</div>
+        </div>
+        <div class="match-col">
+          <div class="match-col-label">Definition</div>
+        </div>
+      </div>
+      <div class="score-bar">
+        <div class="score-display">Score: <span id="score-general">0</span> / <span id="total-general">0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="prog-general"></div></div>
+        <button class="btn-reset" onclick="resetGame('general')">↺ Reset</button>
+      </div>
+      <div class="congrats-msg" id="congrats-general">🎉 Perfect! Well done!</div>
+    </div>
+  </div>
+
+  <p class="cutting-board-divider">— — — 🍳 — — —</p>
+
+</div><!-- /container -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+
+const GAMES = {
+
+  intro: {
+    // ~12 basic items drawn from all 5 categories — NOT repeated later
+    pairs: [
+      { word: "Yolk",           def: "The yellow, central part of an egg." },
+      { word: "Whisk",          def: "A utensil used for whipping eggs or cream." },
+      { word: "Simmer",         def: "To keep a liquid just below boiling point while heating." },
+      { word: "Crispy",         def: "Having a firm, dry, brittle surface or texture." },
+      { word: "Steam",          def: "Vapour arising from a heated substance." },
+      { word: "Stir",           def: "To move a spoon around in a liquid to mix it." },
+      { word: "Strain",         def: "To pour a liquid through a device to remove solids." },
+      { word: "Paprika",        def: "A red spice made from dried and ground sweet peppers." },
+      { word: "Crust",          def: "The tough outer part of a loaf of bread." },
+      { word: "Fluffy",         def: "Light and soft in appearance or texture." },
+      { word: "Splash",         def: "A small amount of liquid." },
+      { word: "Vortex",         def: "A mass of whirling fluid or air." },
+    ]
+  },
+
+  techniques: {
+    pairs: [
+      { word: "Poached eggs",           def: "Eggs simmered gently in water without their shells." },
+      { word: "Toast off",              def: "To make food warm, crisp, and brown by heating it." },
+      { word: "Separate out",           def: "To divide something into distinct parts." },
+      { word: "Scrape down the sides",  def: "To remove food sticking to the inside edges of a bowl." },
+      { word: "Plate",                  def: "To arrange food attractively on a plate for serving." },
+      { word: "Fold up",                def: "To bend something over on itself." },
+    ]
+  },
+
+  ingredients: {
+    pairs: [
+      { word: "Vinegar",           def: "A sour liquid used as a condiment or preservative." },
+      { word: "Hollandaise sauce", def: "A rich, creamy sauce made with butter, egg yolks, and lemon juice." },
+      { word: "Canadian bacon",    def: "A type of lean cured pork from the loin." },
+      { word: "Smoked salmon",     def: "Salmon that has been cured and then smoked." },
+      { word: "Chopped chives",    def: "Small, cut pieces of a herb related to the onion." },
+    ]
+  },
+
+  utensils: {
+    pairs: [
+      { word: "Strainer",      def: "A mesh or perforated device that separates solids from liquids." },
+      { word: "Baking sheet",  def: "A flat metal tray on which food may be cooked or baked." },
+      { word: "Double boiler", def: "Two saucepans fitted together for cooking by indirect heat." },
+      { word: "Heatproof bowl",def: "A bowl that can withstand high temperatures." },
+    ]
+  },
+
+  adjectives: {
+    pairs: [
+      { word: "Messy",          def: "Untidy or dirty." },
+      { word: "Fully set",      def: "Firm and solid (said of an egg white)." },
+      { word: "Jiggly",         def: "Moving with a slight up-and-down or side-to-side motion." },
+      { word: "Runny",          def: "More liquid than usual; tending to flow." },
+      { word: "Squishy",        def: "Soft and yielding when pressed." },
+      { word: "Craggy bits",    def: "Uneven, rough pieces or edges." },
+      { word: "Crunchy",        def: "Making a sharp noise when bitten or crushed." },
+      { word: "Golden brown",   def: "A gold-like colour often describing toasted or fried food." },
+      { word: "Silky",          def: "Having a smooth, soft texture." },
+      { word: "Fatty",          def: "Containing a lot of fat." },
+      { word: "Watery Benedict",def: "A Benedict where the eggs or sauce are too thin and liquid." },
+    ]
+  },
+
+  general: {
+    pairs: [
+      { word: "Loose bits",          def: "Small, unconnected pieces." },
+      { word: "Quantities",          def: "Amounts or numbers of something." },
+      { word: "Components",          def: "Parts of a larger whole." },
+      { word: "Poaching water",      def: "The water used specifically for poaching eggs." },
+      { word: "Nooks and crannies",  def: "Hidden or hard-to-reach parts of something." },
+      { word: "Ribbon like texture", def: "A consistency where the mixture forms a trail when lifted." },
+      { word: "Clumps",              def: "Lumps or masses of something." },
+      { word: "Dibs on both",        def: "Slang: claiming the right to have both things." },
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+
+const STATE = {};
+
+function initState(gameId) {
+  const pairs = [...GAMES[gameId].pairs];
+  const shuffledWords = shuffle([...pairs.map((p,i) => ({ id: i, text: p.word, type: 'word' }))]);
+  const shuffledDefs  = shuffle([...pairs.map((p,i) => ({ id: i, text: p.def,  type: 'def'  }))]);
+  STATE[gameId] = {
+    pairs,
+    words: shuffledWords,
+    defs:  shuffledDefs,
+    selected: null,   // { el, id, type }
+    matched: new Set(),
+    score: 0,
+    total: pairs.length
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+
+function renderGame(gameId) {
+  initState(gameId);
+  const s = STATE[gameId];
+  const card = document.getElementById('sec-' + gameId);
+  const arena = card.querySelector('.match-arena');
+
+  // Clear columns (keep labels)
+  const cols = arena.querySelectorAll('.match-col');
+  cols[0].innerHTML = '<div class="match-col-label">Word</div>';
+  cols[1].innerHTML = '<div class="match-col-label">Definition</div>';
+
+  s.words.forEach(w => {
+    const el = makeCard(gameId, w.id, 'word', w.text);
+    cols[0].appendChild(el);
+  });
+  s.defs.forEach(d => {
+    const el = makeCard(gameId, d.id, 'def', d.text);
+    cols[1].appendChild(el);
+  });
+
+  document.getElementById('score-' + gameId).textContent = 0;
+  document.getElementById('total-' + gameId).textContent = s.total;
+  document.getElementById('prog-' + gameId).style.width = '0%';
+  document.getElementById('congrats-' + gameId).style.display = 'none';
+}
+
+function makeCard(gameId, id, type, text) {
+  const el = document.createElement('div');
+  el.className = 'match-card';
+  el.dataset.id   = id;
+  el.dataset.type = type;
+  el.textContent  = text;
+  el.addEventListener('click', () => handleClick(gameId, el, id, type));
+  return el;
+}
+
+// ═══════════════════════════════════════════════════════
+// INTERACTION
+// ═══════════════════════════════════════════════════════
+
+function handleClick(gameId, el, id, type) {
+  const s = STATE[gameId];
+  if (s.matched.has(id + '-word') && type === 'word') return;
+  if (s.matched.has(id + '-def')  && type === 'def')  return;
+  if (el.classList.contains('matched')) return;
+
+  if (!s.selected) {
+    // First selection
+    s.selected = { el, id, type };
+    el.classList.add('selected');
+    return;
+  }
+
+  if (s.selected.el === el) {
+    // Deselect
+    el.classList.remove('selected');
+    s.selected = null;
+    return;
+  }
+
+  if (s.selected.type === type) {
+    // Both same column — swap selection
+    s.selected.el.classList.remove('selected');
+    s.selected = { el, id, type };
+    el.classList.add('selected');
+    return;
+  }
+
+  // Different columns — check match
+  const isMatch = s.selected.id === id;
+
+  if (isMatch) {
+    s.selected.el.classList.remove('selected');
+    s.selected.el.classList.add('matched');
+    el.classList.add('matched');
+    s.matched.add(id + '-word');
+    s.matched.add(id + '-def');
+    s.score++;
+    s.selected = null;
+    updateScore(gameId);
+  } else {
+    // Wrong
+    const wrongEl = el;
+    const prevEl = s.selected.el;
+    prevEl.classList.remove('selected');
+    prevEl.classList.add('wrong');
+    wrongEl.classList.add('wrong');
+    s.selected = null;
+    setTimeout(() => {
+      prevEl.classList.remove('wrong');
+      wrongEl.classList.remove('wrong');
+    }, 600);
+  }
+}
+
+function updateScore(gameId) {
+  const s = STATE[gameId];
+  document.getElementById('score-' + gameId).textContent = s.score;
+  const pct = (s.score / s.total) * 100;
+  document.getElementById('prog-' + gameId).style.width = pct + '%';
+  if (s.score === s.total) {
+    document.getElementById('congrats-' + gameId).style.display = 'block';
+  }
+}
+
+function resetGame(gameId) {
+  renderGame(gameId);
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT ALL
+// ═══════════════════════════════════════════════════════
+
+['intro','techniques','ingredients','utensils','adjectives','general'].forEach(id => renderGame(id));
+
+</script>
+</body>
+</html>

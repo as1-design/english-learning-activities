@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1-Minute Anecdote Speaking Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1612;
+    --card-radius: 16px;
+    --shadow: 0 4px 20px rgba(0,0,0,0.10);
+  }
+
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 32px 24px 48px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #6b6560;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #1a1612;
+    color: #faf7f2;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+  }
+
+  /* GRID */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* CATEGORY CARD */
+  .category {
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .category:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  }
+
+  .cat-header {
+    padding: 18px 20px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cat-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+
+  .cat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .questions-list {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(4px);
+    padding: 14px 18px 18px;
+    flex: 1;
+    list-style: none;
+  }
+
+  .questions-list li {
+    position: relative;
+    padding: 10px 12px 10px 30px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+
+  .questions-list li:last-child { border-bottom: none; }
+
+  .questions-list li:hover { background: rgba(255,255,255,0.8); }
+
+  .questions-list li::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    opacity: 0.45;
+  }
+
+  /* Highlight selected */
+  .questions-list li.picked {
+    background: rgba(255,255,255,0.95);
+    font-weight: 600;
+  }
+
+  /* COLORS per category */
+  .c1 .cat-header { background: #f4d06f; }
+  .c2 .cat-header { background: #f6a96c; }
+  .c3 .cat-header { background: #f28b82; }
+  .c4 .cat-header { background: #a8d5a2; }
+  .c5 .cat-header { background: #87ceeb; }
+  .c6 .cat-header { background: #b5a0d8; }
+  .c7 .cat-header { background: #f7c6d5; }
+  .c8 .cat-header { background: #9dd0c7; }
+  .c9 .cat-header { background: #fbb4ae; }
+  .c10 .cat-header { background: #c5e1a5; }
+  .c11 .cat-header { background: #ffd180; }
+  .c12 .cat-header { background: #80deea; }
+
+  .c1  { background: #fdf6df; }
+  .c2  { background: #fdf2e9; }
+  .c3  { background: #fdecea; }
+  .c4  { background: #edf7ec; }
+  .c5  { background: #e8f6fd; }
+  .c6  { background: #f0ecfb; }
+  .c7  { background: #fdf0f4; }
+  .c8  { background: #ebf7f5; }
+  .c9  { background: #fdecea; }
+  .c10 { background: #f3fae8; }
+  .c11 { background: #fff8e1; }
+  .c12 { background: #e0f7fa; }
+
+  /* RANDOM BUTTON */
+  .toolbar {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .btn-random {
+    background: #1a1612;
+    color: #faf7f2;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 12px 28px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-random:hover { background: #3a2e28; transform: scale(1.04); }
+  .btn-random:active { transform: scale(0.98); }
+
+  /* SPOTLIGHT MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20,16,12,0.6);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 520px;
+    width: 100%;
+    padding: 36px 36px 32px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.22);
+    animation: pop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes pop {
+    from { transform: scale(0.85); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+
+  .modal-cat {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  .modal-icon { font-size: 2.8rem; margin-bottom: 10px; }
+
+  .modal-question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3vw, 1.55rem);
+    font-weight: 700;
+    line-height: 1.35;
+    color: #1a1612;
+    margin-bottom: 28px;
+  }
+
+  .timer-ring {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 24px;
+  }
+
+  .timer-ring svg { transform: rotate(-90deg); }
+
+  .timer-ring circle.bg {
+    fill: none; stroke: #eee; stroke-width: 8;
+  }
+
+  .timer-ring circle.prog {
+    fill: none;
+    stroke: #1a1612;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1s linear, stroke 0.3s;
+  }
+
+  .timer-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+  }
+
+  .modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+  .btn-start {
+    background: #1a1612;
+    color: #faf7f2;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 10px 26px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-start:hover { background: #3a2e28; }
+
+  .btn-close {
+    background: transparent;
+    color: #1a1612;
+    border: 2px solid #ddd;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .btn-close:hover { border-color: #aaa; }
+
+  footer {
+    text-align: center;
+    margin-top: 44px;
+    font-size: 0.78rem;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="badge">B2.1 Speaking Practice</span>
+  <h1>1-Minute Anecdote<br>Speaking Board</h1>
+  <p>Pick a card, choose a question, and speak for <strong>one minute</strong>. Tell a real story from your life!</p>
+</header>
+
+<div class="toolbar">
+  <button class="btn-random" onclick="pickRandom()">🎲 Pick a Random Question</button>
+</div>
+
+<div class="board" id="board"></div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-cat" id="m-cat"></div>
+    <div class="modal-icon" id="m-icon"></div>
+    <div class="modal-question" id="m-q"></div>
+    <div class="timer-ring">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle class="bg" cx="50" cy="50" r="45"/>
+        <circle class="prog" id="timer-circle" cx="50" cy="50" r="45"/>
+      </svg>
+      <div class="timer-num" id="timer-num">60</div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-start" id="btn-start-stop" onclick="toggleTimer()">▶ Start Timer</button>
+      <button class="btn-close" onclick="closeModal()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<footer>Click any question to open it · Use the timer for exactly 1 minute · B2.1 English</footer>
+
+<script>
+const categories = [
+  {
+    id: 'c1', icon: '✈️', title: 'Travel & Places',
+    questions: [
+      "Tell me about a trip that didn't go as planned.",
+      'Describe a place you visited that surprised you.',
+      'Talk about a time you got lost somewhere.',
+      'Tell me about the most interesting person you met while travelling.',
+      'Describe a journey that took much longer than expected.',
+    ]
+  },
+  {
+    id: 'c2', icon: '🍽️', title: 'Food & Cooking',
+    questions: [
+      "Tell me about a time you tried a new food you didn't like at first.",
+      'Describe a meal that you will never forget.',
+      'Talk about a cooking disaster you had.',
+      'Tell me about a food from childhood that brings back memories.',
+      'Describe a time when you had to eat something very unusual.',
+    ]
+  },
+  {
+    id: 'c3', icon: '😅', title: 'Embarrassing Moments',
+    questions: [
+      'Tell me about a time you said the wrong thing.',
+      'Describe an embarrassing mistake you made in public.',
+      'Talk about a time you forgot something really important.',
+      'Tell me about a misunderstanding that made you blush.',
+      'Describe a time you laughed at the wrong moment.',
+    ]
+  },
+  {
+    id: 'c4', icon: '🌱', title: 'Learning & School',
+    questions: [
+      'Tell me about a subject or skill that was really hard to learn.',
+      'Describe a teacher or mentor who changed the way you think.',
+      'Talk about a time you failed at something and what you learned.',
+      'Tell me about a moment when something finally "clicked".',
+      'Describe a project or assignment you were really proud of.',
+    ]
+  },
+  {
+    id: 'c5', icon: '💼', title: 'Work & Goals',
+    questions: [
+      'Tell me about a job or task that was harder than you expected.',
+      'Describe a goal you worked really hard to achieve.',
+      'Talk about a time you had to make a tough decision.',
+      'Tell me about a moment when you felt really proud of yourself at work.',
+      'Describe something you are currently working towards.',
+    ]
+  },
+  {
+    id: 'c6', icon: '👥', title: 'Relationships',
+    questions: [
+      'Tell me about the time you met your best friend.',
+      'Describe a time when a friend or family member surprised you.',
+      'Talk about a misunderstanding you had with someone close to you.',
+      'Tell me about a time when you needed support and someone was there for you.',
+      'Describe a moment when you helped a stranger.',
+    ]
+  },
+  {
+    id: 'c7', icon: '🎉', title: 'Celebrations & Events',
+    questions: [
+      'Tell me about the best celebration you have ever been to.',
+      'Describe a holiday or tradition that is special in your family.',
+      'Talk about a surprise you once received or gave.',
+      "Tell me about an event that didn't turn out the way you expected.",
+      'Describe the most unusual party or gathering you have attended.',
+    ]
+  },
+  {
+    id: 'c8', icon: '⚡', title: 'Challenges & Fears',
+    questions: [
+      'Tell me about a time you faced your fear.',
+      'Describe a moment when you felt completely out of your comfort zone.',
+      'Talk about a challenge you overcame that made you stronger.',
+      'Tell me about a time when everything went wrong at once.',
+      'Describe the most stressful day of your life.',
+    ]
+  },
+  {
+    id: 'c9', icon: '🐾', title: 'Nature & Animals',
+    questions: [
+      'Tell me about a memorable encounter with an animal.',
+      'Describe the most beautiful natural place you have been to.',
+      'Talk about a time when the weather ruined or saved your plans.',
+      'Tell me about a moment when you felt really connected to nature.',
+      "Describe an outdoor activity or adventure you'll never forget.",
+    ]
+  },
+  {
+    id: 'c10', icon: '💡', title: 'Opinions & Changes',
+    questions: [
+      'Tell me about something you used to believe but now think differently about.',
+      'Describe a moment that changed the way you see the world.',
+      'Talk about a habit you changed and how it affected your life.',
+      'Tell me about a time when someone convinced you they were right.',
+      'Describe something you wish you had done differently.',
+    ]
+  },
+  {
+    id: 'c11', icon: '🎭', title: 'Entertainment & Hobbies',
+    questions: [
+      'Tell me about a film, book, or song that had a big impact on you.',
+      'Describe how you first got into your favourite hobby.',
+      'Talk about a time a hobby or activity went surprisingly well.',
+      'Tell me about a performance, show, or sport event you attended.',
+      'Describe something creative you made and how it turned out.',
+    ]
+  },
+  {
+    id: 'c12', icon: '🌍', title: 'Culture & Society',
+    questions: [
+      'Tell me about a cultural tradition you found surprising or interesting.',
+      'Describe a time you experienced culture shock.',
+      'Talk about a moment when you realised that customs vary between countries.',
+      'Tell me about a social issue you care about and why.',
+      'Describe a time you saw someone do something truly generous.',
+    ]
+  },
+];
+
+// Render board
+const board = document.getElementById('board');
+categories.forEach((cat, ci) => {
+  const card = document.createElement('div');
+  card.className = `category c${ci+1}`;
+  const header = `<div class="cat-header"><span class="cat-icon">${cat.icon}</span><span class="cat-title">${cat.title}</span></div>`;
+  const ul = document.createElement('ul');
+  ul.className = 'questions-list';
+  cat.questions.forEach((q, qi) => {
+    const li = document.createElement('li');
+    li.dataset.num = qi + 1;
+    li.textContent = q;
+    li.addEventListener('click', () => openModal(q, cat.title, cat.icon));
+    ul.appendChild(li);
+  });
+  card.innerHTML = header;
+  card.appendChild(ul);
+  board.appendChild(card);
+});
+
+// Modal
+let timerInterval = null, timeLeft = 60, running = false;
+
+function openModal(q, cat, icon) {
+  document.getElementById('m-q').textContent = q;
+  document.getElementById('m-cat').textContent = cat;
+  document.getElementById('m-icon').textContent = icon;
+  resetTimer();
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  clearInterval(timerInterval);
+  running = false;
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('btn-start-stop').textContent = '▶ Start Timer';
+  resetTimer();
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  running = false;
+  timeLeft = 60;
+  document.getElementById('timer-num').textContent = '60';
+  document.getElementById('timer-circle').style.strokeDashoffset = '0';
+  document.getElementById('timer-circle').style.stroke = '#1a1612';
+  document.getElementById('btn-start-stop').textContent = '▶ Start Timer';
+}
+
+function toggleTimer() {
+  if (running) {
+    clearInterval(timerInterval);
+    running = false;
+    document.getElementById('btn-start-stop').textContent = '▶ Resume';
+  } else {
+    if (timeLeft <= 0) { resetTimer(); return; }
+    running = true;
+    document.getElementById('btn-start-stop').textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('timer-num').textContent = timeLeft;
+      const offset = 283 * (1 - timeLeft / 60);
+      document.getElementById('timer-circle').style.strokeDashoffset = offset;
+      if (timeLeft <= 10) document.getElementById('timer-circle').style.stroke = '#e53e3e';
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        running = false;
+        document.getElementById('btn-start-stop').textContent = '↺ Restart';
+        document.getElementById('timer-num').textContent = '✓';
+      }
+    }, 1000);
+  }
+}
+
+function pickRandom() {
+  const cat = categories[Math.floor(Math.random() * categories.length)];
+  const q = cat.questions[Math.floor(Math.random() * cat.questions.length)];
+  openModal(q, cat.title, cat.icon);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports Vocabulary Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #111827;
+    --teal:       #0F766E;
+    --teal-dark:  #0A5954;
+    --teal-light: #CCFBF1;
+    --teal-pale:  #F0FDFB;
+    --coral:      #DC2626;
+    --amber:      #F59E0B;
+    --cream:      #FAFAF8;
+    --page-bg:    #E7E3DC;
+    --grey-mid:   #9CA3AF;
+    --grey-light: #D1CBC0;
+    --grey-dark:  #6B7280;
+    --white:      #FFFFFF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--page-bg);
+    min-height: 100vh;
+    color: var(--navy);
+  }
+
+  /* dot-grid background matching the PDF */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, #C0BAB1 1px, transparent 1px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  header {
+    position: relative;
+    z-index: 10;
+    background: var(--navy);
+    padding: 18px 32px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  .header-left { display: flex; align-items: baseline; gap: 12px; }
+
+  .header-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--white);
+    line-height: 1;
+  }
+
+  .header-subtitle {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    opacity: 0.8;
+  }
+
+  .header-tag {
+    background: var(--coral);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+
+  /* ── Main wrapper ─────────────────────────────────────────────── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ── Sport selector ───────────────────────────────────────────── */
+  .selector-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+
+  .selector-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey-dark);
+    white-space: nowrap;
+  }
+
+  .sport-select {
+    flex: 1;
+    appearance: none;
+    background: var(--cream);
+    border: 2px solid var(--navy);
+    border-radius: 6px;
+    padding: 10px 44px 10px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23111827' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .sport-select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
+  }
+
+  .word-count-badge {
+    background: var(--teal);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Empty state ──────────────────────────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--grey-mid);
+  }
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+    filter: grayscale(0.3);
+  }
+
+  .empty-state p {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── Glossary header (sport name banner, like the PDF card) ───── */
+  .glossary-header {
+    background: var(--teal);
+    border-radius: 10px 10px 0 0;
+    padding: 20px 28px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glossary-header::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    top: -20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .glossary-sport-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 3px;
+    color: white;
+    line-height: 1;
+  }
+
+  .glossary-sport-tag {
+    background: var(--teal-dark);
+    color: var(--teal-light);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 4px;
+  }
+
+  /* coral rule (mirrors PDF) */
+  .coral-rule {
+    height: 3px;
+    background: var(--coral);
+  }
+
+  /* ── Glossary body ────────────────────────────────────────────── */
+  .glossary-body {
+    background: var(--cream);
+    border-radius: 0 0 10px 10px;
+    border: 1.5px solid var(--grey-light);
+    border-top: none;
+    overflow: hidden;
+    box-shadow: 3px 4px 0 #C0BAB1;
+  }
+
+  /* ── Word row ─────────────────────────────────────────────────── */
+  .word-row {
+    border-bottom: 1px solid #E8E4DF;
+    transition: background 0.15s;
+  }
+
+  .word-row:last-child { border-bottom: none; }
+  .word-row:nth-child(even) { background: var(--teal-pale); }
+  .word-row:nth-child(odd)  { background: var(--cream); }
+
+  .word-row:hover { background: #E8F9F7; }
+
+  .word-header {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Number badge */
+  .word-number {
+    width: 44px;
+    min-width: 44px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--grey-mid);
+    border-right: 1px solid #E8E4DF;
+    flex-shrink: 0;
+  }
+
+  .word-term {
+    flex: 1;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .word-english {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 0.2px;
+  }
+
+  .word-ipa {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--grey-mid);
+    font-weight: 400;
+  }
+
+  .catalan-chip {
+    background: var(--amber);
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  .expand-toggle {
+    width: 44px;
+    min-width: 44px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teal);
+    flex-shrink: 0;
+    border-left: 1px solid #E8E4DF;
+    transition: background 0.15s;
+  }
+
+  .expand-toggle svg {
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .word-row.open .expand-toggle svg {
+    transform: rotate(180deg);
+  }
+
+  .word-row.open .expand-toggle {
+    background: var(--teal-light);
+  }
+
+  /* ── Expanded detail panel ────────────────────────────────────── */
+  .word-detail {
+    display: none;
+    padding: 0 44px 20px 44px;
+    border-top: 1px dashed #D4CFC8;
+    animation: slideDown 0.2s ease;
+  }
+
+  .word-row.open .word-detail { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding-top: 16px;
+  }
+
+  @media (max-width: 560px) {
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+
+  .detail-block {
+    background: white;
+    border-radius: 6px;
+    padding: 12px 14px;
+    border: 1px solid #E8E4DF;
+  }
+
+  .detail-block.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .detail-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 5px;
+  }
+
+  .detail-text {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--navy);
+    font-weight: 400;
+  }
+
+  .detail-text em {
+    font-style: italic;
+    color: var(--grey-dark);
+  }
+
+  .detail-sentence {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--navy);
+  }
+
+  .detail-sentence strong {
+    color: var(--teal);
+    font-weight: 700;
+    border-bottom: 1.5px solid var(--teal-light);
+  }
+
+  .catalan-translation {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .catalan-note {
+    font-size: 11px;
+    color: var(--grey-mid);
+    margin-top: 2px;
+  }
+
+  /* ── Footer ───────────────────────────────────────────────────── */
+  .page-footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--grey-mid);
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="header-title">Sports Vocabulary</span>
+    <span class="header-subtitle">B2 · Taboo Card Explorer</span>
+  </div>
+  <span class="header-tag">EOI Activity</span>
+</header>
+
+<main>
+
+  <div class="selector-row">
+    <span class="selector-label">Choose a sport</span>
+    <select class="sport-select" id="sportSelect" onchange="loadSport()">
+      <option value="">— select a sport —</option>
+    </select>
+    <span class="word-count-badge" id="wordCountBadge" style="display:none"></span>
+  </div>
+
+  <div id="glossaryArea">
+    <div class="empty-state">
+      <span class="empty-icon">🏅</span>
+      <p>Select a sport above to explore its vocabulary.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">Sports Taboo · B2 Vocabulary Explorer · EOI</div>
+
+</main>
+
+<script>
+// ── Data ────────────────────────────────────────────────────────────────────
+// Each word: { en, ipa, cat, catNote, def, sentence }
+// sentence uses **word** to highlight the target word
+
+const SPORTS = {
+  "Tennis": [
+    { en:"ball",    ipa:"/bɔːl/",     cat:"pilota",        catNote:"",                    def:"The round object hit back and forth across the net.",                                              sentence:"She hit the **ball** so hard it flew out of the court." },
+    { en:"racket",  ipa:"/ˈrækɪt/",   cat:"raqueta",       catNote:"",                    def:"The piece of equipment used to hit the ball, with a long handle and a round frame.",              sentence:"He bought a new **racket** before the tournament." },
+    { en:"court",   ipa:"/kɔːt/",     cat:"pista",         catNote:"",                    def:"The rectangular surface where the game is played.",                                               sentence:"The **court** was wet after the rain, so the match was delayed." },
+    { en:"net",     ipa:"/nɛt/",      cat:"xarxa",         catNote:"",                    def:"The barrier stretched across the middle of the court.",                                            sentence:"Her serve hit the **net** and the point was replayed." },
+    { en:"serve",   ipa:"/sɜːv/",     cat:"servei",        catNote:"",                    def:"The action that starts each point, hitting the ball from behind the baseline.",                   sentence:"His **serve** was so fast the opponent couldn't return it." },
+    { en:"set",     ipa:"/sɛt/",      cat:"set",           catNote:"borrowed term",       def:"A unit of scoring, made up of games. A match is usually best of three or five sets.",            sentence:"She won the first **set** 6–3 but lost the second." },
+    { en:"match",   ipa:"/mætʃ/",     cat:"partit",        catNote:"",                    def:"The complete contest between two players or teams.",                                               sentence:"The **match** lasted nearly three hours." },
+    { en:"love",    ipa:"/lʌv/",      cat:"zero",          catNote:"in tennis scoring",   def:"A score of zero in tennis.",                                                                      sentence:"The score was 30–**love** in favour of the server." },
+    { en:"deuce",   ipa:"/djuːs/",    cat:"iguals",        catNote:"also: deuce",         def:"A tied score of 40–40, after which a player must win two consecutive points.",                   sentence:"They reached **deuce** five times before she finally won the game." },
+    { en:"volley",  ipa:"/ˈvɒli/",    cat:"volea",         catNote:"",                    def:"A shot played before the ball bounces, usually near the net.",                                    sentence:"He rushed to the net and played a winning **volley**." },
+  ],
+  "Football": [
+    { en:"goal",      ipa:"/ɡəʊl/",     cat:"gol",          catNote:"also: porteria (the goal frame)", def:"Either the structure players aim at, or the act of scoring a point.",                  sentence:"She scored the winning **goal** in the last minute." },
+    { en:"kick",      ipa:"/kɪk/",      cat:"xut",          catNote:"",                    def:"Striking the ball with the foot.",                                                                sentence:"His free **kick** went straight into the top corner." },
+    { en:"pitch",     ipa:"/pɪtʃ/",     cat:"camp",         catNote:"",                    def:"The grass surface where the match is played.",                                                    sentence:"The **pitch** was in perfect condition for the final." },
+    { en:"referee",   ipa:"/ˌrɛfəˈriː/",cat:"àrbitre",      catNote:"",                    def:"The official who controls the game and enforces the rules.",                                     sentence:"The **referee** showed the player a red card." },
+    { en:"offside",   ipa:"/ˈɒfsaɪd/",  cat:"fora de joc",  catNote:"",                    def:"A rule violation where an attacking player is nearer the goal than the last defender.",         sentence:"The flag went up — the goal was ruled **offside**." },
+    { en:"penalty",   ipa:"/ˈpɛnəlti/", cat:"penal / penalti",catNote:"",                  def:"A direct free kick from 12 yards, awarded for a foul inside the box.",                          sentence:"He missed the **penalty** and the score stayed 0–0." },
+    { en:"striker",   ipa:"/ˈstraɪkər/",cat:"davanter",      catNote:"",                   def:"A forward player whose main role is to score goals.",                                            sentence:"The **striker** scored twice in the first half." },
+    { en:"tackle",    ipa:"/ˈtækl/",    cat:"entrada",      catNote:"",                    def:"An attempt to take the ball from an opponent using the feet.",                                   sentence:"It was a clean **tackle** — no foul at all." },
+    { en:"foul",      ipa:"/faʊl/",     cat:"falta",        catNote:"",                    def:"An illegal action against an opposing player.",                                                   sentence:"He committed a **foul** just outside the penalty area." },
+    { en:"squad",     ipa:"/skwɒd/",    cat:"plantilla",    catNote:"",                    def:"The full group of players available for selection in a team.",                                   sentence:"The manager named a 23-player **squad** for the tournament." },
+  ],
+  "Swimming": [
+    { en:"pool",       ipa:"/puːl/",      cat:"piscina",        catNote:"",                def:"An enclosed area of water used for swimming.",                                                    sentence:"The **pool** was heated to 27°C for the competition." },
+    { en:"stroke",     ipa:"/strəʊk/",   cat:"braçada / estil", catNote:"",               def:"A particular style or technique of swimming.",                                                    sentence:"Backstroke is the only **stroke** where you swim on your back." },
+    { en:"lane",       ipa:"/leɪn/",     cat:"carrer",         catNote:"",                def:"A marked strip in the pool that separates swimmers.",                                             sentence:"She was assigned **lane** 4 for the final race." },
+    { en:"goggles",    ipa:"/ˈɡɒɡlz/",  cat:"ulleres de natació", catNote:"",             def:"Protective glasses worn in the water to help you see clearly.",                                  sentence:"He always wears **goggles** to protect his eyes from chlorine." },
+    { en:"dive",       ipa:"/daɪv/",     cat:"capbussar-se",   catNote:"",                def:"To jump head-first into the water.",                                                              sentence:"She made a perfect **dive** off the starting block." },
+    { en:"float",      ipa:"/fləʊt/",    cat:"flotar",         catNote:"",                def:"To remain on the surface of the water without sinking.",                                         sentence:"He taught her to **float** on her back first." },
+    { en:"crawl",      ipa:"/krɔːl/",   cat:"crol",           catNote:"",                def:"The fastest swimming stroke, performed face-down with alternating arm movements.",               sentence:"She swam the **crawl** for the first 50 metres." },
+    { en:"lap",        ipa:"/læp/",      cat:"llargada",       catNote:"",                def:"One length of the pool, or sometimes a complete back-and-forth length.",                         sentence:"He swam 40 **laps** without stopping." },
+    { en:"cap",        ipa:"/kæp/",      cat:"gorro",          catNote:"",                def:"A tight rubber or silicone hat worn to keep hair out of the face.",                              sentence:"All competitors must wear a **cap** in race conditions." },
+    { en:"backstroke", ipa:"/ˈbækstrəʊk/", cat:"esquena",     catNote:"",                def:"A swimming stroke performed on the back.",                                                        sentence:"She won gold in the 100m **backstroke**." },
+  ],
+  "Cycling": [
+    { en:"wheel",    ipa:"/wiːl/",    cat:"roda",         catNote:"",  def:"The circular frame and tyre that the bicycle moves on.",                    sentence:"He punctured the front **wheel** on a sharp stone." },
+    { en:"pedal",    ipa:"/ˈpɛdl/",  cat:"pedal",        catNote:"",  def:"The foot-operated lever you push to move the bicycle forward.",             sentence:"She stood up on her **pedals** to climb the steep hill." },
+    { en:"helmet",   ipa:"/ˈhɛlmɪt/",cat:"casc",         catNote:"",  def:"Protective headgear worn for safety.",                                      sentence:"Always wear your **helmet** when riding on the road." },
+    { en:"gear",     ipa:"/ɡɪr/",    cat:"marxa",        catNote:"",  def:"A setting that controls how hard or easy it is to pedal.",                  sentence:"She changed **gear** before the steep descent." },
+    { en:"road",     ipa:"/rəʊd/",   cat:"carretera",    catNote:"",  def:"The paved surface used for cycling.",                                        sentence:"The **road** race covered 200 kilometres through the mountains." },
+    { en:"chain",    ipa:"/tʃeɪn/",  cat:"cadena",       catNote:"",  def:"The metal loop connecting the pedals to the back wheel.",                   sentence:"His **chain** came off halfway through the race." },
+    { en:"saddle",   ipa:"/ˈsædl/",  cat:"seient / sella",catNote:"", def:"The seat the rider sits on.",                                               sentence:"A well-fitted **saddle** is essential for long rides." },
+    { en:"sprint",   ipa:"/sprɪnt/", cat:"esprint",      catNote:"",  def:"A short burst of maximum speed.",                                           sentence:"He won with a powerful **sprint** in the final 200 metres." },
+    { en:"jersey",   ipa:"/ˈdʒɜːzi/",cat:"mallot",       catNote:"",  def:"The tight-fitting top worn by a cyclist, often showing team colours.",      sentence:"The yellow **jersey** is worn by the leader of the Tour de France." },
+    { en:"brake",    ipa:"/breɪk/",  cat:"fre",          catNote:"",  def:"The device used to slow down or stop the bicycle.",                         sentence:"She squeezed the **brake** hard to avoid the car." },
+  ],
+  "Running": [
+    { en:"track",    ipa:"/træk/",   cat:"pista",        catNote:"",  def:"The oval surface used for athletics events.",                               sentence:"They ran eight laps of the **track**." },
+    { en:"pace",     ipa:"/peɪs/",   cat:"ritme",        catNote:"",  def:"The speed at which a runner moves, often measured per kilometre.",          sentence:"She set a steady **pace** from the start." },
+    { en:"sprint",   ipa:"/sprɪnt/", cat:"esprint",      catNote:"",  def:"Running at maximum speed over a short distance.",                           sentence:"He finished with a **sprint** to overtake the leader." },
+    { en:"marathon", ipa:"/ˈmærəθən/",cat:"marató",      catNote:"",  def:"A road race of exactly 42.195 kilometres.",                                 sentence:"She trained for six months to complete her first **marathon**." },
+    { en:"jog",      ipa:"/dʒɒɡ/",  cat:"trotar",       catNote:"",  def:"Running at a slow, comfortable pace.",                                      sentence:"He goes for a **jog** in the park every morning." },
+    { en:"finish",   ipa:"/ˈfɪnɪʃ/",cat:"meta / línia d'arribada", catNote:"", def:"The end point of a race.",                               sentence:"She crossed the **finish** line in first place." },
+    { en:"stride",   ipa:"/straɪd/", cat:"gambada",      catNote:"",  def:"A single step, or the length and rhythm of a runner's steps.",             sentence:"His long **stride** gave him a natural advantage." },
+    { en:"medal",    ipa:"/ˈmɛdl/",  cat:"medalla",      catNote:"",  def:"A metal disc awarded to race winners.",                                     sentence:"She won the gold **medal** at the national championships." },
+    { en:"bib",      ipa:"/bɪb/",    cat:"dorsal",       catNote:"",  def:"The numbered paper worn on a runner's chest to identify them in a race.",  sentence:"Pick up your **bib** and timing chip at registration." },
+    { en:"lap",      ipa:"/læp/",    cat:"volta",        catNote:"",  def:"One complete circuit of a track.",                                          sentence:"She ran the fastest **lap** of the whole race." },
+  ],
+  "Basketball": [
+    { en:"hoop",     ipa:"/huːp/",   cat:"cèrcol / cistella", catNote:"",  def:"The metal ring the ball must pass through to score.",             sentence:"He jumped and dunked the ball straight through the **hoop**." },
+    { en:"dribble",  ipa:"/ˈdrɪbl/", cat:"botar",            catNote:"",  def:"Bouncing the ball continuously while moving across the court.",   sentence:"She **dribbled** past two defenders before shooting." },
+    { en:"slam dunk",ipa:"/slæm dʌŋk/", cat:"esmaixada",     catNote:"",  def:"Scoring by jumping and pushing the ball down through the hoop.", sentence:"The crowd roared when he scored with a powerful **slam dunk**." },
+    { en:"rebound",  ipa:"/ˈriːbaʊnd/",cat:"rebot",          catNote:"",  def:"Catching the ball after a missed shot.",                          sentence:"She grabbed the **rebound** and scored immediately." },
+    { en:"foul",     ipa:"/faʊl/",   cat:"falta",            catNote:"",  def:"Illegal physical contact with an opposing player.",               sentence:"He committed his fifth **foul** and was disqualified." },
+    { en:"free throw",ipa:"/friː θrəʊ/",cat:"tir lliure",    catNote:"",  def:"An uncontested shot from the free-throw line, awarded after a foul.", sentence:"She made both **free throws** to put her team ahead." },
+    { en:"pass",     ipa:"/pɑːs/",   cat:"passada",          catNote:"",  def:"Throwing the ball to a team-mate.",                               sentence:"His no-look **pass** found his team-mate perfectly." },
+    { en:"point",    ipa:"/pɔɪnt/",  cat:"punt",             catNote:"",  def:"A unit of score in the game.",                                   sentence:"A three-pointer is worth three **points**." },
+    { en:"shoot",    ipa:"/ʃuːt/",   cat:"llançar / tirar",  catNote:"",  def:"To throw the ball towards the hoop in an attempt to score.",     sentence:"She turned and **shot** from beyond the three-point line." },
+    { en:"court",    ipa:"/kɔːt/",   cat:"pista / canxa",    catNote:"",  def:"The rectangular surface where basketball is played.",             sentence:"The players warmed up at each end of the **court**." },
+  ],
+  "Golf": [
+    { en:"club",     ipa:"/klʌb/",   cat:"pal",          catNote:"",  def:"One of the long-handled sticks used to hit the ball.",             sentence:"He chose a seven **club** for the approach shot." },
+    { en:"hole",     ipa:"/həʊl/",   cat:"forat",        catNote:"",  def:"The small cup in the green that the ball must enter, or one of the 18 sections of the course.", sentence:"She completed the **hole** in just three shots." },
+    { en:"putt",     ipa:"/pʌt/",    cat:"putt",         catNote:"borrowed term", def:"A gentle shot used on the green to roll the ball into the hole.", sentence:"He needed one **putt** to win the championship." },
+    { en:"course",   ipa:"/kɔːs/",   cat:"camp de golf", catNote:"",  def:"The area of land with 18 holes where golf is played.",             sentence:"The **course** was designed by a famous architect." },
+    { en:"birdie",   ipa:"/ˈbɜːdi/", cat:"birdie",       catNote:"borrowed term", def:"Completing a hole in one shot fewer than par.",         sentence:"She scored a **birdie** on the 12th hole." },
+    { en:"bogey",    ipa:"/ˈbəʊɡi/", cat:"bogey",        catNote:"borrowed term", def:"Completing a hole in one shot more than par.",          sentence:"He made a **bogey** after his ball landed in the bunker." },
+    { en:"green",    ipa:"/ɡriːn/",  cat:"green",        catNote:"borrowed term", def:"The carefully mown area of grass surrounding the hole.", sentence:"Her ball landed on the **green** just two metres from the hole." },
+    { en:"iron",     ipa:"/ˈaɪən/",  cat:"ferro",        catNote:"",  def:"A type of golf club with a flat metal head.",                      sentence:"He used a long **iron** to reach the distant green." },
+    { en:"swing",    ipa:"/swɪŋ/",   cat:"swing",        catNote:"borrowed term", def:"The movement of the club when hitting the ball.",       sentence:"She has a very smooth, consistent **swing**." },
+    { en:"par",      ipa:"/pɑː/",    cat:"par",          catNote:"borrowed term", def:"The expected number of shots to complete a hole.",      sentence:"He finished the round at five under **par**." },
+  ],
+  "Boxing": [
+    { en:"punch",    ipa:"/pʌntʃ/",  cat:"cop de puny",  catNote:"",  def:"A strike with the fist.",                                          sentence:"He threw a fast **punch** that caught his opponent off guard." },
+    { en:"ring",     ipa:"/rɪŋ/",    cat:"quadrilàter",  catNote:"also: ring", def:"The raised, roped platform where the fight takes place.", sentence:"Both fighters entered the **ring** to loud applause." },
+    { en:"glove",    ipa:"/ɡlʌv/",   cat:"guant",        catNote:"",  def:"Padded protective covering for the hands in boxing.",             sentence:"She laced up her **gloves** before sparring." },
+    { en:"round",    ipa:"/raʊnd/",  cat:"assalt",       catNote:"",  def:"A timed period of fighting, usually three minutes.",              sentence:"He dominated the third **round** and won on points." },
+    { en:"knock out",ipa:"/nɒk aʊt/",cat:"KO / knock-out",catNote:"", def:"Winning a fight by hitting the opponent so they cannot get up.", sentence:"She won by **knock out** in the second round." },
+    { en:"guard",    ipa:"/ɡɑːd/",   cat:"guàrdia",      catNote:"",  def:"The defensive position of the hands and arms.",                   sentence:"Keep your **guard** up or you'll get hit." },
+    { en:"jab",      ipa:"/dʒæb/",   cat:"jab",          catNote:"borrowed term", def:"A quick straight punch with the lead hand.",         sentence:"She used a sharp **jab** to keep her opponent at distance." },
+    { en:"bout",     ipa:"/baʊt/",   cat:"combat",       catNote:"",  def:"A boxing match.",                                                sentence:"The **bout** was scheduled for 12 rounds." },
+    { en:"corner",   ipa:"/ˈkɔːnər/",cat:"cantonada / córner", catNote:"", def:"The area where a boxer's team waits between rounds.",      sentence:"His trainer gave him advice in the **corner** between rounds." },
+    { en:"belt",     ipa:"/bɛlt/",   cat:"cinturó / títol", catNote:"", def:"The title or championship prize in professional boxing.",      sentence:"He defended his world **belt** for the third time." },
+  ],
+  "Skiing": [
+    { en:"slope",    ipa:"/sləʊp/",  cat:"pista / vessant", catNote:"", def:"The angled surface of snow down which skiers travel.",          sentence:"The black **slope** was only for expert skiers." },
+    { en:"poles",    ipa:"/pəʊlz/",  cat:"bastons",         catNote:"", def:"The two long sticks held in the hands to help with balance and pushing.", sentence:"She planted her **poles** firmly before each turn." },
+    { en:"downhill", ipa:"/ˈdaʊnhɪl/",cat:"davallada",      catNote:"", def:"Skiing in the direction of the slope, going down.",           sentence:"The **downhill** race is the fastest event in skiing." },
+    { en:"piste",    ipa:"/piːst/",  cat:"pista",           catNote:"",  def:"A prepared ski run marked and maintained for skiers.",        sentence:"The **piste** was perfectly groomed after last night's snowfall." },
+    { en:"helmet",   ipa:"/ˈhɛlmɪt/",cat:"casc",           catNote:"",  def:"Protective headgear worn on the slopes.",                     sentence:"All children must wear a **helmet** on this mountain." },
+    { en:"lift",     ipa:"/lɪft/",   cat:"remuntador / telecabina", catNote:"", def:"A mechanical system for transporting skiers up the mountain.", sentence:"We queued for 20 minutes to get on the **lift**." },
+    { en:"jump",     ipa:"/dʒʌmp/",  cat:"salt",            catNote:"",  def:"A ramp or moment in which the skier leaves the ground.",      sentence:"He launched off the **jump** and flew ten metres through the air." },
+    { en:"gate",     ipa:"/ɡeɪt/",   cat:"porta",          catNote:"",  def:"A pair of poles with a flag that marks the route in a slalom race.", sentence:"She clipped a **gate** and was disqualified." },
+    { en:"binding",  ipa:"/ˈbaɪndɪŋ/",cat:"fixació",       catNote:"",  def:"The mechanism that attaches the ski boot to the ski.",        sentence:"Her **binding** released automatically when she fell." },
+    { en:"snowboard",ipa:"/ˈsnəʊbɔːd/",cat:"snowboard",    catNote:"borrowed term", def:"A single wide board used to descend snow slopes.", sentence:"He switched from skiing to **snowboard** after his first lesson." },
+  ],
+  "Sailing": [
+    { en:"sail",     ipa:"/seɪl/",   cat:"vela",         catNote:"",  def:"The large piece of fabric that catches the wind to move the boat.", sentence:"They raised the **sail** as soon as they left the harbour." },
+    { en:"wind",     ipa:"/wɪnd/",   cat:"vent",         catNote:"",  def:"The moving air that propels a sailing boat.",                   sentence:"There wasn't enough **wind** to race that afternoon." },
+    { en:"helm",     ipa:"/hɛlm/",   cat:"timó / roda",  catNote:"",  def:"The steering mechanism of a boat.",                            sentence:"She took the **helm** as they entered the channel." },
+    { en:"anchor",   ipa:"/ˈæŋkər/", cat:"àncora",       catNote:"",  def:"A heavy object lowered to the seabed to keep a boat in place.", sentence:"They dropped **anchor** in the bay for the night." },
+    { en:"mast",     ipa:"/mɑːst/",  cat:"pal / màstil",  catNote:"",  def:"The tall vertical pole to which sails are attached.",         sentence:"The **mast** snapped in the storm." },
+    { en:"port",     ipa:"/pɔːt/",   cat:"babord / port", catNote:"babord = left side; port = harbour", def:"The left side of a boat when facing forward, or a harbour.", sentence:"Turn to **port** to avoid the rocks." },
+    { en:"starboard",ipa:"/ˈstɑːbəd/",cat:"estribord",   catNote:"",  def:"The right side of a boat when facing forward.",               sentence:"There is a buoy on the **starboard** side." },
+    { en:"crew",     ipa:"/kruː/",   cat:"tripulació",   catNote:"",  def:"The team of people who operate a sailing boat.",               sentence:"The **crew** worked together to change direction quickly." },
+    { en:"hull",     ipa:"/hʌl/",    cat:"casc",         catNote:"",  def:"The main body of the boat that sits in the water.",           sentence:"The **hull** was painted red and white." },
+    { en:"tack",     ipa:"/tæk/",    cat:"virada",       catNote:"",  def:"To change direction by turning the front of the boat through the wind.", sentence:"They had to **tack** three times to reach the mark." },
+  ],
+  "Climbing": [
+    { en:"rope",     ipa:"/rəʊp/",   cat:"corda",         catNote:"",  def:"The long cord that connects climbers and provides safety.",    sentence:"She tied the **rope** to the anchor at the top of the route." },
+    { en:"hold",     ipa:"/həʊld/",  cat:"presa / agafador", catNote:"", def:"A shaped piece of rock or plastic that a climber grabs or steps on.", sentence:"The final **hold** was just out of reach." },
+    { en:"harness",  ipa:"/ˈhɑːnɪs/",cat:"arnès",         catNote:"",  def:"The system of straps worn around the body to attach to the rope.", sentence:"Always check your partner's **harness** before climbing." },
+    { en:"belay",    ipa:"/bɪˈleɪ/", cat:"assegurar",     catNote:"",  def:"The technique of controlling the rope to protect a climber from falling.", sentence:"She **belayed** her partner carefully on the difficult section." },
+    { en:"summit",   ipa:"/ˈsʌmɪt/", cat:"cim",           catNote:"",  def:"The highest point of a mountain.",                            sentence:"They reached the **summit** just before sunset." },
+    { en:"chalk",    ipa:"/tʃɔːk/",  cat:"magnesi",       catNote:"(magnesi = magnesium carbonate powder)", def:"White powder used to dry the hands and improve grip.", sentence:"He dipped his hands in the **chalk** bag before the hardest move." },
+    { en:"clip",     ipa:"/klɪp/",   cat:"clavar / enganxar", catNote:"", def:"To attach the rope to a bolt or protection point.",         sentence:"She **clipped** the rope through the bolt with one hand." },
+    { en:"crag",     ipa:"/kræɡ/",   cat:"penya-segat / roca", catNote:"", def:"A steep rugged cliff used for outdoor rock climbing.",    sentence:"They spent the weekend climbing at a **crag** near the coast." },
+    { en:"anchor",   ipa:"/ˈæŋkər/", cat:"ancoratge",     catNote:"",  def:"The fixed point at the top of a route that the rope is attached to.", sentence:"She built a solid **anchor** from two bolts at the top." },
+    { en:"crash pad",ipa:"/kræʃ pæd/",cat:"matalàs",      catNote:"",  def:"A thick foam mat placed on the ground to cushion falls in bouldering.", sentence:"He positioned the **crash pad** directly below the problem." },
+  ],
+  "Rowing": [
+    { en:"oar",      ipa:"/ɔː/",     cat:"rem",           catNote:"",  def:"The long pole with a flat blade used to propel a rowing boat.", sentence:"She pulled hard on the **oar** to keep up with the pace." },
+    { en:"cox",      ipa:"/kɒks/",   cat:"timoner",       catNote:"",  def:"The person who steers the boat and directs the crew.",         sentence:"The **cox** called out the rhythm for the crew." },
+    { en:"blade",    ipa:"/bleɪd/",  cat:"pala",          catNote:"",  def:"The flat part of the oar that enters the water.",             sentence:"She buried the **blade** deep with every stroke." },
+    { en:"bow",      ipa:"/baʊ/",    cat:"proa",          catNote:"",  def:"The front end of the boat.",                                   sentence:"The **bow** of the boat crossed the line first." },
+    { en:"stern",    ipa:"/stɜːn/",  cat:"popa",          catNote:"",  def:"The rear end of the boat.",                                   sentence:"The cox sits at the **stern** facing the crew." },
+    { en:"catch",    ipa:"/kætʃ/",   cat:"entrada",       catNote:"rowing term", def:"The moment the blade enters the water at the start of a stroke.", sentence:"A clean **catch** is the most important part of rowing technique." },
+    { en:"stroke",   ipa:"/strəʊk/", cat:"palada / punta", catNote:"", def:"One complete movement of the oar, or the rower nearest the stern.", sentence:"The **stroke** sets the rhythm for the whole boat." },
+    { en:"scull",    ipa:"/skʌl/",   cat:"escullar / vogada", catNote:"", def:"To row using two oars, one in each hand.",                  sentence:"She prefers to **scull** alone rather than row in a crew." },
+    { en:"rudder",   ipa:"/ˈrʌdər/", cat:"timó",          catNote:"",  def:"The underwater plate used to steer the boat.",                sentence:"He adjusted the **rudder** to keep a straight course." },
+    { en:"canoe",    ipa:"/kəˈnuː/", cat:"canoa",         catNote:"",  def:"A narrow, light boat propelled with a paddle.",               sentence:"The **canoe** tipped over when they hit the rapid." },
+  ],
+  "Ice Skating": [
+    { en:"blade",    ipa:"/bleɪd/",  cat:"patí / cúter",  catNote:"(patí = the full boot+blade)", def:"The thin metal strip on the bottom of an ice skate.", sentence:"She sharpened her **blade** before the competition." },
+    { en:"rink",     ipa:"/rɪŋk/",   cat:"pista de gel",  catNote:"",  def:"The ice surface where skating takes place.",                  sentence:"The **rink** was freshly resurfaced between sessions." },
+    { en:"spin",     ipa:"/spɪn/",   cat:"gir / pirueta", catNote:"",  def:"A rotation movement performed on a fixed spot on the ice.",  sentence:"She completed a triple **spin** without wobbling." },
+    { en:"glide",    ipa:"/ɡlaɪd/",  cat:"lliscar",       catNote:"",  def:"Moving smoothly across the ice without pushing.",            sentence:"He **glided** across the ice making it look effortless." },
+    { en:"jump",     ipa:"/dʒʌmp/",  cat:"salt",          catNote:"",  def:"A move where the skater leaves the ice and rotates in the air.", sentence:"The Axel is the most difficult **jump** in figure skating." },
+    { en:"edge",     ipa:"/ɛdʒ/",    cat:"cantell",       catNote:"",  def:"The inner or outer side of the blade used to cut into the ice.", sentence:"She used her inside **edge** to make a sharp turn." },
+    { en:"lace",     ipa:"/leɪs/",   cat:"cordó",         catNote:"",  def:"The cord used to tie a skate boot tightly.",                 sentence:"He tied his **laces** so tight his feet went numb." },
+    { en:"figure",   ipa:"/ˈfɪɡər/", cat:"figura",        catNote:"",  def:"A specific pattern or shape traced on the ice, or a skating discipline.", sentence:"**Figure** skating combines athleticism with artistic expression." },
+    { en:"triple",   ipa:"/ˈtrɪpl/", cat:"triple",        catNote:"",  def:"A jump with three full rotations in the air.",               sentence:"She landed the **triple** Lutz perfectly." },
+    { en:"boot",     ipa:"/buːt/",   cat:"bota",          catNote:"",  def:"The stiff shoe part of the ice skate.",                      sentence:"A well-fitted **boot** provides essential ankle support." },
+  ],
+  "Diving": [
+    { en:"board",     ipa:"/bɔːd/",   cat:"trampolí",     catNote:"",  def:"The springboard or platform from which divers jump.",         sentence:"She climbed to the 10-metre **board** for her final dive." },
+    { en:"plunge",    ipa:"/plʌndʒ/", cat:"capbussar-se / llançar-se", catNote:"", def:"To jump or dive quickly into water.",           sentence:"He took a deep breath and **plunged** into the cold pool." },
+    { en:"twist",     ipa:"/twɪst/",  cat:"gir / torsió",  catNote:"", def:"A rotation along the body's vertical axis during a dive.",   sentence:"Her entry was clean after two and a half **twists**." },
+    { en:"tuck",      ipa:"/tʌk/",   cat:"posició agrupada", catNote:"", def:"A body position where the knees are pulled tightly to the chest.", sentence:"He did three somersaults in the **tuck** position." },
+    { en:"pike",      ipa:"/paɪk/",  cat:"posició carpada", catNote:"", def:"A body position with the hips bent and legs straight.",     sentence:"The **pike** position requires excellent flexibility." },
+    { en:"entry",     ipa:"/ˈɛntri/", cat:"entrada",       catNote:"",  def:"The moment the body enters the water.",                     sentence:"A perfect **entry** produces almost no splash." },
+    { en:"somersault",ipa:"/ˈsʌməsɔːlt/",cat:"volta de campana", catNote:"", def:"A head-over-heels rotation of the body.",             sentence:"He completed a back **somersault** before entering the water." },
+    { en:"height",    ipa:"/haɪt/",  cat:"altura / alçada", catNote:"", def:"The distance above the water the diver jumps from.",       sentence:"The **height** of the platform makes the sport even more impressive." },
+    { en:"splash",    ipa:"/splæʃ/", cat:"esquitx",        catNote:"",  def:"The water displaced when a diver enters the pool.",         sentence:"Judges deduct points for a large **splash** on entry." },
+    { en:"snorkel",   ipa:"/ˈsnɔːkl/",cat:"tub / esnòrquel", catNote:"", def:"A tube that allows breathing while face-down in water.",  sentence:"He used a **snorkel** to explore the coral reef." },
+  ],
+  "Volleyball": [
+    { en:"spike",    ipa:"/spaɪk/",  cat:"remat / atac",  catNote:"",  def:"A powerful downward hit of the ball towards the opponents' side.", sentence:"Her **spike** was so fast the libero couldn't react." },
+    { en:"serve",    ipa:"/sɜːv/",   cat:"servei / sacada", catNote:"", def:"Putting the ball into play by hitting it over the net.",    sentence:"He started the game with a powerful jump **serve**." },
+    { en:"block",    ipa:"/blɒk/",   cat:"bloqueig",       catNote:"",  def:"Stopping the ball at the net with raised hands.",           sentence:"She jumped and made a perfect **block** at the net." },
+    { en:"dig",      ipa:"/dɪɡ/",    cat:"recepció",       catNote:"",  def:"A defensive move to prevent the ball touching the floor, often with joined arms.", sentence:"He made a diving **dig** to keep the ball in play." },
+    { en:"rotation", ipa:"/rəʊˈteɪʃən/",cat:"rotació",    catNote:"",  def:"The rule requiring players to move positions clockwise after winning a serve.", sentence:"Their **rotation** brought the best server to the service line." },
+    { en:"ace",      ipa:"/eɪs/",    cat:"as",             catNote:"",  def:"A serve that lands in the court without being touched by the opposition.", sentence:"She won the point with an **ace** down the line." },
+    { en:"set",      ipa:"/sɛt/",    cat:"col·locació",    catNote:"(col·locació = the action; set = the game unit)", def:"Passing the ball upward to a team-mate for an attack.", sentence:"The setter did a perfect **set** to the outside hitter." },
+    { en:"net",      ipa:"/nɛt/",    cat:"xarxa",          catNote:"",  def:"The barrier across the middle of the court.",               sentence:"The ball hit the **net** and fell back on their side." },
+    { en:"libero",   ipa:"/ˈliːbərəʊ/",cat:"líbero",      catNote:"borrowed from Italian", def:"A specialist defensive player who wears a different coloured top.", sentence:"The **libero** is not allowed to attack the ball above net height." },
+    { en:"rally",    ipa:"/ˈræli/",  cat:"intercanvi",     catNote:"",  def:"A sequence of hits between teams before the point is decided.", sentence:"The crowd cheered as the **rally** lasted over 20 shots." },
+  ],
+  "Rugby": [
+    { en:"tackle",   ipa:"/ˈtækl/",  cat:"entrada / placatge", catNote:"", def:"Stopping a ball carrier by grabbing and bringing them to the ground.", sentence:"He made a crunching **tackle** near his own try line." },
+    { en:"scrum",    ipa:"/skrʌm/",  cat:"melé",           catNote:"",  def:"A method of restarting play where players from both teams bind together.", sentence:"The referee called a **scrum** after a knock-on." },
+    { en:"try",      ipa:"/traɪ/",   cat:"assaig",         catNote:"",  def:"Scoring by touching the ball down in the opposition's goal area, worth five points.", sentence:"She scored a brilliant **try** in the corner." },
+    { en:"lineout",  ipa:"/ˈlaɪnaʊt/",cat:"touche",        catNote:"",  def:"A way to restart play after the ball goes out of touch, with players lifting each other.", sentence:"They won their own **lineout** cleanly." },
+    { en:"ruck",     ipa:"/rʌk/",    cat:"ruck",           catNote:"borrowed term", def:"A contest for the ball on the ground between players on their feet.", sentence:"He kept the ball alive at the **ruck** to set up an attack." },
+    { en:"maul",     ipa:"/mɔːl/",   cat:"maul",          catNote:"borrowed term", def:"When the ball carrier is held by opponents and both sides struggle for the ball.", sentence:"They formed a rolling **maul** from the lineout." },
+    { en:"prop",     ipa:"/prɒp/",   cat:"pilar",         catNote:"",  def:"A front-row forward who provides the core strength in the scrum.", sentence:"The tighthead **prop** is one of the most physical positions." },
+    { en:"hooker",   ipa:"/ˈhʊkər/", cat:"talonador",     catNote:"",  def:"The middle player in the front row of the scrum, who hooks the ball back.", sentence:"The **hooker** threw the ball into every lineout." },
+    { en:"pitch",    ipa:"/pɪtʃ/",   cat:"camp",          catNote:"",  def:"The grass field where the match is played.",                 sentence:"The **pitch** was soft and heavy after the rain." },
+    { en:"conversion",ipa:"/kənˈvɜːʃən/",cat:"transformació", catNote:"", def:"A kick at goal attempted after scoring a try, worth two points.", sentence:"He kicked the **conversion** from a difficult angle." },
+  ],
+  "Archery": [
+    { en:"bow",      ipa:"/baʊ/",    cat:"arc",            catNote:"",  def:"The curved piece of flexible material used to shoot arrows.", sentence:"She drew the **bow** back smoothly before releasing." },
+    { en:"arrow",    ipa:"/ˈærəʊ/",  cat:"fletxa",         catNote:"",  def:"The long thin projectile shot from a bow.",                  sentence:"His **arrow** landed just millimetres from the bullseye." },
+    { en:"target",   ipa:"/ˈtɑːɡɪt/",cat:"diana / blanc", catNote:"",  def:"The circular board marked with scoring zones that archers aim at.", sentence:"She hit the **target** with every one of her six arrows." },
+    { en:"quiver",   ipa:"/ˈkwɪvər/",cat:"buirac / carcaix", catNote:"", def:"The container for holding arrows.",                        sentence:"He reached into his **quiver** for his last arrow." },
+    { en:"draw",     ipa:"/drɔː/",   cat:"estirar",        catNote:"",  def:"Pulling the bowstring back ready to shoot.",                 sentence:"Her **draw** weight was 28 pounds." },
+    { en:"release",  ipa:"/rɪˈliːs/",cat:"soltar / deixar anar", catNote:"", def:"The action of letting the bowstring go to shoot the arrow.", sentence:"A clean **release** is essential for accuracy." },
+    { en:"bullseye", ipa:"/ˈbʊlzaɪ/",cat:"diana / centre de la diana", catNote:"", def:"The central circle of the target, worth the most points.", sentence:"She hit the **bullseye** three times in a row." },
+    { en:"nock",     ipa:"/nɒk/",    cat:"encastar",       catNote:"",  def:"Fitting the arrow onto the bowstring ready to shoot.",       sentence:"He **nocked** the arrow and raised his bow." },
+    { en:"shaft",    ipa:"/ʃɑːft/",  cat:"asta / canya",   catNote:"",  def:"The long body of the arrow.",                               sentence:"The **shaft** was carbon fibre for maximum speed." },
+    { en:"aim",      ipa:"/eɪm/",    cat:"apuntar",        catNote:"",  def:"Pointing the weapon at the target before shooting.",         sentence:"She closed one eye to **aim** more carefully." },
+  ],
+  "Fencing": [
+    { en:"sword",    ipa:"/sɔːd/",   cat:"espasa",         catNote:"",  def:"The weapon used in fencing.",                               sentence:"He cleaned and checked his **sword** before the competition." },
+    { en:"blade",    ipa:"/bleɪd/",  cat:"fulla / làmina", catNote:"",  def:"The long thin part of the sword.",                          sentence:"The tip of the **blade** must touch the target zone to score." },
+    { en:"lunge",    ipa:"/lʌndʒ/",  cat:"estocada",       catNote:"",  def:"A rapid forward movement extending the arm and weapon to attack.", sentence:"She made a lightning-fast **lunge** to score the point." },
+    { en:"parry",    ipa:"/ˈpæri/",  cat:"parada",         catNote:"",  def:"A defensive movement to block or deflect an attack.",       sentence:"He made a precise **parry** and riposted immediately." },
+    { en:"bout",     ipa:"/baʊt/",   cat:"assalt / combat",catNote:"",  def:"A fencing match or fight.",                                  sentence:"She won the **bout** 15–9." },
+    { en:"mask",     ipa:"/mɑːsk/",  cat:"màscara",        catNote:"",  def:"The protective wire mesh headgear worn to protect the face.", sentence:"He lowered his **mask** before saluting his opponent." },
+    { en:"touch",    ipa:"/tʌtʃ/",   cat:"tocada",         catNote:"",  def:"A scoring point, made when the weapon lands on a valid target area.", sentence:"The electronic system confirmed the **touch**." },
+    { en:"foil",     ipa:"/fɔɪl/",   cat:"floret",         catNote:"",  def:"The lightest of the three fencing weapons, scoring only with the tip.", sentence:"She specialises in the **foil** discipline." },
+    { en:"en garde", ipa:"/ɒn ɡɑːd/",cat:"en guàrdia",    catNote:"",  def:"The starting position, and the command to prepare to fight.", sentence:"The referee shouted 'Allez!' after calling **en garde**." },
+    { en:"saber",    ipa:"/ˈseɪbər/",cat:"sabre",          catNote:"",  def:"A fencing weapon that can score with the edge as well as the tip.", sentence:"The **saber** event is the most explosive of the three disciplines." },
+  ],
+  "Gymnastics": [
+    { en:"beam",     ipa:"/biːm/",   cat:"barra d'equilibri", catNote:"", def:"A narrow raised platform used in gymnastics routines.",   sentence:"She fell from the **beam** but remounted confidently." },
+    { en:"vault",    ipa:"/vɔːlt/",  cat:"salt / plinton",catNote:"",   def:"An event where gymnasts sprint and jump over an apparatus.", sentence:"Her **vault** had a difficulty score of 5.8." },
+    { en:"flip",     ipa:"/flɪp/",   cat:"volta / gir enrere", catNote:"", def:"A backwards or forwards somersault performed in the air.", sentence:"She landed a perfect back **flip** on the floor exercise." },
+    { en:"tumble",   ipa:"/ˈtʌmbl/", cat:"rondada / acrobàcia", catNote:"", def:"A series of acrobatic moves performed in sequence.",    sentence:"Her **tumble** pass ended with a double twist." },
+    { en:"handstand",ipa:"/ˈhændstænd/",cat:"vertical / fer el pino", catNote:"", def:"Balancing vertically on the hands with the body straight.", sentence:"He held a perfect **handstand** for five seconds." },
+    { en:"cartwheel",ipa:"/ˈkɑːtwiːl/",cat:"roda",         catNote:"",  def:"A sideways rotation with hands and feet touching the ground alternately.", sentence:"She began her floor routine with a round-off and **cartwheel**." },
+    { en:"floor",    ipa:"/flɔː/",   cat:"exercici de terra", catNote:"", def:"The gymnastics event performed on a sprung mat.",        sentence:"The **floor** exercise is set to music in women's gymnastics." },
+    { en:"bar",      ipa:"/bɑː/",    cat:"barra",          catNote:"",  def:"A horizontal or uneven apparatus used in gymnastics.",      sentence:"She swung between the uneven **bars** with incredible power." },
+    { en:"score",    ipa:"/skɔː/",   cat:"puntuació",      catNote:"",  def:"The mark awarded by judges for a routine.",                 sentence:"Her final **score** of 15.3 put her in first place." },
+    { en:"routine",  ipa:"/ruːˈtiːn/",cat:"exercici / rutina", catNote:"", def:"A prepared set of moves performed in competition.",    sentence:"She had been working on the same **routine** for six months." },
+  ],
+  "Surfing": [
+    { en:"wave",     ipa:"/weɪv/",   cat:"ona",            catNote:"",  def:"The moving ridge of water that surfers ride.",              sentence:"He paddled hard to catch the perfect **wave**." },
+    { en:"board",    ipa:"/bɔːd/",   cat:"taula de surf",  catNote:"",  def:"The flat buoyant surface the surfer stands on.",            sentence:"Her **board** was shaped for big wave surfing." },
+    { en:"paddle",   ipa:"/ˈpædl/",  cat:"remar / paladejar", catNote:"", def:"The action of using the arms to move through the water lying on the board.", sentence:"She **paddled** out through the breaking waves." },
+    { en:"tube",     ipa:"/tjuːb/",  cat:"tub / barril",   catNote:"",  def:"The hollow cylinder formed inside a breaking wave.",        sentence:"He pulled into the **tube** and came out cleanly." },
+    { en:"wipe out", ipa:"/waɪp aʊt/",cat:"caure / xocar", catNote:"",  def:"Falling off the board into the water.",                    sentence:"She **wiped out** on the biggest wave of the day." },
+    { en:"swell",    ipa:"/swɛl/",   cat:"maror",          catNote:"",  def:"A series of waves caused by distant weather or wind.",      sentence:"There was a solid six-foot **swell** all morning." },
+    { en:"break",    ipa:"/breɪk/",  cat:"trencant",       catNote:"",  def:"The point where a wave collapses and becomes surfable.",    sentence:"The best **break** on the beach is just past the pier." },
+    { en:"crest",    ipa:"/krɛst/",  cat:"cresta",         catNote:"",  def:"The top of a wave before it breaks.",                      sentence:"He stood on the **crest** and dropped into the wave." },
+    { en:"ride",     ipa:"/raɪd/",   cat:"cavalcar / surfar", catNote:"", def:"The journey on a wave from catching it to the end.",    sentence:"That was the longest **ride** I have ever seen." },
+    { en:"leash",    ipa:"/liːʃ/",   cat:"lligam",         catNote:"",  def:"The cord that attaches the surfer's ankle to the board.",  sentence:"Her **leash** snapped and the board washed to shore." },
+  ],
+  "Darts": [
+    { en:"board",    ipa:"/bɔːd/",   cat:"diana",          catNote:"",  def:"The circular target mounted on a wall.",                    sentence:"He hung the **board** on the wall at regulation height." },
+    { en:"bullseye", ipa:"/ˈbʊlzaɪ/",cat:"centre / bull",  catNote:"",  def:"The central circle of the dartboard, worth 50 points.",   sentence:"She hit the **bullseye** to win the match." },
+    { en:"double",   ipa:"/ˈdʌbl/",  cat:"doble",          catNote:"",  def:"The thin outer ring of the dartboard, worth twice the segment value.", sentence:"He needed double 16 to finish." },
+    { en:"treble",   ipa:"/ˈtrɛbl/", cat:"triple",         catNote:"",  def:"The thin inner ring, worth three times the segment value.", sentence:"She hit the **treble** 20 to take the lead." },
+    { en:"checkout", ipa:"/ˈtʃɛkaʊt/",cat:"sortida / tancament", catNote:"", def:"The combination of darts needed to reach exactly zero and win the leg.", sentence:"He finished with a 164 **checkout** — an outstanding feat." },
+    { en:"score",    ipa:"/skɔː/",   cat:"puntuació / marcador", catNote:"", def:"The total points counted from each throw.",           sentence:"After three darts her **score** was 140." },
+    { en:"flight",   ipa:"/flaɪt/",  cat:"aleta / vol",    catNote:"",  def:"The plastic fins at the back of the dart that help it fly straight.", sentence:"He replaced the torn **flight** before his next throw." },
+    { en:"steel tip",ipa:"/stiːl tɪp/",cat:"punta d'acer", catNote:"",  def:"A dart with a sharp metal point, used on traditional bristle boards.", sentence:"She prefers **steel tip** darts in competition." },
+    { en:"leg",      ipa:"/lɛɡ/",    cat:"mànega / parcial", catNote:"", def:"One game within a set in a match.",                      sentence:"He won the first **leg** starting from 501." },
+    { en:"throw",    ipa:"/θrəʊ/",   cat:"llançament",     catNote:"",  def:"The action of releasing the dart towards the board.",      sentence:"Each player has three darts per **throw**." },
+  ],
+  "Judo": [
+    { en:"mat",      ipa:"/mæt/",    cat:"tatami",         catNote:"(tatami = the traditional term)", def:"The padded surface on which judo is practised.",           sentence:"Both players bowed before stepping onto the **mat**." },
+    { en:"throw",    ipa:"/θrəʊ/",   cat:"llançament / projecció", catNote:"", def:"A technique used to lift and bring an opponent to the ground.", sentence:"She executed a perfect **throw** to score ippon." },
+    { en:"grip",     ipa:"/ɡrɪp/",   cat:"agafada / presa", catNote:"", def:"Holding the opponent's jacket to control their movement.", sentence:"He broke her **grip** before launching his attack." },
+    { en:"belt",     ipa:"/bɛlt/",   cat:"cinturó",        catNote:"",  def:"The coloured band tied around the judoka's jacket, showing their level.", sentence:"She passed her grading and received an orange **belt**." },
+    { en:"ippon",    ipa:"/ˈɪpɒn/",  cat:"ippon",          catNote:"Japanese term used in Catalan too", def:"A full point, winning the match immediately.",      sentence:"The referee raised his hand and called **ippon**." },
+    { en:"fall",     ipa:"/fɔːl/",   cat:"caiguda",        catNote:"",  def:"Going to the ground after a throw.",                       sentence:"He cushioned his **fall** by slapping the mat with his arm." },
+    { en:"hold",     ipa:"/həʊld/",  cat:"immobilització", catNote:"",  def:"A groundwork technique that pins the opponent to the mat.", sentence:"She applied a **hold** and pinned him for 20 seconds to score ippon." },
+    { en:"gi",       ipa:"/ɡiː/",    cat:"quimono / judo-gi", catNote:"", def:"The traditional white jacket and trousers worn in judo.", sentence:"He gripped the lapels of her **gi** firmly." },
+    { en:"sensei",   ipa:"/ˈsɛnseɪ/",cat:"professor / mestre", catNote:"", def:"The instructor or teacher of judo.",                    sentence:"The **sensei** corrected her technique during practice." },
+    { en:"grapple",  ipa:"/ˈɡræpl/", cat:"lluitar cos a cos", catNote:"", def:"To struggle with an opponent in close contact.",          sentence:"They **grappled** on the ground for nearly a minute." },
+  ],
+  "Bowling": [
+    { en:"lane",     ipa:"/leɪn/",   cat:"carril / pista",  catNote:"", def:"The long narrow strip of polished wood the ball rolls along.", sentence:"She chose **lane** 6 and bowled a perfect game." },
+    { en:"pin",      ipa:"/pɪn/",    cat:"birle",           catNote:"",  def:"One of the ten bottle-shaped targets at the end of the lane.", sentence:"She knocked down nine **pins** with her first ball." },
+    { en:"strike",   ipa:"/straɪk/", cat:"plena / strike",  catNote:"",  def:"Knocking down all ten pins with the first ball.",           sentence:"He bowled a **strike** on the first ball of every frame." },
+    { en:"spare",    ipa:"/spɛər/",  cat:"semiplena",       catNote:"",  def:"Knocking down all remaining pins with the second ball.",     sentence:"She converted the difficult split into a **spare**." },
+    { en:"frame",    ipa:"/freɪm/",  cat:"marc / ronda",    catNote:"",  def:"One of the ten rounds in a game of bowling.",               sentence:"He scored 30 points in the final **frame**." },
+    { en:"gutter",   ipa:"/ˈɡʌtər/", cat:"canaló",         catNote:"",  def:"The channel either side of the lane; if the ball falls in, it scores zero.", sentence:"His first ball went into the **gutter**." },
+    { en:"split",    ipa:"/splɪt/",  cat:"obertura",        catNote:"",  def:"A situation where two or more pins are left with a gap between them after the first ball.", sentence:"Picking up a **split** is one of the hardest shots in bowling." },
+    { en:"roll",     ipa:"/rəʊl/",   cat:"llançament / tirada", catNote:"", def:"The action of releasing the ball down the lane.",      sentence:"Her second **roll** was perfectly aimed." },
+    { en:"alley",    ipa:"/ˈæli/",   cat:"bolera",          catNote:"",  def:"The venue where bowling is played, or the lane itself.",    sentence:"The **alley** had 24 lanes and was fully air-conditioned." },
+    { en:"hook",     ipa:"/hʊk/",    cat:"efecte / corba",  catNote:"",  def:"A curved path the ball takes to hit the pins at an angle.", sentence:"She put a big **hook** on the ball to hit the pocket." },
+  ],
+  "Horse Riding": [
+    { en:"saddle",   ipa:"/ˈsædl/",  cat:"sella",          catNote:"",  def:"The leather seat strapped to the horse's back for the rider.", sentence:"She checked the **saddle** was secure before mounting." },
+    { en:"stirrup",  ipa:"/ˈstɪrəp/",cat:"estrep",         catNote:"",  def:"The metal loop hanging from the saddle in which the rider places their foot.", sentence:"He shortened his **stirrup** leathers before jumping." },
+    { en:"rein",     ipa:"/reɪn/",   cat:"regna",          catNote:"",  def:"The strap attached to the bit that the rider uses to steer.", sentence:"She gently pulled on the left **rein** to turn the horse." },
+    { en:"canter",   ipa:"/ˈkæntər/",cat:"galop curt / mig galop", catNote:"", def:"A controlled three-beat gait faster than a trot.",  sentence:"They went for a **canter** across the open field." },
+    { en:"trot",     ipa:"/trɒt/",   cat:"trot",           catNote:"",  def:"A two-beat gait between walk and canter.",                  sentence:"The horse broke into a **trot** as they left the yard." },
+    { en:"gallop",   ipa:"/ˈɡæləp/", cat:"galop",          catNote:"",  def:"The fastest gait of a horse, a four-beat stride.",          sentence:"The horse broke into a full **gallop** across the field." },
+    { en:"jump",     ipa:"/dʒʌmp/",  cat:"salt / obstacle",catNote:"",  def:"A fence or obstacle that the horse and rider must clear.",   sentence:"She prepared her horse carefully for the final **jump**." },
+    { en:"stable",   ipa:"/ˈsteɪbl/",cat:"estable",        catNote:"",  def:"The building where horses are kept.",                       sentence:"He mucked out the **stable** every morning." },
+    { en:"bridle",   ipa:"/ˈbraɪdl/",cat:"brida",          catNote:"",  def:"The complete headgear fitted to the horse, including the bit, reins, and headpiece.", sentence:"She fitted the **bridle** carefully before riding." },
+    { en:"groom",    ipa:"/ɡruːm/",  cat:"palafrenera/er", catNote:"",  def:"To clean and care for a horse, or the person who does so.",  sentence:"She **groomed** her horse for an hour before the show." },
+  ],
+};
+
+// ── Build selector ───────────────────────────────────────────────────────────
+const select = document.getElementById('sportSelect');
+Object.keys(SPORTS).sort().forEach(sport => {
+  const opt = document.createElement('option');
+  opt.value = sport;
+  opt.textContent = sport;
+  select.appendChild(opt);
+});
+
+function loadSport() {
+  const sport = select.value;
+  const area  = document.getElementById('glossaryArea');
+  const badge = document.getElementById('wordCountBadge');
+
+  if (!sport) {
+    badge.style.display = 'none';
+    area.innerHTML = `<div class="empty-state"><span class="empty-icon">🏅</span><p>Select a sport above to explore its vocabulary.</p></div>`;
+    return;
+  }
+
+  const words = SPORTS[sport];
+  badge.textContent = `${words.length} words`;
+  badge.style.display = 'inline-block';
+
+  // Highlight the target word in a sentence
+  function highlightWord(sentence, word) {
+    return sentence.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  }
+
+  let html = `
+    <div class="glossary-header">
+      <span class="glossary-sport-name">${sport}</span>
+      <span class="glossary-sport-tag">Taboo Vocabulary</span>
+    </div>
+    <div class="coral-rule"></div>
+    <div class="glossary-body">
+  `;
+
+  words.forEach((w, i) => {
+    const catNote = w.catNote ? `<div class="catalan-note">${w.catNote}</div>` : '';
+    html += `
+      <div class="word-row" id="row-${i}">
+        <div class="word-header" onclick="toggleRow(${i})">
+          <div class="word-number">${String(i+1).padStart(2,'0')}</div>
+          <div class="word-term">
+            <span class="word-english">${w.en}</span>
+            <span class="word-ipa">${w.ipa}</span>
+            <span class="catalan-chip">${w.cat}</span>
+          </div>
+          <div class="expand-toggle">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M2 4.5l5 5 5-5" stroke="#0F766E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="word-detail">
+          <div class="detail-grid">
+            <div class="detail-block">
+              <div class="detail-label">Definition</div>
+              <div class="detail-text">${w.def}</div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-label">Catalan translation</div>
+              <div class="catalan-translation">${w.cat}</div>
+              ${catNote}
+            </div>
+            <div class="detail-block full-width">
+              <div class="detail-label">Example sentence</div>
+              <div class="detail-sentence">${highlightWord(w.sentence, w.en)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  area.innerHTML = html;
+}
+
+function toggleRow(i) {
+  const row = document.getElementById(`row-${i}`);
+  row.classList.toggle('open');
+}
+</script>
+</body>
+</html>

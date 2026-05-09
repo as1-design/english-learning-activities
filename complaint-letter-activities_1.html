@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaint Letter Detective Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --cream: #f5f0e8;
+    --red: #c0392b;
+    --amber: #e67e22;
+    --gold: #f1c40f;
+    --teal: #16a085;
+    --light: #faf7f2;
+    --border: #d4c9b0;
+    --success: #27ae60;
+    --error: #e74c3c;
+    --card: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.04) 28px),
+      repeating-linear-gradient(90deg, transparent, transparent 27px, rgba(0,0,0,0.02) 28px);
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 8px,
+      rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 9px
+    );
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--ink);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    position: relative;
+  }
+
+  header h1 span { color: var(--gold); }
+
+  header p {
+    font-size: 1rem;
+    opacity: 0.75;
+    margin-top: 0.5rem;
+    font-style: italic;
+    position: relative;
+  }
+
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    height: 6px;
+    margin: 1.25rem auto 0;
+    max-width: 400px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar-fill {
+    background: var(--gold);
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-label {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    margin-top: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    position: relative;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    background: var(--ink);
+    border-bottom: 3px solid var(--gold);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    flex: 1;
+    min-width: 100px;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.45);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .nav-tab:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
+
+  .nav-tab.active {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .nav-tab .num {
+    display: block;
+    font-size: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0;
+    margin-bottom: 2px;
+  }
+
+  /* SECTIONS */
+  .section { display: none; padding: 2rem 1.5rem; max-width: 860px; margin: 0 auto; }
+  .section.active { display: block; animation: fadeIn 0.3s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .section-header h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+
+  .section-header p {
+    font-size: 0.92rem;
+    color: #555;
+    margin-top: 0.25rem;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 0.5rem;
+  }
+
+  .card h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  /* THEORY ACCORDION */
+  .accordion { margin-bottom: 0.75rem; border: 2px solid var(--border); border-radius: 8px; overflow: hidden; }
+
+  .accordion-head {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.85rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+
+  .accordion-head:hover { background: #2a2a45; }
+
+  .accordion-head .arrow {
+    transition: transform 0.25s;
+    font-size: 0.8rem;
+    opacity: 0.7;
+  }
+
+  .accordion-head.open .arrow { transform: rotate(180deg); }
+
+  .accordion-body {
+    display: none;
+    padding: 1.25rem;
+    background: #fefefe;
+    border-top: 2px solid var(--border);
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .accordion-body.open { display: block; animation: fadeIn 0.2s ease; }
+
+  .example-box {
+    background: var(--cream);
+    border-left: 4px solid var(--amber);
+    padding: 0.75rem 1rem;
+    border-radius: 0 4px 4px 0;
+    margin: 0.75rem 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  .example-box .before { color: var(--error); text-decoration: line-through; }
+  .example-box .after { color: var(--success); font-weight: 600; }
+
+  /* ACTIVITIES */
+  .question-block { margin-bottom: 2rem; }
+
+  .question-text {
+    font-size: 0.97rem;
+    font-weight: 600;
+    margin-bottom: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .q-number {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    margin-right: 0.4rem;
+  }
+
+  /* DRAG DROP */
+  .drag-zone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--cream);
+    border: 2px dashed var(--border);
+    border-radius: 6px;
+    min-height: 50px;
+    margin-bottom: 0.5rem;
+  }
+
+  .drag-item {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: grab;
+    font-size: 0.85rem;
+    font-family: 'DM Mono', monospace;
+    user-select: none;
+    transition: transform 0.15s, opacity 0.15s;
+    border: 2px solid transparent;
+  }
+
+  .drag-item:active { cursor: grabbing; transform: scale(1.05); }
+  .drag-item.dragging { opacity: 0.4; }
+  .drag-item.correct { background: var(--success); border-color: #1e8449; }
+  .drag-item.wrong { background: var(--error); border-color: #922b21; }
+
+  .drop-zone {
+    min-height: 50px;
+    border: 2px dashed var(--teal);
+    border-radius: 6px;
+    padding: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    background: rgba(22, 160, 133, 0.05);
+    margin-bottom: 0.5rem;
+  }
+
+  .drop-zone.drag-over { background: rgba(22,160,133,0.12); border-color: var(--teal); }
+
+  .drop-label {
+    font-size: 0.75rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--teal);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* RADIO / MULTIPLE CHOICE */
+  .options-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .option-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .option-btn:hover:not(:disabled) { border-color: var(--ink); background: var(--cream); }
+  .option-btn.correct { border-color: var(--success); background: #eafaf1; color: #1e8449; font-weight: 600; }
+  .option-btn.wrong { border-color: var(--error); background: #fdedec; color: #922b21; }
+  .option-btn .opt-letter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    min-width: 24px;
+    text-align: center;
+    color: var(--amber);
+  }
+  .option-btn.correct .opt-letter { color: var(--success); }
+  .option-btn.wrong .opt-letter { color: var(--error); }
+
+  /* TEXT INPUT FILL */
+  .fill-input {
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+    font-family: 'DM Mono', monospace;
+    min-width: 160px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .fill-input:focus { border-color: var(--teal); }
+  .fill-input.correct { border-color: var(--success); background: #eafaf1; }
+  .fill-input.wrong { border-color: var(--error); background: #fdedec; }
+
+  /* FEEDBACK */
+  .feedback {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: none;
+  }
+
+  .feedback.show { display: block; animation: fadeIn 0.2s ease; }
+  .feedback.ok { background: #eafaf1; color: var(--success); border-left: 3px solid var(--success); }
+  .feedback.bad { background: #fdedec; color: var(--error); border-left: 3px solid var(--error); }
+
+  /* BUTTONS */
+  .btn {
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .btn-primary { background: var(--ink); color: var(--gold); }
+  .btn-primary:hover { background: #2a2a45; }
+  .btn-success { background: var(--teal); color: white; }
+  .btn-success:hover { background: #128172; }
+  .btn-outline { background: transparent; border: 2px solid var(--ink); color: var(--ink); }
+  .btn-outline:hover { background: var(--ink); color: var(--cream); }
+
+  .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+
+  /* SCORE */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    padding: 0.3rem 0.9rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* LETTER BUILDER */
+  .letter-frame {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 2rem;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    box-shadow: 4px 4px 0 var(--border);
+  }
+
+  .letter-frame textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.9;
+    outline: none;
+    color: var(--ink);
+  }
+
+  .letter-section {
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .letter-section:last-child { border-bottom: none; }
+
+  .letter-hint {
+    font-size: 0.7rem;
+    font-family: 'DM Mono', monospace;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3rem;
+  }
+
+  .letter-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.4rem 0;
+  }
+
+  .phrase-chip {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .phrase-chip:hover { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .phrase-chip.selected { background: var(--teal); color: white; border-color: var(--teal); }
+
+  /* COMPARISON TABLE */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .compare-table th { background: var(--ink); color: var(--gold); padding: 0.6rem 1rem; text-align: left; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.08em; font-size: 1rem; }
+  .compare-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .compare-table tr:nth-child(even) td { background: var(--cream); }
+  .compare-table .formal { color: var(--teal); font-weight: 600; }
+  .compare-table .informal { color: var(--error); }
+
+  /* CERTIFICATE */
+  .certificate {
+    text-align: center;
+    padding: 2.5rem;
+    border: 4px double var(--gold);
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: none;
+  }
+
+  .certificate.show { display: block; animation: fadeIn 0.5s ease; }
+  .certificate h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--ink); letter-spacing: 0.05em; }
+  .certificate p { font-size: 1rem; color: #555; margin: 0.5rem 0; }
+  .certificate .big-score { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; color: var(--gold); line-height: 1; }
+
+  /* INFO PILLS */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+  .pill {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.8rem;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .pill.teal { background: rgba(22,160,133,0.1); border-color: var(--teal); color: var(--teal); }
+  .pill.red { background: rgba(192,57,43,0.1); border-color: var(--red); color: var(--red); }
+  .pill.amber { background: rgba(230,126,34,0.1); border-color: var(--amber); color: var(--amber); }
+
+  /* WORD SORTER */
+  .sentence-display {
+    font-size: 1rem;
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.8;
+    min-height: 3.5rem;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .word-chip {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-family: 'DM Mono', monospace;
+    transition: all 0.15s;
+    border: 2px solid transparent;
+  }
+
+  .word-chip:hover { background: var(--teal); }
+  .word-chip.used { opacity: 0.3; cursor: default; pointer-events: none; }
+  .word-chip.placed { display: none; }
+
+  .placed-word {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--teal);
+    color: white;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  .placed-word:hover { background: var(--red); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .section { padding: 1.25rem 1rem; }
+    .nav-tab { padding: 0.6rem 0.5rem; font-size: 0.6rem; }
+    header { padding: 1.5rem 1rem 1rem; }
+  }
+
+  /* LETTER STEPS */
+  .letter-step {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem 1.25rem;
+    margin-bottom: 0.85rem;
+  }
+  .step-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .step-note {
+    font-size: 0.82rem;
+    color: #777;
+    margin-bottom: 0.6rem;
+    font-style: italic;
+  }
+  .letter-step .letter-picker { flex-direction: column; }
+  .letter-step .phrase-chip { white-space: normal; line-height: 1.5; padding: 0.45rem 0.85rem; }
+
+  .hint-box {
+    background: rgba(230,126,34,0.08);
+    border: 1.5px solid var(--amber);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    margin: 0.75rem 0;
+    color: #6d4c10;
+  }
+
+  .hint-box strong { color: var(--amber); }
+
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), transparent);
+    margin: 1.5rem 0;
+    border: none;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">B2 English · Writing Skills</div>
+  <h1>Complaint Letter<br><span>Detective Academy</span></h1>
+  <p>Turn your frustration into a letter that gets results!</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <p class="progress-label" id="progressLabel">0 / 5 activities completed</p>
+</header>
+
+<nav class="nav-tabs" id="navTabs">
+  <button class="nav-tab active" onclick="showSection(0)"><span class="num">📖</span>Guide</button>
+  <button class="nav-tab" onclick="showSection(1)"><span class="num">01</span>Formal vs Informal</button>
+  <button class="nav-tab" onclick="showSection(2)"><span class="num">02</span>Connectors</button>
+  <button class="nav-tab" onclick="showSection(3)"><span class="num">03</span>Grammar Powers</button>
+  <button class="nav-tab" onclick="showSection(4)"><span class="num">04</span>Spot the Error</button>
+  <button class="nav-tab" onclick="showSection(5)"><span class="num">✍️</span>Build a Letter</button>
+</nav>
+
+<!-- ===== SECTION 0: GUIDE ===== -->
+<section class="section active" id="sec0">
+  <div class="section-header">
+    <div class="section-icon">🕵️</div>
+    <div>
+      <h2>The Detective's Dossier</h2>
+      <p>Read each section to unlock your complaint letter superpowers. Click to expand!</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-head" onclick="toggleAccordion(this)">
+      📬 Level 1–2 · Format & Greetings <span class="arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <p><strong>Your address</strong> goes top right. The recipient's address goes below, on the left. Always include the date.</p>
+      <hr style="margin:0.75rem 0;border-color:var(--border)">
+      <p><strong>Greeting rules:</strong></p>
+      <div class="example-box">
+        <span style="color:var(--teal)">✓</span> Know their name? → <strong>Dear Mr. Smith,</strong> → End with <strong>Yours sincerely,</strong><br>
+        <span style="color:var(--teal)">✓</span> Don't know? → <strong>Dear Sir / Madam,</strong> → End with <strong>Yours faithfully,</strong>
+      </div>
+      <p style="font-size:0.82rem;color:#888;margin-top:0.5rem">💡 Memory trick: <em>Sincerely = you know them. Faithfully = you're faithfully hoping it reaches the right person!</em></p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-head" onclick="toggleAccordion(this)">
+      🏗️ Level 3 · Letter Structure <span class="arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <p>Your complaint letter = a well-built case. Three key sections:</p>
+      <div class="example-box" style="border-left-color:var(--teal)">
+        <strong style="color:var(--teal)">¶1 — Opening Salvo:</strong> State you are writing to complain + what + when + reference number.<br>
+        <em>e.g. I am writing to express my dissatisfaction with the 8-day tour of Greece, reference GR36A...</em>
+      </div>
+      <div class="example-box" style="border-left-color:var(--amber)">
+        <strong style="color:var(--amber)">¶2+ — Evidence:</strong> Detail each problem using connectors (Firstly... Secondly... Furthermore... To make matters worse... Finally...)<br>
+      </div>
+      <div class="example-box" style="border-left-color:var(--red)">
+        <strong style="color:var(--red)">¶Final — The Demand:</strong> Say exactly what you want. A refund? Replacement? Compensation?<br>
+        <em>e.g. I feel that I am entitled to a full refund.</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-head" onclick="toggleAccordion(this)">
+      💪 Level 4 · The 4 Grammar Superpowers <span class="arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <p><strong>1. Power Adjectives</strong> — Show how bad it was!</p>
+      <div class="example-box">
+        I was <strong>extremely disappointed</strong>. We were <strong>shocked</strong> by the dirty room.
+      </div>
+      <p><strong>2. Passive Voice</strong> — Something happened <em>to</em> you, not by you.</p>
+      <div class="example-box">
+        <span class="before">They gave us a small sandwich.</span><br>
+        <span class="after">→ We were given a small sandwich.</span>
+      </div>
+      <p><strong>3. Reported Speech</strong> — What did they promise?</p>
+      <div class="example-box">
+        <span class="before">Brochure: "All meals are included."</span><br>
+        <span class="after">→ The brochure stated that all meals were included.</span>
+      </div>
+      <p><strong>4. Although / However</strong> — Show the contrast between promise & reality.</p>
+      <div class="example-box">
+        <span class="after">Although the brochure stated meals were included, we only received breakfast.</span><br>
+        <span class="after">The hotel was praised online. However, our room was filthy.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-head" onclick="toggleAccordion(this)">
+      ✨ Level 5 · Pro Tips <span class="arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div style="display:grid;gap:0.75rem">
+        <div class="example-box" style="border-left-color:var(--red)">
+          <strong>❌ Weak:</strong> The food was bad.<br>
+          <strong style="color:var(--success)">✓ Strong:</strong> The sandwich was small, squashed, and tasted stale.
+        </div>
+        <div class="example-box" style="border-left-color:var(--red)">
+          <strong>❌ Weak:</strong> The hotel was noisy.<br>
+          <strong style="color:var(--success)">✓ Strong:</strong> The hotel was next to a nightclub, and the noise continued until 3 am.
+        </div>
+        <div class="example-box" style="border-left-color:var(--teal)">
+          🔥➡️🧊 <strong>Keep your cool on paper!</strong> Polite + firm = more effective than angry shouting.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;text-align:center">
+    <button class="btn btn-primary" onclick="showSection(1)">Start the Activities →</button>
+  </div>
+</section>
+
+<!-- ===== SECTION 1: FORMAL vs INFORMAL ===== -->
+<section class="section" id="sec1">
+  <div class="section-header">
+    <div class="section-icon">⚖️</div>
+    <div>
+      <h2>Activity 1<br>Formal or Informal?</h2>
+      <p>Drag each phrase into the correct box — formal complaint or informal chat?</p>
+    </div>
+  </div>
+
+  <div class="score-badge" id="score1">Score: 0 / 8</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+    <div>
+      <div class="drop-label" style="color:var(--teal)">✉️ FORMAL COMPLAINT</div>
+      <div class="drop-zone" id="drop-formal" ondragover="dragOver(event)" ondrop="dropItem(event,'formal')"></div>
+    </div>
+    <div>
+      <div class="drop-label" style="color:var(--error)">💬 INFORMAL / WRONG</div>
+      <div class="drop-zone" id="drop-informal" ondragover="dragOver(event)" ondrop="dropItem(event,'informal')"></div>
+    </div>
+  </div>
+
+  <div class="drop-label">PHRASE BANK — drag these:</div>
+  <div class="drag-zone" id="phrase-bank">
+    <div class="drag-item" draggable="true" data-cat="formal" ondragstart="dragStart(event)" id="d1">I am writing to express my dissatisfaction with...</div>
+    <div class="drag-item" draggable="true" data-cat="informal" ondragstart="dragStart(event)" id="d2">I'm really annoyed about...</div>
+    <div class="drag-item" draggable="true" data-cat="formal" ondragstart="dragStart(event)" id="d3">I feel I am entitled to a full refund.</div>
+    <div class="drag-item" draggable="true" data-cat="informal" ondragstart="dragStart(event)" id="d4">Give me my money back!</div>
+    <div class="drag-item" draggable="true" data-cat="formal" ondragstart="dragStart(event)" id="d5">We were given a cold sandwich.</div>
+    <div class="drag-item" draggable="true" data-cat="informal" ondragstart="dragStart(event)" id="d6">They gave us a gross sandwich.</div>
+    <div class="drag-item" draggable="true" data-cat="formal" ondragstart="dragStart(event)" id="d7">I look forward to your response.</div>
+    <div class="drag-item" draggable="true" data-cat="informal" ondragstart="dragStart(event)" id="d8">Hope to hear from you soon. Thanks!</div>
+  </div>
+
+  <div class="feedback" id="fb1"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkDrag()">Check Answers</button>
+    <button class="btn btn-outline" onclick="resetDrag()">Reset</button>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: CONNECTORS ===== -->
+<section class="section" id="sec2">
+  <div class="section-header">
+    <div class="section-icon">🔗</div>
+    <div>
+      <h2>Activity 2<br>Fill the Gaps — Connectors</h2>
+      <p>Choose the best connector to complete each sentence.</p>
+    </div>
+  </div>
+
+  <div class="score-badge" id="score2">Score: 0 / 5</div>
+
+  <div id="connector-qs"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkConnectors()">Check Answers</button>
+    <button class="btn btn-outline" onclick="resetConnectors()">Reset</button>
+  </div>
+</section>
+
+<!-- ===== SECTION 3: GRAMMAR POWERS ===== -->
+<section class="section" id="sec3">
+  <div class="section-header">
+    <div class="section-icon">🔮</div>
+    <div>
+      <h2>Activity 3<br>Grammar Superpowers</h2>
+      <p>Rewrite or identify sentences using passive voice, reported speech & contrast.</p>
+    </div>
+  </div>
+
+  <div class="score-badge" id="score3">Score: 0 / 4</div>
+
+  <div id="grammar-qs"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="checkGrammar()">Check Answers</button>
+    <button class="btn btn-outline" onclick="resetGrammar()">Reset</button>
+  </div>
+</section>
+
+<!-- ===== SECTION 4: SPOT THE ERROR ===== -->
+<section class="section" id="sec4">
+  <div class="section-header">
+    <div class="section-icon">🔍</div>
+    <div>
+      <h2>Activity 4<br>Spot the Error</h2>
+      <p>This letter has problems. Click the sentence that is <strong>wrong</strong> in each pair.</p>
+    </div>
+  </div>
+
+  <div class="score-badge" id="score4">Score: 0 / 5</div>
+
+  <div id="spot-qs"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-outline" onclick="resetSpot()">Reset</button>
+  </div>
+</section>
+
+<!-- ===== SECTION 5: BUILD A LETTER ===== -->
+<section class="section" id="sec5">
+  <div class="section-header">
+    <div class="section-icon">✍️</div>
+    <div>
+      <h2>Activity 5<br>Build Your Letter</h2>
+      <p>All options below are correct and formal. Choose the phrase you prefer for each part — then watch your letter take shape!</p>
+    </div>
+  </div>
+
+  <div class="hint-box">
+    <strong>Scenario:</strong> You booked a 5-day beach holiday (Booking Ref: BH2024). The brochure promised a sea-view room, but you were given a room facing a car park. The pool was closed for repairs and the food was described as "gourmet" but was cold and unappetising.
+  </div>
+
+  <!-- STEP-BY-STEP PICKERS -->
+  <div id="letter-steps">
+
+    <!-- STEP 1: GREETING -->
+    <div class="letter-step" id="step-greeting">
+      <div class="step-label"><span class="step-num">1</span> Choose your greeting</div>
+      <div class="step-note">You are writing to the manager but do not know their name.</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('greeting', this, 'Dear Sir / Madam,')">Dear Sir / Madam,</span>
+        <span class="phrase-chip" onclick="selectStep('greeting', this, 'Dear Customer Services Manager,')">Dear Customer Services Manager,</span>
+        <span class="phrase-chip" onclick="selectStep('greeting', this, 'To Whom It May Concern,')">To Whom It May Concern,</span>
+      </div>
+    </div>
+
+    <!-- STEP 2: OPENING -->
+    <div class="letter-step" id="step-open">
+      <div class="step-label"><span class="step-num">2</span> Choose your opening sentence</div>
+      <div class="step-note">State clearly why you are writing and include the booking reference BH2024.</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('open', this, 'I am writing to complain about the 5-day beach holiday I booked with your company (Booking Ref: BH2024).')">I am writing to complain about…</span>
+        <span class="phrase-chip" onclick="selectStep('open', this, 'I wish to express my dissatisfaction with the 5-day beach holiday provided by your company (Booking Ref: BH2024).')">I wish to express my dissatisfaction with…</span>
+        <span class="phrase-chip" onclick="selectStep('open', this, 'I am writing to bring to your attention several serious issues regarding my recent 5-day beach holiday (Booking Ref: BH2024).')">I am writing to bring to your attention…</span>
+      </div>
+    </div>
+
+    <!-- STEP 3: PROBLEM 1 — ROOM -->
+    <div class="letter-step" id="step-p1">
+      <div class="step-label"><span class="step-num">3</span> Describe the first problem: the room</div>
+      <div class="step-note">The brochure promised a sea-view room. You got a room facing a car park.</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('p1', this, 'Firstly, although the brochure stated that we would be given a sea-view room, we were in fact placed in a room overlooking a car park.')">Firstly, although the brochure stated…</span>
+        <span class="phrase-chip" onclick="selectStep('p1', this, 'First of all, the accommodation did not match what had been advertised. We were given a room facing a car park, despite the brochure's promise of a sea view.')">First of all, the accommodation did not match…</span>
+        <span class="phrase-chip" onclick="selectStep('p1', this, 'To begin with, I was extremely disappointed to find that the room we had been assigned overlooked a car park rather than the sea, as stated in the brochure.')">To begin with, I was extremely disappointed…</span>
+      </div>
+    </div>
+
+    <!-- STEP 4: PROBLEM 2 — POOL -->
+    <div class="letter-step" id="step-p2">
+      <div class="step-label"><span class="step-num">4</span> Add the second problem: the pool</div>
+      <div class="step-note">The pool was closed for the entire stay.</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('p2', this, 'Furthermore, the swimming pool was closed for repairs throughout our entire stay, which was a significant inconvenience.')">Furthermore, the swimming pool was closed…</span>
+        <span class="phrase-chip" onclick="selectStep('p2', this, 'Secondly, we were informed upon arrival that the pool would be unavailable for the duration of our holiday due to ongoing maintenance work.')">Secondly, we were informed upon arrival…</span>
+        <span class="phrase-chip" onclick="selectStep('p2', this, 'In addition, the pool facilities that had been advertised were entirely inaccessible during our stay, as they had been closed for repair without prior notice.')">In addition, the pool facilities…</span>
+      </div>
+    </div>
+
+    <!-- STEP 5: PROBLEM 3 — FOOD -->
+    <div class="letter-step" id="step-p3">
+      <div class="step-label"><span class="step-num">5</span> Add the third problem: the food</div>
+      <div class="step-note">The brochure described the food as "gourmet" but it was cold and unappetising.</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('p3', this, 'To make matters worse, the food served at the hotel fell far short of the "gourmet" standard advertised. The meals were consistently cold and wholly unappetising.')">To make matters worse, the food…</span>
+        <span class="phrase-chip" onclick="selectStep('p3', this, 'Finally, I was shocked by the poor quality of the meals. Although the brochure described the cuisine as gourmet, the food we were served was cold and unappetising on every occasion.')">Finally, I was shocked by the poor quality…</span>
+        <span class="phrase-chip" onclick="selectStep('p3', this, 'Moreover, the quality of the food was deeply disappointing. Despite being described as gourmet in the brochure, the meals were cold and of a very poor standard throughout our stay.')">Moreover, the quality of the food…</span>
+      </div>
+    </div>
+
+    <!-- STEP 6: DEMAND -->
+    <div class="letter-step" id="step-demand">
+      <div class="step-label"><span class="step-num">6</span> State your demand</div>
+      <div class="step-note">What do you expect the company to do about it?</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('demand', this, 'In light of the above, I feel that I am entitled to a full refund and I hope you will take the necessary steps to resolve this matter promptly.')">I feel that I am entitled to a full refund…</span>
+        <span class="phrase-chip" onclick="selectStep('demand', this, 'I therefore expect a full refund for the cost of the holiday, as the service provided was entirely inconsistent with what had been advertised.')">I therefore expect a full refund…</span>
+        <span class="phrase-chip" onclick="selectStep('demand', this, 'I must insist on appropriate compensation for the considerable inconvenience and disappointment caused by these failures. I look forward to your prompt response.')">I must insist on appropriate compensation…</span>
+      </div>
+    </div>
+
+    <!-- STEP 7: CLOSING -->
+    <div class="letter-step" id="step-close">
+      <div class="step-label"><span class="step-num">7</span> Choose your closing</div>
+      <div class="step-note">Match your closing to your greeting. (Faithfully = didn't know the name; Sincerely = knew the name.)</div>
+      <div class="letter-picker">
+        <span class="phrase-chip" onclick="selectStep('close', this, 'I look forward to your response.\nYours faithfully,')">I look forward to your response. / Yours faithfully,</span>
+        <span class="phrase-chip" onclick="selectStep('close', this, 'I await your reply at your earliest convenience.\nYours faithfully,')">I await your reply at your earliest convenience. / Yours faithfully,</span>
+        <span class="phrase-chip" onclick="selectStep('close', this, 'I trust this matter will be dealt with promptly.\nYours faithfully,')">I trust this matter will be dealt with promptly. / Yours faithfully,</span>
+      </div>
+    </div>
+
+  </div><!-- end letter-steps -->
+
+  <!-- LIVE LETTER PREVIEW -->
+  <div style="margin-top:2rem">
+    <div class="drop-label" style="margin-bottom:0.5rem">📄 YOUR LETTER — builds as you choose above:</div>
+    <div class="letter-frame" id="letterPreview" style="min-height:200px;white-space:pre-line;line-height:2;color:#333;font-size:0.92rem">
+      <span style="color:#bbb;font-style:italic">Your letter will appear here as you make your selections above…</span>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:1.25rem">
+    <button class="btn btn-success" onclick="checkLetter()">Check My Letter ✓</button>
+    <button class="btn btn-outline" onclick="clearLetter()">Start Again</button>
+  </div>
+
+  <div id="letter-feedback" style="margin-top:1rem"></div>
+
+  <div class="certificate" id="certificate">
+    <div style="font-size:3rem;margin-bottom:0.5rem">🏅</div>
+    <h2>Mission Complete!</h2>
+    <p>You've built a complaint letter like a true detective.</p>
+    <div class="big-score" id="finalScoreDisplay">A+</div>
+    <p style="font-size:0.9rem;color:#888;margin-top:0.75rem">Keep your cool. Be specific. Get results.</p>
+  </div>
+</section>
+
+<script>
+// =====================
+// NAVIGATION
+// =====================
+const completedSections = new Set();
+let currentSection = 0;
+
+function showSection(idx) {
+  document.querySelectorAll('.section').forEach((s,i) => s.classList.toggle('active', i===idx));
+  document.querySelectorAll('.nav-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+  currentSection = idx;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function markComplete(idx) {
+  if (idx > 0 && idx <= 5) {
+    completedSections.add(idx);
+    updateProgress();
+  }
+}
+
+function updateProgress() {
+  const count = completedSections.size;
+  document.getElementById('progressFill').style.width = (count/5*100)+'%';
+  document.getElementById('progressLabel').textContent = count+' / 5 activities completed';
+}
+
+// =====================
+// ACCORDIONS
+// =====================
+function toggleAccordion(head) {
+  head.classList.toggle('open');
+  head.nextElementSibling.classList.toggle('open');
+}
+
+// =====================
+// ACTIVITY 1: DRAG & DROP
+// =====================
+let draggedEl = null;
+let dragScores = {formal:0, informal:0};
+
+function dragStart(e) {
+  draggedEl = e.target;
+  draggedEl.classList.add('dragging');
+}
+
+function dragOver(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+document.addEventListener('dragleave', e => {
+  if (e.target.classList) e.target.classList.remove('drag-over');
+});
+
+function dropItem(e, zone) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (!draggedEl) return;
+  draggedEl.classList.remove('dragging');
+  e.currentTarget.appendChild(draggedEl);
+  draggedEl = null;
+}
+
+function checkDrag() {
+  const formal = document.getElementById('drop-formal');
+  const informal = document.getElementById('drop-informal');
+  let correct = 0;
+  const all = [...formal.querySelectorAll('.drag-item'), ...informal.querySelectorAll('.drag-item')];
+  all.forEach(el => {
+    const inFormal = formal.contains(el);
+    const cat = el.dataset.cat;
+    el.classList.remove('correct','wrong');
+    if ((inFormal && cat==='formal') || (!inFormal && cat==='informal')) {
+      el.classList.add('correct'); correct++;
+    } else {
+      el.classList.add('wrong');
+    }
+  });
+  document.getElementById('score1').textContent = `Score: ${correct} / 8`;
+  showFeedback('fb1', correct, 8);
+  if (correct >= 6) markComplete(1);
+}
+
+function resetDrag() {
+  const bank = document.getElementById('phrase-bank');
+  ['drop-formal','drop-informal'].forEach(id => {
+    document.getElementById(id).querySelectorAll('.drag-item').forEach(el => {
+      el.classList.remove('correct','wrong');
+      bank.appendChild(el);
+    });
+  });
+  document.getElementById('score1').textContent = 'Score: 0 / 8';
+  hideFeedback('fb1');
+}
+
+// =====================
+// ACTIVITY 2: CONNECTORS
+// =====================
+const connectorQs = [
+  {
+    text: "________, the hotel room was dirty and smelled of smoke.",
+    options: ["A) However", "B) Firstly", "C) Although", "D) Finally"],
+    answer: 1,
+    explanation: "'Firstly' is used to introduce the first problem in a list."
+  },
+  {
+    text: "The brochure promised a sea view. ________, our room faced a car park.",
+    options: ["A) Firstly", "B) Furthermore", "C) However", "D) To make matters worse"],
+    answer: 2,
+    explanation: "'However' contrasts two sentences. It goes after a full stop."
+  },
+  {
+    text: "________, the pool was closed for the entire week.",
+    options: ["A) Although", "B) Furthermore", "C) Yours faithfully", "D) Secondly"],
+    answer: 3,
+    explanation: "'Secondly' introduces the second problem. 'Furthermore' could also work here for adding info."
+  },
+  {
+    text: "________ the advert stated that all meals were included, we only received breakfast.",
+    options: ["A) However", "B) Although", "C) Firstly", "D) Finally"],
+    answer: 1,
+    explanation: "'Although' introduces a contrast clause at the start of a sentence."
+  },
+  {
+    text: "________, we were kept awake by loud music from a nearby bar until 3 am.",
+    options: ["A) Yours sincerely", "B) Secondly", "C) Although", "D) To make matters worse"],
+    answer: 3,
+    explanation: "'To make matters worse' is perfect for escalating — when things go from bad to really bad!"
+  }
+];
+
+function buildConnectorQs() {
+  const container = document.getElementById('connector-qs');
+  container.innerHTML = connectorQs.map((q,i) => `
+    <div class="question-block card">
+      <div class="card-label">Question ${i+1}</div>
+      <div class="question-text"><span class="q-number">Q${i+1}</span> ${q.text}</div>
+      <div class="options-list" id="cq-opts-${i}">
+        ${q.options.map((o,j) => `
+          <button class="option-btn" onclick="selectConnector(${i},${j})" id="cq-${i}-${j}">
+            <span class="opt-letter">${String.fromCharCode(65+j)}</span> ${o.substring(3)}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="cfb-${i}"></div>
+    </div>
+  `).join('');
+}
+
+let connectorAnswers = {};
+
+function selectConnector(qIdx, optIdx) {
+  connectorAnswers[qIdx] = optIdx;
+  document.querySelectorAll(`#cq-opts-${qIdx} .option-btn`).forEach((b,j) => {
+    b.classList.toggle('selected-hover', j===optIdx);
+    b.style.borderColor = j===optIdx ? 'var(--ink)' : '';
+    b.style.background = j===optIdx ? 'var(--cream)' : '';
+  });
+}
+
+function checkConnectors() {
+  let correct = 0;
+  connectorQs.forEach((q,i) => {
+    const sel = connectorAnswers[i];
+    const btns = document.querySelectorAll(`#cq-opts-${i} .option-btn`);
+    btns.forEach(b => { b.disabled = true; b.classList.remove('correct','wrong'); });
+    const fb = document.getElementById(`cfb-${i}`);
+    if (sel === undefined) {
+      showFeedbackEl(fb, false, `⚠️ You didn't select an answer. Correct: ${q.options[q.answer]}`);
+    } else if (sel === q.answer) {
+      btns[sel].classList.add('correct');
+      showFeedbackEl(fb, true, `✓ Correct! ${q.explanation}`);
+      correct++;
+    } else {
+      btns[sel].classList.add('wrong');
+      btns[q.answer].classList.add('correct');
+      showFeedbackEl(fb, false, `✗ Not quite. ${q.explanation}`);
+    }
+  });
+  document.getElementById('score2').textContent = `Score: ${correct} / 5`;
+  if (correct >= 4) markComplete(2);
+}
+
+function resetConnectors() {
+  connectorAnswers = {};
+  buildConnectorQs();
+  document.getElementById('score2').textContent = 'Score: 0 / 5';
+}
+
+// =====================
+// ACTIVITY 3: GRAMMAR
+// =====================
+const grammarQs = [
+  {
+    type: 'mc',
+    label: 'Passive Voice',
+    text: 'Which sentence uses the passive voice correctly?',
+    options: [
+      "The manager ignored our complaints.",
+      "We were ignored by the manager.",
+      "We ignored the manager's reply.",
+      "The manager was ignoring us."
+    ],
+    answer: 1,
+    explanation: "Passive voice = was/were + past participle. 'We were ignored' places focus on what happened to us."
+  },
+  {
+    type: 'mc',
+    label: 'Reported Speech',
+    text: 'The brochure says: "The hotel has a rooftop pool." How do you report this?',
+    options: [
+      "The brochure said the hotel has a rooftop pool.",
+      "The brochure stated that the hotel had a rooftop pool.",
+      "The brochure says that the hotel would have a pool.",
+      "The brochure told that the hotel had a pool."
+    ],
+    answer: 1,
+    explanation: "In reported speech, tenses shift back: 'has' → 'had'. We use 'stated that', not 'told that'."
+  },
+  {
+    type: 'mc',
+    label: 'Contrasting',
+    text: 'Which sentence uses "Although" correctly?',
+    options: [
+      "Although, the room was dirty.",
+      "Although the room was dirty we asked to move.",
+      "Although the room was dirty, we asked to move.",
+      "We asked to move although but the room was dirty."
+    ],
+    answer: 2,
+    explanation: "'Although + subject + verb, main clause.' A comma separates the two clauses."
+  },
+  {
+    type: 'mc',
+    label: 'Adjectives & Tone',
+    text: 'Which sentence is most appropriate for a formal complaint letter?',
+    options: [
+      "I'm super mad about the horrible food!!",
+      "The food was bad and gross.",
+      "I was extremely disappointed with the quality of the meals provided.",
+      "What you served us was totally disgusting, honestly."
+    ],
+    answer: 2,
+    explanation: "Formal tone = polite, calm, specific language. 'Extremely disappointed' is strong but professional."
+  }
+];
+
+function buildGrammarQs() {
+  const container = document.getElementById('grammar-qs');
+  container.innerHTML = grammarQs.map((q,i) => `
+    <div class="question-block card">
+      <div class="card-label">${q.label}</div>
+      <div class="question-text"><span class="q-number">Q${i+1}</span> ${q.text}</div>
+      <div class="options-list" id="gq-opts-${i}">
+        ${q.options.map((o,j) => `
+          <button class="option-btn" onclick="selectGrammar(${i},${j})" id="gq-${i}-${j}">
+            <span class="opt-letter">${String.fromCharCode(65+j)}</span> ${o}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="gfb-${i}"></div>
+    </div>
+  `).join('');
+}
+
+let grammarAnswers = {};
+
+function selectGrammar(qIdx, optIdx) {
+  grammarAnswers[qIdx] = optIdx;
+  document.querySelectorAll(`#gq-opts-${qIdx} .option-btn`).forEach((b,j) => {
+    b.style.borderColor = j===optIdx ? 'var(--ink)' : '';
+    b.style.background = j===optIdx ? 'var(--cream)' : '';
+  });
+}
+
+function checkGrammar() {
+  let correct = 0;
+  grammarQs.forEach((q,i) => {
+    const sel = grammarAnswers[i];
+    const btns = document.querySelectorAll(`#gq-opts-${i} .option-btn`);
+    btns.forEach(b => { b.disabled = true; b.classList.remove('correct','wrong'); });
+    const fb = document.getElementById(`gfb-${i}`);
+    if (sel === undefined) {
+      showFeedbackEl(fb, false, `⚠️ You didn't answer. Correct: option ${String.fromCharCode(65+q.answer)}`);
+    } else if (sel === q.answer) {
+      btns[sel].classList.add('correct');
+      showFeedbackEl(fb, true, `✓ Correct! ${q.explanation}`);
+      correct++;
+    } else {
+      btns[sel].classList.add('wrong');
+      btns[q.answer].classList.add('correct');
+      showFeedbackEl(fb, false, `✗ ${q.explanation}`);
+    }
+  });
+  document.getElementById('score3').textContent = `Score: ${correct} / 4`;
+  if (correct >= 3) markComplete(3);
+}
+
+function resetGrammar() {
+  grammarAnswers = {};
+  buildGrammarQs();
+  document.getElementById('score3').textContent = 'Score: 0 / 4';
+}
+
+// =====================
+// ACTIVITY 4: SPOT THE ERROR
+// =====================
+const spotQs = [
+  {
+    label: "Greeting",
+    pairs: [
+      { text: "Dear Sir / Madam,", correct: true },
+      { text: "Hey, to whom it may concern!", correct: false }
+    ],
+    explanation: "'Hey' is far too informal. 'Dear Sir / Madam,' is the correct formal greeting when you don't know the name."
+  },
+  {
+    label: "Opening Line",
+    pairs: [
+      { text: "I am writing to express my dissatisfaction with the service.", correct: true },
+      { text: "I am writing to complain about the very bad service I got.", correct: false }
+    ],
+    explanation: "'Very bad' is vague and informal. 'Express my dissatisfaction' is formal and precise."
+  },
+  {
+    label: "Passive Voice",
+    pairs: [
+      { text: "We were given a room facing the car park.", correct: true },
+      { text: "They putted us in a room facing the car park.", correct: false }
+    ],
+    explanation: "'Putted' is not a word — 'put' is irregular. Also, active voice ('they put us') is less formal here."
+  },
+  {
+    label: "Reported Speech",
+    pairs: [
+      { text: "The brochure stated that all meals were included.", correct: true },
+      { text: "The brochure stated that all meals are included.", correct: false }
+    ],
+    explanation: "Reported speech shifts tenses back: 'are' → 'were'. This is called backshifting."
+  },
+  {
+    label: "Closing",
+    pairs: [
+      { text: "I look forward to your prompt response.\nYours faithfully,", correct: true },
+      { text: "Hoping u reply soon! Cheers 😊", correct: false }
+    ],
+    explanation: "Emojis, text speak ('u'), and 'Cheers' have no place in a formal complaint letter."
+  }
+];
+
+let spotAnswers = {};
+
+function buildSpotQs() {
+  const container = document.getElementById('spot-qs');
+  container.innerHTML = spotQs.map((q,i) => `
+    <div class="question-block card">
+      <div class="card-label">${q.label}</div>
+      <div class="question-text"><span class="q-number">Q${i+1}</span> Click the sentence that is <strong>WRONG</strong> for a formal complaint letter:</div>
+      <div class="options-list">
+        ${q.pairs.map((p,j) => `
+          <button class="option-btn" onclick="selectSpot(${i},${j})" id="sp-${i}-${j}" style="white-space:pre-line">
+            <span class="opt-letter">${String.fromCharCode(65+j)}</span> ${p.text}
+          </button>
+        `).join('')}
+      </div>
+      <div class="feedback" id="sfb-${i}"></div>
+    </div>
+  `).join('');
+}
+
+function selectSpot(qIdx, optIdx) {
+  const q = spotQs[qIdx];
+  const btns = [document.getElementById(`sp-${qIdx}-0`), document.getElementById(`sp-${qIdx}-1`)];
+  btns.forEach(b => { b.disabled = true; b.classList.remove('correct','wrong'); });
+  const fb = document.getElementById(`sfb-${qIdx}`);
+
+  const clickedCorrect = !q.pairs[optIdx].correct; // We want them to click the WRONG one
+  spotAnswers[qIdx] = clickedCorrect;
+
+  if (clickedCorrect) {
+    btns[optIdx].classList.add('correct');
+    showFeedbackEl(fb, true, `✓ Correct! ${q.explanation}`);
+  } else {
+    btns[optIdx].classList.add('wrong');
+    btns[1-optIdx].classList.add('correct');
+    showFeedbackEl(fb, false, `✗ That was actually the correct one! ${q.explanation}`);
+  }
+
+  const total = Object.keys(spotAnswers).length;
+  const correct = Object.values(spotAnswers).filter(Boolean).length;
+  document.getElementById('score4').textContent = `Score: ${correct} / ${total}`;
+  if (Object.keys(spotAnswers).length === 5 && correct >= 4) markComplete(4);
+}
+
+function resetSpot() {
+  spotAnswers = {};
+  buildSpotQs();
+  document.getElementById('score4').textContent = 'Score: 0 / 5';
+}
+
+// =====================
+// ACTIVITY 5: LETTER BUILDER
+// =====================
+const letterParts = {
+  greeting: null, open: null,
+  p1: null, p2: null, p3: null,
+  demand: null, close: null
+};
+
+const stepLabels = {
+  greeting: 'Greeting',
+  open: 'Opening',
+  p1: 'Problem 1 (room)',
+  p2: 'Problem 2 (pool)',
+  p3: 'Problem 3 (food)',
+  demand: 'Demand',
+  close: 'Closing'
+};
+
+function selectStep(key, el, text) {
+  // Deselect siblings
+  el.closest('.letter-picker').querySelectorAll('.phrase-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  letterParts[key] = text;
+  updateLetterPreview();
+}
+
+function updateLetterPreview() {
+  const preview = document.getElementById('letterPreview');
+  const address = '12 Elm Street\nLondon, SW1 3AB\n7th March 2026\n\nThe Manager\nSunBliss Travel Agency\n14 Holiday Road, London, W1 2AB\n';
+  const parts = [
+    letterParts.greeting,
+    letterParts.open,
+    [letterParts.p1, letterParts.p2, letterParts.p3].filter(Boolean).join(' '),
+    letterParts.demand,
+    letterParts.close,
+    '\n[Your name]'
+  ].filter(Boolean);
+
+  if (parts.length === 0) {
+    preview.innerHTML = '<span style="color:#bbb;font-style:italic">Your letter will appear here as you make your selections above…</span>';
+    return;
+  }
+
+  const text = address + '\n' + parts.join('\n\n');
+  preview.textContent = text;
+}
+
+function checkLetter() {
+  const filled = Object.entries(letterParts).filter(([,v]) => v !== null);
+  const total = Object.keys(letterParts).length; // 7
+  const count = filled.length;
+
+  const fbEl = document.getElementById('letter-feedback');
+  let html = `<div class="card" style="border-color:${count===total?'var(--success)':'var(--amber)'}">`;
+  html += `<div class="score-badge" style="margin-bottom:0.75rem">Sections completed: ${count} / ${total}</div>`;
+
+  if (count === total) {
+    html += `<p style="color:var(--success);font-weight:600;margin-bottom:0.75rem">🎉 Your letter is complete! Every section has been filled with correct, formal language. Well done, detective!</p>`;
+    // Show language observations
+    const observations = [];
+    if (letterParts.p1 && /although/i.test(letterParts.p1)) observations.push("✓ You used <strong>Although</strong> to contrast the brochure's promise with reality — great use of contrast!");
+    if (letterParts.p1 && /were (given|placed|assigned)/i.test(letterParts.p1)) observations.push("✓ You used the <strong>passive voice</strong> — putting the focus on what happened to you.");
+    if (letterParts.p1 && /stated/i.test(letterParts.p1)) observations.push("✓ You used <strong>reported speech</strong> to quote the brochure — very effective.");
+    if (letterParts.p2 && /furthermore|secondly|in addition/i.test(letterParts.p2)) observations.push("✓ You used a <strong>connector</strong> to introduce the second problem smoothly.");
+    if (letterParts.p3 && /to make matters worse|finally|moreover/i.test(letterParts.p3)) observations.push("✓ Nice use of an <strong>escalating connector</strong> for the final problem.");
+    if (letterParts.demand && /entitled|insist|expect/i.test(letterParts.demand)) observations.push("✓ Your demand is <strong>polite but firm</strong> — exactly the right tone.");
+    if (observations.length > 0) {
+      html += `<p style="font-weight:600;margin-bottom:0.5rem">Language highlights in your letter:</p>`;
+      html += observations.map(o => `<p style="margin:0.3rem 0;font-size:0.88rem">${o}</p>`).join('');
+    }
+  } else {
+    const missing = Object.entries(letterParts).filter(([,v]) => v === null).map(([k]) => stepLabels[k]);
+    html += `<p style="font-weight:600;margin-bottom:0.5rem">Almost there! You still need to choose:</p>`;
+    html += missing.map(m => `<p style="margin:0.3rem 0;font-size:0.88rem">⚠️ ${m}</p>`).join('');
+  }
+
+  html += `</div>`;
+  fbEl.innerHTML = html;
+
+  if (count === total) {
+    markComplete(5);
+    document.getElementById('certificate').classList.add('show');
+  }
+}
+
+function clearLetter() {
+  Object.keys(letterParts).forEach(k => letterParts[k] = null);
+  document.querySelectorAll('#letter-steps .phrase-chip').forEach(el => el.classList.remove('selected'));
+  updateLetterPreview();
+  document.getElementById('letter-feedback').innerHTML = '';
+  document.getElementById('certificate').classList.remove('show');
+}
+
+// =====================
+// SHARED HELPERS
+// =====================
+function showFeedback(id, correct, total) {
+  const el = document.getElementById(id);
+  el.className = 'feedback show ' + (correct >= total*0.75 ? 'ok' : 'bad');
+  el.textContent = correct >= total*0.75
+    ? `✓ Great work! ${correct}/${total} correct.`
+    : `✗ ${correct}/${total} correct. Review the incorrect ones (shown in red) and try again.`;
+}
+
+function hideFeedback(id) {
+  const el = document.getElementById(id);
+  el.className = 'feedback';
+  el.textContent = '';
+}
+
+function showFeedbackEl(el, ok, msg) {
+  el.className = 'feedback show ' + (ok ? 'ok' : 'bad');
+  el.textContent = msg;
+}
+
+// =====================
+// INIT
+// =====================
+document.addEventListener('DOMContentLoaded', () => {
+  buildConnectorQs();
+  buildGrammarQs();
+  buildSpotQs();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Media Vocabulary Lab</title>
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: #fff;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 1rem;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Score & Intro */
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
+        }
+
+        .score-num {
+            font-weight: 700;
+            color: var(--primary);
+            background: #dbeafe;
+            padding: 0.2rem 0.75rem;
+            border-radius: 20px;
+        }
+
+        .section-intro {
+            background: #f1f5f9;
+            padding: 1.25rem;
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            color: #475569;
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--text-muted);
+        }
+
+        /* Question Blocks */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-2px); }
+
+        .q-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .q-verb {
+            display: inline-block;
+            font-size: 1rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            background: #eff6ff;
+            color: var(--primary);
+            border-radius: 6px;
+            margin-bottom: 1.25rem;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Grid Layouts */
+        .headlines-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .hl-btn, .role-btn, .tf-btn {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            color: var(--text-main);
+        }
+
+        .hl-btn:hover:not(:disabled), .role-btn:hover:not(:disabled), .tf-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        /* Extract Styling */
+        .extract-text {
+            font-family: 'Georgia', serif;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #334155;
+            padding: 1.5rem;
+            background: #fdfdfd;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .extract-text::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            font-size: 4rem;
+            color: #e2e8f0;
+            font-family: serif;
+        }
+
+        .roles-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .role-btn {
+            border-radius: 30px;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* T/F Options */
+        .tf-options {
+            display: flex;
+            gap: 1rem;
+        }
+        .tf-btn { text-align: center; font-weight: 600; flex: 1; }
+
+        /* Statuses */
+        .correct {
+            background: #ecfdf5 !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+        }
+
+        .wrong {
+            background: #fef2f2 !important;
+            border-color: var(--danger) !important;
+            color: #991b1b !important;
+        }
+
+        .dimmed { opacity: 0.4; }
+
+        .feedback {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .feedback.show-correct { display: block; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .feedback.show-incorrect { display: block; background: #fff1f2; border: 1px solid #fecaca; color: #991b1b; }
+
+        .reset-btn {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover { background: #fff; border-color: var(--text-muted); color: var(--text-main); }
+
+        @media (min-width: 640px) {
+            .headlines-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Media Vocabulary Lab</h1>
+        <p>Master the language of the newsroom</p>
+    </header>
+
+    <nav class="nav-container">
+        <button class="nav-btn active" onclick="showSection('s1')">1. Headlines</button>
+        <button class="nav-btn" onclick="showSection('s2')">2. Voices</button>
+        <button class="nav-btn" onclick="showSection('s3')">3. Ethics</button>
+    </nav>
+
+    <div id="s1" class="section active">
+        <div class="score-bar">
+            <span>Section Progress: <span class="score-num" id="score1">0 / 5</span></span>
+            <button class="reset-btn" onclick="resetSection('s1')">Reset Section</button>
+        </div>
+        <div class="section-intro">
+            Select the headline where the verb is <strong>not</strong> used in its professional newspaper style.
+        </div>
+
+        <div class="card" id="q1">
+            <div class="q-label">Case Study 01</div>
+            <div class="q-verb">back</div>
+            <div class="headlines-grid">
+                <button class="hl-btn" onclick="checkHL(this,'q1',false)">PM backs new energy bill</button>
+                <button class="hl-btn" onclick="checkHL(this,'q1',false)">Trade unions back strike action</button>
+                <button class="hl-btn" onclick="checkHL(this,'q1',true)">City backs away from canal</button>
+                <button class="hl-btn" onclick="checkHL(this,'q1',false)">Opposition backs spending cuts</button>
+            </div>
+            <div class="feedback" id="q1-fb"></div>
+        </div>
+
+        <div class="card" id="q2">
+            <div class="q-label">Case Study 02</div>
+            <div class="q-verb">axe</div>
+            <div class="headlines-grid">
+                <button class="hl-btn" onclick="checkHL(this,'q2',false)">Council axes library services</button>
+                <button class="hl-btn" onclick="checkHL(this,'q2',false)">Thousands of jobs axed in merger</button>
+                <button class="hl-btn" onclick="checkHL(this,'q2',false)">Government axes free school meals</button>
+                <button class="hl-btn" onclick="checkHL(this,'q2',true)">Logger axes tree in forest</button>
+            </div>
+            <div class="feedback" id="q2-fb"></div>
+        </div>
+
+        <div class="card" id="q3">
+            <div class="q-label">Case Study 03</div>
+            <div class="q-verb">vow</div>
+            <div class="headlines-grid">
+                <button class="hl-btn" onclick="checkHL(this,'q3',false)">Minister vows to cut waiting times</button>
+                <button class="hl-btn" onclick="checkHL(this,'q3',true)">Couple vow to love each other forever</button>
+                <button class="hl-btn" onclick="checkHL(this,'q3',false)">Coach vows revenge after final defeat</button>
+                <button class="hl-btn" onclick="checkHL(this,'q3',false)">President vows tougher border controls</button>
+            </div>
+            <div class="feedback" id="q3-fb"></div>
+        </div>
+
+        <div class="card" id="q4">
+            <div class="q-label">Case Study 04</div>
+            <div class="q-verb">quiz</div>
+            <div class="headlines-grid">
+                <button class="hl-btn" onclick="checkHL(this,'q4',false)">Detective quizzes suspect over theft</button>
+                <button class="hl-btn" onclick="checkHL(this,'q4',true)">School holds quiz on Friday afternoon</button>
+                <button class="hl-btn" onclick="checkHL(this,'q4',false)">Officers quiz businessman over fraud claims</button>
+                <button class="hl-btn" onclick="checkHL(this,'q4',false)">MPs quiz minister on defence spending</button>
+            </div>
+            <div class="feedback" id="q4-fb"></div>
+        </div>
+
+        <div class="card" id="q5">
+            <div class="q-label">Case Study 05</div>
+            <div class="q-verb">clash</div>
+            <div class="headlines-grid">
+                <button class="hl-btn" onclick="checkHL(this,'q5',false)">Leaders clash over immigration policy</button>
+                <button class="hl-btn" onclick="checkHL(this,'q5',false)">Rivals clash in budget debate</button>
+                <button class="hl-btn" onclick="checkHL(this,'q5',true)">Red clashes with orange in new painting</button>
+                <button class="hl-btn" onclick="checkHL(this,'q5',false)">Ministers clash on climate targets</button>
+            </div>
+            <div class="feedback" id="q5-fb"></div>
+        </div>
+    </div>
+
+    <div id="s2" class="section">
+        <div class="score-bar">
+            <span>Section Progress: <span class="score-num" id="score2">0 / 5</span></span>
+            <button class="reset-btn" onclick="resetSection('s2')">Reset Section</button>
+        </div>
+        <div class="section-intro">
+            Read the extracts below. Identify the media professional responsible for the text.
+        </div>
+
+        <div class="card" id="e1">
+            <div class="q-label">Extract 1</div>
+            <div class="extract-text">The performance is breathtaking. Cate Blanchett commands every scene with a precision that borders on the terrifying — a career-best turn in an already extraordinary career.</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="checkRole(this,'e1','critic')">critic</button>
+                <button class="role-btn" onclick="checkRole(this,'e1','newsreader')">newsreader</button>
+                <button class="role-btn" onclick="checkRole(this,'e1','paparazzi')">paparazzi</button>
+                <button class="role-btn" onclick="checkRole(this,'e1','commentator')">commentator</button>
+                <button class="role-btn" onclick="checkRole(this,'e1','reporter')">reporter</button>
+            </div>
+            <div class="feedback" id="e1-fb"></div>
+        </div>
+
+        <div class="card" id="e2">
+            <div class="q-label">Extract 2</div>
+            <div class="extract-text">Good evening. The Chancellor has announced a package of emergency measures aimed at reducing inflation, which reached a forty-year high this morning. Our economics correspondent reports from Westminster.</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="checkRole(this,'e2','critic')">critic</button>
+                <button class="role-btn" onclick="checkRole(this,'e2','newsreader')">newsreader</button>
+                <button class="role-btn" onclick="checkRole(this,'e2','agony aunt')">agony aunt</button>
+                <button class="role-btn" onclick="checkRole(this,'e2','editor')">editor</button>
+                <button class="role-btn" onclick="checkRole(this,'e2','presenter')">presenter</button>
+            </div>
+            <div class="feedback" id="e2-fb"></div>
+        </div>
+
+        <div class="card" id="e3">
+            <div class="q-label">Extract 3</div>
+            <div class="extract-text">Spotted! The newlyweds stepping out for the first time since the ceremony — and she's already ditched the designer gown for ripped jeans and trainers. Love it!</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="checkRole(this,'e3','reporter')">reporter</button>
+                <button class="role-btn" onclick="checkRole(this,'e3','newsreader')">newsreader</button>
+                <button class="role-btn" onclick="checkRole(this,'e3','paparazzi')">paparazzi</button>
+                <button class="role-btn" onclick="checkRole(this,'e3','commentator')">commentator</button>
+                <button class="role-btn" onclick="checkRole(this,'e3','editor')">editor</button>
+            </div>
+            <div class="feedback" id="e3-fb"></div>
+        </div>
+
+        <div class="card" id="e4">
+            <div class="q-label">Extract 4</div>
+            <div class="extract-text">Dear Worried in Warwick, I understand how painful this situation must feel. But pushing your son to speak before he is ready is likely to make things worse, not better. Give him time.</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="checkRole(this,'e4','critic')">critic</button>
+                <button class="role-btn" onclick="checkRole(this,'e4','agony aunt')">agony aunt</button>
+                <button class="role-btn" onclick="checkRole(this,'e4','reporter')">reporter</button>
+                <button class="role-btn" onclick="checkRole(this,'e4','freelance journalist')">freelance journalist</button>
+                <button class="role-btn" onclick="checkRole(this,'e4','commentator')">commentator</button>
+            </div>
+            <div class="feedback" id="e4-fb"></div>
+        </div>
+
+        <div class="card" id="e5">
+            <div class="q-label">Extract 5</div>
+            <div class="extract-text">What these polling figures reveal is a fundamental collapse in trust. The party has not lost voters because of one bad week — it has lost them over three years of broken promises and strategic incoherence.</div>
+            <div class="roles-grid">
+                <button class="role-btn" onclick="checkRole(this,'e5','newsreader')">newsreader</button>
+                <button class="role-btn" onclick="checkRole(this,'e5','paparazzi')">paparazzi</button>
+                <button class="role-btn" onclick="checkRole(this,'e5','commentator')">commentator</button>
+                <button class="role-btn" onclick="checkRole(this,'e5','agony aunt')">agony aunt</button>
+                <button class="role-btn" onclick="checkRole(this,'e5','reporter')">reporter</button>
+            </div>
+            <div class="feedback" id="e5-fb"></div>
+        </div>
+    </div>
+
+    <div id="s3" class="section">
+        <div class="score-bar">
+            <span>Section Progress: <span class="score-num" id="score3">0 / 6</span></span>
+            <button class="reset-btn" onclick="resetSection('s3')">Reset Section</button>
+        </div>
+        <div class="section-intro">
+            Evaluate the following statements regarding media ethics and terminology.
+        </div>
+
+        <div class="card" id="t1">
+            <div class="q-label">Statement 01</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;">A newspaper can be <em>biased</em> and <em>accurate</em> at the same time.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t1')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t1')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t1')">It depends</button>
+            </div>
+            <div class="feedback" id="t1-fb"></div>
+        </div>
+
+        <div class="card" id="t2">
+            <div class="q-label">Statement 02</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;"><em>Sensational</em> headlines always contain false information.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t2')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t2')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t2')">It depends</button>
+            </div>
+            <div class="feedback" id="t2-fb"></div>
+        </div>
+
+        <div class="card" id="t3">
+            <div class="q-label">Statement 03</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;">A news article can be <em>objective</em> even if the journalist has a personal opinion on the topic.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t3')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t3')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t3')">It depends</button>
+            </div>
+            <div class="feedback" id="t3-fb"></div>
+        </div>
+
+        <div class="card" id="t4">
+            <div class="q-label">Statement 04</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;">If a news story goes <em>viral</em>, it is probably <em>trustworthy</em>.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t4')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t4')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t4')">It depends</button>
+            </div>
+            <div class="feedback" id="t4-fb"></div>
+        </div>
+
+        <div class="card" id="t5">
+            <div class="q-label">Statement 05</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;"><em>Censored</em> media cannot exist in a democratic country.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t5')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t5')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t5')">It depends</button>
+            </div>
+            <div class="feedback" id="t5-fb"></div>
+        </div>
+
+        <div class="card" id="t6">
+            <div class="q-label">Statement 06</div>
+            <div class="statement" style="margin-bottom:1.5rem; font-weight:500;">A news source can be <em>reliable</em> even if it sometimes publishes <em>misleading</em> headlines.</div>
+            <div class="tf-options">
+                <button class="tf-btn" data-val="true" onclick="checkTF(this,'t6')">True</button>
+                <button class="tf-btn" data-val="false" onclick="checkTF(this,'t6')">False</button>
+                <button class="tf-btn" data-val="it depends" onclick="checkTF(this,'t6')">It depends</button>
+            </div>
+            <div class="feedback" id="t6-fb"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const hlFeedback = {
+        q1:{correct:"In headline language, <strong>back</strong> means <em>support</em>. &ldquo;City backs away from canal&rdquo; uses the phrasal verb <em>back away</em> — a movement phrase, not a support phrase.",wrong:"Look for the headline where <strong>back</strong> is being used as a movement verb rather than to mean <em>support</em>."},
+        q2:{correct:"In the other three, <strong>axe</strong> means to cut or eliminate something. &ldquo;Logger axes tree&rdquo; uses the literal, everyday meaning of the tool.",wrong:"Three headlines use <strong>axe</strong> to mean <em>eliminate or cut</em>. One describes a physical action with an actual axe."},
+        q3:{correct:"<strong>Vow</strong> in headlines signals a strong public commitment. &ldquo;Couple vow to love each other&rdquo; is a private wedding context — natural English, but not a news headline register.",wrong:"Think about which headline describes a private personal moment rather than a public figure making a strong public commitment."},
+        q4:{correct:"In headlines, <strong>quiz</strong> means to question officially. &ldquo;School holds quiz on Friday&rdquo; is a general knowledge competition — completely different meaning.",wrong:"<strong>Quiz</strong> in headlines means to question someone formally, not to run a general knowledge game."},
+        q5:{correct:"In headlines, <strong>clash</strong> means to disagree strongly. &ldquo;Red clashes with orange&rdquo; uses the everyday sense of colours not going well together.",wrong:"<strong>Clash</strong> in headline language always describes people or groups in conflict."}
+    };
+
+    const roleFeedback = {
+        e1:{answer:"critic",correct:"This is a <strong>critic</strong>. The evaluative language (&ldquo;breathtaking&rdquo;), the focus on performance, and the personal judgement signal a professional review.",wrong:"Notice the evaluative, opinionated language and the focus on judging an artistic performance."},
+        e2:{answer:"newsreader",correct:"This is a <strong>newsreader</strong>. The formal register, the direct address (&ldquo;Good evening&rdquo;), and the handover to a correspondent are classic broadcast features.",wrong:"The formal opening, the neutral tone, and the reference to handing over to a correspondent all point to a <strong>newsreader</strong>."},
+        e3:{answer:"paparazzi",correct:"This is the kind of caption written by a <strong>paparazzi</strong> photographer. The informal register and focus on a celebrity's appearance are characteristic.",wrong:"The casual, gossipy tone and the focus on a celebrity's clothes are typical of <strong>paparazzi</strong>-style coverage."},
+        e4:{answer:"agony aunt",correct:"This is an <strong>agony aunt</strong>. The direct address to a named reader and the empathetic personal advice format are defining features.",wrong:"The opening &ldquo;Dear...&rdquo; format and the empathetic personal advice are the clear signals of an <strong>agony aunt</strong> column."},
+        e5:{answer:"commentator",correct:"This is a <strong>commentator</strong>. The analytical tone and interpretive judgement place this firmly in the opinion and analysis register.",wrong:"This person is not just reporting facts — they are interpreting them. That is the voice of a <strong>commentator</strong>."}
+    };
+
+    const tfData = {
+        t1:{correct:"it depends",text:"<strong>It depends</strong>. A newspaper can report facts accurately while still selecting which stories to cover or how to frame them. Bias operates at the level of selection, not just factual accuracy."},
+        t2:{correct:"false",text:"<strong>False.</strong> <em>Sensational</em> means exaggerated to attract attention — not necessarily invented. The facts may be true but the presentation is designed to shock."},
+        t3:{correct:"true",text:"<strong>True.</strong> Objectivity is a professional standard. A journalist can hold a personal opinion while still giving fair coverage to all sides of a story."},
+        t4:{correct:"false",text:"<strong>False.</strong> Content spreads because it is emotionally engaging, not because it is reliable. Virality and trustworthiness are unrelated."},
+        t5:{correct:"false",text:"<strong>False.</strong> Even democratic countries have forms of censorship (e.g., laws regarding national security or inciting violence)."},
+        t6:{correct:"it depends",text:"<strong>It depends.</strong> A source can be generally reliable and still use misleading &ldquo;clickbait&rdquo; headlines occasionally. Reliability is judged across a body of work."}
+    };
+
+    const state = {};
+    const scores = {s1:0,s2:0,s3:0};
+    const totals = {s1:5,s2:5,s3:6};
+
+    function getState(qid) {
+        if(!state[qid]) state[qid] = {locked:false, hadWrong:false};
+        return state[qid];
+    }
+
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        const btns = document.querySelectorAll('.nav-btn');
+        if(id==='s1') btns[0].classList.add('active');
+        if(id==='s2') btns[1].classList.add('active');
+        if(id==='s3') btns[2].classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function clearBtnStates(btns) {
+        btns.forEach(b=>{ b.classList.remove('wrong','correct','dimmed'); b.disabled=false; });
+    }
+
+    function checkHL(btn, qid, isOdd) {
+        const st = getState(qid);
+        if(st.locked) return;
+        const block = document.getElementById(qid);
+        const btns = block.querySelectorAll('.hl-btn');
+        const fb = document.getElementById(qid+'-fb');
+        const data = hlFeedback[qid];
+        
+        if(isOdd) {
+            st.locked = true;
+            btns.forEach(b=>b.disabled=true);
+            btn.classList.add('correct');
+            btns.forEach(b=>{ if(b!==btn) b.classList.add('dimmed'); });
+            fb.innerHTML = data.correct;
+            fb.className = 'feedback show-correct';
+            if(!st.hadWrong){ scores.s1++; updateScore('score1',scores.s1,totals.s1); }
+        } else {
+            st.hadWrong = true;
+            btn.classList.add('wrong');
+            fb.innerHTML = data.wrong;
+            fb.className = 'feedback show-incorrect';
+            setTimeout(()=>{ btn.classList.remove('wrong'); },1200);
+        }
+    }
+
+    function checkRole(btn, eid, role) {
+        const st = getState(eid);
+        if(st.locked) return;
+        const block = document.getElementById(eid);
+        const btns = block.querySelectorAll('.role-btn');
+        const fb = document.getElementById(eid+'-fb');
+        const data = roleFeedback[eid];
+        
+        if(role === data.answer) {
+            st.locked = true;
+            btns.forEach(b=>b.disabled=true);
+            btn.classList.add('correct');
+            btns.forEach(b=>{ if(b!==btn) b.classList.add('dimmed'); });
+            fb.innerHTML = data.correct;
+            fb.className = 'feedback show-correct';
+            if(!st.hadWrong){ scores.s2++; updateScore('score2',scores.s2,totals.s2); }
+        } else {
+            st.hadWrong = true;
+            btn.classList.add('wrong');
+            fb.innerHTML = data.wrong;
+            fb.className = 'feedback show-incorrect';
+            setTimeout(()=>{ btn.classList.remove('wrong'); },1200);
+        }
+    }
+
+    function checkTF(btn, tid) {
+        const st = getState(tid);
+        if(st.locked) return;
+        const block = document.getElementById(tid);
+        const btns = block.querySelectorAll('.tf-btn');
+        const fb = document.getElementById(tid+'-fb');
+        const data = tfData[tid];
+        const chosen = btn.getAttribute('data-val');
+        
+        if(chosen === data.correct) {
+            st.locked = true;
+            btns.forEach(b=>b.disabled=true);
+            btn.classList.add('correct');
+            btns.forEach(b=>{ if(b!==btn) b.classList.add('dimmed'); });
+            fb.innerHTML = data.text;
+            fb.className = 'feedback show-correct';
+            if(!st.hadWrong){ scores.s3++; updateScore('score3',scores.s3,totals.s3); }
+        } else {
+            st.hadWrong = true;
+            btn.classList.add('wrong');
+            btns.forEach(b=>{ if(b.getAttribute('data-val')===data.correct) b.classList.add('correct'); });
+            fb.innerHTML = data.text;
+            fb.className = 'feedback show-incorrect';
+            btns.forEach(b=>b.disabled=true);
+            st.locked = true;
+        }
+    }
+
+    function updateScore(id, val, total) {
+        document.getElementById(id).textContent = val + ' / ' + total;
+    }
+
+    function resetSection(sid) {
+        const sec = document.getElementById(sid);
+        scores[sid] = 0;
+        const scoreId = sid==='s1'?'score1':sid==='s2'?'score2':'score3';
+        updateScore(scoreId, 0, totals[sid]);
+        sec.querySelectorAll('.hl-btn,.role-btn,.tf-btn').forEach(b=>{
+            b.disabled=false;
+            b.classList.remove('wrong','correct','dimmed');
+        });
+        sec.querySelectorAll('.feedback').forEach(f=>{ f.className='feedback'; f.innerHTML=''; });
+        Object.keys(state).forEach(k=>{
+            const prefix = sid==='s1'?'q':sid==='s2'?'e':'t';
+            if(k.startsWith(prefix)) delete state[k];
+        });
+    }
+</script>
+
+</body>
+</html>

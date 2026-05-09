@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crack the Egg! — Easter Quiz B2.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6ec;
+    --warm-white: #fffbf5;
+    --sage: #a8b89a;
+    --sage-dark: #7a9470;
+    --blush: #e8b4b8;
+    --blush-dark: #c97b82;
+    --sky: #b8d4e8;
+    --sky-dark: #7aadcc;
+    --mauve: #c4a4c0;
+    --mauve-dark: #9e74a0;
+    --gold: #e8c87a;
+    --gold-dark: #c4a030;
+    --coral: #e8a88a;
+    --coral-dark: #c47040;
+    --lavender: #c8b4e4;
+    --lavender-dark: #9e80c0;
+    --mint: #a4d0b8;
+    --mint-dark: #60a47a;
+    --peach: #f0c0a0;
+    --peach-dark: #c88060;
+    --lilac: #d4b8e8;
+    --lilac-dark: #a07ac4;
+    --ink: #2c2420;
+    --shadow: rgba(80,50,30,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(232,180,184,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(184,212,232,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 60% 30%, rgba(196,164,192,0.1) 0%, transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .header-eyebrow {
+    font-family: 'Lato', sans-serif;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--sage-dark);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--ink);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--blush-dark);
+  }
+
+  .header-sub {
+    font-size: 14px;
+    color: #7a6050;
+    margin-top: 10px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  /* Score bar */
+  .score-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 20px 0 36px;
+    flex-wrap: wrap;
+  }
+
+  .score-pill {
+    background: white;
+    border: 1.5px solid rgba(80,50,30,0.1);
+    border-radius: 40px;
+    padding: 8px 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .score-pill .label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #9a7860;
+    font-weight: 700;
+  }
+
+  .score-pill .value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+
+  .score-pill .value.bump {
+    transform: scale(1.4);
+  }
+
+  /* Instructions */
+  .instructions {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 24px;
+    margin-bottom: 36px;
+    border-left: 4px solid var(--sage);
+    box-shadow: 0 2px 12px var(--shadow);
+    font-size: 14px;
+    color: #5a4030;
+    line-height: 1.6;
+  }
+
+  .instructions strong { color: var(--ink); }
+
+  /* Egg grid */
+  .egg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 28px 20px;
+    justify-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Individual egg */
+  .egg-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .egg-wrapper.answered { cursor: default; }
+
+  .egg-container {
+    position: relative;
+    width: 90px;
+    height: 110px;
+    transition: transform 0.2s;
+  }
+
+  .egg-wrapper:not(.answered):hover .egg-container {
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  /* SVG egg */
+  .egg-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(80,50,30,0.15));
+    transition: filter 0.3s;
+  }
+
+  .egg-wrapper.answered .egg-svg {
+    filter: drop-shadow(0 2px 6px rgba(80,50,30,0.08));
+  }
+
+  /* Crack animation */
+  .egg-wrapper.cracking .egg-svg {
+    animation: crack 0.5s ease forwards;
+  }
+
+  @keyframes crack {
+    0% { transform: scale(1) rotate(0); }
+    20% { transform: scale(1.1) rotate(-5deg); }
+    40% { transform: scale(0.95) rotate(4deg); }
+    60% { transform: scale(1.05) rotate(-3deg); }
+    80% { transform: scale(0.98) rotate(2deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+
+  .egg-number {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #9a7860;
+    font-weight: 700;
+  }
+
+  .egg-tag {
+    font-size: 10px;
+    color: #b09070;
+    font-style: italic;
+  }
+
+  /* Checkmark / X overlay on egg */
+  .egg-result-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.4s 0.4s;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .egg-wrapper.correct .egg-result-overlay {
+    background: rgba(255,255,255,0.92);
+    color: var(--sage-dark);
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(80,50,30,0.15);
+  }
+
+  .egg-wrapper.incorrect .egg-result-overlay {
+    background: rgba(255,255,255,0.92);
+    color: var(--blush-dark);
+    opacity: 1;
+    box-shadow: 0 2px 8px rgba(80,50,30,0.15);
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,20,10,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--warm-white);
+    border-radius: 24px;
+    max-width: 560px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(30,20,10,0.3);
+    overflow: hidden;
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.3s;
+    position: relative;
+  }
+
+  .modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-header {
+    padding: 28px 32px 20px;
+    border-bottom: 1.5px solid rgba(80,50,30,0.07);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .modal-egg-icon {
+    width: 48px;
+    height: 58px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .modal-meta {
+    flex: 1;
+  }
+
+  .modal-category {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .modal-question {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .modal-context {
+    background: rgba(168,184,154,0.12);
+    border-left: 3px solid var(--sage);
+    padding: 10px 14px;
+    margin: 0 32px;
+    font-size: 13px;
+    color: #5a4030;
+    font-style: italic;
+    line-height: 1.6;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* Options */
+  .options-grid {
+    padding: 20px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: white;
+    border: 1.5px solid rgba(80,50,30,0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    line-height: 1.4;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .option-btn::before {
+    content: attr(data-letter);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: #9a7860;
+    display: block;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: rgba(168,184,154,0.1);
+    border-color: var(--sage);
+    transform: translateY(-1px);
+  }
+
+  .option-btn.selected-correct {
+    background: rgba(120,180,120,0.12);
+    border-color: var(--sage-dark);
+    color: var(--ink);
+  }
+
+  .option-btn.selected-incorrect {
+    background: rgba(232,180,184,0.15);
+    border-color: var(--blush-dark);
+    color: var(--ink);
+  }
+
+  .option-btn.show-correct {
+    background: rgba(120,180,120,0.12);
+    border-color: var(--sage-dark);
+  }
+
+  .option-btn:disabled {
+    cursor: default;
+  }
+
+  /* Feedback */
+  .feedback-area {
+    padding: 0 32px 20px;
+    display: none;
+  }
+
+  .feedback-area.visible { display: block; }
+
+  .feedback-box {
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .feedback-box.correct-feedback {
+    background: rgba(120,180,120,0.12);
+    border: 1.5px solid rgba(120,180,120,0.3);
+  }
+
+  .feedback-box.incorrect-feedback {
+    background: rgba(232,180,184,0.12);
+    border: 1.5px solid rgba(232,180,184,0.4);
+  }
+
+  .feedback-box .fb-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .feedback-box.correct-feedback .fb-title { color: var(--sage-dark); }
+  .feedback-box.incorrect-feedback .fb-title { color: var(--blush-dark); }
+
+  .modal-footer {
+    padding: 0 32px 28px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .close-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 28px;
+    font-family: 'Lato', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    display: none;
+  }
+
+  .close-btn.visible { display: block; }
+  .close-btn:hover { background: #4a3428; transform: translateY(-1px); }
+
+  /* Final results screen */
+  .results-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.6s ease;
+  }
+
+  .results-screen.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .results-emoji {
+    font-size: 4rem;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .results-sub {
+    font-size: 14px;
+    color: #7a6050;
+    margin-bottom: 28px;
+  }
+
+  .results-score-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--blush-dark);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .results-score-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #9a7860;
+    font-weight: 700;
+    margin-bottom: 28px;
+  }
+
+  .results-breakdown {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .rb-pill {
+    background: white;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1.5px solid rgba(80,50,30,0.1);
+    box-shadow: 0 2px 6px var(--shadow);
+    color: var(--ink);
+  }
+
+  .results-message {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #7a6050;
+    max-width: 380px;
+    margin: 0 auto 28px;
+    line-height: 1.6;
+  }
+
+  .play-again-btn {
+    background: var(--blush-dark);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 36px;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+    box-shadow: 0 4px 16px rgba(201,123,130,0.3);
+  }
+
+  .play-again-btn:hover { background: var(--blush); transform: translateY(-2px); }
+
+  /* Category legend */
+  .legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 32px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #7a6050;
+    letter-spacing: 0.5px;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 12px;
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    flex-shrink: 0;
+  }
+
+  /* Decorative flowers */
+  .deco {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.18;
+    font-size: 3rem;
+    z-index: 0;
+  }
+  .deco-1 { top: 5%; left: 3%; transform: rotate(-20deg); }
+  .deco-2 { top: 15%; right: 4%; transform: rotate(15deg); }
+  .deco-3 { bottom: 10%; left: 6%; transform: rotate(25deg); }
+  .deco-4 { bottom: 5%; right: 5%; transform: rotate(-10deg); }
+
+  @media (max-width: 600px) {
+    .egg-grid { grid-template-columns: repeat(3, 1fr); gap: 18px 12px; }
+    .options-grid { grid-template-columns: 1fr; }
+    .modal-header { flex-direction: column; }
+    .modal-egg-icon { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deco deco-1">🌸</div>
+<div class="deco deco-2">🌷</div>
+<div class="deco deco-3">🌼</div>
+<div class="deco deco-4">🐣</div>
+
+<div class="page-wrapper">
+
+  <header>
+    <p class="header-eyebrow">B2.2 English · Easter Activity</p>
+    <h1>Crack the <em>Egg!</em></h1>
+    <p class="header-sub">Click each egg to reveal a language challenge. How many can you crack?</p>
+  </header>
+
+  <div class="score-bar">
+    <div class="score-pill">
+      <span class="label">Score</span>
+      <span class="value" id="score-display">0</span>
+    </div>
+    <div class="score-pill">
+      <span class="label">Correct</span>
+      <span class="value" id="correct-display">0</span>
+    </div>
+    <div class="score-pill">
+      <span class="label">Remaining</span>
+      <span class="value" id="remaining-display">10</span>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <strong>How to play:</strong> Each decorated egg hides a B2.2 English question. Click an egg to crack it open, then choose the best answer. Correct answers earn <strong>10 points</strong> — but read the feedback carefully even when you're right!
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="egg-grid" id="egg-grid"></div>
+
+  <div class="results-screen" id="results-screen">
+    <span class="results-emoji" id="results-emoji">🐣</span>
+    <div class="results-title" id="results-title">Well done!</div>
+    <div class="results-sub" id="results-sub">Here's how you did:</div>
+    <div class="results-score-big" id="results-score-big">0</div>
+    <div class="results-score-label">points out of 100</div>
+    <div class="results-breakdown" id="results-breakdown"></div>
+    <p class="results-message" id="results-message"></p>
+    <button class="play-again-btn" onclick="resetGame()">Try Again</button>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <svg class="modal-egg-icon" id="modal-egg-icon" viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="modal-meta">
+        <div class="modal-category" id="modal-category"></div>
+        <div class="modal-question" id="modal-question"></div>
+      </div>
+    </div>
+    <div class="modal-context" id="modal-context" style="display:none;margin-top:0;margin-bottom:12px;"></div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="feedback-area" id="feedback-area">
+      <div class="feedback-box" id="feedback-box">
+        <div class="fb-title" id="fb-title"></div>
+        <div id="fb-text"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="close-btn" id="close-btn" onclick="closeModal()">Next Egg →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATEGORIES = {
+  vocab:    { label: "Vocabulary",  color: "#e8a88a", dark: "#c47040" },
+  grammar:  { label: "Grammar",     color: "#b8d4e8", dark: "#4a90b8" },
+  customs:  { label: "Customs",     color: "#a8b89a", dark: "#5a8050" },
+  idioms:   { label: "Idioms",      color: "#c8b4e4", dark: "#7050a0" },
+  culture:  { label: "World Easter",color: "#e8c87a", dark: "#a07820" },
+};
+
+const QUESTIONS = [
+  {
+    id: 1,
+    category: "customs",
+    question: "In many English-speaking countries, children traditionally hunt for chocolate eggs on Easter Sunday. What is the most likely reason this tradition developed?",
+    context: "The Easter egg hunt is one of the most popular Easter activities. Eggs have long been associated with spring and new life.",
+    options: [
+      "Eggs were historically hidden by rabbits to protect them from predators.",
+      "It developed as a way to celebrate the arrival of spring and new life through a fun activity for children.",
+      "It was invented by a chocolate manufacturer in the 19th century purely for commercial purposes.",
+      "It originated as a medieval church ritual to find the last egg of winter."
+    ],
+    correct: 1,
+    feedback: "Eggs have symbolised new life and fertility since ancient times, and the egg hunt evolved as a playful springtime tradition linked to this symbolism. While chocolate manufacturers did later commercialise it, the tradition predates them."
+  },
+  {
+    id: 2,
+    category: "vocab",
+    question: "Choose the most appropriate word to complete the sentence at B2+ level:",
+    context: "\"The Easter weekend is often seen as a time for ______ and quiet reflection, as well as for family gatherings.\"",
+    options: [
+      "contemplation",
+      "distraction",
+      "elaboration",
+      "provocation"
+    ],
+    correct: 0,
+    feedback: "<em>Contemplation</em> (deep, calm thought) fits perfectly — it collocates with \"quiet reflection\" and suits a formal tone. <em>Distraction</em> and <em>provocation</em> have opposite connotations, and <em>elaboration</em> relates to adding detail, not inner reflection."
+  },
+  {
+    id: 3,
+    category: "grammar",
+    question: "Which sentence uses the subjunctive mood correctly in a formal register?",
+    context: "The subjunctive is still used in formal English, especially in conditional and hypothetical contexts.",
+    options: [
+      "It is essential that each child finds their own egg.",
+      "It is essential that each child find their own egg.",
+      "It is essential that each child would find their own egg.",
+      "It is essential that each child found their own egg."
+    ],
+    correct: 1,
+    feedback: "The formal subjunctive after expressions like <em>it is essential that…</em> uses the base form of the verb without -s, so <em>\"each child find\"</em> is correct. This structure is typical in formal writing and B2+ texts. Option A is informal but acceptable in spoken English."
+  },
+  {
+    id: 4,
+    category: "idioms",
+    question: "What does the idiom \"to put all your eggs in one basket\" mean?",
+    context: "\"She's investing all her savings in that single project — I think she's putting all her eggs in one basket.\"",
+    options: [
+      "To be very careful and organised when planning something",
+      "To rely entirely on one plan or option without having a backup",
+      "To share resources equally among several people",
+      "To work hard towards a single important goal"
+    ],
+    correct: 1,
+    feedback: "This idiom warns against over-reliance on one option — if the basket drops, you lose everything. It's used to advise diversification, whether in finance, career planning, or decision-making. Compare: <em>\"Don't put all your eggs in one basket\"</em> = have a Plan B!"
+  },
+  {
+    id: 5,
+    category: "culture",
+    question: "In which country do people traditionally celebrate Easter Monday with a custom called 'Śmigus-dyngus', where people splash each other with water?",
+    options: [
+      "Greece",
+      "Sweden",
+      "Poland",
+      "Mexico"
+    ],
+    correct: 2,
+    feedback: "<em>Śmigus-dyngus</em> (also called Wet Monday) is a Polish tradition on Easter Monday. People — especially young men — splash water on others, originally symbolising baptism and the arrival of spring. In Greece, Easter is celebrated with fireworks and candle processions; Sweden has its own 'Easter witches' tradition."
+  },
+  {
+    id: 6,
+    category: "vocab",
+    question: "Which word best describes the mood of the sentence below?",
+    context: "\"The church bells rang out across the valley, filling the crisp spring air with a sense of joyful ______.\"",
+    options: [
+      "lamentation",
+      "exuberance",
+      "melancholy",
+      "indifference"
+    ],
+    correct: 1,
+    feedback: "<em>Exuberance</em> (lively, enthusiastic joy) matches the positive, energetic image of bells ringing on a spring morning. <em>Lamentation</em> and <em>melancholy</em> are negative, while <em>indifference</em> implies a lack of feeling — none of these suit the context."
+  },
+  {
+    id: 7,
+    category: "grammar",
+    question: "Select the sentence that uses a participle clause correctly and naturally at B2+ level:",
+    options: [
+      "Having decorated all the eggs, the children were ready to hide them in the garden.",
+      "Having been decorated all the eggs, the children hid them in the garden.",
+      "Decorated having the eggs, the children were finally ready.",
+      "The children, having hide the eggs, ran inside to tell the others."
+    ],
+    correct: 0,
+    feedback: "<em>\"Having decorated…\"</em> is a perfect participle clause showing a completed action before the main clause — correct and elegant at B2+. Option B uses a passive participle wrongly; option C inverts the word order; option D uses the wrong verb form (<em>hide</em> instead of <em>hidden</em>)."
+  },
+  {
+    id: 8,
+    category: "customs",
+    question: "The Easter Bunny is a popular symbol in Anglo-American culture. Which of the following statements is most accurate?",
+    options: [
+      "The Easter Bunny has ancient Christian roots and was introduced by the Church in the 4th century.",
+      "The Easter Bunny likely derives from pre-Christian spring traditions linked to fertility symbols, later blended with Easter.",
+      "The Easter Bunny was invented by American greeting card companies in the 1950s with no older origin.",
+      "The Easter Bunny was originally a bird that transformed into a rabbit, according to medieval legend."
+    ],
+    correct: 1,
+    feedback: "Hares and rabbits were associated with fertility and spring in pre-Christian European traditions. The tradition was brought to the US by German immigrants ('Osterhase') and gradually merged with Christian Easter celebrations. Option D refers to a folk legend about the goddess Eostre — entertaining but not historically confirmed."
+  },
+  {
+    id: 9,
+    category: "idioms",
+    question: "Which of the following best explains the phrase \"a curate's egg\" in natural conversation?",
+    context: "\"The new film is a bit of a curate's egg — the acting is superb, but the plot leaves a lot to be desired.\"",
+    options: [
+      "Something that is completely and obviously bad",
+      "Something that is surprisingly better than expected",
+      "Something that has both good and bad qualities",
+      "Something that is difficult to understand or evaluate"
+    ],
+    correct: 2,
+    feedback: "A <em>curate's egg</em> describes something that is partly good and partly bad — the phrase comes from a Victorian cartoon where a curate, not wanting to offend his host, insists a bad egg is \"good in parts.\" It's a very British expression, useful in critical writing and reviews."
+  },
+  {
+    id: 10,
+    category: "culture",
+    question: "In Orthodox Christian countries such as Greece and Russia, Easter eggs are often dyed a specific colour. Which colour is considered traditional and symbolic?",
+    options: [
+      "Blue, symbolising the sky and the divine",
+      "Red, symbolising the blood of Christ and resurrection",
+      "White, symbolising purity and new life",
+      "Gold, symbolising wealth and the glory of heaven"
+    ],
+    correct: 1,
+    feedback: "In Orthodox tradition, Easter eggs are typically dyed <strong>red</strong>, symbolising the blood of Christ and the joy of resurrection. According to one legend, Mary Magdalene presented red eggs to the Emperor Tiberius when announcing the resurrection. The red egg tradition remains central in Greek, Russian, and Serbian Easter customs."
+  }
+];
+
+// Egg colors for each egg
+const EGG_PALETTES = [
+  { fill: "#f0c0a0", stripe: "#e8a060", dot: "#c06030" },    // coral
+  { fill: "#c8e0f4", stripe: "#90bce0", dot: "#4a90b8" },    // sky
+  { fill: "#d4ecc0", stripe: "#a0cc80", dot: "#5a8840" },    // sage
+  { fill: "#f4c0d4", stripe: "#e8889c", dot: "#c04060" },    // blush
+  { fill: "#e8d4f8", stripe: "#c4a0e8", dot: "#8050b0" },    // lavender
+  { fill: "#fce8a0", stripe: "#e8c840", dot: "#a08020" },    // gold
+  { fill: "#b8f0d8", stripe: "#70d4a8", dot: "#30a070" },    // mint
+  { fill: "#f8d8c0", stripe: "#e8a888", dot: "#b06840" },    // peach
+  { fill: "#d0d8f8", stripe: "#9098e0", dot: "#4050b0" },    // periwinkle
+  { fill: "#f4c8f4", stripe: "#e090e0", dot: "#a040a0" },    // pink
+];
+
+function makeEggSVG(palette, small = false) {
+  const s = small ? 0.53 : 1;
+  const w = Math.round(90 * s), h = Math.round(110 * s);
+  return `<svg viewBox="0 0 90 110" xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
+    <ellipse cx="45" cy="58" rx="38" ry="50" fill="${palette.fill}"/>
+    <!-- Stripe 1 -->
+    <path d="M10 58 Q45 50 80 58" stroke="${palette.stripe}" stroke-width="7" fill="none" opacity="0.7"/>
+    <!-- Dots -->
+    <circle cx="25" cy="42" r="5" fill="${palette.dot}" opacity="0.6"/>
+    <circle cx="65" cy="42" r="5" fill="${palette.dot}" opacity="0.6"/>
+    <circle cx="45" cy="35" r="4" fill="${palette.stripe}" opacity="0.7"/>
+    <!-- Stripe 2 -->
+    <path d="M14 72 Q45 65 76 72" stroke="${palette.stripe}" stroke-width="5" fill="none" opacity="0.5"/>
+    <!-- Shine -->
+    <ellipse cx="32" cy="30" rx="8" ry="5" fill="white" opacity="0.25" transform="rotate(-20,32,30)"/>
+  </svg>`;
+}
+
+let state = {
+  answered: new Set(),
+  correctAnswers: new Set(),
+  score: 0,
+  currentQuestionId: null
+};
+
+function buildLegend() {
+  const legend = document.getElementById('legend');
+  legend.innerHTML = Object.entries(CATEGORIES).map(([key, cat]) =>
+    `<div class="legend-item">
+      <div class="legend-dot" style="background:${cat.color}"></div>
+      <span>${cat.label}</span>
+    </div>`
+  ).join('');
+}
+
+function buildGrid() {
+  const grid = document.getElementById('egg-grid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const palette = EGG_PALETTES[i];
+    const cat = CATEGORIES[q.category];
+    const wrapper = document.createElement('div');
+    wrapper.className = 'egg-wrapper';
+    wrapper.id = `egg-${q.id}`;
+    wrapper.innerHTML = `
+      <div class="egg-container">
+        ${makeEggSVG(palette)}
+        <div class="egg-result-overlay" id="overlay-${q.id}"></div>
+      </div>
+      <span class="egg-number">Egg ${i + 1}</span>
+      <span class="egg-tag" style="color:${cat.dark}">${cat.label}</span>
+    `;
+    wrapper.addEventListener('click', () => openQuestion(q.id));
+    grid.appendChild(wrapper);
+  });
+}
+
+function openQuestion(id) {
+  if (state.answered.has(id)) return;
+  const q = QUESTIONS.find(x => x.id === id);
+  if (!q) return;
+  state.currentQuestionId = id;
+
+  const cat = CATEGORIES[q.category];
+  const palette = EGG_PALETTES[QUESTIONS.indexOf(q)];
+
+  // Crack animation
+  const wrapper = document.getElementById(`egg-${id}`);
+  wrapper.classList.add('cracking');
+
+  // Populate modal
+  document.getElementById('modal-category').textContent = cat.label.toUpperCase();
+  document.getElementById('modal-category').style.color = cat.dark;
+  document.getElementById('modal-question').textContent = q.question;
+
+  const ctxEl = document.getElementById('modal-context');
+  if (q.context) {
+    ctxEl.innerHTML = q.context;
+    ctxEl.style.display = 'block';
+  } else {
+    ctxEl.style.display = 'none';
+  }
+
+  // Mini egg in modal header
+  document.getElementById('modal-egg-icon').innerHTML = makeEggSVG(palette, true);
+
+  // Options
+  const grid = document.getElementById('options-grid');
+  const letters = ['A', 'B', 'C', 'D'];
+  grid.innerHTML = q.options.map((opt, i) =>
+    `<button class="option-btn" data-letter="${letters[i]}" data-index="${i}" onclick="selectAnswer(${i})">${opt}</button>`
+  ).join('');
+
+  // Reset feedback
+  document.getElementById('feedback-area').classList.remove('visible');
+  document.getElementById('close-btn').classList.remove('visible');
+
+  // Show modal after a short crack delay
+  setTimeout(() => {
+    document.getElementById('modal-overlay').classList.add('active');
+  }, 350);
+}
+
+function selectAnswer(selectedIndex) {
+  const q = QUESTIONS.find(x => x.id === state.currentQuestionId);
+  if (!q) return;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const isCorrect = selectedIndex === q.correct;
+
+  btns[selectedIndex].classList.add(isCorrect ? 'selected-correct' : 'selected-incorrect');
+  if (!isCorrect) {
+    btns[q.correct].classList.add('show-correct');
+  }
+
+  // Feedback
+  const feedbackArea = document.getElementById('feedback-area');
+  const feedbackBox = document.getElementById('feedback-box');
+  const fbTitle = document.getElementById('fb-title');
+  const fbText = document.getElementById('fb-text');
+
+  feedbackBox.className = 'feedback-box ' + (isCorrect ? 'correct-feedback' : 'incorrect-feedback');
+  fbTitle.textContent = isCorrect ? '✓ Correct!' : '✗ Not quite';
+  fbText.innerHTML = q.feedback;
+  feedbackArea.classList.add('visible');
+
+  document.getElementById('close-btn').classList.add('visible');
+
+  // Update state
+  state.answered.add(q.id);
+  if (isCorrect) {
+    state.correctAnswers.add(q.id);
+    state.score += 10;
+  }
+
+  // Update egg visual
+  const wrapper = document.getElementById(`egg-${q.id}`);
+  wrapper.classList.remove('cracking');
+  wrapper.classList.add('answered', isCorrect ? 'correct' : 'incorrect');
+
+  const overlay = document.getElementById(`overlay-${q.id}`);
+  overlay.textContent = isCorrect ? '✓' : '✗';
+
+  // Update score bar
+  updateScoreBar();
+}
+
+function updateScoreBar() {
+  const scoreEl = document.getElementById('score-display');
+  scoreEl.textContent = state.score;
+  scoreEl.classList.add('bump');
+  setTimeout(() => scoreEl.classList.remove('bump'), 250);
+
+  document.getElementById('correct-display').textContent = state.correctAnswers.size;
+  document.getElementById('remaining-display').textContent = QUESTIONS.length - state.answered.size;
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+
+  // Check if all answered
+  if (state.answered.size === QUESTIONS.length) {
+    setTimeout(showResults, 500);
+  }
+}
+
+function showResults() {
+  document.querySelector('.egg-grid').style.display = 'none';
+  document.querySelector('.instructions').style.display = 'none';
+  document.getElementById('legend').style.display = 'none';
+
+  const correct = state.correctAnswers.size;
+  const total = QUESTIONS.length;
+  const pct = correct / total;
+
+  let emoji, title, message;
+  if (pct === 1) {
+    emoji = '🏆'; title = 'A perfect score!';
+    message = '"Not a single shell left uncracked. Your English is truly in full bloom."';
+  } else if (pct >= 0.8) {
+    emoji = '🐣'; title = 'Excellent work!';
+    message = '"Almost every egg cracked with precision. A confident B2.2 performance."';
+  } else if (pct >= 0.6) {
+    emoji = '🌸'; title = 'Well done!';
+    message = '"A solid Easter haul. Review the eggs you missed and try again!"';
+  } else if (pct >= 0.4) {
+    emoji = '🌱'; title = 'Good effort!';
+    message = '"Some eggs were harder to crack than others. Read the feedback and give it another go."';
+  } else {
+    emoji = '🥚'; title = 'Keep going!';
+    message = '"Every egg is a new lesson. Read the explanations carefully and try again — you\'ll get there!"';
+  }
+
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-score-big').textContent = state.score;
+  document.getElementById('results-message').textContent = message.replace(/"/g, '');
+
+  // Breakdown by category
+  const breakdown = {};
+  QUESTIONS.forEach(q => {
+    if (!breakdown[q.category]) breakdown[q.category] = { total: 0, correct: 0 };
+    breakdown[q.category].total++;
+    if (state.correctAnswers.has(q.id)) breakdown[q.category].correct++;
+  });
+
+  const bdEl = document.getElementById('results-breakdown');
+  bdEl.innerHTML = Object.entries(breakdown).map(([key, val]) => {
+    const cat = CATEGORIES[key];
+    return `<div class="rb-pill" style="border-color:${cat.color}">${cat.label}: ${val.correct}/${val.total}</div>`;
+  }).join('');
+
+  document.getElementById('results-screen').classList.add('visible');
+}
+
+function resetGame() {
+  state = { answered: new Set(), correctAnswers: new Set(), score: 0, currentQuestionId: null };
+  document.getElementById('results-screen').classList.remove('visible');
+  document.querySelector('.egg-grid').style.display = 'grid';
+  document.querySelector('.instructions').style.display = 'block';
+  document.getElementById('legend').style.display = 'flex';
+  document.getElementById('score-display').textContent = '0';
+  document.getElementById('correct-display').textContent = '0';
+  document.getElementById('remaining-display').textContent = '10';
+  buildGrid();
+}
+
+// Init
+buildLegend();
+buildGrid();
+</script>
+</body>
+</html>

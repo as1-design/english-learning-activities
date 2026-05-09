@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Executive Guide to Formal English</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50; /* Dark Blue-Grey */
+            --secondary-color: #34495e; /* Slightly lighter Blue-Grey */
+            --accent-color: #e74c3c; /* A touch of Red for emphasis */
+            --text-color: #333;
+            --light-text-color: #ecf0f1; /* Light Grey for headers */
+            --background-color: #f9f9f9;
+            --card-background: #ffffff;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--card-background);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        h2 {
+            font-size: 2.2em;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: var(--secondary-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            background-color: #ecf0f1;
+            margin-bottom: 8px;
+            padding: 12px 20px;
+            border-left: 5px solid var(--primary-color);
+            border-radius: 5px;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+        }
+
+        ul li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            margin-right: 0.5em;
+        }
+
+        .section-icon {
+            font-size: 1.5em;
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+
+        .highlight-box {
+            background-color: #f0f4f7;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px 25px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 1.05em;
+        }
+
+        table th, table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: var(--secondary-color);
+            color: var(--light-text-color);
+            font-weight: bold;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        table tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        strong {
+            color: var(--accent-color);
+        }
+
+        .mistakes-section {
+            background-color: #fef1f1;
+            border: 1px solid #e74c3c;
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+
+        .mistakes-section h2 {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .mistakes-section ul li {
+            border-left-color: var(--accent-color);
+        }
+
+        .mistakes-section ul li::before {
+            color: var(--primary-color);
+        }
+
+        .finishing-moves {
+            background-color: #e9f5f5;
+            border-left: 5px solid #28a745; /* Green accent */
+            padding: 25px;
+            margin-top: 40px;
+            border-radius: 8px;
+        }
+
+        .finishing-moves h2 {
+            color: #28a745;
+            border-bottom-color: #28a745;
+        }
+
+        .finishing-moves ul li {
+            border-left-color: #28a745;
+        }
+
+        .finishing-moves ul li::before {
+            color: var(--primary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            h3 {
+                font-size: 1.4em;
+            }
+            table th, table td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="section-icon">🎩</span> THE EXECUTIVE GUIDE TO FORMAL ENGLISH</h1>
+        <p class="highlight-box">
+            Mastering the Register of Authority (Level B2.2)<br>
+            Formal writing is an art of precision. It is used when addressing someone in a position of authority or in professional business contexts where concision and brevity are highly valued.
+        </p>
+
+        <h2><span class="section-icon">🏗️</span> THE ANATOMY OF A PROFESSIONAL EMAIL</h2>
+        <p>A formal email must follow a strict four-part structure:</p>
+        <ul>
+            <li><strong>Salutation:</strong> A formal greeting to the addressee.</li>
+            <li><strong>Body:</strong> The core message, using complex and elaborate grammar.</li>
+            <li><strong>Closing:</strong> A polite standard ending.</li>
+            <li><strong>Signature:</strong> Your professional sign-off and name.</li>
+        </ul>
+
+        <h2><span class="section-icon">🚀</span> THE VOCABULARY "GLOW-UP"</h2>
+        <p>To reach B2.2, you must swap "spoken" English for "written" professional English.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Informal / Weak</th>
+                    <th>Formal / Powerful</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>A lot of / Lots of</td><td>Numerous / A significant number of</td></tr>
+                <tr><td>Ask for</td><td>Request / Inquire</td></tr>
+                <tr><td>Get</td><td>Obtain / Receive / Acquire</td></tr>
+                <tr><td>Help</td><td>Assistance / Provide aid</td></tr>
+                <tr><td>Check / Look into</td><td>Verify / Investigate</td></tr>
+                <tr><td>Think about</td><td>Consider</td></tr>
+                <tr><td>Find out</td><td>Ascertain / Determine</td></tr>
+                <tr><td>But / So</td><td>However / Consequently</td></tr>
+                <tr><td>Give</td><td>Provide / Furnish</td></tr>
+                <tr><td>Tell</td><td>Inform / Advise</td></tr>
+            </tbody>
+        </table>
+
+        <h2><span class="section-icon">🛠️</span> THE ULTIMATE PHRASE BANK</h2>
+
+        <h3>1. Greetings & Openings</h3>
+        <ul>
+            <li>To a specific person: <strong>Dear Professor Keating,</strong></li>
+            <li>To an unknown person: <strong>Dear Sir/Madam,</strong> or <strong>Dear Sir or Madam,</strong></li>
+            <li>To a group: <strong>Dear all / Dear Team</strong></li>
+        </ul>
+        <p>Opening Lines:</p>
+        <ul>
+            <li>"With reference to our telephone conversation yesterday (about)..."</li>
+            <li>"I am writing on behalf of..."</li>
+            <li>"I am writing to draw your attention to..."</li>
+            <li>"Thank you for your email regarding..."</li>
+        </ul>
+
+        <h3>2. Stating Your Purpose</h3>
+        <ul>
+            <li>"I am writing (in order) to make a reservation / apply for the position of..."</li>
+            <li>"I am writing with regard to the sale of..."</li>
+            <li>"I would like to let you know that..."</li>
+        </ul>
+
+        <h3>3. Making Requests</h3>
+        <ul>
+            <li>"I would be grateful if you could..."</li>
+            <li>"I would appreciate it if you could please reply within two days."</li>
+            <li>"Could you possibly arrange a meeting with the Logistics Manager?"</li>
+            <li>"I would be interested in having more details about..."</li>
+        </ul>
+
+        <h3>4. Complaints & Dissatisfaction</h3>
+        <ul>
+            <li>"I am writing to express my dissatisfaction with..."</li>
+            <li>"I find it most unsatisfactory that..."</li>
+            <li>"I regret to say that I was not completely satisfied with..."</li>
+            <li>"I would like to receive a full refund and compensation for the damages."</li>
+        </ul>
+
+        <h3>5. Attachments</h3>
+        <ul>
+            <li>"Please find attached the file you requested."</li>
+            <li>"I am attaching my CV for your consideration."</li>
+            <li>"Please see the statement attached."</li>
+        </ul>
+
+        <div class="mistakes-section">
+            <h2><span class="section-icon">⚠️</span> COMMON MISTAKES TO AVOID</h2>
+            <ul>
+                <li><strong>The Contraction Trap:</strong> Never use I'm, don't, or can't. Use the full forms: <strong>I am, do not, cannot.</strong></li>
+                <li><strong>Closing Confusion:</strong>
+                    <ul>
+                        <li>Use <strong>Yours sincerely</strong> only if you started with a specific name.</li>
+                        <li>Use <strong>Yours faithfully</strong> if you started with "Dear Sir/Madam".</li>
+                    </ul>
+                </li>
+                <li><strong>Over-Emotional Language:</strong> Instead of saying "I am very angry," use "I am writing to express my dissatisfaction".</li>
+                <li><strong>Phrasal Verb Overuse:</strong> Avoid "look into" or "get back to." Use "investigate" or "respond."</li>
+                <li><strong>Directness vs. Politeness:</strong> Don't say "Tell me the price." Use "Please let me know how much the tickets cost".</li>
+            </ul>
+        </div>
+
+        <div class="finishing-moves">
+            <h2><span class="section-icon">🏁</span> THE PERFECT FINISH</h2>
+            <ul>
+                <li>"I look forward to hearing from you."</li>
+                <li>"Should you need any further information, please do not hesitate to contact me."</li>
+                <li>"Thanks again for your attention, consideration, and time."</li>
+                <li>"I await your reply with interest."</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

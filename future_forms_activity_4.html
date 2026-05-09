@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXT — Expressing the Future</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --cream: #ede7d9;
+    --rule: #c8b89a;
+    --accent: #b5371a;
+    --accent2: #2a5c45;
+    --gold: #c9973a;
+    --muted: #7a6e60;
+    --white: #fdfaf5;
+    --correct: #2a5c45;
+    --wrong: #b5371a;
+    --correct-bg: #e8f2ec;
+    --wrong-bg: #f9ebe8;
+
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 32px;
+    --space-xl: 64px;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'EB Garamond', Georgia, serif;
+    --font-ui: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: var(--space-lg) var(--space-md) var(--space-md);
+    position: relative;
+    border-bottom: 4px solid var(--accent);
+  }
+  .masthead-kicker {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+  .masthead-title {
+    font-family: var(--font-display);
+    font-size: clamp(52px, 10vw, 96px);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+  }
+  .masthead-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .masthead-sub {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--rule);
+    margin-top: var(--space-sm);
+  }
+  .masthead-rule {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: var(--space-md) auto 0;
+    max-width: 600px;
+  }
+  .masthead-rule::before, .masthead-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+    opacity: 0.4;
+  }
+  .masthead-issue {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-strip {
+    background: var(--cream);
+    border-bottom: 1px solid var(--rule);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .progress-label {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    background: var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--gold));
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    width: 0%;
+  }
+  .progress-pct {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    min-width: 36px;
+    text-align: right;
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--ink);
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .tab-btn:hover { color: var(--paper); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+  }
+  .tab-btn .check {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent2);
+    color: white;
+    font-size: 9px;
+    line-height: 14px;
+    text-align: center;
+    margin-left: 6px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .tab-btn.done .check { opacity: 1; }
+
+  /* ── PANELS ── */
+  .panel { display: none; animation: fadeUp 0.35s ease both; }
+  .panel.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-kicker {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: var(--space-md);
+  }
+  .section-deck {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: var(--space-lg);
+    border-left: 3px solid var(--gold);
+    padding-left: var(--space-md);
+  }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: var(--space-lg) 0;
+  }
+
+  /* ── ACCORDION (Reference) ── */
+  .accordion-item {
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: var(--space-sm);
+    overflow: hidden;
+  }
+  .accordion-trigger {
+    width: 100%;
+    background: var(--cream);
+    border: none;
+    padding: var(--space-md) var(--space-lg);
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    transition: background 0.2s;
+  }
+  .accordion-trigger:hover { background: var(--rule); }
+  .accordion-trigger .arrow {
+    font-size: 20px;
+    transition: transform 0.3s;
+    color: var(--accent);
+  }
+  .accordion-trigger.open .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    display: none;
+    padding: var(--space-lg);
+    background: var(--white);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .accordion-body.open { display: block; }
+
+  .form-label {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: var(--space-sm);
+  }
+  .use-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+  @media (max-width: 600px) { .use-row { grid-template-columns: 1fr; } }
+  .use-card {
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    padding: var(--space-md);
+    border-radius: 2px;
+  }
+  .use-card strong {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--accent);
+  }
+  .use-card em { font-style: italic; color: var(--muted); }
+  .memory-tip {
+    background: #fdf3e7;
+    border: 1px solid var(--gold);
+    padding: var(--space-md);
+    border-radius: 2px;
+    margin-top: var(--space-md);
+    font-size: 15px;
+  }
+  .memory-tip::before {
+    content: '✦ Memory tip: ';
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin: var(--space-sm) 0;
+  }
+  @media (max-width: 500px) { .before-after { grid-template-columns: 1fr; } }
+  .ba-box {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 2px;
+    font-style: italic;
+    font-size: 15px;
+  }
+  .ba-box.wrong { background: var(--wrong-bg); border-left: 3px solid var(--wrong); }
+  .ba-box.right { background: var(--correct-bg); border-left: 3px solid var(--correct); }
+  .ba-box span {
+    display: block;
+    font-family: var(--font-ui);
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  /* ── ACTIVITY WRAPPER ── */
+  .activity-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    border-radius: 2px;
+    position: relative;
+  }
+  .activity-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+  }
+  .q-num {
+    font-family: var(--font-display);
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--cream);
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-lg);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    padding: var(--space-md);
+    border-radius: 2px;
+    margin-top: var(--space-md);
+    font-size: 15px;
+    font-family: var(--font-ui);
+    line-height: 1.5;
+  }
+  .feedback.correct {
+    display: block;
+    background: var(--correct-bg);
+    border-left: 4px solid var(--correct);
+    color: var(--correct);
+  }
+  .feedback.wrong {
+    display: block;
+    background: var(--wrong-bg);
+    border-left: 4px solid var(--wrong);
+    color: var(--wrong);
+  }
+  .feedback strong { font-weight: 600; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    padding: 10px 24px;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-sm {
+    font-size: 11px;
+    padding: 6px 16px;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+  }
+  .btn-outline:hover { background: var(--ink); color: var(--paper); }
+
+  /* ── COMPLETE BTN ── */
+  .complete-btn-wrap {
+    text-align: center;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ─────────────────────────────────────────
+     ACTIVITY 1: DRAG & DROP
+  ───────────────────────────────────────── */
+  .drag-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--cream);
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+    min-height: 60px;
+    margin-bottom: var(--space-lg);
+  }
+  .drag-chip {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: grab;
+    user-select: none;
+    transition: opacity 0.2s, transform 0.15s;
+    touch-action: none;
+  }
+  .drag-chip:hover { transform: scale(1.04); }
+  .drag-chip.dragging { opacity: 0.4; cursor: grabbing; }
+  .drop-zone {
+    min-height: 50px;
+    border: 1px dashed var(--rule);
+    border-radius: 2px;
+    padding: var(--space-sm);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: flex-start;
+    background: var(--paper);
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .drop-zone.drag-over { background: #e8f2ec; border-color: var(--accent2); }
+  .drop-zone .drag-chip { background: var(--accent2); }
+  .drop-table { width: 100%; border-collapse: collapse; margin-bottom: var(--space-md); }
+  .drop-table th {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--space-sm) var(--space-md);
+    text-align: left;
+  }
+  .drop-table td {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  .drop-table .form-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 15px;
+    white-space: nowrap;
+    width: 160px;
+    background: var(--cream);
+  }
+
+  /* ─────────────────────────────────────────
+     ACTIVITY 2: MULTIPLE CHOICE
+  ───────────────────────────────────────── */
+  .mc-options { list-style: none; margin-top: var(--space-md); }
+  .mc-option {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-bottom: var(--space-sm);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-size: 16px;
+    font-family: var(--font-body);
+  }
+  .mc-option:hover:not(.disabled) { background: var(--cream); border-color: var(--ink); }
+  .mc-option.selected-correct { background: var(--correct-bg); border-color: var(--correct); color: var(--correct); }
+  .mc-option.selected-wrong { background: var(--wrong-bg); border-color: var(--wrong); color: var(--wrong); }
+  .mc-option.show-correct { background: var(--correct-bg); border-color: var(--correct); }
+  .mc-option.disabled { cursor: default; }
+  .mc-letter {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .context-quote {
+    border-left: 4px solid var(--gold);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--cream);
+    font-style: italic;
+    font-size: 17px;
+    margin-bottom: var(--space-md);
+    border-radius: 0 2px 2px 0;
+  }
+  .context-quote strong { font-style: normal; font-family: var(--font-ui); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--muted); }
+
+  /* ─────────────────────────────────────────
+     ACTIVITY 3: SPOT THE ERROR
+  ───────────────────────────────────────── */
+  .error-sentence {
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 1.8;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--cream);
+    border-radius: 2px;
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--rule);
+  }
+  .correction-input {
+    width: 100%;
+    max-width: 400px;
+    font-family: var(--font-body);
+    font-size: 17px;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--white);
+    color: var(--ink);
+    margin-top: var(--space-sm);
+  }
+  .correction-input:focus { outline: none; border-color: var(--accent2); }
+  .correction-input:disabled { background: var(--cream); color: var(--muted); }
+
+  /* ─────────────────────────────────────────
+     ACTIVITY 4: PHRASE PICKER
+  ───────────────────────────────────────── */
+  .interview-preview {
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--space-lg);
+    border-radius: 2px;
+    margin-bottom: var(--space-lg);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.8;
+    min-height: 120px;
+    position: relative;
+  }
+  .interview-preview::before {
+    content: 'YOUR INTERVIEW — LIVE PREVIEW';
+    display: block;
+    font-family: var(--font-ui);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: var(--space-sm);
+  }
+  .preview-q { color: var(--gold); font-weight: bold; margin-top: var(--space-sm); }
+  .preview-a { color: var(--paper); margin-bottom: var(--space-sm); }
+  .preview-placeholder { color: rgba(255,255,255,0.3); font-style: italic; }
+
+  .picker-step {
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .picker-step.active { display: block; }
+  .picker-question {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: var(--space-md);
+    color: var(--accent);
+  }
+  .picker-context {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: var(--space-md);
+    font-style: italic;
+  }
+  .picker-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .picker-opt {
+    padding: var(--space-md);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 16px;
+    transition: all 0.15s;
+    background: var(--white);
+    position: relative;
+  }
+  .picker-opt:hover { background: var(--cream); border-color: var(--ink); transform: translateX(4px); }
+  .picker-opt.chosen {
+    background: var(--correct-bg);
+    border-color: var(--correct);
+    color: var(--correct);
+    transform: translateX(6px);
+  }
+  .picker-note {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .step-counter {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: var(--space-md);
+  }
+  .step-dots {
+    display: flex;
+    gap: 6px;
+    margin-bottom: var(--space-lg);
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rule);
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: var(--accent2); }
+  .step-dot.current { background: var(--gold); }
+
+  /* ── CERTIFICATE ── */
+  #certificate {
+    display: none;
+    padding: var(--space-xl) var(--space-lg);
+    text-align: center;
+    animation: fadeUp 0.5s ease both;
+  }
+  .cert-inner {
+    max-width: 620px;
+    margin: 0 auto;
+    border: 2px solid var(--ink);
+    padding: var(--space-xl);
+    position: relative;
+    background: var(--white);
+  }
+  .cert-inner::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--gold);
+    pointer-events: none;
+  }
+  .cert-kicker {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .cert-title {
+    font-family: var(--font-display);
+    font-size: 48px;
+    font-weight: 900;
+    font-style: italic;
+    margin: var(--space-md) 0 var(--space-sm);
+    color: var(--ink);
+  }
+  .cert-body {
+    font-family: var(--font-body);
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: var(--space-lg);
+    font-style: italic;
+  }
+  .cert-stars { font-size: 28px; letter-spacing: 8px; }
+  .cert-seal {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 900;
+    margin: var(--space-lg) auto 0;
+    font-style: italic;
+  }
+
+  /* ── SCORE TALLY ── */
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: var(--space-md);
+  }
+  .score-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <span class="masthead-kicker">B2 Grammar & Communication · Escola Oficial d'Idiomes</span>
+  <h1 class="masthead-title">NEXT<em>.</em></h1>
+  <p class="masthead-sub">An interactive feature on expressing the future</p>
+  <div class="masthead-rule"><span class="masthead-issue">Issue 01 · Future Forms · Interactive Edition</span></div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-strip">
+  <span class="progress-label">Progress</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <span class="progress-pct" id="progressPct">0%</span>
+</div>
+
+<!-- TABS -->
+<nav class="nav-tabs" role="tablist">
+  <button class="tab-btn active" onclick="showTab(0)" id="tabBtn0">Reference Guide</button>
+  <button class="tab-btn" onclick="showTab(1)" id="tabBtn1">Act. 1 — Sort It Out <span class="check">✓</span></button>
+  <button class="tab-btn" onclick="showTab(2)" id="tabBtn2">Act. 2 — Best Fit <span class="check">✓</span></button>
+  <button class="tab-btn" onclick="showTab(3)" id="tabBtn3">Act. 3 — Spot It <span class="check">✓</span></button>
+  <button class="tab-btn" onclick="showTab(4)" id="tabBtn4">Act. 4 — The Interview <span class="check">✓</span></button>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     PANEL 0: REFERENCE GUIDE
+══════════════════════════════════════════ -->
+<div class="panel active" id="panel0">
+<div class="panel-inner">
+  <span class="section-kicker">Reference Guide</span>
+  <h2 class="section-title">What Lies Ahead —<br><em>A Grammar of the Future</em></h2>
+  <p class="section-deck">Everything you need before tackling the activities. Open each section, study the examples, and keep this tab handy.</p>
+
+  <!-- WILL -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Will</span> &nbsp; Facts, predictions & spontaneous decisions</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>Fact / certain future</strong><em>It will be an expensive trip.</em></div>
+        <div class="use-card"><strong>Opinion-based prediction</strong><em>I think they'll win the election.</em></div>
+        <div class="use-card"><strong>Spontaneous decision</strong><em>I'll get the bill — don't worry.</em></div>
+        <div class="use-card"><strong>Promise / offer / refusal</strong><em>I promise I'll call you back.</em></div>
+        <div class="use-card"><strong>First conditional</strong><em>We'll have fun if you come.</em></div>
+      </div>
+      <div class="memory-tip">Think of <em>will</em> as a declaration — made in the moment, based on opinion or intention. If you decide as you speak, use <em>will</em>.</div>
+    </div>
+  </div>
+
+  <!-- GOING TO -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Be going to</span> &nbsp; Intentions, plans & evidence-based predictions</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>Intention / plan</strong><em>I'm going to apply for a new job.</em></div>
+        <div class="use-card"><strong>Evidence-based prediction</strong><em>Look at those clouds — it's going to rain!</em></div>
+        <div class="use-card"><strong>Past unfulfilled plan</strong><em>We were going to move abroad, but then Brexit happened.</em></div>
+      </div>
+      <div class="before-after">
+        <div class="ba-box wrong"><span>Intention (going to)</span>I'm going to visit my mother this weekend.</div>
+        <div class="ba-box right"><span>Arrangement (present continuous)</span>I'm visiting my mother this weekend.</div>
+      </div>
+      <div class="memory-tip">The plan already exists in your head before you speak. If you can picture it as a mental to-do list item, use <em>going to</em>.</div>
+    </div>
+  </div>
+
+  <!-- PRESENT CONTINUOUS -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Present Continuous</span> &nbsp; Fixed arrangements</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>Arrangement (action taken)</strong><em>We're leaving early in the morning. (tickets booked)</em></div>
+        <div class="use-card"><strong>Diary plan</strong><em>She's meeting the director on Friday.</em></div>
+      </div>
+      <div class="memory-tip">Something is already <em>in the diary</em>. A step has been taken to confirm it. Present continuous = it's happening, full stop.</div>
+    </div>
+  </div>
+
+  <!-- PRESENT SIMPLE -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Present Simple</span> &nbsp; Timetables & time clauses</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>Timetabled event</strong><em>The train leaves at 7:42.</em></div>
+        <div class="use-card"><strong>After time conjunctions</strong><em>before / after / as soon as / until / when</em><em>Call me when you arrive.</em></div>
+      </div>
+      <div class="memory-tip">After <em>when, before, after, as soon as, until</em> — never use <em>will</em>. The present simple takes over.</div>
+    </div>
+  </div>
+
+  <!-- FUTURE CONTINUOUS -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Future Continuous</span> &nbsp; In progress, polite enquiries</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>In progress at a future time</strong><em>This time next week, I'll be hiking in Menorca.</em></div>
+        <div class="use-card"><strong>Polite enquiry</strong><em>Will you be attending the conference?</em></div>
+        <div class="use-card"><strong>Inevitable / natural course</strong><em>I'll be seeing Sarah at the party anyway.</em></div>
+        <div class="use-card"><strong>Temporary situation</strong><em>You'll be taking the train next week.</em></div>
+      </div>
+      <div class="memory-tip">Picture a camera filming a future moment — the future continuous captures what's happening <em>in frame</em>. Also your most polite tool for asking about someone's arrangements.</div>
+    </div>
+  </div>
+
+  <!-- OTHER WAYS -->
+  <div class="accordion-item">
+    <button class="accordion-trigger" onclick="toggleAccordion(this)">
+      <span><span class="form-label">Other Ways</span> &nbsp; Formal structures & probability</span>
+      <span class="arrow">▾</span>
+    </button>
+    <div class="accordion-body">
+      <div class="use-row">
+        <div class="use-card"><strong>be due to + inf.</strong><em>The report is due to be published on Friday.</em></div>
+        <div class="use-card"><strong>be about to + inf.</strong><em>She's about to resign.</em> (very soon)</div>
+        <div class="use-card"><strong>be on the verge/brink of + -ing</strong><em>He was on the brink of quitting.</em></div>
+        <div class="use-card"><strong>be + to + inf. (formal)</strong><em>The president is to address the nation.</em></div>
+        <div class="use-card"><strong>be bound to</strong><em>It's bound to be a success.</em> (very likely)</div>
+        <div class="use-card"><strong>be (un)likely to</strong><em>She's unlikely to accept the offer.</em></div>
+      </div>
+      <div class="memory-tip"><em>About to</em> = seconds away. <em>On the verge of</em> = dramatic, significant. <em>Due to</em> = scheduled. <em>Bound to</em> = almost certain.</div>
+    </div>
+  </div>
+
+  <div style="margin-top: var(--space-lg); text-align:center;">
+    <button class="btn btn-primary" onclick="showTab(1)">Start Activity 1 →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 1: DRAG & DROP — SORT IT OUT
+══════════════════════════════════════════ -->
+<div class="panel" id="panel1">
+<div class="panel-inner">
+  <span class="section-kicker">Activity 1</span>
+  <h2 class="section-title">Sort It Out</h2>
+  <p class="section-deck">Drag each sentence into the correct future form category. Identify the form used in each sentence and place it in the right box.</p>
+
+  <div id="drag-bank" class="drag-bank">
+    <div class="drag-chip" draggable="true" data-id="d1">The flight departs at 06:15.</div>
+    <div class="drag-chip" draggable="true" data-id="d2">I'll be living in Berlin this time next year.</div>
+    <div class="drag-chip" draggable="true" data-id="d3">She's going to quit her corporate job.</div>
+    <div class="drag-chip" draggable="true" data-id="d4">I promise I'll send you the details.</div>
+    <div class="drag-chip" draggable="true" data-id="d5">We're having dinner with the team on Thursday.</div>
+    <div class="drag-chip" draggable="true" data-id="d6">Call me as soon as you land.</div>
+    <div class="drag-chip" draggable="true" data-id="d7">It's bound to rain — it always does in April.</div>
+    <div class="drag-chip" draggable="true" data-id="d8">Look at those clouds — it's going to storm!</div>
+    <div class="drag-chip" draggable="true" data-id="d9">Will you be needing the car tomorrow?</div>
+    <div class="drag-chip" draggable="true" data-id="d10">She is to meet the CEO next Monday.</div>
+  </div>
+
+  <table class="drop-table">
+    <thead><tr><th>Future Form</th><th>Drop sentences here</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="form-name">Present Simple</td>
+        <td><div class="drop-zone" data-category="ps" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+      <tr>
+        <td class="form-name">Present Continuous</td>
+        <td><div class="drop-zone" data-category="pc" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+      <tr>
+        <td class="form-name">Be going to</td>
+        <td><div class="drop-zone" data-category="bgt" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+      <tr>
+        <td class="form-name">Will</td>
+        <td><div class="drop-zone" data-category="will" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+      <tr>
+        <td class="form-name">Future Continuous</td>
+        <td><div class="drop-zone" data-category="fc" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+      <tr>
+        <td class="form-name">Other Ways</td>
+        <td><div class="drop-zone" data-category="other" ondragover="allowDrop(event)" ondrop="handleDrop(event)"></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button class="btn btn-primary" onclick="checkDrag()">Check my answers</button>
+  <div id="drag-feedback" class="feedback"></div>
+
+  <div class="complete-btn-wrap" id="drag-complete" style="display:none;">
+    <button class="btn btn-primary" onclick="markDone(1); showTab(2)">Next Activity →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 2: MULTIPLE CHOICE
+══════════════════════════════════════════ -->
+<div class="panel" id="panel2">
+<div class="panel-inner">
+  <span class="section-kicker">Activity 2</span>
+  <h2 class="section-title">The Best Fit</h2>
+  <p class="section-deck">A journalist is preparing for a life-changes interview. Choose the most appropriate future form for each context. Read the situation carefully — communicative function matters as much as grammar.</p>
+
+  <div id="mc-container"></div>
+
+  <div class="complete-btn-wrap" id="mc-complete" style="display:none;">
+    <div class="score-row">
+      <span class="score-num" id="mc-score">0</span>
+      <span>/ 6 correct</span>
+    </div>
+    <button class="btn btn-primary" style="margin-top:var(--space-md);" onclick="markDone(2); showTab(3)">Next Activity →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 3: SPOT THE ERROR
+══════════════════════════════════════════ -->
+<div class="panel" id="panel3">
+<div class="panel-inner">
+  <span class="section-kicker">Activity 3</span>
+  <h2 class="section-title">Spot the Error</h2>
+  <p class="section-deck">Each sentence below contains one incorrect future form. Read each sentence carefully, identify the error, and type the correct version of the wrong word or phrase in the box provided.</p>
+
+  <div id="ste-container"></div>
+
+  <div class="complete-btn-wrap" id="ste-complete" style="display:none;">
+    <div class="score-row">
+      <span class="score-num" id="ste-score">0</span>
+      <span>/ 7 correct</span>
+    </div>
+    <button class="btn btn-primary" style="margin-top:var(--space-md);" onclick="markDone(3); showTab(4)">Final Activity →</button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANEL 4: GUIDED PHRASE PICKER
+══════════════════════════════════════════ -->
+<div class="panel" id="panel4">
+<div class="panel-inner">
+  <span class="section-kicker">Activity 4 — The Feature Interview</span>
+  <h2 class="section-title">Build the Interview</h2>
+  <p class="section-deck">NEXT magazine is interviewing Lucía Torres — a 34-year-old architect about to leave her firm and move abroad. At each step, choose the response that best expresses her meaning. Your choices will build the full interview below.</p>
+
+  <div class="interview-preview" id="interview-preview">
+    <p class="preview-placeholder">Your interview will appear here as you make your choices…</p>
+  </div>
+
+  <div class="step-dots" id="step-dots"></div>
+
+  <div id="picker-container"></div>
+
+  <div class="complete-btn-wrap" id="picker-complete" style="display:none;">
+    <button class="btn btn-primary" onclick="markDone(4); showCertificate()">Finish & Get Certificate →</button>
+  </div>
+</div>
+</div>
+
+<!-- CERTIFICATE -->
+<div id="certificate">
+  <div class="cert-inner">
+    <p class="cert-kicker">NEXT Magazine · Escola Oficial d'Idiomes</p>
+    <h2 class="cert-title">Activity Complete</h2>
+    <p class="cert-body">You have worked through all four activities on expressing the future.</p>
+    <div id="cert-score-display" style="margin: var(--space-md) 0;"></div>
+    <div class="cert-stars" id="cert-stars">✦ ✦ ✦</div>
+    <div class="cert-seal">N.</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE & PROGRESS
+// ═══════════════════════════════════════
+const completed = [false, false, false, false, false]; // panel 0 = guide (always counts), 1–4 = activities
+
+function updateProgress() {
+  const done = completed.slice(1).filter(Boolean).length;
+  const pct = Math.round((done / 4) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+function markDone(idx) {
+  completed[idx] = true;
+  document.getElementById('tabBtn' + idx).classList.add('done');
+  updateProgress();
+}
+
+function showTab(idx) {
+  document.querySelectorAll('.panel').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  window.scrollTo(0, 0);
+}
+
+function showCertificate() {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+  // Total scorable items: MC = 6, STE = 7 → 13 total (drag is pass/fail, picker has no wrong answers)
+  const total = 13;
+  const score = mcCorrect + steCorrect;
+  const pct = Math.round((score / total) * 100);
+
+  let tier, stars, colour;
+  if (pct >= 80) {
+    tier = 'Excellent command of future forms.';
+    stars = '✦ ✦ ✦';
+    colour = 'var(--accent2)';
+  } else if (pct >= 55) {
+    tier = 'Good understanding — a few areas to revisit.';
+    stars = '✦ ✦';
+    colour = 'var(--gold)';
+  } else {
+    tier = 'Keep practising — review the Reference Guide and try again.';
+    stars = '✦';
+    colour = 'var(--accent)';
+  }
+
+  document.getElementById('cert-score-display').innerHTML = `
+    <div style="font-family:var(--font-display);font-size:52px;font-weight:900;color:${colour};line-height:1;">${score}<span style="font-size:24px;color:var(--muted);">/${total}</span></div>
+    <div style="font-family:var(--font-ui);font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:4px;">scored in activities 2 & 3</div>
+    <div style="font-family:var(--font-body);font-style:italic;font-size:17px;color:var(--ink);margin-top:var(--space-md);">${tier}</div>
+  `;
+  document.getElementById('cert-stars').textContent = stars;
+
+  document.getElementById('certificate').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════
+// ACCORDION
+// ═══════════════════════════════════════
+function toggleAccordion(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ═══════════════════════════════════════
+// ACTIVITY 1: DRAG & DROP
+// ═══════════════════════════════════════
+const dragCorrect = {
+  d1: 'ps',   // Present Simple (timetable)
+  d2: 'fc',   // Future Continuous
+  d3: 'bgt',  // Be going to (intention)
+  d4: 'will', // Will (promise)
+  d5: 'pc',   // Present Continuous (arrangement)
+  d6: 'ps',   // Present Simple (time clause - as soon as)
+  d7: 'other',// Be bound to
+  d8: 'bgt',  // Be going to (evidence)
+  d9: 'fc',   // Future Continuous (polite enquiry)
+  d10: 'other' // Be + to (formal)
+};
+
+const dragExplain = {
+  d1: '"The flight departs" uses Present Simple for a fixed timetable event.',
+  d2: '"I\'ll be living" = Future Continuous — in progress at a future point in time.',
+  d3: '"Going to quit" = be going to — a decided intention.',
+  d4: '"I promise I\'ll send" = volitional will — a commitment made at the moment of speaking.',
+  d5: '"We\'re having dinner" = Present Continuous — a fixed social arrangement.',
+  d6: '"As soon as you land" requires Present Simple after a time conjunction — never will.',
+  d7: '"Bound to rain" = be bound to — expressing near-certainty.',
+  d8: '"It\'s going to storm" = be going to — a prediction based on visible evidence (the clouds).',
+  d9: '"Will you be needing" = Future Continuous — a polite enquiry about someone\'s arrangements.',
+  d10: '"Is to meet" = be + to infinitive — a formal, official arrangement.'
+};
+
+let dragItem = null;
+
+document.querySelectorAll('.drag-chip').forEach(chip => {
+  chip.addEventListener('dragstart', e => {
+    dragItem = chip;
+    setTimeout(() => chip.classList.add('dragging'), 0);
+  });
+  chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+
+  // Touch support
+  chip.addEventListener('touchstart', e => {
+    dragItem = chip;
+    chip.style.opacity = '0.6';
+  }, {passive: true});
+  chip.addEventListener('touchend', e => {
+    chip.style.opacity = '';
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const zone = target && target.closest('.drop-zone');
+    if (zone) {
+      zone.appendChild(dragItem);
+      dragItem.style.cursor = 'default';
+    }
+    dragItem = null;
+  });
+});
+
+function allowDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+}
+
+document.querySelectorAll('.drop-zone').forEach(z => {
+  z.addEventListener('dragleave', () => z.classList.remove('drag-over'));
+});
+
+function handleDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragItem) {
+    e.currentTarget.appendChild(dragItem);
+    dragItem.style.cursor = 'default';
+    dragItem = null;
+  }
+}
+
+function checkDrag() {
+  let correct = 0; let total = 0;
+  const errors = [];
+  const placed = {};
+
+  document.querySelectorAll('.drop-zone').forEach(zone => {
+    const cat = zone.dataset.category;
+    zone.querySelectorAll('.drag-chip').forEach(chip => {
+      const id = chip.dataset.id;
+      placed[id] = cat;
+      total++;
+      if (dragCorrect[id] === cat) {
+        correct++;
+        chip.style.background = 'var(--accent2)';
+      } else {
+        chip.style.background = 'var(--wrong)';
+        errors.push(dragExplain[id]);
+      }
+    });
+  });
+
+  // chips still in bank
+  document.querySelectorAll('#drag-bank .drag-chip').forEach(chip => {
+    errors.push('You haven\'t placed: "' + chip.textContent + '"');
+  });
+
+  const fb = document.getElementById('drag-feedback');
+  if (errors.length === 0 && total === 10) {
+    fb.className = 'feedback correct';
+    fb.innerHTML = '<strong>Excellent! All 10 sentences correctly sorted.</strong> Every form is accounted for — notice how be going to covers both intention (d3) and evidence-based prediction (d8), and how two sentences use Present Simple for very different reasons (timetable vs. time clause).';
+    document.getElementById('drag-complete').style.display = 'block';
+  } else {
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '<strong>' + correct + '/' + total + ' correct so far.</strong> Check the highlighted chips and try again. Hints:<br><ul style="margin-top:8px;padding-left:20px;">' +
+      errors.slice(0, 3).map(e => '<li style="margin-bottom:4px;">' + e + '</li>').join('') +
+      (errors.length > 3 ? '<li>…and ' + (errors.length - 3) + ' more to review.</li>' : '') + '</ul>';
+  }
+}
+
+// ═══════════════════════════════════════
+// ACTIVITY 2: MULTIPLE CHOICE
+// ═══════════════════════════════════════
+const mcQuestions = [
+  {
+    context: 'It is Monday. The interview is scheduled for Friday morning. Elena, the journalist, phones Lucía to confirm the appointment. She does not want to sound demanding — she simply wants to check it is still in Lucía\'s diary.',
+    prompt: 'Elena asks politely: "_______ you _______ to the studio on Friday morning?"',
+    options: [
+      { text: 'Will you come', explain: 'Grammatically possible, but "Will you come?" can sound like a direct request or a mild instruction — not the politely distanced tone Elena is going for when checking an existing arrangement.' },
+      { text: 'Will you be coming', explain: 'Correct. The Future Continuous is the natural form for politely enquiring about someone\'s existing plans — it implies respect for their diary and avoids any hint of pressure.' },
+      { text: 'Are you going to come', explain: 'Possible, but "going to" focuses on intention rather than a pre-existing arrangement, and it lacks the politely distanced quality of the Future Continuous.' },
+      { text: 'Do you come', explain: 'Incorrect. Present Simple here suggests a regular habit ("Do you come every Friday?") rather than a specific future appointment.' },
+    ],
+    correct: 1
+  },
+  {
+    context: 'On Friday, the interview begins. Elena asks Lucía about her plans. Lucía has made a firm decision — she thought about this for months before acting. She is not announcing something new; she is confirming something she already resolved.',
+    prompt: 'Lucía says with conviction: "I\'ve made up my mind. I _______ my own studio in Valencia."',
+    options: [
+      { text: 'will open', explain: '"Will" here sounds like a spontaneous declaration made at the moment of speaking — which is not the case. Lucía is confirming a long-considered plan, so another form is more precise.' },
+      { text: 'am going to open', explain: 'Correct. "Going to" expresses a pre-existing intention — the decision was made well before this conversation. This is its classic use.' },
+      { text: 'am opening', explain: 'This would be the natural choice if all the practical arrangements were already in place (premises rented, date confirmed, etc.). Without that confirmed context, "going to" better reflects a firm intention still being put into action.' },
+      { text: 'open', explain: 'Incorrect. Present Simple cannot express a personal intention or plan for the future.' },
+    ],
+    correct: 1
+  },
+  {
+    context: 'Elena\'s photographer is joining them later that morning. He will arrive at a specific time — 11am — and Lucía has mentioned she will be in the middle of something when he arrives. Elena wants to know exactly what Lucía will be doing at that precise moment.',
+    prompt: 'Elena asks: "What _______ you _______ when Marco arrives at 11?"',
+    options: [
+      { text: 'are you doing', explain: 'This asks about a confirmed arrangement at 11am rather than what will be in progress at that moment. It does not capture the sense of an ongoing activity that Marco will walk into.' },
+      { text: 'will you do', explain: 'This asks about a completed single action, not something in progress. It does not convey the idea of an activity already underway when Marco arrives.' },
+      { text: 'will you be doing', explain: 'Correct. The Future Continuous captures an action that will be in progress at a specific future moment — 11am is the reference point, and Lucía will be mid-task when Marco walks in.' },
+      { text: 'do you do', explain: 'Incorrect. This asks about a habitual pattern, not what will be happening at a particular moment in the future.' },
+    ],
+    correct: 2
+  },
+  {
+    context: 'During the interview, Lucía is explaining why she chose Valencia. She is not looking at any evidence — she is simply expressing her belief about what life there will be like, based on her general knowledge of the city\'s climate.',
+    prompt: 'Lucía says: "And of course, in Valencia it _______ be sunny. Not like here — just look at this sky!"',
+    options: [
+      { text: 'is going to', explain: 'Incorrect here. "Going to" is for predictions grounded in visible, present evidence. Lucía is not observing Valencia\'s sky right now — she is expressing a general opinion about what life there will be like. The clouds she points to are where she is now, not evidence about Valencia.' },
+      { text: 'will', explain: 'Correct. "Will" is the right form for opinion-based predictions and general statements about the future that are not grounded in immediate evidence. Lucía is sharing her belief about Valencia\'s climate — not reacting to something she can see happening.' },
+      { text: 'is about to', explain: '"About to" signals something happening imminently — within moments. Sunny weather in Valencia is a general future state, not something about to happen right now.' },
+      { text: 'is due to', explain: '"Due to" is reserved for scheduled events with a fixed time. Weather cannot be scheduled — it can only be predicted, and here the correct form is "will".' },
+    ],
+    correct: 1
+  },
+  {
+    context: 'Halfway through the interview, Lucía\'s phone vibrates on the table. She glances at it — it is a colleague calling unexpectedly. She had not planned to speak to him today. She decides on the spot to return the call after the session ends.',
+    prompt: 'Lucía says: "Don\'t worry — I _______ him back as soon as the interview _______."',
+    options: [
+      { text: 'will call / will finish', explain: 'The second blank is wrong. After time conjunctions like "as soon as", English always requires the Present Simple — never "will". This is one of the most common errors at B2 level.' },
+      { text: 'am going to call / finishes', explain: 'The second blank is correct (Present Simple after "as soon as"), but "going to" in the first blank implies a prior intention. Since this is a spontaneous decision — made at this exact moment — "will" is the natural choice.' },
+      { text: 'will call / finishes', explain: 'Correct. "Will" for a spontaneous in-the-moment decision, and Present Simple after the time conjunction "as soon as". Both rules applied perfectly.' },
+      { text: 'call / finishes', explain: 'The first blank needs an auxiliary verb — you cannot express a future decision without one.' },
+    ],
+    correct: 2
+  },
+  {
+    context: 'At the end of the interview, Elena reads aloud from the official press release that Lucía\'s firm has drafted. She wants to know whether Lucía feels the language reflects the situation accurately.',
+    prompt: 'Elena reads: "The firm _______ issue a formal communication to all clients regarding Ms Torres\'s departure no later than 1st June." Then she looks up: "Does that sound right to you?"',
+    options: [
+      { text: 'is about to', explain: '"About to" signals something happening imminently — in moments or hours. A scheduled corporate communication with a named deadline is not described as "about to happen".' },
+      { text: 'is to', explain: 'Correct. "Be + to infinitive" is the conventional structure in formal written documents, press releases, and official announcements — it signals a planned, obligatory future action, exactly right for this corporate register.' },
+      { text: 'is going to', explain: 'Natural in speech, but "going to" carries an informal register that does not suit a corporate press release. "Is to" is the standard form in formal written English.' },
+      { text: 'will be making', explain: 'Grammatically possible, but not the conventional choice for formal institutional announcements. "Is to" is the expected structure in this written register.' },
+    ],
+    correct: 1
+  }
+];
+
+let mcAnswered = 0;
+let mcCorrect = 0;
+
+function buildMC() {
+  const container = document.getElementById('mc-container');
+  mcQuestions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'activity-card';
+    card.innerHTML = `
+      <span class="q-num">${qi + 1}</span>
+      <div class="context-quote"><strong>Context</strong>${q.context}</div>
+      <p style="font-family:var(--font-body);font-size:18px;margin-bottom:var(--space-md);"><strong style="font-style:italic;">${q.prompt}</strong></p>
+      <ul class="mc-options" id="mc-opts-${qi}">
+        ${q.options.map((o, oi) => `
+          <li class="mc-option" onclick="answerMC(${qi}, ${oi})" id="mc-opt-${qi}-${oi}">
+            <span class="mc-letter">${String.fromCharCode(65 + oi)}</span>
+            <span>${o.text}</span>
+          </li>`).join('')}
+      </ul>
+      <div class="feedback" id="mc-fb-${qi}"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function answerMC(qi, chosen) {
+  const q = mcQuestions[qi];
+  const opts = document.querySelectorAll(`#mc-opts-${qi} .mc-option`);
+  opts.forEach(o => o.classList.add('disabled'));
+  opts.forEach(o => o.onclick = null);
+
+  const fb = document.getElementById(`mc-fb-${qi}`);
+  if (chosen === q.correct) {
+    document.getElementById(`mc-opt-${qi}-${chosen}`).classList.add('selected-correct');
+    fb.className = 'feedback correct';
+    fb.innerHTML = '<strong>✓ Correct!</strong> ' + q.options[chosen].explain;
+    mcCorrect++;
+  } else {
+    document.getElementById(`mc-opt-${qi}-${chosen}`).classList.add('selected-wrong');
+    document.getElementById(`mc-opt-${qi}-${q.correct}`).classList.add('show-correct');
+    fb.className = 'feedback wrong';
+    fb.innerHTML = '<strong>✗ Not quite.</strong> ' + q.options[chosen].explain + '<br><br><strong>The best answer was: ' + q.options[q.correct].text + '</strong> — ' + q.options[q.correct].explain;
+  }
+
+  mcAnswered++;
+  if (mcAnswered === mcQuestions.length) {
+    document.getElementById('mc-score').textContent = mcCorrect;
+    document.getElementById('mc-complete').style.display = 'block';
+  }
+}
+
+buildMC();
+
+// ═══════════════════════════════════════
+// ACTIVITY 3: SPOT THE ERROR
+// ═══════════════════════════════════════
+const steQuestions = [
+  {
+    sentence: 'Before you will leave, please remember to lock the studio.',
+    accept: ['you leave', 'leave'],
+    display: 'you leave',
+    explain: 'After time conjunctions like <em>before, after, when, as soon as, until</em>, English uses the Present Simple — never <em>will</em>. The correct version is "before you leave".'
+  },
+  {
+    sentence: 'Look at those dark clouds — it will rain any minute now!',
+    accept: ["is going to rain", "it's going to rain", "its going to rain", "going to rain"],
+    display: "is going to rain",
+    explain: '"Will" is for opinions and predictions without immediate evidence. Here the speaker can <em>see</em> the dark clouds — physical evidence points to the prediction. The correct form is "it\'s going to rain".'
+  },
+  {
+    sentence: 'She is about to launch her new studio next spring.',
+    accept: ['is due to', 'due to', 'is due to launch', 'is going to', 'is going to launch'],
+    display: 'is due to',
+    explain: '"About to" signals imminent action — something happening in moments, not months away. For a planned event at a specific future time, use "is due to" (scheduled/expected) or "is going to".'
+  },
+  {
+    sentence: "The conference is going to begin at 9:00 sharp. Don't be late.",
+    accept: ['begins', 'will begin', 'is due to begin'],
+    display: 'begins',
+    explain: 'For official timetabled events — conferences, trains, classes, flights — English uses the Present Simple. The correct form is "the conference begins at 9:00".'
+  },
+  {
+    sentence: "This time next month, I will live in a completely different city.",
+    accept: ["will be living", "i'll be living", "ill be living", "'ll be living", "will be living in"],
+    display: "will be living",
+    explain: '"This time next month" points to an action in progress at a specific future moment. Use the Future Continuous: "I will be living in a completely different city". "Will live" suggests a simple future fact, not an ongoing state.'
+  },
+  {
+    sentence: "I am going to call you a taxi — I see one right there!",
+    accept: ["will", "i'll", "ill", "'ll", "will call", "i'll call", "ill call"],
+    display: "will / 'll",
+    explain: 'This is a spontaneous decision made at the moment of speaking — the speaker just noticed the taxi. Spontaneous decisions always use <em>will</em> (or its contraction <em>\'ll</em>), not "going to".'
+  },
+  {
+    sentence: "Don't worry — I will call him as soon as the interview will finish.",
+    accept: ['finishes', 'the interview finishes', 'ends', 'is over'],
+    display: 'finishes',
+    explain: 'After time conjunctions like <em>as soon as, when, before, after, until</em>, English always uses the Present Simple — never <em>will</em>. The correct version is "as soon as the interview finishes".'
+  },
+];
+
+let steAnswered = 0;
+let steCorrect = 0;
+const steAnsweredSet = new Set();
+
+function buildSTE() {
+  const container = document.getElementById('ste-container');
+  steQuestions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'activity-card';
+    card.innerHTML = `
+      <span class="q-num">${qi + 1}</span>
+      <div class="error-sentence">${q.sentence}</div>
+      <p style="font-family:var(--font-ui);font-size:13px;color:var(--muted);margin-bottom:var(--space-sm);">There is one error in the sentence above. Type the correct word or phrase to replace it:</p>
+      <input class="correction-input" id="ste-input-${qi}" placeholder="Type the correct version…" />
+      <button class="btn btn-sm btn-outline" id="ste-check-${qi}" style="margin-top:var(--space-sm);" onclick="checkSTE(${qi})">Check</button>
+      <div class="feedback" id="ste-fb-${qi}"></div>
+    `;
+    container.appendChild(card);
+
+    // Allow Enter key to submit
+    card.querySelector(`#ste-input-${qi}`).addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkSTE(qi);
+    });
+  });
+}
+
+function normalise(str) {
+  return str.trim().toLowerCase()
+    .replace(/['']/g, "'")
+    .replace(/^i'll/, "'ll")  // normalise I'll → 'll for comparison
+    .replace(/\s+/g, ' ');
+}
+
+function checkSTE(qi) {
+  const q = steQuestions[qi];
+  const input = document.getElementById(`ste-input-${qi}`);
+  const fb = document.getElementById(`ste-fb-${qi}`);
+  const btn = document.getElementById(`ste-check-${qi}`);
+  const raw = input.value;
+  const val = normalise(raw);
+
+  // Build normalised accept list
+  const acceptNorm = q.accept.map(a => normalise(a));
+  // Also accept 'll / I'll as equivalent to will where will is a valid answer
+  if (q.accept.some(a => a.toLowerCase() === 'will' || a.toLowerCase() === 'will call' || a.toLowerCase() === "i'll" || a.toLowerCase() === "i'll call")) {
+    acceptNorm.push("'ll", "ll", "i'll", "ill");
+  }
+
+  // Exact match only — no loose substring matching
+  const isCorrect = acceptNorm.includes(val);
+
+  if (isCorrect) {
+    fb.className = 'feedback correct';
+    fb.innerHTML = `<strong>✓ Correct!</strong> The right answer is <em>"${q.display}"</em>. ${q.explain}`;
+    input.disabled = true;
+    btn.disabled = true;
+    if (!steAnsweredSet.has(qi)) {
+      steCorrect++;
+    }
+    steAnsweredSet.add(qi);
+    steAnswered = steAnsweredSet.size;
+    if (steAnswered === steQuestions.length) {
+      document.getElementById('ste-score').textContent = steCorrect;
+      document.getElementById('ste-complete').style.display = 'block';
+    }
+  } else {
+    fb.className = 'feedback wrong';
+    fb.innerHTML = `<strong>✗ Not quite.</strong> Have another look at the sentence. Think about which future form is being used and whether it fits the context. ${q.explain}`;
+    // Don't increment steAnswered on wrong — allow retry
+  }
+}
+
+buildSTE();
+
+// ═══════════════════════════════════════
+// ACTIVITY 4: PHRASE PICKER
+// ═══════════════════════════════════════
+const pickerSteps = [
+  {
+    question: '"Lucía, what made you decide to make this change?"',
+    context: 'Choose how Lucía expresses her long-held intention.',
+    options: [
+      {
+        text: "I've always known I was going to run my own studio one day. I just needed the right moment.",
+        note: 'be going to — pre-existing intention',
+        function: 'Expresses a deeply held plan that existed long before the conversation.'
+      },
+      {
+        text: "I've always known I'd end up running my own studio. Something inside me always said it was bound to happen.",
+        note: 'would (reported) + be bound to — certainty',
+        function: 'Uses "would" for a past sense of future certainty and "bound to" for near-inevitability.'
+      },
+      {
+        text: "For years I thought I was going to stay at the firm forever. But circumstances change, and suddenly I'm about to take the biggest step of my career.",
+        note: 'going to (past unfulfilled plan) + be about to',
+        function: 'Contrasts a past intention that changed with an imminent dramatic action.'
+      }
+    ]
+  },
+  {
+    question: '"When exactly does everything happen?"',
+    context: 'Choose how Lucía describes the timeline of confirmed events.',
+    options: [
+      {
+        text: "My contract ends on the 30th. The studio opens in Valencia the following Monday. It's all fixed.",
+        note: 'Present Simple — timetabled / official dates',
+        function: 'Uses Present Simple for fixed, scheduled events — the dates are already set like a timetable.'
+      },
+      {
+        text: "I'm handing over my final projects next week and moving to Valencia on the 1st. It's all in the diary.",
+        note: 'Present Continuous — fixed personal arrangements',
+        function: 'Uses Present Continuous for diary arrangements — specific steps have been taken to confirm them.'
+      },
+      {
+        text: "The firm is to announce my departure formally next Thursday. I'm due to hand over all projects by the end of the month.",
+        note: 'be to (formal) + be due to (scheduled)',
+        function: 'Uses formal structures appropriate for official professional announcements and scheduled obligations.'
+      }
+    ]
+  },
+  {
+    question: '"Are you nervous about the financial side?"',
+    context: 'Choose how Lucía assesses the risks and likely outcomes.',
+    options: [
+      {
+        text: "Of course — it's unlikely to be easy at first. But I think the market is likely to respond well to what I'm offering.",
+        note: 'be unlikely to + be likely to — probability',
+        function: 'Uses the "likely/unlikely" structure to express degrees of probability about future outcomes.'
+      },
+      {
+        text: "There will be difficult months — I know that. But I genuinely believe it will work out. Independent studios are bound to thrive in this climate.",
+        note: 'will (fact/prediction) + be bound to',
+        function: 'Uses "will" for an honest prediction and "bound to" to express strong confidence in the outcome.'
+      },
+      {
+        text: "I won't pretend it's risk-free. But I'll face each challenge as it comes. If I plan carefully, things will fall into place.",
+        note: 'will (promise/volitional) + first conditional',
+        function: 'Uses volitional "will" for a personal commitment and the first conditional to express a realistic plan.'
+      }
+    ]
+  },
+  {
+    question: '"What will your days look like in six months\' time?"',
+    context: 'Choose how Lucía pictures her future life in progress.',
+    options: [
+      {
+        text: "This time next year I'll be working on projects I actually believe in. I'll be waking up excited, not drained.",
+        note: 'Future Continuous — in progress at a future time',
+        function: 'Paints a picture of ongoing states and activities at a specific future reference point.'
+      },
+      {
+        text: "By next spring I'm going to have a small team, a full client list and a studio I'm proud of. That's the plan.",
+        note: 'be going to — concrete future intention',
+        function: 'Lists specific intentional goals — all things she plans to have achieved.'
+      },
+      {
+        text: "I expect I'll be juggling about five projects at once — you'll be hearing from me a lot! — and finally on the verge of turning a profit.",
+        note: 'Future Continuous + on the verge of',
+        function: 'Uses Future Continuous for imagined ongoing activity and "on the verge of" for a significant approaching moment.'
+      }
+    ]
+  },
+  {
+    question: '"Any final message for readers thinking of making a big change?"',
+    context: 'Choose Lucía\'s closing words — a blend of advice and encouragement.',
+    options: [
+      {
+        text: "Don't wait until everything is perfect. If you keep waiting, you'll wake up ten years from now still planning. Life won't pause for you.",
+        note: 'will (prediction) + first conditional',
+        function: 'Uses conditional and predictive "will" to make the advice vivid and direct.'
+      },
+      {
+        text: "Do the maths, make the plan — and then trust it. Things that are due to happen will happen. You just have to show up.",
+        note: 'be due to + will (certainty)',
+        function: 'Combines "due to" for scheduled inevitability with declarative "will" for motivational certainty.'
+      },
+      {
+        text: "The only question worth asking is: are you about to take the leap, or are you going to spend another year on the brink of it?",
+        note: 'be about to + going to + on the brink of',
+        function: 'A rhetorically powerful close using three different future structures to contrast action and hesitation.'
+      }
+    ]
+  }
+];
+
+let pickerCurrentStep = 0;
+const pickerChosen = [];
+const previewLines = [];
+
+function buildPicker() {
+  const dots = document.getElementById('step-dots');
+  pickerSteps.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'step-dot';
+    dot.id = `dot-${i}`;
+    dots.appendChild(dot);
+  });
+  renderPickerStep(0);
+}
+
+function renderPickerStep(idx) {
+  const container = document.getElementById('picker-container');
+  container.innerHTML = '';
+
+  if (idx >= pickerSteps.length) {
+    document.getElementById('picker-complete').style.display = 'block';
+    return;
+  }
+
+  // Update dots
+  pickerSteps.forEach((_, i) => {
+    const dot = document.getElementById(`dot-${i}`);
+    dot.className = 'step-dot' + (i < idx ? ' done' : i === idx ? ' current' : '');
+  });
+
+  const step = pickerSteps[idx];
+  const div = document.createElement('div');
+  div.className = 'picker-step active';
+  div.innerHTML = `
+    <div class="step-counter">Question ${idx + 1} of ${pickerSteps.length}</div>
+    <p class="picker-question">${step.question}</p>
+    <p class="picker-context">${step.context}</p>
+    <div class="picker-options">
+      ${step.options.map((o, oi) => `
+        <div class="picker-opt" id="popt-${idx}-${oi}" onclick="choosePicker(${idx}, ${oi})">
+          <div>${o.text}</div>
+          <div class="picker-note">[ ${o.note} ]</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="feedback" id="picker-fb-${idx}"></div>
+  `;
+  container.appendChild(div);
+}
+
+function choosePicker(stepIdx, optIdx) {
+  // Disable all options
+  pickerSteps[stepIdx].options.forEach((_, oi) => {
+    const el = document.getElementById(`popt-${stepIdx}-${oi}`);
+    if (el) el.onclick = null;
+  });
+
+  const chosen = pickerSteps[stepIdx].options[optIdx];
+  const el = document.getElementById(`popt-${stepIdx}-${optIdx}`);
+  el.classList.add('chosen');
+
+  const fb = document.getElementById(`picker-fb-${stepIdx}`);
+  fb.className = 'feedback correct';
+  fb.innerHTML = `<strong>✓ Good choice!</strong> ${chosen.function} Notice the grammar in action as it appears in your interview below.`;
+
+  // Add to preview
+  const q = pickerSteps[stepIdx].question;
+  previewLines.push({ q: q.replace(/^"|"$/g, ''), a: chosen.text });
+  updateInterviewPreview();
+
+  pickerChosen.push(optIdx);
+
+  // Next step after short delay
+  setTimeout(() => {
+    pickerCurrentStep++;
+    renderPickerStep(pickerCurrentStep);
+  }, 1400);
+}
+
+function updateInterviewPreview() {
+  const preview = document.getElementById('interview-preview');
+  if (previewLines.length === 0) {
+    preview.innerHTML = '<p class="preview-placeholder">Your interview will appear here as you make your choices…</p>';
+    return;
+  }
+  let html = '';
+  previewLines.forEach(line => {
+    html += `<p class="preview-q">— ${line.q}</p><p class="preview-a">${line.a}</p>`;
+  });
+  if (previewLines.length < pickerSteps.length) {
+    html += '<p class="preview-placeholder" style="margin-top:12px;">…more to come</p>';
+  }
+  preview.innerHTML = html;
+}
+
+buildPicker();
+updateProgress();
+</script>
+</body>
+</html>

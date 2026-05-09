@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sports Vocabulary · B2</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Warm energetic palette — dopamine/delight register */
+    --bg:        #fdf8f2;
+    --surface:   #ffffff;
+    --ink:       #1c1916;
+    --ink-mid:   #6b6460;
+    --ink-light: #aaa49e;
+    --accent:    #f04e23;       /* punchy orange-red */
+    --accent-lt: #fdeee9;
+    --accent2:   #f5a623;       /* amber energy */
+    --accent2-lt:#fef6e4;
+    --violet:    #7c3aed;       /* unexpected accent for idioms */
+    --violet-lt: #f0ebff;
+    --green:     #16a34a;
+    --green-lt:  #dcfce7;
+    --border:    #ede8e0;
+    --radius:    16px;
+    --radius-sm: 10px;
+    --shadow-card: 0 2px 12px rgba(28,25,22,0.08), 0 1px 3px rgba(28,25,22,0.05);
+    --shadow-lift: 0 10px 32px rgba(28,25,22,0.13), 0 2px 8px rgba(28,25,22,0.07);
+    --transition: 170ms cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  html { font-size: 16px; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding-bottom: 96px;
+  }
+
+  /* ── HEADER — full-bleed with SVG atmosphere ── */
+  .site-header {
+    background: linear-gradient(135deg, #1c1916 0%, #2e2620 60%, #3d1f0f 100%);
+    color: var(--bg);
+    padding: 32px 40px 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .site-header .header-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 28px;
+  }
+  .site-header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.03em;
+  }
+  .site-header .level-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    padding: 4px 10px;
+    border: 1.5px solid var(--accent2);
+    border-radius: 20px;
+  }
+  /* SVG atmospheric image — runner silhouettes */
+  .header-svg {
+    position: absolute;
+    right: 0; bottom: 0;
+    width: 420px; height: 140px;
+    opacity: 0.18;
+    z-index: 1;
+  }
+  /* floating emoji — one deliberate element */
+  .header-emoji {
+    position: absolute;
+    top: 24px; right: 48px;
+    font-size: 3.5rem;
+    z-index: 2;
+    animation: floatBob 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(240,78,35,0.4));
+  }
+  @keyframes floatBob {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-8px) rotate(3deg); }
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    background: linear-gradient(135deg, #1c1916, #2e2620);
+    padding: 0 40px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 600ms cubic-bezier(0.34, 1.3, 0.64, 1);
+    box-shadow: 0 0 12px rgba(240,78,35,0.5);
+  }
+  .progress-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.45);
+    white-space: nowrap;
+    letter-spacing: 0.08em;
+  }
+
+  /* ── SECTION TABS ── */
+  .tabs-outer {
+    background: linear-gradient(135deg, #1c1916, #2e2620);
+    padding: 0 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .tabs { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    background: none;
+    border: none;
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color 160ms ease, border-color 160ms ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-btn .check {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.62rem;
+    flex-shrink: 0;
+    transition: background 200ms ease, transform 300ms cubic-bezier(0.34,1.6,0.64,1);
+  }
+  .tab-btn.done .check {
+    background: var(--green);
+    color: #fff;
+    transform: scale(1.15);
+  }
+  .tab-btn.active { color: #fff; border-bottom-color: var(--accent); }
+  .tab-btn:hover:not(.active) { color: rgba(255,255,255,0.7); }
+
+  /* ── MAIN CONTENT ── */
+  .main { max-width: 860px; margin: 0 auto; padding: 48px 40px; }
+  .section-panel { display: none; animation: panelIn 280ms ease; }
+  .section-panel.active { display: block; }
+  @keyframes panelIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+  .section-header-text { flex: 1; }
+  .section-emoji {
+    font-size: 3rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .section-kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 2.2rem;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .section-desc {
+    font-size: 0.9rem;
+    color: var(--ink-mid);
+    line-height: 1.55;
+    max-width: 500px;
+  }
+
+  /* ── ACTIVITY CARD ── */
+  .activity {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 200ms ease;
+  }
+  .activity:hover { box-shadow: var(--shadow-lift); }
+  .activity-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+  .activity h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+    color: var(--ink);
+  }
+
+  /* ── GAP FILL ── */
+  .passage { font-size: 0.95rem; line-height: 1.9; color: var(--ink); }
+  .blank-input {
+    display: inline-block;
+    border: none;
+    border-bottom: 2.5px solid var(--accent);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--ink);
+    width: 150px;
+    padding: 3px 6px;
+    outline: none;
+    transition: all 200ms ease;
+    vertical-align: baseline;
+    border-radius: 0;
+  }
+  .blank-input:focus { border-color: var(--violet); background: var(--violet-lt); border-radius: 6px 6px 0 0; }
+  .blank-input.correct { border-color: var(--green); background: var(--green-lt); color: var(--green); border-radius: 6px 6px 0 0; }
+  .blank-input.wrong   { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); border-radius: 6px 6px 0 0; animation: wiggle 300ms ease; }
+  @keyframes wiggle {
+    0%,100%{ transform:rotate(0); } 25%{transform:rotate(-2deg);} 75%{transform:rotate(2deg);}
+  }
+
+  .word-bank {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 1.5px dashed var(--border);
+  }
+  .word-bank-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+  .word-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 5px 13px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    color: var(--ink-mid);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+  .chip:not(.used):hover { transform: translateY(-1px); border-color: var(--accent2); color: var(--ink); }
+  .chip.used { opacity: 0.3; text-decoration: line-through; }
+
+  /* ── MATCHING ── */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; }
+  .match-col-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+  }
+  .match-item {
+    padding: 13px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+    background: var(--surface);
+    line-height: 1.4;
+  }
+  .match-item:hover { border-color: var(--accent2); transform: translateY(-2px) scale(1.01); box-shadow: var(--shadow-card); }
+  .match-item.selected { border-color: var(--accent); background: var(--accent-lt); transform: translateY(-1px); }
+  .match-item.matched  { border-color: var(--green); background: var(--green-lt); color: var(--green); cursor: default; }
+  .match-item.matched:hover { transform: none; box-shadow: none; }
+  .match-item.wrong-flash { animation: shake 320ms ease; border-color: var(--accent); background: var(--accent-lt); }
+  @keyframes shake {
+    0%,100%{ transform:translateX(0); }
+    20%{ transform:translateX(-6px); }
+    40%{ transform:translateX(5px); }
+    60%{ transform:translateX(-4px); }
+    80%{ transform:translateX(3px); }
+  }
+
+  /* ── CLASSIFIER ── */
+  .classifier-items { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .drag-chip {
+    font-size: 0.82rem;
+    padding: 9px 16px;
+    border-radius: 22px;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+  .drag-chip:hover { border-color: var(--accent2); color: var(--ink); transform: translateY(-2px) scale(1.03); box-shadow: var(--shadow-card); }
+  .drag-chip.selected-chip { border-color: var(--accent); background: var(--accent-lt); transform: scale(1.05); }
+  .drag-chip.placed { opacity: 0.25; pointer-events: none; transform: none; }
+
+  .bucket-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+  .bucket {
+    border: 2.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    min-height: 110px;
+    transition: all 180ms ease;
+    cursor: pointer;
+  }
+  .bucket:hover { border-color: var(--accent2); background: var(--accent2-lt); }
+  .bucket-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    color: var(--ink-mid);
+  }
+  .bucket-items { display: flex; flex-wrap: wrap; gap: 6px; min-height: 32px; }
+  .bucket-item {
+    font-size: 0.74rem;
+    padding: 5px 11px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 180ms ease;
+    font-weight: 500;
+  }
+  .bucket-item:hover { opacity: 0.65; transform: scale(0.96); }
+  .bucket-item.correct-placed { background: var(--green-lt); color: var(--green); border: 1.5px solid #86efac; }
+  .bucket-item.wrong-placed   { background: var(--accent-lt); color: var(--accent); border: 1.5px solid #fca5a5; }
+  .bucket-item.neutral-placed { background: var(--violet-lt); color: var(--violet); border: 1.5px solid #c4b5fd; }
+
+  /* ── TRUE / FALSE ── */
+  .tf-list { display: flex; flex-direction: column; gap: 12px; }
+  .tf-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 16px 20px;
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    transition: all 220ms ease;
+  }
+  .tf-item.answered-correct { border-color: var(--green); background: var(--green-lt); }
+  .tf-item.answered-wrong   { border-color: var(--accent); background: var(--accent-lt); }
+  .tf-statement { font-size: 0.88rem; line-height: 1.55; color: var(--ink); }
+  .tf-statement em { font-style: italic; color: var(--violet); font-weight: 500; }
+  .tf-buttons { display: flex; gap: 8px; }
+  .tf-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all var(--transition);
+    color: var(--ink-mid);
+  }
+  .tf-btn:hover { border-color: var(--ink); color: var(--ink); transform: translateY(-1px); }
+  .tf-btn.selected-true  { background: var(--green); border-color: var(--green); color: #fff; }
+  .tf-btn.selected-false { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tf-btn:disabled { cursor: default; }
+  .tf-explanation {
+    grid-column: 1 / -1;
+    font-size: 0.8rem;
+    color: var(--ink-mid);
+    font-style: italic;
+    margin-top: 6px;
+    display: none;
+    line-height: 1.55;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.6);
+  }
+  .tf-item.answered-correct .tf-explanation,
+  .tf-item.answered-wrong .tf-explanation { display: block; }
+
+  /* ── IDIOM MULTIPLE CHOICE ── */
+  .scenario-card {
+    background: var(--violet-lt);
+    border-left: 4px solid var(--violet);
+    padding: 16px 20px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .mc-options { display: flex; flex-direction: column; gap: 8px; }
+  .mc-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 0.86rem;
+    line-height: 1.4;
+  }
+  .mc-option:hover { border-color: var(--violet); background: var(--violet-lt); transform: translateX(3px); }
+  .mc-option .opt-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--transition);
+    color: var(--ink-mid);
+    margin-top: 0;
+  }
+  .mc-option.correct  { border-color: var(--green); background: var(--green-lt); color: var(--green); }
+  .mc-option.correct .opt-label { background: var(--green); border-color: var(--green); color: #fff; }
+  .mc-option.wrong    { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); }
+  .mc-option.wrong .opt-label { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .mc-option.disabled { pointer-events: none; }
+
+  /* ── COLLOCATION ── */
+  .colloc-grid { display: flex; flex-direction: column; gap: 14px; }
+  .colloc-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .colloc-verb {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    color: var(--accent);
+    min-width: 140px;
+    letter-spacing: -0.02em;
+  }
+  .colloc-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 9px 14px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 180ms ease;
+    appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23aaa49e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .colloc-select:focus { border-color: var(--accent); }
+  .colloc-select.correct { border-color: var(--green); background-color: var(--green-lt); }
+  .colloc-select.wrong   { border-color: var(--accent); background-color: var(--accent-lt); }
+
+  /* ── ODD ONE OUT ── */
+  .odd-group { margin-bottom: 24px; }
+  .odd-group-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 10px;
+  }
+  .odd-words { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+  .odd-word {
+    font-size: 0.88rem;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all var(--transition);
+    user-select: none;
+    font-weight: 500;
+  }
+  .odd-word:hover { border-color: var(--accent2); transform: translateY(-2px) scale(1.02); box-shadow: var(--shadow-card); }
+  .odd-word.correct { border-color: var(--green); background: var(--green-lt); color: var(--green); transform: scale(1.04); }
+  .odd-word.wrong   { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); animation: shake 300ms ease; }
+  .odd-word.disabled { pointer-events: none; }
+  .odd-explanation {
+    font-size: 0.8rem;
+    color: var(--ink-mid);
+    font-style: italic;
+    line-height: 1.55;
+    display: none;
+    padding: 10px 14px;
+    background: var(--accent2-lt);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent2);
+  }
+  .odd-explanation.visible { display: block; animation: panelIn 200ms ease; }
+
+  /* ── BUTTONS ── */
+  .btn-row { margin-top: 24px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.84rem;
+    padding: 11px 24px;
+    border-radius: 22px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(28,25,22,0.25); }
+  .btn-secondary { background: transparent; border: 2px solid var(--border); color: var(--ink-mid); border-radius: 22px; }
+  .btn-secondary:hover { border-color: var(--ink-light); color: var(--ink); }
+  .btn-next {
+    background: linear-gradient(135deg, var(--accent), #e8390a);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(240,78,35,0.35);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(240,78,35,0.45); }
+
+  /* ── SCORE BADGE ── */
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-mid);
+    margin-left: auto;
+    background: var(--bg);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+  }
+  .score-badge .score-num { color: var(--accent); font-weight: 500; font-size: 0.82rem; }
+
+  /* ── FEEDBACK ── */
+  .feedback-bar {
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: none;
+    margin-top: 14px;
+    border: 1.5px solid transparent;
+    font-weight: 500;
+  }
+  .feedback-bar.show { display: block; animation: panelIn 200ms ease; }
+  .feedback-bar.ok  { background: var(--green-lt); border-color: #86efac; color: var(--green); }
+  .feedback-bar.err { background: var(--accent-lt); border-color: #fca5a5; color: var(--accent); }
+
+  /* ── CONFETTI BURST ── */
+  .confetti-particle {
+    position: fixed;
+    width: 8px; height: 8px;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall 1.2s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translateY(180px) rotate(540deg) scale(0.4); opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .site-header, .progress-wrap, .tabs-outer { padding-left: 20px; padding-right: 20px; }
+    .main { padding: 28px 20px; }
+    .section-title { font-size: 1.6rem; }
+    .section-header-row { flex-direction: row; gap: 16px; }
+    .section-emoji { font-size: 2.2rem; }
+    .match-grid { grid-template-columns: 1fr; }
+    .bucket-row { grid-template-columns: 1fr; }
+    .header-svg, .header-emoji { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <svg class="header-svg" viewBox="0 0 420 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <line x1="0" y1="120" x2="420" y2="120" stroke="white" stroke-width="1.5" stroke-dasharray="18 10"/>
+    <line x1="0" y1="100" x2="420" y2="100" stroke="white" stroke-width="1" stroke-dasharray="18 10" opacity="0.6"/>
+    <line x1="0" y1="80"  x2="420" y2="80"  stroke="white" stroke-width="0.8" stroke-dasharray="18 10" opacity="0.35"/>
+    <circle cx="120" cy="52" r="10" fill="white"/>
+    <line x1="120" y1="62" x2="120" y2="92" stroke="white" stroke-width="3" stroke-linecap="round"/>
+    <line x1="120" y1="72" x2="104" y2="85" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="120" y1="72" x2="136" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="120" y1="92" x2="106" y2="112" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="120" y1="92" x2="132" y2="115" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="230" cy="48" r="10" fill="white" opacity="0.7"/>
+    <line x1="232" y1="58" x2="226" y2="90" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+    <line x1="230" y1="70" x2="212" y2="78" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="230" y1="70" x2="248" y2="76" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="226" y1="90" x2="212" y2="114" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="226" y1="90" x2="240" y2="118" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+    <circle cx="330" cy="56" r="7" fill="white" opacity="0.35"/>
+    <line x1="330" y1="63" x2="328" y2="86" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.35"/>
+    <line x1="329" y1="73" x2="318" y2="80" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <line x1="329" y1="73" x2="340" y2="78" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <line x1="328" y1="86" x2="320" y2="103" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <line x1="328" y1="86" x2="336" y2="105" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+    <line x1="60" y1="40" x2="60" y2="122" stroke="#f5a623" stroke-width="2" opacity="0.6"/>
+    <line x1="62" y1="40" x2="62" y2="122" stroke="#f04e23" stroke-width="1.5" opacity="0.5"/>
+  </svg>
+  <div class="header-emoji">🏃</div>
+  <div class="header-content">
+    <h1>Sports &amp; Fitness Vocabulary</h1>
+    <span class="level-tag">B2</span>
+  </div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="progress-label" id="progressLabel">0 / 4 sections</div>
+</div>
+
+<div class="tabs-outer">
+  <div class="tabs">
+    <button class="tab-btn active" data-section="0" onclick="goSection(0)">
+      <span class="check" id="chk0">1</span> Sport &amp; Competition
+    </button>
+    <button class="tab-btn" data-section="1" onclick="goSection(1)">
+      <span class="check" id="chk1">2</span> The Sport Gene
+    </button>
+    <button class="tab-btn" data-section="2" onclick="goSection(2)">
+      <span class="check" id="chk2">3</span> Battle of the Workouts
+    </button>
+    <button class="tab-btn" data-section="3" onclick="goSection(3)">
+      <span class="check" id="chk3">4</span> Idioms
+    </button>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════════
+     SECTION 1 · Sport & Competition
+     ══════════════════════════════════════════════ -->
+<div class="section-panel active" id="section-0">
+  <div class="section-header-row">
+    <div class="section-header-text">
+      <div class="section-kicker">Section 01 · Sport &amp; Competition</div>
+      <h2 class="section-title">The Language<br>of the Game</h2>
+      <p class="section-desc">Two activities to explore general sports vocabulary — from venues and kit to the verbs that describe competing.</p>
+    </div>
+    <div class="section-emoji">🏆</div>
+  </div>
+
+  <!-- Activity A: Gap Fill -->
+  <div class="activity" id="s0-act1">
+    <div class="activity-label">Activity 01 · Gap Fill</div>
+    <h3>Commentary Box</h3>
+    <p class="passage">
+      The young sprinter had always been the <input class="blank-input" id="gf0" data-answer="underdog" placeholder="…" autocomplete="off"> — no one expected much from her. But over four years, she had worked tirelessly to gain a <input class="blank-input" id="gf1" data-answer="competitive edge" placeholder="…" autocomplete="off"> over her rivals, finally setting a new <input class="blank-input" id="gf2" data-answer="personal best" placeholder="…" autocomplete="off"> at the national trials. Her training partner, however, had to <input class="blank-input" id="gf3" data-answer="drop out" placeholder="…" autocomplete="off"> mid-season due to injury — a devastating blow after choosing to <input class="blank-input" id="gf4" data-answer="take up" placeholder="…" autocomplete="off"> athletics only two years earlier.
+    </p>
+    <div class="word-bank">
+      <div class="word-bank-label">Word Bank</div>
+      <div class="word-chips">
+        <span class="chip" id="wc-underdog">underdog</span>
+        <span class="chip" id="wc-competitive edge">competitive edge</span>
+        <span class="chip" id="wc-personal best">personal best</span>
+        <span class="chip" id="wc-drop out">drop out</span>
+        <span class="chip" id="wc-take up">take up</span>
+        <span class="chip" id="wc-front-runner">front-runner</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkGapFill('s0-act1', ['gf0','gf1','gf2','gf3','gf4'])">Check answers</button>
+      <button class="btn btn-secondary" onclick="resetGapFill(['gf0','gf1','gf2','gf3','gf4'])">Reset</button>
+      <div class="score-badge">Score: <span class="score-num" id="s0a1-score">–</span></div>
+    </div>
+    <div class="feedback-bar" id="s0a1-fb"></div>
+  </div>
+
+  <!-- Activity B: Matching (venues) -->
+  <div class="activity" id="s0-act2">
+    <div class="activity-label">Activity 02 · Matching</div>
+    <h3>Venues &amp; Gear</h3>
+    <p style="font-size:0.85rem; color:var(--ink-mid); margin-bottom:20px;">Click a term on the left, then click its matching definition on the right.</p>
+    <div class="match-grid">
+      <div>
+        <div class="match-col-label">Term</div>
+        <div id="match-terms-0" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+      <div>
+        <div class="match-col-label">Definition</div>
+        <div id="match-defs-0" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="resetMatch(0)">Reset</button>
+      <div class="score-badge">Matched: <span class="score-num" id="match0-score">0 / 5</span></div>
+    </div>
+    <div class="feedback-bar" id="s0a2-fb"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-next" onclick="completeSection(0)">Next section →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 2 · The Sport Gene
+     ══════════════════════════════════════════════ -->
+<div class="section-panel" id="section-1">
+  <div class="section-header-row">
+    <div class="section-header-text">
+      <div class="section-kicker">Section 02 · The Sport Gene</div>
+      <h2 class="section-title">Nature vs.<br>Nurture</h2>
+      <p class="section-desc">Explore the science vocabulary from <em>The Sport Gene</em> — anatomy, genetics, and the big debate about talent.</p>
+    </div>
+    <div class="section-emoji">🧬</div>
+  </div>
+
+  <!-- Activity: True / False -->
+  <div class="activity">
+    <div class="activity-label">Activity 01 · True / False</div>
+    <h3>Fact Check</h3>
+    <p style="font-size:0.85rem;color:var(--ink-mid);margin-bottom:20px;">Read each statement. Decide if it is true or false based on the definition of the word in <em>italics</em>.</p>
+    <div class="tf-list" id="tf-list-1"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="resetTF(1)">Reset</button>
+      <div class="score-badge">Score: <span class="score-num" id="tf1-score">–</span></div>
+    </div>
+  </div>
+
+  <!-- Activity: Odd One Out -->
+  <div class="activity">
+    <div class="activity-label">Activity 02 · Odd One Out</div>
+    <h3>Which doesn't belong?</h3>
+    <p style="font-size:0.85rem;color:var(--ink-mid);margin-bottom:20px;">In each group, click the word that doesn't fit. Think about meaning, not spelling.</p>
+    <div id="odd-container-1"></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="resetOdd(1)">Reset</button>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-next" onclick="completeSection(1)">Next section →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 3 · Battle of the Workouts
+     ══════════════════════════════════════════════ -->
+<div class="section-panel" id="section-2">
+  <div class="section-header-row">
+    <div class="section-header-text">
+      <div class="section-kicker">Section 03 · Battle of the Workouts</div>
+      <h2 class="section-title">Feel the<br>Burn</h2>
+      <p class="section-desc">Fitness, training, and the physical experience of exercise — classify the vocabulary, then fill in the gaps.</p>
+    </div>
+    <div class="section-emoji">💪</div>
+  </div>
+
+  <!-- Activity: Classifier -->
+  <div class="activity">
+    <div class="activity-label">Activity 01 · Classify</div>
+    <h3>Sort the vocabulary</h3>
+    <p style="font-size:0.85rem;color:var(--ink-mid);margin-bottom:20px;">Click a word below, then click the category it belongs to. You can remove a word from a bucket by clicking it.</p>
+    <div class="classifier-items" id="classifier-chips"></div>
+    <div class="bucket-row" id="bucket-row"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkClassifier()">Check</button>
+      <button class="btn btn-secondary" onclick="resetClassifier()">Reset</button>
+      <div class="score-badge">Score: <span class="score-num" id="cls-score">–</span></div>
+    </div>
+    <div class="feedback-bar" id="cls-fb"></div>
+  </div>
+
+  <!-- Activity: Gap Fill (fitness blog) -->
+  <div class="activity" id="s2-act2">
+    <div class="activity-label">Activity 02 · Gap Fill</div>
+    <h3>Fitness Blog</h3>
+    <p class="passage">
+      I decided to <input class="blank-input" id="gf2_0" data-answer="work out" placeholder="…" autocomplete="off"> every morning before work. At first I was completely out of shape — I'd <input class="blank-input" id="gf2_1" data-answer="pant" placeholder="…" autocomplete="off"> after just ten minutes. My trainer said I needed to <input class="blank-input" id="gf2_2" data-answer="build up" placeholder="…" autocomplete="off"> my stamina gradually. The first week, the <input class="blank-input" id="gf2_3" data-answer="soreness" placeholder="…" autocomplete="off"> was awful — my muscles ached for days. But I was careful not to <input class="blank-input" id="gf2_4" data-answer="overdo it" placeholder="…" autocomplete="off">, because I'd read that pushing too hard too soon leads to injury. Three months later, I finally feel like I've started to <input class="blank-input" id="gf2_5" data-answer="tone up" placeholder="…" autocomplete="off">.
+    </p>
+    <div class="word-bank">
+      <div class="word-bank-label">Word Bank</div>
+      <div class="word-chips">
+        <span class="chip" id="wc2-work out">work out</span>
+        <span class="chip" id="wc2-pant">pant</span>
+        <span class="chip" id="wc2-build up">build up</span>
+        <span class="chip" id="wc2-soreness">soreness</span>
+        <span class="chip" id="wc2-overdo it">overdo it</span>
+        <span class="chip" id="wc2-tone up">tone up</span>
+        <span class="chip" id="wc2-vigorous">vigorous</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkGapFill('s2-act2', ['gf2_0','gf2_1','gf2_2','gf2_3','gf2_4','gf2_5'])">Check answers</button>
+      <button class="btn btn-secondary" onclick="resetGapFill(['gf2_0','gf2_1','gf2_2','gf2_3','gf2_4','gf2_5'])">Reset</button>
+      <div class="score-badge">Score: <span class="score-num" id="s2a2-score">–</span></div>
+    </div>
+    <div class="feedback-bar" id="s2a2-fb"></div>
+  </div>
+
+  <!-- Collocation Builder -->
+  <div class="activity">
+    <div class="activity-label">Activity 03 · Collocation Builder</div>
+    <h3>Complete the phrase</h3>
+    <p style="font-size:0.85rem;color:var(--ink-mid);margin-bottom:24px;">Choose the word or phrase that best completes each collocation.</p>
+    <div class="colloc-grid" id="colloc-grid"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="checkCollocations()">Check</button>
+      <button class="btn btn-secondary" onclick="resetCollocations()">Reset</button>
+      <div class="score-badge">Score: <span class="score-num" id="colloc-score">–</span></div>
+    </div>
+    <div class="feedback-bar" id="colloc-fb"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-next" onclick="completeSection(2)">Next section →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SECTION 4 · Idioms
+     ══════════════════════════════════════════════ -->
+<div class="section-panel" id="section-3">
+  <div class="section-header-row">
+    <div class="section-header-text">
+      <div class="section-kicker">Section 04 · Idiomatic Expressions</div>
+      <h2 class="section-title">Playing<br>the Language</h2>
+      <p class="section-desc">Four sporting idioms used in everyday English — match them to their meanings, then find them in context.</p>
+    </div>
+    <div class="section-emoji">🎯</div>
+  </div>
+
+  <!-- Matching: Idiom → Meaning -->
+  <div class="activity" id="s3-act1">
+    <div class="activity-label">Activity 01 · Matching</div>
+    <h3>Idiom to meaning</h3>
+    <p style="font-size:0.85rem; color:var(--ink-mid); margin-bottom:20px;">Click an idiom, then click its meaning.</p>
+    <div class="match-grid">
+      <div>
+        <div class="match-col-label">Idiom</div>
+        <div id="match-terms-1" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+      <div>
+        <div class="match-col-label">Meaning</div>
+        <div id="match-defs-1" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="resetMatch(1)">Reset</button>
+      <div class="score-badge">Matched: <span class="score-num" id="match1-score">0 / 4</span></div>
+    </div>
+  </div>
+
+  <!-- Multiple Choice: Idiom in context -->
+  <div class="activity">
+    <div class="activity-label">Activity 02 · Idiom in Context</div>
+    <h3>Choose the right idiom</h3>
+    <div id="mc-container"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-next" onclick="completeSection(3)">🎉 Finish</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FINISH SCREEN
+     ══════════════════════════════════════════════ -->
+<div class="section-panel" id="finish-screen" style="text-align:center;padding:64px 32px;">
+  <div style="font-size:4rem;margin-bottom:16px;">🏅</div>
+  <h2 class="section-title" style="font-size:2.6rem;margin-bottom:12px;">All done!</h2>
+  <p class="section-desc" style="margin:0 auto 32px;text-align:center;max-width:420px;">You've worked through all four sections. Brilliant effort — your sports and fitness vocabulary is in great shape.</p>
+  <button class="btn btn-next" style="font-size:0.95rem;padding:14px 36px;" onclick="restartAll()">Start again →</button>
+</div>
+
+</main>
+
+<script>
+function confetti(x, y) {
+  const colours = ['#f04e23','#f5a623','#7c3aed','#16a34a','#3b82f6','#ec4899'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.cssText = `left:${x + (Math.random()-0.5)*120}px;top:${y}px;background:${colours[Math.floor(Math.random()*colours.length)]};transform:rotate(${Math.random()*360}deg);animation-delay:${Math.random()*0.3}s;animation-duration:${0.9+Math.random()*0.5}s`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1800);
+  }
+}
+
+
+/* ════════════════════════════════════════════════
+   DATA
+   ════════════════════════════════════════════════ */
+
+const matchData = [
+  // Section 0 match
+  [
+    { term: "Pitch", def: "Playing area for football" },
+    { term: "Court", def: "Playing area for tennis or basketball" },
+    { term: "Course", def: "Playing area for golf" },
+    { term: "Track", def: "Circuit used in athletics or cycling" },
+    { term: "Kit", def: "The clothing and equipment worn for a sport" },
+  ],
+  // Section 3 match (idioms)
+  [
+    { term: "The ball is in your court", def: "It is your turn to act or decide" },
+    { term: "Throw in the towel", def: "To give up or admit defeat" },
+    { term: "Jump the gun", def: "To act before the right moment" },
+    { term: "Keep at it", def: "To persevere and not give up" },
+  ]
+];
+
+const tfData = {
+  1: [
+    { stmt: "Someone who is <em>predisposed to</em> a condition is completely immune to developing it.", answer: false, exp: "False — to be predisposed to something means you are more likely or inclined to develop it, not immune." },
+    { stmt: "Your <em>Achilles tendon</em> connects the calf muscle to the heel bone.", answer: true, exp: "True — the Achilles tendon is the tissue that connects the calf to the heel." },
+    { stmt: "<em>Innate</em> talent is something you develop through years of dedicated practice.", answer: false, exp: "False — innate means inborn; something you are born with, not acquired through practice." },
+    { stmt: "A person's <em>stature</em> refers to their natural height.", answer: true, exp: "True — stature means a person's natural height." },
+    { stmt: "If you <em>excel at</em> something, you perform at an average level in that activity.", answer: false, exp: "False — to excel at something means to be exceptionally good at it, well above average." },
+    { stmt: "The <em>10,000-hour rule</em> suggests that talent alone, with no practice, is enough to master a skill.", answer: false, exp: "False — the 10,000-hour rule is a theory about deliberate practice, arguing that extensive practice is key to mastery." },
+  ]
+};
+
+const oddData = {
+  1: [
+    { words: ["innate", "inborn", "genetic", "sedentary"], odd: "sedentary", exp: "Sedentary means inactive — the other three all relate to something you are born with." },
+    { words: ["torso", "limb", "trait", "stature"], odd: "trait", exp: "A trait is a characteristic or quality — the other three are all parts or dimensions of the physical body." },
+    { words: ["genetics", "anatomy", "endorphins", "traits"], odd: "endorphins", exp: "Endorphins are brain chemicals linked to exercise — the other three are from the genetics/nature vocabulary set." },
+  ]
+};
+
+const classifierData = {
+  items: [
+    { word: "HIIT", cat: "Training type" },
+    { word: "Steady-state cardio", cat: "Training type" },
+    { word: "Sedentary", cat: "Lifestyle" },
+    { word: "Vigorous", cat: "Intensity" },
+    { word: "Brisk walk", cat: "Training type" },
+    { word: "Endorphins", cat: "Body response" },
+    { word: "Soreness", cat: "Body response" },
+    { word: "Metabolism", cat: "Body response" },
+    { word: "Out of breath", cat: "Body response" },
+  ],
+  buckets: ["Training type", "Body response", "Lifestyle", "Intensity"]
+};
+
+const collocData = [
+  { verb: "build up", options: ["stamina", "an opponent", "a pitch", "your trait"], answer: "stamina" },
+  { verb: "tone up", options: ["your muscles", "the track", "your genetics", "a brisk walk"], answer: "your muscles" },
+  { verb: "take up", options: ["a sport", "your kit", "out of breath", "the court"], answer: "a sport" },
+  { verb: "work out", options: ["at the gym", "the Achilles", "your stature", "the underdog"], answer: "at the gym" },
+  { verb: "be blessed with", options: ["natural talent", "endorphins", "the oval track", "a vigorous rule"], answer: "natural talent" },
+];
+
+const mcData = [
+  {
+    scenario: "After three failed interviews, Sofia decided to stop applying for that job. She told her friend: 'I'm done — I'm just going to ___.'",
+    options: ["jump the gun", "throw in the towel", "keep at it", "the ball is in my court"],
+    answer: "throw in the towel"
+  },
+  {
+    scenario: "The project proposal has been sent to the client. Now the team is waiting for their feedback. As the manager said: '___ — we've done our part.'",
+    options: ["The ball is in your court", "Throw in the towel", "Keep at it", "Jump the gun"],
+    answer: "The ball is in your court"
+  },
+  {
+    scenario: "The race hadn't officially started yet, but one runner sprinted off. The commentator shouted: 'She's ___ — that'll cost her a disqualification!'",
+    options: ["thrown in the towel", "kept at it", "jumped the gun", "the ball in her court"],
+    answer: "jumped the gun"
+  },
+  {
+    scenario: "Learning a language is hard — it takes months before you feel confident. The key is to ___: a little every day adds up.",
+    options: ["jump the gun", "throw in the towel", "keep at it", "be in the court"],
+    answer: "keep at it"
+  }
+];
+
+/* ════════════════════════════════════════════════
+   STATE
+   ════════════════════════════════════════════════ */
+let currentSection = 0;
+const sectionDone = [false, false, false, false];
+
+// Match state
+const matchState = matchData.map(pairs => ({
+  selected: { term: null, def: null },
+  matched: new Set()
+}));
+
+/* ════════════════════════════════════════════════
+   INIT
+   ════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initMatch(0);
+  initMatch(1);
+  initTF(1);
+  initOdd(1);
+  initClassifier();
+  initCollocations();
+  initMC();
+});
+
+/* ════════════════════════════════════════════════
+   PROGRESS
+   ════════════════════════════════════════════════ */
+function updateProgress() {
+  const done = sectionDone.filter(Boolean).length;
+  const pct = (done / 4) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = done + ' / 4 sections';
+}
+
+function completeSection(idx) {
+  // Guard: warn if earlier sections not done
+  for (let i = 0; i < idx; i++) {
+    if (!sectionDone[i]) {
+      alert('Complete the earlier sections first!');
+      return;
+    }
+  }
+  sectionDone[idx] = true;
+  document.getElementById('chk' + idx).textContent = '✓';
+  document.getElementById('chk' + idx).style.background = 'var(--green)';
+  document.getElementById('chk' + idx).style.color = '#fff';
+  document.querySelectorAll('.tab-btn')[idx].classList.add('done');
+  updateProgress();
+  const next = idx + 1;
+  if (next < 4) {
+    goSection(next);
+  } else {
+    showFinish();
+  }
+}
+
+function restartAll() {
+  if (!confirm('Start again from the beginning? Your progress will be lost.')) return;
+  sectionDone.fill(false);
+  for (let i = 0; i < 4; i++) {
+    const chk = document.getElementById('chk' + i);
+    chk.textContent = i + 1;
+    chk.style.background = '';
+    chk.style.color = '';
+    document.querySelectorAll('.tab-btn')[i].classList.remove('done');
+  }
+  updateProgress();
+  goSection(0);
+}
+
+
+function showFinish() {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const fin = document.getElementById('finish-screen');
+  fin.classList.add('active');
+  setTimeout(() => confetti(window.innerWidth / 2, 200), 100);
+  setTimeout(() => confetti(window.innerWidth / 3, 240), 350);
+  setTimeout(() => confetti((window.innerWidth / 3) * 2, 220), 550);
+}
+
+/* ════════════════════════════════════════════════
+   TABS
+   ════════════════════════════════════════════════ */
+function goSection(idx) {
+  document.querySelectorAll('.section-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  currentSection = idx;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════════════
+   GAP FILL
+   ════════════════════════════════════════════════ */
+function checkGapFill(actId, ids) {
+  let correct = 0;
+  const scoreId = actId === 's0-act1' ? 's0a1-score' : 's2a2-score';
+  const fbId    = actId === 's0-act1' ? 's0a1-fb'    : 's2a2-fb';
+  const prefix  = actId === 's0-act1' ? 'wc-'        : 'wc2-';
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    const val = el.value.trim().toLowerCase();
+    const ans = el.dataset.answer.toLowerCase();
+    el.classList.remove('correct', 'wrong');
+    if (val === ans) {
+      el.classList.add('correct');
+      correct++;
+      const chip = document.getElementById(prefix + el.dataset.answer);
+      if (chip) chip.classList.add('used');
+    } else {
+      el.classList.add('wrong');
+    }
+  });
+
+  document.getElementById(scoreId).textContent = correct + ' / ' + ids.length;
+  const fb = document.getElementById(fbId);
+  fb.classList.add('show');
+  if (correct === ids.length) {
+    fb.className = 'feedback-bar show ok';
+    fb.textContent = '✓ Perfect! All answers correct.';
+    const r = fb.getBoundingClientRect();
+    confetti(r.left + r.width/2, r.top + window.scrollY);
+  } else {
+    fb.className = 'feedback-bar show err';
+    fb.textContent = correct + ' of ' + ids.length + ' correct. Check the highlighted gaps.';
+  }
+}
+
+function resetGapFill(ids) {
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.classList.remove('correct', 'wrong');
+  });
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('used'));
+  ['s0a1-score','s2a2-score'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '–';
+  });
+  ['s0a1-fb','s2a2-fb'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('show');
+  });
+}
+
+/* ════════════════════════════════════════════════
+   MATCHING
+   ════════════════════════════════════════════════ */
+function initMatch(setIdx) {
+  const pairs = matchData[setIdx];
+  const terms = [...pairs].sort(() => Math.random() - 0.5);
+  const defs  = [...pairs].sort(() => Math.random() - 0.5);
+
+  const tContainer = document.getElementById('match-terms-' + setIdx);
+  const dContainer = document.getElementById('match-defs-' + setIdx);
+  tContainer.innerHTML = '';
+  dContainer.innerHTML = '';
+
+  terms.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.dataset.key = p.term;
+    el.dataset.role = 'term';
+    el.dataset.set = setIdx;
+    el.textContent = p.term;
+    el.onclick = () => matchClick(el, setIdx);
+    tContainer.appendChild(el);
+  });
+  defs.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'match-item';
+    el.dataset.key = p.term;
+    el.dataset.role = 'def';
+    el.dataset.set = setIdx;
+    el.textContent = p.def;
+    el.onclick = () => matchClick(el, setIdx);
+    dContainer.appendChild(el);
+  });
+}
+
+function matchClick(el, setIdx) {
+  const state = matchState[setIdx];
+  if (el.classList.contains('matched')) return;
+
+  const role = el.dataset.role;
+  const other = role === 'term' ? 'def' : 'term';
+
+  // deselect same-role if already selected
+  if (state.selected[role]) {
+    state.selected[role].classList.remove('selected');
+  }
+  state.selected[role] = el;
+  el.classList.add('selected');
+
+  // check for pair
+  if (state.selected.term && state.selected.def) {
+    if (state.selected.term.dataset.key === state.selected.def.dataset.key) {
+      state.selected.term.classList.remove('selected');
+      state.selected.def.classList.remove('selected');
+      state.selected.term.classList.add('matched');
+      state.selected.def.classList.add('matched');
+      state.matched.add(state.selected.term.dataset.key);
+      state.selected = { term: null, def: null };
+      const total = matchData[setIdx].length;
+      document.getElementById('match' + setIdx + '-score').textContent = state.matched.size + ' / ' + total;
+    } else {
+      // flash wrong
+      state.selected.term.classList.add('wrong-flash');
+      state.selected.def.classList.add('wrong-flash');
+      const t = state.selected.term, d = state.selected.def;
+      setTimeout(() => {
+        t.classList.remove('selected', 'wrong-flash');
+        d.classList.remove('selected', 'wrong-flash');
+      }, 320);
+      state.selected = { term: null, def: null };
+    }
+  }
+}
+
+function resetMatch(setIdx) {
+  matchState[setIdx] = { selected: { term: null, def: null }, matched: new Set() };
+  document.getElementById('match' + setIdx + '-score').textContent = '0 / ' + matchData[setIdx].length;
+  initMatch(setIdx);
+}
+
+/* ════════════════════════════════════════════════
+   TRUE / FALSE
+   ════════════════════════════════════════════════ */
+function initTF(secIdx) {
+  const list = document.getElementById('tf-list-' + secIdx);
+  list.innerHTML = '';
+  tfData[secIdx].forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'tf-item';
+    div.id = 'tf-' + secIdx + '-' + i;
+    div.innerHTML = `
+      <div>
+        <div class="tf-statement">${item.stmt}</div>
+        <div class="tf-explanation">${item.exp}</div>
+      </div>
+      <div class="tf-buttons">
+        <button class="tf-btn" onclick="answerTF(${secIdx}, ${i}, true)">TRUE</button>
+        <button class="tf-btn" onclick="answerTF(${secIdx}, ${i}, false)">FALSE</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+let tfScores = {};
+function answerTF(secIdx, itemIdx, answer) {
+  const item = tfData[secIdx][itemIdx];
+  const el = document.getElementById('tf-' + secIdx + '-' + itemIdx);
+  const btns = el.querySelectorAll('.tf-btn');
+  btns.forEach(b => b.disabled = true);
+  const isCorrect = (answer === item.answer);
+  el.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+  btns[0].classList.toggle('selected-true', answer === true);
+  btns[1].classList.toggle('selected-false', answer === false);
+
+  if (!tfScores[secIdx]) tfScores[secIdx] = { correct: 0, total: 0 };
+  tfScores[secIdx].total++;
+  if (isCorrect) tfScores[secIdx].correct++;
+  const total = tfData[secIdx].length;
+  document.getElementById('tf' + secIdx + '-score').textContent =
+    tfScores[secIdx].correct + ' / ' + total;
+}
+
+function resetTF(secIdx) {
+  tfScores[secIdx] = { correct: 0, total: 0 };
+  document.getElementById('tf' + secIdx + '-score').textContent = '–';
+  initTF(secIdx);
+}
+
+/* ════════════════════════════════════════════════
+   ODD ONE OUT
+   ════════════════════════════════════════════════ */
+function initOdd(secIdx) {
+  const container = document.getElementById('odd-container-' + secIdx);
+  container.innerHTML = '';
+  oddData[secIdx].forEach((group, gi) => {
+    const div = document.createElement('div');
+    div.className = 'odd-group';
+    div.innerHTML = `<div class="odd-group-label">Group ${gi + 1}</div>`;
+    const wordsDiv = document.createElement('div');
+    wordsDiv.className = 'odd-words';
+    group.words.forEach(w => {
+      const btn = document.createElement('div');
+      btn.className = 'odd-word';
+      btn.textContent = w;
+      btn.onclick = () => checkOdd(btn, w, group, wordsDiv, expDiv);
+      wordsDiv.appendChild(btn);
+    });
+    const expDiv = document.createElement('div');
+    expDiv.className = 'odd-explanation';
+    div.appendChild(wordsDiv);
+    div.appendChild(expDiv);
+    container.appendChild(div);
+  });
+}
+
+function checkOdd(btn, word, group, wordsDiv, expDiv) {
+  const btns = wordsDiv.querySelectorAll('.odd-word');
+  btns.forEach(b => b.classList.add('disabled'));
+  if (word === group.odd) {
+    btn.classList.add('correct');
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b => { if (b.textContent === group.odd) b.classList.add('correct'); });
+  }
+  expDiv.textContent = group.exp;
+  expDiv.classList.add('visible');
+}
+
+function resetOdd(secIdx) {
+  initOdd(secIdx);
+}
+
+/* ════════════════════════════════════════════════
+   CLASSIFIER
+   ════════════════════════════════════════════════ */
+let classifierSelected = null;
+let classifierPlaced = {};
+
+function initClassifier() {
+  const chipsEl = document.getElementById('classifier-chips');
+  const bucketsEl = document.getElementById('bucket-row');
+  chipsEl.innerHTML = '';
+  bucketsEl.innerHTML = '';
+  classifierPlaced = {};
+
+  classifierData.items.forEach(item => {
+    const chip = document.createElement('div');
+    chip.className = 'drag-chip';
+    chip.id = 'cls-' + item.word;
+    chip.textContent = item.word;
+    chip.onclick = () => selectChip(chip, item.word);
+    chipsEl.appendChild(chip);
+  });
+
+  classifierData.buckets.forEach(cat => {
+    const bucket = document.createElement('div');
+    bucket.className = 'bucket';
+    bucket.dataset.cat = cat;
+    bucket.innerHTML = `<div class="bucket-title">${cat}</div><div class="bucket-items" id="bucket-${cat.replace(/\s+/g,'-')}"></div>`;
+    bucket.onclick = () => placeToBucket(cat);
+    bucketsEl.appendChild(bucket);
+  });
+}
+
+function selectChip(chip, word) {
+  document.querySelectorAll('.drag-chip').forEach(c => { c.style.background = ''; c.style.borderColor = ''; c.classList.remove('selected-chip'); });
+  if (classifierSelected === word) {
+    classifierSelected = null;
+    return;
+  }
+  classifierSelected = word;
+  chip.classList.add('selected-chip');
+}
+
+function placeToBucket(cat) {
+  if (!classifierSelected) return;
+  const word = classifierSelected;
+  const sourceChip = document.getElementById('cls-' + word);
+
+  // Remove from any previous bucket
+  Object.keys(classifierPlaced).forEach(k => {
+    if (classifierPlaced[k] === word) {
+      delete classifierPlaced[k];
+      const bucketKey = k.replace(/\s+/g,'-');
+      const bucketEl = document.getElementById('bucket-' + bucketKey);
+      if (bucketEl) {
+        const existing = bucketEl.querySelector(`[data-word="${word}"]`);
+        if (existing) bucketEl.removeChild(existing);
+      }
+      document.getElementById('cls-' + word).classList.remove('placed');
+    }
+  });
+
+  classifierPlaced[cat + '|' + word] = word;
+  sourceChip.classList.add('placed');
+  sourceChip.classList.remove('selected-chip');
+  sourceChip.style.background = '';
+  sourceChip.style.borderColor = '';
+
+  const bucketKey = cat.replace(/\s+/g,'-');
+  const bucketEl = document.getElementById('bucket-' + bucketKey);
+  const item = document.createElement('div');
+  item.className = 'bucket-item neutral-placed';
+  item.dataset.word = word;
+  item.dataset.cat = cat;
+  item.textContent = word;
+  item.onclick = (e) => {
+    e.stopPropagation();
+    removeFromBucket(word, cat);
+  };
+  bucketEl.appendChild(item);
+  classifierSelected = null;
+}
+
+function removeFromBucket(word, cat) {
+  const bucketKey = cat.replace(/\s+/g,'-');
+  const bucketEl = document.getElementById('bucket-' + bucketKey);
+  const existing = bucketEl.querySelector(`[data-word="${word}"]`);
+  if (existing) bucketEl.removeChild(existing);
+  delete classifierPlaced[cat + '|' + word];
+  document.getElementById('cls-' + word).classList.remove('placed');
+}
+
+function checkClassifier() {
+  let correct = 0, total = 0;
+  classifierData.buckets.forEach(cat => {
+    const bucketKey = cat.replace(/\s+/g,'-');
+    const bucketEl = document.getElementById('bucket-' + bucketKey);
+    if (!bucketEl) return;
+    bucketEl.querySelectorAll('.bucket-item').forEach(item => {
+      total++;
+      const word = item.dataset.word;
+      const correctCat = classifierData.items.find(i => i.word === word)?.cat;
+      item.classList.remove('neutral-placed','correct-placed','wrong-placed');
+      if (correctCat === cat) {
+        item.classList.add('correct-placed');
+        correct++;
+      } else {
+        item.classList.add('wrong-placed');
+      }
+    });
+  });
+  document.getElementById('cls-score').textContent = correct + ' / ' + classifierData.items.length;
+  const fb = document.getElementById('cls-fb');
+  fb.classList.add('show');
+  if (correct === classifierData.items.length) {
+    fb.className = 'feedback-bar show ok';
+    fb.textContent = '✓ Excellent — all words correctly sorted!';
+    const r = fb.getBoundingClientRect();
+    confetti(r.left + r.width/2, r.top + window.scrollY);
+  } else {
+    fb.className = 'feedback-bar show err';
+    fb.textContent = correct + ' of ' + classifierData.items.length + ' correct. Wrong items are highlighted in red — remove them and try again.';
+  }
+}
+
+function resetClassifier() {
+  document.getElementById('cls-score').textContent = '–';
+  const fb = document.getElementById('cls-fb');
+  fb.classList.remove('show');
+  initClassifier();
+}
+
+/* ════════════════════════════════════════════════
+   COLLOCATIONS
+   ════════════════════════════════════════════════ */
+function initCollocations() {
+  const grid = document.getElementById('colloc-grid');
+  grid.innerHTML = '';
+  collocData.forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'colloc-row';
+    const shuffled = [...item.options].sort(() => Math.random() - 0.5);
+    row.innerHTML = `
+      <span class="colloc-verb">${item.verb}</span>
+      <select class="colloc-select" id="colloc-${i}">
+        <option value="">— choose —</option>
+        ${shuffled.map(o => `<option value="${o}">${o}</option>`).join('')}
+      </select>`;
+    grid.appendChild(row);
+  });
+}
+
+function checkCollocations() {
+  let correct = 0;
+  collocData.forEach((item, i) => {
+    const sel = document.getElementById('colloc-' + i);
+    sel.classList.remove('correct', 'wrong');
+    if (sel.value === item.answer) {
+      sel.classList.add('correct');
+      correct++;
+    } else if (sel.value) {
+      sel.classList.add('wrong');
+    }
+  });
+  document.getElementById('colloc-score').textContent = correct + ' / ' + collocData.length;
+  const fb = document.getElementById('colloc-fb');
+  fb.classList.add('show');
+  if (correct === collocData.length) {
+    fb.className = 'feedback-bar show ok';
+    fb.textContent = '✓ All collocations correct!';
+  } else {
+    fb.className = 'feedback-bar show err';
+    fb.textContent = correct + ' of ' + collocData.length + ' correct.';
+  }
+}
+
+function resetCollocations() {
+  document.getElementById('colloc-score').textContent = '–';
+  document.getElementById('colloc-fb').classList.remove('show');
+  initCollocations();
+}
+
+/* ════════════════════════════════════════════════
+   MULTIPLE CHOICE (IDIOMS)
+   ════════════════════════════════════════════════ */
+function initMC() {
+  const container = document.getElementById('mc-container');
+  container.innerHTML = '';
+  mcData.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.style.marginBottom = '28px';
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    div.innerHTML = `
+      <div class="scenario-card">${q.scenario}</div>
+      <div class="mc-options">
+        ${shuffled.map((opt, oi) => `
+          <div class="mc-option" id="mc-${qi}-${oi}" onclick="answerMC(${qi}, '${opt}', this)">
+            <span class="opt-label">${String.fromCharCode(65+oi)}</span>
+            <span>${opt}</span>
+          </div>`).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function answerMC(qi, chosen, el) {
+  const correct = mcData[qi].answer;
+  const parent = el.closest('.mc-options');
+  parent.querySelectorAll('.mc-option').forEach(o => o.classList.add('disabled'));
+  if (chosen === correct) {
+    el.classList.add('correct');
+  } else {
+    el.classList.add('wrong');
+    parent.querySelectorAll('.mc-option').forEach(o => {
+      if (o.querySelector('span:last-child').textContent === correct) o.classList.add('correct');
+    });
+  }
+}
+
+</script>
+</body>
+</html>
