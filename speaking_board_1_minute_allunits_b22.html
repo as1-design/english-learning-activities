@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C1.1 Speaking Board</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --surface: #ffffff;
+      --shadow: rgba(80, 80, 160, 0.12);
+      --text: #2d2d4e;
+      --accent: #6c63ff;
+      /* Unit Colors */
+      --c1: #ff6b9d; --c1b: #ffd6e7;
+      --c2: #f97316; --c2b: #ffe5cc;
+      --c3: #22c55e; --c3b: #d1fae5;
+      --c4: #6c63ff; --c4b: #e0deff;
+      --c5: #0ea5e9; --c5b: #d0f0fd;
+      --c6: #ec4899; --c6b: #fce7f3;
+      --c7: #a855f7; --c7b: #f3e8ff;
+      --c8: #14b8a6; --c8b: #ccfbf1;
+      --c9: #fb7185; --c9b: #ffe4e6; /* New for Unit 9 */
+      --c10: #6366f1; --c10b: #e0e7ff; /* New for Unit 10 */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(circle at 15% 20%, #dde8ff 0%, transparent 45%),
+                        radial-gradient(circle at 85% 80%, #fde8ff 0%, transparent 45%);
+      min-height: 100vh;
+      padding: 32px 20px 60px;
+      color: var(--text);
+    }
+
+    header { text-align: center; margin-bottom: 32px; }
+    h1 {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #6c63ff, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle { font-size: 0.95rem; color: #888; margin-top: 4px; }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px var(--shadow); }
+    .btn-random { background: linear-gradient(135deg, #6c63ff, #a78bfa); color: #fff; }
+    .btn-reset { background: linear-gradient(135deg, #f97316, #fbbf24); color: #fff; }
+
+    .timer-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+      border-radius: 50px;
+      padding: 8px 20px;
+      box-shadow: 0 4px 14px var(--shadow);
+    }
+    #timer {
+      font-family: 'Baloo 2', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--text);
+      min-width: 52px;
+      text-align: center;
+    }
+    #timer.danger { color: #ef4444; animation: pulse 0.6s infinite alternate; }
+    @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.08); } }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card { perspective: 1200px; height: 155px; }
+    .inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+      cursor: pointer;
+    }
+    .card.flipped .inner { transform: rotateY(180deg); }
+    .front, .back {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      padding: 18px 16px;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+      box-shadow: 0 5px 20px var(--shadow);
+    }
+    .back { transform: rotateY(180deg); font-size: 0.82rem; font-weight: 600; line-height: 1.45; }
+
+    /* Theme generation for all units 1-10 */
+    .unit-1 .front, .unit-1 .back { background: var(--c1b); border-top: 4px solid var(--c1); }
+    .unit-2 .front, .unit-2 .back { background: var(--c2b); border-top: 4px solid var(--c2); }
+    .unit-3 .front, .unit-3 .back { background: var(--c3b); border-top: 4px solid var(--c3); }
+    .unit-4 .front, .unit-4 .back { background: var(--c4b); border-top: 4px solid var(--c4); }
+    .unit-5 .front, .unit-5 .back { background: var(--c5b); border-top: 4px solid var(--c5); }
+    .unit-6 .front, .unit-6 .back { background: var(--c6b); border-top: 4px solid var(--c6); }
+    .unit-7 .front, .unit-7 .back { background: var(--c7b); border-top: 4px solid var(--c7); }
+    .unit-8 .front, .unit-8 .back { background: var(--c8b); border-top: 4px solid var(--c8); }
+    .unit-9 .front, .unit-9 .back { background: var(--c9b); border-top: 4px solid var(--c9); }
+    .unit-10 .front, .unit-10 .back { background: var(--c10b); border-top: 4px solid var(--c10); }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 20, 60, 0.55);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 28px;
+      padding: 40px 36px 32px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes popIn { from { transform: scale(0.75); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Speaking <span>Board</span></h1>
+  <p class="subtitle">B2.2 / C1.1 Level • Flip a card to start the discussion</p>
+</header>
+
+<div class="controls">
+  <button class="btn btn-random" id="randomBtn">🎲 Random Question</button>
+  <button class="btn btn-reset" id="resetBtn">↩ Flip All Back</button>
+  <div class="timer-block">
+    <div id="timer">1:00</div>
+    <button class="btn btn-start" id="startBtn" style="background: #22c55e; color: #fff;">▶</button>
+    <button class="btn btn-restart" id="restartBtn" style="background: #ef4444; color: #fff;">↺</button>
+  </div>
+</div>
+
+<div class="grid" id="board"></div>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div id="modalEmoji" style="font-size: 3rem;"></div>
+    <div id="modalTopic" style="font-weight: 800; margin: 10px 0;"></div>
+    <div id="modalPrompt" style="font-size: 1.2rem; margin-bottom: 20px;"></div>
+    <button class="btn btn-random" id="modalClose">Got it!</button>
+  </div>
+</div>
+
+<script>
+const data = [
+  /* Units 1-8 (Original) */
+  {unit:1, emoji:"👨‍👩‍👧", topic:"1A – We are family", prompt:"Tell us about a time when a family member surprised you."},
+  {unit:1, emoji:"👨‍👩‍👧", topic:"1A – We are family", prompt:"Describe a situation where you had a disagreement with a relative."},
+  {unit:1, emoji:"💼", topic:"1B – A job for life?", prompt:"Tell us about your first job or a memorable job interview."},
+  {unit:2, emoji:"🧒", topic:"2A – Do you remember…?", prompt:"Tell us about a childhood memory you will never forget."},
+  {unit:2, emoji:"💬", topic:"2B – On the tip of my tongue", prompt:"Talk about a time when you couldn't remember something important."},
+  {unit:3, emoji:"❤️‍🔥", topic:"3A – A love-hate relationship", prompt:"Describe something you love and hate at the same time."},
+  {unit:3, emoji:"🎭", topic:"3B – Dramatic licence", prompt:"Tell us about a time when someone exaggerated a story."},
+  {unit:4, emoji:"📖", topic:"4A – An open book", prompt:"Tell us about a book or film that had a strong impact on you."},
+  {unit:4, emoji:"🤫", topic:"4B – The sound of silence", prompt:"Talk about a time when silence was important or meaningful."},
+  {unit:5, emoji:"⏰", topic:"5A – No time for anything", prompt:"Tell us about a time when you were extremely busy or stressed."},
+  {unit:5, emoji:"💰", topic:"5B – Not for profit?", prompt:"Talk about a time when money influenced an important decision."},
+  {unit:6, emoji:"🤝", topic:"6A – Help, I need somebody!", prompt:"Tell us about a time when you needed help and how you got it."},
+  {unit:6, emoji:"🔄", topic:"6B – Can't give it up", prompt:"Describe a habit you managed to change successfully."},
+  {unit:7, emoji:"📜", topic:"7A – As a matter of fact…", prompt:"Describe a situation where you broke a rule and what happened."},
+  {unit:7, emoji:"🎨", topic:"7B – A masterpiece?", prompt:"Talk about a piece of art that impressed you."},
+  {unit:8, emoji:"🩺", topic:"8A – The best medicine?", prompt:"Describe something you do to stay healthy."},
+  {unit:8, emoji:"✈️", topic:"8B – A must-see attraction", prompt:"Tell us about a memorable trip or holiday."},
+
+  /* Units 9-10 (New Syllabus Content) */
+  {unit:9, emoji:"📺", topic:"9A – The things I do for love", prompt:"Talk about a time when you went to great lengths to help someone you care about."},
+  {unit:9, emoji:"📺", topic:"9A – The things I do for love", prompt:"Describe a situation where someone's obsession with a hobby became problematic."},
+  {unit:9, emoji:"📱", topic:"9B – Digital footprint", prompt:"How much do you worry about your privacy online? Have you ever regretted a post?"},
+  {unit:9, emoji:"📱", topic:"9B – Digital footprint", prompt:"Should 'the right to be forgotten' be a universal law? Explain your view."},
+  {unit:10, emoji:"🏙️", topic:"10A – The city that never sleeps", prompt:"Describe a city you've visited that had a unique atmosphere."},
+  {unit:10, emoji:"🏙️", topic:"10A – The city that never sleeps", prompt:"What aspects of your home culture would you miss most if you moved abroad?"},
+  {unit:10, emoji:"🤔", topic:"10B – Confusing words", prompt:"Tell us about a 'voyage' (literal or metaphorical) that changed your perspective."},
+  {unit:10, emoji:"🤔", topic:"10B – Confusing words", prompt:"Tell us about a time you felt like a 'stranger' in a new place. How did you cope?"}
+];
+
+const board = document.getElementById("board");
+data.forEach(item => {
+  const card = document.createElement("div");
+  card.classList.add("card", `unit-${item.unit}`);
+  card.innerHTML = `
+    <div class="inner">
+      <div class="front">
+        <span style="font-size:1.8rem">${item.emoji}</span>
+        <span style="font-size:0.85rem">${item.topic}</span>
+      </div>
+      <div class="back">${item.prompt}</div>
+    </div>`;
+  card.addEventListener("click", () => card.classList.toggle("flipped"));
+  board.appendChild(card);
+});
+
+// Random Question Logic
+const backdrop = document.getElementById("modalBackdrop");
+document.getElementById("randomBtn").addEventListener("click", () => {
+  const pick = data[Math.floor(Math.random() * data.length)];
+  document.getElementById("modalEmoji").textContent = pick.emoji;
+  document.getElementById("modalTopic").textContent = pick.topic;
+  document.getElementById("modalPrompt").textContent = pick.prompt;
+  backdrop.classList.add("open");
+});
+document.getElementById("modalClose").addEventListener("click", () => backdrop.classList.remove("open"));
+
+// Reset All
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.querySelectorAll(".card").forEach(c => c.classList.remove("flipped"));
+});
+
+// Simple Timer Logic
+let time = 60;
+let timerId = null;
+const timerEl = document.getElementById("timer");
+
+function updateTimer() {
+  timerEl.textContent = `0:${time < 10 ? '0' : ''}${time}`;
+  if (time <= 10) timerEl.classList.add("danger");
+  if (time === 0) { clearInterval(timerId); timerEl.textContent = "Done!"; }
+}
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  if (timerId) return;
+  timerId = setInterval(() => { if (time > 0) { time--; updateTimer(); } }, 1000);
+});
+
+document.getElementById("restartBtn").addEventListener("click", () => {
+  clearInterval(timerId);
+  timerId = null;
+  time = 60;
+  timerEl.classList.remove("danger");
+  updateTimer();
+});
+</script>
+</body>
+</html>
