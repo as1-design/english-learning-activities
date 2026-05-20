@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosco – Action Verbs & Expression Nouns</title>
+<style>
+/* ── reset & tokens ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #0F0E17;
+  --surface:   #1A1828;
+  --surface2:  #221F35;
+  --border:    rgba(255,255,255,0.08);
+  --text:      #F2EFE9;
+  --muted:     #7B78A0;
+  --green:     #3ECF8E;
+  --green-dim: #0D5A35;
+  --red:       #FF5C5C;
+  --red-dim:   #7A1C1C;
+  --gold:      #FFD166;
+  --active:    #B48EF5;
+  --active-dim:#4B2D8A;
+  --spring: cubic-bezier(0.34,1.56,0.64,1);
+  --smooth: cubic-bezier(0.25,0.46,0.45,0.94);
+  --r: 16px;
+}
+
+/* ── page ─────────────────────────────────────────────────────────────── */
+html, body { height: 100%; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 14px 48px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  background-size: 180px;
+  pointer-events: none; z-index: 0;
+}
+/* ambient glow blobs */
+.glow { position:fixed; border-radius:50%; pointer-events:none; z-index:0; }
+.glow-a { width:480px;height:480px;top:-160px;right:-130px;
+  background:radial-gradient(circle,var(--active) 0%,transparent 70%);opacity:.07; }
+.glow-b { width:340px;height:340px;bottom:-80px;left:-90px;
+  background:radial-gradient(circle,var(--active) 0%,transparent 70%);opacity:.05; }
+
+/* ── header ───────────────────────────────────────────────────────────── */
+header {
+  text-align: center; margin-bottom: 16px;
+  position: relative; z-index: 1;
+  animation: fadeUp .45s var(--smooth) both;
+}
+.eyebrow {
+  font-size: .68rem; font-weight: 700; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--active); margin-bottom: 4px;
+}
+h1 {
+  font-size: clamp(1.7rem,5vw,2.6rem); font-weight: 900;
+  letter-spacing: -1px; line-height: 1;
+}
+h1 em { font-style: italic; color: var(--active); }
+
+/* ── layout ───────────────────────────────────────────────────────────── */
+.layout {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 16px;
+  width: 100%; max-width: 700px;
+  position: relative; z-index: 1;
+}
+@media (min-width: 660px) {
+  .layout { flex-direction: row; align-items: flex-start; }
+  .rosco-wrap { width: min(320px,43vw) !important; height: min(320px,43vw) !important; }
+  .right-col  { flex: 1; min-width: 220px; }
+}
+
+/* ── rosco ────────────────────────────────────────────────────────────── */
+.rosco-wrap {
+  position: relative;
+  width: min(340px, 88vw); height: min(340px, 88vw);
+  flex-shrink: 0;
+  animation: fadeUp .45s .1s var(--smooth) both;
+}
+#roscoSvg { width: 100%; height: 100%; overflow: visible; }
+.rosco-centre {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 43%; text-align: center; pointer-events: none;
+}
+.c-letter {
+  display: block;
+  font-size: clamp(2.4rem,9vw,3.8rem); font-weight: 900; line-height: 1;
+  color: var(--active); transition: color .3s;
+}
+.c-label  { font-size: .6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.c-score  { font-size: .95rem; font-weight: 700; color: var(--gold); margin-top: 5px;
+            font-variant-numeric: tabular-nums; }
+
+/* ── right column ─────────────────────────────────────────────────────── */
+.right-col {
+  width: 100%;
+  display: flex; flex-direction: column; gap: 12px;
+  animation: fadeUp .45s .14s var(--smooth) both;
+}
+
+/* round badge */
+.round-badge {
+  display: none; align-items: center; gap: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 50px; padding: 5px 14px;
+  font-size: .73rem; font-weight: 700; color: var(--muted);
+  width: fit-content;
+}
+.round-badge.lap2 { border-color: var(--gold); color: var(--gold); }
+
+/* clue card */
+.clue-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+  min-height: 155px; display: flex; flex-direction: column;
+  transition: filter .3s;
+}
+.clue-card.blurred .clue-body { filter: blur(8px); pointer-events: none; user-select: none; }
+
+.clue-head {
+  padding: 13px 18px 11px; display: flex; align-items: center; gap: 12px;
+  background: var(--active); transition: background .4s;
+}
+.ch-letter {
+  font-size: 2.5rem; font-weight: 900; color: #fff; line-height: 1;
+  text-shadow: 0 3px 0 rgba(0,0,0,.2); min-width: 36px;
+}
+.ch-meta { flex: 1; }
+.ch-type {
+  font-size: .67rem; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(255,255,255,.65); margin-bottom: 2px;
+}
+.ch-preview {
+  font-size: .8rem; color: rgba(255,255,255,.85); line-height: 1.4;
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+}
+/* timer ring */
+.timer-wrap { width: 42px; height: 42px; flex-shrink: 0; position: relative; }
+.timer-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.t-track { fill: none; stroke: rgba(255,255,255,.18); stroke-width: 3; }
+.t-bar   { fill: none; stroke: #fff; stroke-width: 3; stroke-linecap: round;
+           stroke-dasharray: 113; stroke-dashoffset: 0;
+           transition: stroke-dashoffset 1s linear, stroke .25s; }
+.t-num   { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+           font-size: .82rem; font-weight: 700; color: #fff; }
+
+.clue-body { padding: 14px 18px 16px; flex: 1; display: flex; flex-direction: column; gap: 9px; }
+.clue-def  {
+  font-size: .97rem; line-height: 1.6; color: var(--text);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity .3s var(--smooth), transform .3s var(--smooth);
+}
+.clue-def.show { opacity: 1; transform: translateY(0); }
+.ex-row {
+  display: flex; align-items: flex-start; gap: 9px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .3s .07s var(--smooth), transform .3s .07s var(--smooth);
+}
+.ex-row.show { opacity: 1; transform: translateY(0); }
+.ex-pill {
+  font-size: .62rem; font-weight: 700; letter-spacing: 1.2px;
+  text-transform: uppercase; color: var(--muted);
+  padding: 3px 8px; border: 1px solid var(--border);
+  border-radius: 20px; white-space: nowrap; margin-top: 2px; flex-shrink: 0;
+}
+.ex-text  { font-size: .9rem; line-height: 1.6; color: #BDB8D8; }
+.blank {
+  display: inline-block; background: rgba(255,255,255,.1);
+  border-radius: 4px; padding: 0 9px; min-width: 56px;
+  color: transparent; font-weight: 700; user-select: none;
+  transition: background .25s, color .3s;
+}
+.blank.shown {
+  background: transparent; color: var(--active);
+  border-bottom: 2px solid var(--active); padding: 0 3px;
+  animation: inkIn .38s var(--spring) both;
+}
+@keyframes inkIn { 0%{opacity:0;transform:scale(.8) translateY(5px)} 65%{opacity:1;transform:scale(1.06) translateY(-1px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+
+.reveal-row { display: none; justify-content: flex-end; }
+.btn-show-ans {
+  background: transparent; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 13px;
+  font-size: .76rem; font-weight: 700; color: var(--muted);
+  cursor: pointer; transition: border-color .2s, color .2s;
+}
+.btn-show-ans:hover:not(:disabled) { border-color: var(--active); color: var(--active); }
+.btn-show-ans:disabled { opacity: .3; cursor: default; }
+
+/* ── answer buttons ───────────────────────────────────────────────────── */
+.answer-btns {
+  display: none; gap: 8px;
+}
+.abtn {
+  flex: 1; border: none; border-radius: 11px;
+  padding: 13px 8px; cursor: pointer;
+  font-size: .8rem; font-weight: 800;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  transition: transform .14s, box-shadow .14s, opacity .2s;
+  line-height: 1.1;
+}
+.abtn .ico { font-size: 1.25rem; }
+.abtn:active:not(:disabled) { transform: scale(.95); }
+.abtn:disabled { opacity: .35; cursor: default; }
+
+.abtn-correct {
+  background: var(--green); color: #fff;
+  box-shadow: 0 4px 0 var(--green-dim), 0 6px 14px rgba(0,0,0,.3);
+}
+.abtn-correct:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--green-dim), 0 10px 18px rgba(0,0,0,.3); }
+
+.abtn-wrong {
+  background: var(--red); color: #fff;
+  box-shadow: 0 4px 0 var(--red-dim), 0 6px 14px rgba(0,0,0,.3);
+}
+.abtn-wrong:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--red-dim), 0 10px 18px rgba(0,0,0,.3); }
+
+.abtn-skip {
+  background: var(--surface2); color: var(--muted);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 0 rgba(0,0,0,.3);
+}
+.abtn-skip:hover:not(:disabled) { background: #2E2A45; color: var(--text); transform: translateY(-2px); }
+
+/* ── pause button ─────────────────────────────────────────────────────── */
+.pause-row { display: none; justify-content: center; }
+.btn-pause {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 50px; padding: 8px 22px;
+  font-size: .8rem; font-weight: 700; color: var(--muted);
+  cursor: pointer; transition: all .2s; gap: 6px; display: flex; align-items: center;
+}
+.btn-pause:hover { background: #2E2A45; color: var(--text); border-color: rgba(255,255,255,.18); }
+.btn-pause.paused { background: var(--active); border-color: var(--active); color: #fff;
+  box-shadow: 0 0 16px rgba(180,142,245,.4); }
+
+/* ── start / end ──────────────────────────────────────────────────────── */
+.btn-start {
+  width: 100%; border: none; border-radius: 13px; padding: 15px;
+  font-size: .97rem; font-weight: 800; cursor: pointer;
+  background: var(--active); color: #fff;
+  box-shadow: 0 5px 0 var(--active-dim), 0 8px 22px rgba(0,0,0,.3);
+  transition: transform .14s, box-shadow .14s;
+  letter-spacing: .2px;
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--active-dim), 0 12px 28px rgba(0,0,0,.35); }
+.btn-start:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--active-dim); }
+
+.end-screen { text-align: center; padding: 12px 0; }
+.end-big { font-size: clamp(2rem,8vw,3.2rem); font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 6px; }
+.end-sub { color: var(--muted); font-size: .9rem; margin-bottom: 16px; }
+.end-stats { display: flex; gap: 9px; justify-content: center; margin-bottom: 16px; }
+.stat-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 11px; padding: 10px 15px; text-align: center; min-width: 72px; }
+.stat-n   { font-size: 1.65rem; font-weight: 900; line-height: 1; }
+.stat-lbl { font-size: .6rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+
+/* ── progress dots ────────────────────────────────────────────────────── */
+.prog-row {
+  display: flex; gap: 3px; flex-wrap: wrap; justify-content: center;
+  width: 100%;
+}
+.pdot {
+  width: 20px; height: 20px; border-radius: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .54rem; font-weight: 800; color: var(--muted);
+  transition: all .28s var(--spring);
+}
+.pdot.correct { background: var(--green); border-color: var(--green); color: #fff; transform: scale(1.1); }
+.pdot.wrong   { background: rgba(255,92,92,.18); border-color: var(--red); color: var(--red); }
+.pdot.skipped { background: var(--surface2); border-color: #3A3660; color: #3A3660; opacity: .55; }
+.pdot.active  {
+  background: var(--surface2); border-color: var(--active); color: var(--active);
+  box-shadow: 0 0 8px var(--active);
+  animation: dotPulse 1.8s ease-in-out infinite;
+}
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 5px var(--active)} 50%{box-shadow:0 0 13px var(--active)} }
+
+/* ── pause overlay ────────────────────────────────────────────────────── */
+#pauseOverlay {
+  display: none; position: fixed; inset: 0; z-index: 50;
+  background: rgba(15,14,23,.72); backdrop-filter: blur(3px);
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 12px;
+  animation: fadeIn .25s var(--smooth);
+}
+#pauseOverlay.show { display: flex; }
+.pause-icon { font-size: 4rem; line-height: 1; }
+.pause-label { font-size: 1.4rem; font-weight: 800; color: var(--text); letter-spacing: .5px; }
+.pause-hint  { font-size: .82rem; color: var(--muted); }
+
+/* ── keyframes ────────────────────────────────────────────────────────── */
+@keyframes fadeUp  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+@keyframes shake   { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.shake { animation: shake .34s ease both; }
+</style>
+</head>
+<body>
+
+<div class="glow glow-a"></div>
+<div class="glow glow-b"></div>
+
+<!-- PAUSE OVERLAY -->
+<div id="pauseOverlay">
+  <div class="pause-icon">⏸</div>
+  <div class="pause-label">Paused</div>
+  <div class="pause-hint">Press Space or click Resume to continue</div>
+</div>
+
+<header>
+  <div class="eyebrow">🎬 Action Verbs & Expression Nouns</div>
+  <h1>The <em>Rosco</em></h1>
+</header>
+
+<div class="layout">
+
+  <!-- ROSCO SVG -->
+  <div class="rosco-wrap" id="roscoWrap">
+    <svg id="roscoSvg" viewBox="0 0 380 380"></svg>
+    <div class="rosco-centre">
+      <span class="c-letter" id="cLetter">?</span>
+      <span class="c-label"  id="cLabel">ready</span>
+      <div  class="c-score"  id="cScore">0 / 26</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-col">
+
+    <div class="round-badge" id="roundBadge">
+      <span id="roundText">Round 2</span>
+    </div>
+
+    <!-- clue card -->
+    <div class="clue-card" id="clueCard">
+      <div class="clue-head" id="clueHead">
+        <span class="ch-letter"  id="chLetter">–</span>
+        <div  class="ch-meta">
+          <div class="ch-type"    id="chType">–</div>
+          <div class="ch-preview" id="chPreview">Pick a list and start the rosco.</div>
+        </div>
+        <div class="timer-wrap">
+          <svg viewBox="0 0 40 40">
+            <circle class="t-track" cx="20" cy="20" r="18"/>
+            <circle class="t-bar"   cx="20" cy="20" r="18" id="tBar"/>
+          </svg>
+          <div class="t-num" id="tNum">–</div>
+        </div>
+      </div>
+      <div class="clue-body">
+        <div class="clue-def" id="clueDef"></div>
+        <div class="ex-row"   id="exRow">
+          <span class="ex-pill">Example</span>
+          <span class="ex-text" id="exText"></span>
+        </div>
+        <div class="reveal-row" id="revealRow">
+          <button class="btn-show-ans" id="btnShowAns" onclick="doReveal()">👁 Show answer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- answer buttons -->
+    <div class="answer-btns" id="answerBtns">
+      <button class="abtn abtn-correct" id="btnCorrect" onclick="doMark('correct')">
+        <span class="ico">✅</span><span>Correct</span>
+      </button>
+      <button class="abtn abtn-wrong"   id="btnWrong"   onclick="doMark('wrong')">
+        <span class="ico">❌</span><span>Wrong</span>
+      </button>
+      <button class="abtn abtn-skip"    id="btnSkip"    onclick="doMark('skip')">
+        <span class="ico">⏭</span><span>Skip</span>
+      </button>
+    </div>
+
+    <!-- pause button row -->
+    <div class="pause-row" id="pauseRow">
+      <button class="btn-pause" id="btnPause" onclick="togglePause()">⏸ Pause</button>
+    </div>
+
+    <!-- start area -->
+    <div id="startArea">
+      <button class="btn-start" onclick="startGame()">▶ Start the Rosco</button>
+    </div>
+
+    <!-- end area -->
+    <div id="endArea" style="display:none">
+      <div class="end-screen">
+        <div class="end-big" id="endBig">Done!</div>
+        <div class="end-sub" id="endSub"></div>
+        <div class="end-stats">
+          <div class="stat-box"><div class="stat-n" style="color:var(--green)" id="sCorrect">0</div><div class="stat-lbl">Correct</div></div>
+          <div class="stat-box"><div class="stat-n" style="color:var(--red)"   id="sWrong">0</div>  <div class="stat-lbl">Wrong</div></div>
+          <div class="stat-box"><div class="stat-n" style="color:var(--muted)" id="sSkip">0</div>   <div class="stat-lbl">Skipped</div></div>
+        </div>
+        <button class="btn-start" onclick="resetGame()">↺ Play Again</button>
+      </div>
+    </div>
+
+    <!-- progress dots -->
+    <div class="prog-row" id="progRow"></div>
+
+  </div><!-- /right-col -->
+</div><!-- /layout -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+const LIST_DATA = {"A": {"word": "Amused", "type": "adjective", "def": "Thinking that somebody or something is funny, entertaining, or enjoyable.", "ex": "They were _____ by his descriptive, fast-moving stories."}, "B": {"word": "Blow", "type": "verb", "def": "To force air through your nose or mouth, often to clear it.", "ex": "I hate when people _____ their nose in public."}, "C": {"word": "Crash", "type": "noun", "def": "A sudden, very loud sound made by objects hitting each other violently.", "ex": "She heard the loud _____ of a tree falling down."}, "D": {"word": "Drip", "type": "verb", "def": "To fall or let liquids fall in small, distinct drops.", "ex": "Please turn the tap off properly or it will _____."}, "E": {"word": "Exhibition", "type": "noun", "def": "A public event where art, objects, or products are displayed for people to view.", "ex": "Look out for the drawings when you go round the _____."}, "F": {"word": "Frightened", "type": "adjective", "def": "Afraid, anxious, or fearful of something.", "ex": "Don't be _____. The dog won't hurt you."}, "G": {"word": "Giggle", "type": "verb", "def": "To laugh repeatedly in a quiet, high-pitched, or nervous way.", "ex": "They _____ nervously as they waited for their turn to speak."}, "H": {"word": "Hum", "type": "verb", "def": "To make a continuous low musical sound with your lips closed.", "ex": "She began to _____ along with the background music."}, "I": {"word": "Itinerary", "type": "noun", "def": "A detailed plan or route scheduled for a journey or holiday.", "ex": "I haven't really planned my trip yet, but I have a rough _____."}, "J": {"word": "Journey", "type": "noun", "def": "An act of travelling from one location to another, especially over a long distance.", "ex": "The long railway _____ across the countryside took six hours."}, "K": {"word": "Kneel", "type": "verb", "def": "To support your body weight on one or both of your knees.", "ex": "The photographer had to _____ on the floor to get a low-angle shot."}, "L": {"word": "Loss", "type": "noun", "def": "The state of no longer having something, or the failure to keep it.", "ex": "I reported the _____ of my suitcase at the airport help desk."}, "M": {"word": "Mumble", "type": "verb", "def": "To speak quietly, unclearly, and with lips barely moving, making words hard to hear.", "ex": "She _____ a few words and left the meeting unexpectedly."}, "N": {"word": "Notice", "type": "verb", "def": "To see, hear, or become aware of someone or something.", "ex": "Did you _____ any sudden changes in the team's behaviour?"}, "O": {"word": "Observe", "type": "verb", "def": "To watch somebody or something carefully, especially to learn or notice data.", "ex": "Researchers want to _____ how animals adapt to changing environments."}, "P": {"word": "Proceed", "type": "verb", "def": "To move forward or travel in a particular direction.", "ex": "The airline passengers were instructed to _____ to gate number twelve."}, "Q": {"word": "Quote", "type": "verb", "def": "To repeat or write out the exact words spoken or written by someone else.", "ex": "Can you _____ a specific line from the text to support your argument?"}, "R": {"word": "Rattle", "type": "verb", "def": "To make a series of short, sharp, knocking sounds while shaking.", "ex": "Every time a bus goes by, the old windows _____."}, "S": {"word": "Scream", "type": "verb", "def": "To give a loud, high, piercing cry out of fear, pain, or excitement.", "ex": "The boy _____ when he fell off his bicycle."}, "T": {"word": "Tap", "type": "verb", "def": "To hit a surface lightly and repeatedly with a finger, hand, or footwear.", "ex": "When I'm nervous I often _____ my fingers on the table."}, "U": {"word": "Utter", "type": "verb", "def": "To make a sound with your voice; to say something aloud.", "ex": "She did not _____ a single word during the entire performance."}, "V": {"word": "Voyage", "type": "noun", "def": "A very long journey, especially by sea or in space, to a distant destination.", "ex": "The Titanic's first transatlantic _____ was also its tragic last."}, "W": {"word": "Whisper", "type": "verb", "def": "To speak very quietly using your breath rather than your vocal cords.", "ex": "It's rude to _____ when you are sitting in a group."}, "X": {"word": "X-ray", "type": "verb", "def": "To photograph the internal bone structures of a body using electromagnetic radiation.", "ex": "The doctor decided to _____ his ankle to ensure nothing was broken."}, "Y": {"word": "Yell", "type": "verb", "def": "To shout loudly, often because you are angry, excited, or in pain.", "ex": "Please don't _____ at me. It wasn't my fault."}, "Z": {"word": "Zip", "type": "verb", "def": "To open or fasten an item of clothing or bag using a zipper mechanism.", "ex": "Don't forget to _____ up your jacket; it is quite chilly outside."}};
+const LETTERS   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+const TIMER_MAX = 15;
+const COLOR     = '#B48EF5';
+
+// ── AUDIO ─────────────────────────────────────────────────────────────────
+let _ctx = null;
+function ac() {
+  if (!_ctx) _ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return _ctx;
+}
+function resumeAC() { if (_ctx && _ctx.state === 'suspended') _ctx.resume(); }
+
+function playTone(freq, type, dur, vol, delay=0, ramp=false) {
+  try {
+    const c = ac();
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type = type; o.frequency.setValueAtTime(freq, c.currentTime + delay);
+    g.gain.setValueAtTime(vol, c.currentTime + delay);
+    if (ramp) g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + delay + dur);
+    o.start(c.currentTime + delay);
+    o.stop(c.currentTime + delay + dur);
+  } catch(e){}
+}
+
+function sfxCorrect() {
+  resumeAC();
+  playTone(523, 'sine', .12, .4, 0,    true);
+  playTone(659, 'sine', .12, .4, .1,   true);
+  playTone(784, 'sine', .22, .45, .2,  true);
+}
+
+function sfxWrong() {
+  resumeAC();
+  // descending buzz
+  playTone(220, 'sawtooth', .1, .3, 0,   true);
+  playTone(180, 'sawtooth', .1, .3, .1,  true);
+  playTone(140, 'sawtooth', .15,.3, .2,  true);
+}
+
+function sfxTick() {
+  resumeAC();
+  playTone(880, 'square', .05, .15, 0, true);
+}
+
+function sfxRound2() {
+  resumeAC();
+  // short ascending fanfare
+  [392,440,523,659].forEach((f,i) => playTone(f, 'triangle', .18, .35, i*.12, true));
+}
+
+function sfxFinish() {
+  resumeAC();
+  // triumphant 5-note riff
+  [523,659,784,659,1047].forEach((f,i) => playTone(f, 'triangle', .22, .4, i*.14, true));
+  // add a low pad
+  playTone(131, 'sine', .9, .18, 0, true);
+}
+
+function sfxPause() {
+  resumeAC();
+  playTone(440, 'sine', .08, .2, 0, true);
+  playTone(392, 'sine', .1,  .2, .09, true);
+}
+
+function sfxResume() {
+  resumeAC();
+  playTone(392, 'sine', .08, .2, 0, true);
+  playTone(440, 'sine', .1,  .2, .09, true);
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let gameActive  = false;
+let paused      = false;
+let round       = 1;
+let currentIdx  = 0;
+let status      = new Array(26).fill(null); // null | 'correct' | 'wrong' | 'skip'
+let queue       = [];
+let timerSec    = TIMER_MAX;
+let timerID     = null;
+let ansLocked   = false;
+
+// ── ROSCO DRAW ────────────────────────────────────────────────────────────
+function drawRosco() {
+  const svg = document.getElementById('roscoSvg');
+  const n=26, cx=190, cy=190, R=173, r=130;
+
+  svg.innerHTML = `<defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>`;
+
+  for (let i=0; i<n; i++) {
+    const mid  = (i/n)*2*Math.PI - Math.PI/2 + Math.PI/n;
+    const half = (Math.PI/n)*0.82;
+    const pt   = (a,r2) => [cx+r2*Math.cos(a), cy+r2*Math.sin(a)];
+    const [x1,y1]=pt(mid-half,R), [x2,y2]=pt(mid+half,R);
+    const [x3,y3]=pt(mid+half,r), [x4,y4]=pt(mid-half,r);
+    const d = `M${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${r} ${r} 0 0 0 ${x4} ${y4}Z`;
+
+    const isAct = gameActive && i===currentIdx;
+    const s = status[i];
+    let fill, stroke, tf, gf='';
+    if      (isAct)         { fill=COLOR;                    stroke=COLOR;                    tf='#fff';          gf='filter="url(#glow)"'; }
+    else if (s==='correct') { fill='rgba(62,207,142,.25)';   stroke='#3ECF8E';                tf='#3ECF8E';       }
+    else if (s==='wrong')   { fill='rgba(255,92,92,.18)';    stroke='rgba(255,92,92,.65)';    tf='#FF5C5C';       }
+    else if (s==='skip')    { fill='#1B1929';                stroke='#32304A';                tf='#3E3B58';       }
+    else                    { fill='#1B1929';                stroke='#32304A';                tf='#8A87B0';       }
+
+    svg.innerHTML += `<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" ${gf}/>`;
+
+    const tr=(R+r)/2;
+    const [tx,ty]=[cx+tr*Math.cos(mid), cy+tr*Math.sin(mid)];
+    svg.innerHTML += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="central"
+      font-family="system-ui,sans-serif" font-size="${isAct?14:11.5}" font-weight="${isAct?900:700}"
+      fill="${tf}" style="user-select:none;pointer-events:none">${LETTERS[i]}</text>`;
+
+    if (s==='correct' || s==='wrong') {
+      const dot = s==='correct' ? '#3ECF8E' : '#FF5C5C';
+      const [dx,dy]=[cx+tr*Math.cos(mid), cy+tr*Math.sin(mid)-11];
+      svg.innerHTML += `<circle cx="${dx}" cy="${dy}" r="4.5" fill="${dot}" opacity=".85"/>`;
+    }
+  }
+}
+
+// ── CLUE ──────────────────────────────────────────────────────────────────
+function showClue(idx) {
+  const letter = LETTERS[idx];
+  const d      = LIST_DATA[letter];
+  ansLocked    = false;
+
+  document.getElementById('chLetter').textContent  = letter;
+  document.getElementById('chType').textContent    = d.type;
+  document.getElementById('chPreview').textContent = d.def;
+  document.getElementById('clueHead').style.background = COLOR;
+
+  const defEl = document.getElementById('clueDef');
+  const exRow = document.getElementById('exRow');
+  defEl.classList.remove('show'); exRow.classList.remove('show');
+
+  document.getElementById('exText').innerHTML = d.ex.replace('_____',
+    `<span class="blank" id="blankSlot">${d.word}</span>`);
+  document.getElementById('revealRow').style.display = 'flex';
+  document.getElementById('btnShowAns').disabled = false;
+
+  setTimeout(() => { defEl.textContent = d.def; defEl.classList.add('show'); }, 70);
+  setTimeout(() => { exRow.classList.add('show'); }, 160);
+
+  document.getElementById('cLetter').textContent = letter;
+  document.getElementById('cLabel').textContent  = round===2 ? 'round 2' : 'current';
+
+  setABtnsEnabled(true);
+  updateProgress();
+  updateScore();
+  startTimer();
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────
+function startTimer() {
+  clearInterval(timerID);
+  timerSec = TIMER_MAX;
+  renderTimer();
+  timerID = setInterval(() => {
+    if (paused) return;
+    timerSec--;
+    renderTimer();
+    if (timerSec <= 5 && timerSec > 0) sfxTick();
+    if (timerSec <= 0) {
+      clearInterval(timerID);
+      setTimeout(() => { if (gameActive && !ansLocked && !paused) doMark('skip',true); }, 200);
+    }
+  }, 1000);
+}
+function stopTimer() { clearInterval(timerID); }
+function renderTimer() {
+  const circ = 2*Math.PI*18;
+  document.getElementById('tBar').style.strokeDashoffset = circ*(1-timerSec/TIMER_MAX);
+  document.getElementById('tNum').textContent = timerSec>0 ? timerSec : '–';
+  document.getElementById('tBar').style.stroke =
+    timerSec<=5 ? '#FF5C5C' : timerSec<=9 ? '#FFD166' : '#fff';
+}
+
+// ── PAUSE ─────────────────────────────────────────────────────────────────
+function togglePause() {
+  if (!gameActive) return;
+  paused = !paused;
+  const btn = document.getElementById('btnPause');
+  const overlay = document.getElementById('pauseOverlay');
+  const card = document.getElementById('clueCard');
+
+  if (paused) {
+    btn.textContent = '▶ Resume';
+    btn.classList.add('paused');
+    overlay.classList.add('show');
+    card.classList.add('blurred');
+    sfxPause();
+  } else {
+    btn.textContent = '⏸ Pause';
+    btn.classList.remove('paused');
+    overlay.classList.remove('show');
+    card.classList.remove('blurred');
+    sfxResume();
+  }
+}
+
+// ── REVEAL ────────────────────────────────────────────────────────────────
+function doReveal() {
+  const slot = document.getElementById('blankSlot');
+  if (slot) slot.classList.add('shown');
+  document.getElementById('btnShowAns').disabled = true;
+  stopTimer();
+  document.getElementById('tNum').textContent = '–';
+}
+
+// ── MARK ──────────────────────────────────────────────────────────────────
+function doMark(verdict) {
+  if (!gameActive || ansLocked || paused) return;
+  ansLocked = true;
+  stopTimer();
+
+  status[currentIdx] = verdict;
+
+  if (verdict==='correct') sfxCorrect();
+  else if (verdict==='wrong') {
+    sfxWrong();
+    document.getElementById('clueCard').classList.add('shake');
+    setTimeout(() => document.getElementById('clueCard').classList.remove('shake'), 380);
+  }
+
+  if (verdict==='correct') confettiBurst();
+  drawRosco();
+  updateProgress();
+  updateScore();
+  setABtnsEnabled(false);
+
+  setTimeout(() => advance(), verdict==='skip' ? 150 : 480);
+}
+
+// ── ADVANCE ───────────────────────────────────────────────────────────────
+function advance() {
+  if (!gameActive) return;
+  queue.shift();
+  if (queue.length===0) {
+    const needR2 = status.some(s => s==='wrong' || s==='skip');
+    if (needR2 && round===1) { startRound2(); return; }
+    endGame(); return;
+  }
+  currentIdx = queue[0];
+  drawRosco();
+  showClue(currentIdx);
+}
+
+function startRound2() {
+  round = 2;
+  queue = LETTERS.map((_,i)=>i).filter(i => status[i]==='wrong'||status[i]==='skip');
+  queue.forEach(i => { status[i] = null; });
+  currentIdx = queue[0];
+
+  const b = document.getElementById('roundBadge');
+  b.style.display = 'inline-flex';
+  b.classList.add('lap2');
+  document.getElementById('roundText').textContent = '🔁 Round 2 — unanswered words';
+
+  sfxRound2();
+  drawRosco();
+  showClue(currentIdx);
+}
+
+// ── GAME FLOW ─────────────────────────────────────────────────────────────
+function startGame() {
+  resumeAC();
+  gameActive = true; paused = false; round = 1; ansLocked = false;
+  status = new Array(26).fill(null);
+  queue  = LETTERS.map((_,i)=>i);
+  currentIdx = 0;
+
+  document.getElementById('startArea').style.display   = 'none';
+  document.getElementById('endArea').style.display     = 'none';
+  document.getElementById('answerBtns').style.display  = 'flex';
+  document.getElementById('pauseRow').style.display    = 'flex';
+  document.getElementById('roundBadge').style.display  = 'none';
+
+  buildProgress();
+  drawRosco();
+  showClue(0);
+}
+
+function endGame() {
+  gameActive = false; paused = false;
+  stopTimer();
+  drawRosco();
+
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('clueCard').classList.remove('blurred');
+  document.getElementById('answerBtns').style.display  = 'none';
+  document.getElementById('pauseRow').style.display    = 'none';
+  document.getElementById('endArea').style.display     = 'block';
+  document.getElementById('revealRow').style.display   = 'none';
+
+  const c = status.filter(s=>s==='correct').length;
+  const w = status.filter(s=>s==='wrong').length;
+  const k = status.filter(s=>s==='skip').length;
+  document.getElementById('sCorrect').textContent = c;
+  document.getElementById('sWrong').textContent   = w;
+  document.getElementById('sSkip').textContent    = k;
+  document.getElementById('cLetter').textContent  = c===26 ? '🏆' : '✓';
+  document.getElementById('cLabel').textContent   = 'done';
+
+  if (c===26) {
+    document.getElementById('endBig').textContent = 'Perfect!';
+    document.getElementById('endSub').textContent = 'All 26 words correct!';
+    bigConfetti();
+  } else {
+    document.getElementById('endBig').textContent = 'Finished!';
+    document.getElementById('endSub').textContent = `${c} correct · ${w} wrong · ${k} skipped`;
+  }
+  sfxFinish();
+  updateProgress(); updateScore();
+}
+
+function resetGame() {
+  gameActive=false; paused=false; round=1; ansLocked=false;
+  status=new Array(26).fill(null); queue=[];
+  stopTimer();
+
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('clueCard').classList.remove('blurred');
+  document.getElementById('endArea').style.display    = 'none';
+  document.getElementById('startArea').style.display  = 'block';
+  document.getElementById('answerBtns').style.display = 'none';
+  document.getElementById('pauseRow').style.display   = 'none';
+  document.getElementById('roundBadge').style.display = 'none';
+  document.getElementById('revealRow').style.display  = 'none';
+  document.getElementById('clueDef').textContent = '';
+  document.getElementById('clueDef').classList.remove('show');
+  document.getElementById('exRow').classList.remove('show');
+  document.getElementById('chLetter').textContent  = '–';
+  document.getElementById('chType').textContent    = '–';
+  document.getElementById('chPreview').textContent = 'Pick a list and start the rosco.';
+  document.getElementById('cLetter').textContent  = '?';
+  document.getElementById('cLabel').textContent   = 'ready';
+  document.getElementById('cScore').textContent   = '0 / 26';
+  document.getElementById('tNum').textContent     = '–';
+  document.getElementById('tBar').style.strokeDashoffset = 0;
+  document.getElementById('progRow').innerHTML    = '';
+  const pb = document.getElementById('btnPause');
+  pb.textContent = '⏸ Pause'; pb.classList.remove('paused');
+  drawRosco();
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────────────────
+function buildProgress() {
+  const row = document.getElementById('progRow');
+  row.innerHTML = '';
+  LETTERS.forEach((l,i) => {
+    const d = document.createElement('div');
+    d.className='pdot'; d.id=`pd${i}`; d.textContent=l;
+    row.appendChild(d);
+  });
+}
+function updateProgress() {
+  LETTERS.forEach((_,i) => {
+    const d = document.getElementById(`pd${i}`);
+    if (!d) return;
+    d.className = 'pdot';
+    const s = status[i];
+    if      (s==='correct') d.classList.add('correct');
+    else if (s==='wrong')   d.classList.add('wrong');
+    else if (s==='skip')    d.classList.add('skipped');
+    else if (i===currentIdx && gameActive) d.classList.add('active');
+  });
+}
+function updateScore() {
+  document.getElementById('cScore').textContent =
+    status.filter(s=>s==='correct').length + ' / 26';
+}
+function setABtnsEnabled(on) {
+  ['btnCorrect','btnWrong','btnSkip'].forEach(id =>
+    document.getElementById(id).disabled = !on);
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────────
+function confettiBurst() {
+  const cols=['#B48EF5','#FFD166','#ffffff'];
+  const rect=document.getElementById('roscoWrap').getBoundingClientRect();
+  const cx=rect.left+rect.width/2, cy=rect.top+rect.height/2;
+  for(let i=0;i<20;i++) setTimeout(()=>{
+    const el=document.createElement('div');
+    const sz=5+Math.random()*6;
+    Object.assign(el.style,{position:'fixed',width:sz+'px',height:sz+'px',
+      background:cols[Math.floor(Math.random()*cols.length)],
+      borderRadius:Math.random()>.4?'50%':'2px',
+      left:cx+'px',top:cy+'px',pointerEvents:'none',zIndex:9999});
+    document.body.appendChild(el);
+    const a=Math.random()*Math.PI*2,v=65+Math.random()*100;
+    let vx=Math.cos(a)*v,vy=Math.sin(a)*v-75,px=cx,py=cy,f=0;
+    const run=()=>{vy+=3.5;px+=vx*.016;py+=vy*.016;
+      el.style.left=px+'px';el.style.top=py+'px';
+      el.style.opacity=Math.max(0,1-f/52);
+      el.style.transform=`rotate(${f*8}deg)`;
+      if(++f<52)requestAnimationFrame(run);else el.remove();};
+    requestAnimationFrame(run);
+  }, i*20);
+}
+
+function bigConfetti() {
+  const cols=['#B48EF5','#FFD166','#fff','#FF6B6B','#3ECFB2'];
+  for(let i=0;i<80;i++) setTimeout(()=>{
+    const el=document.createElement('div');
+    const sz=6+Math.random()*9;
+    Object.assign(el.style,{position:'fixed',width:sz+'px',height:sz+'px',
+      background:cols[Math.floor(Math.random()*cols.length)],
+      borderRadius:Math.random()>.4?'50%':'2px',
+      left:Math.random()*window.innerWidth+'px',top:'-20px',
+      pointerEvents:'none',zIndex:9999});
+    document.body.appendChild(el);
+    let py=-20,vy=55+Math.random()*120,vx=(Math.random()-.5)*80,f=0;
+    const run=()=>{vy+=2;py+=vy*.016;el.style.top=py+'px';
+      el.style.left=(parseFloat(el.style.left)+vx*.016)+'px';
+      el.style.transform=`rotate(${f*6}deg)`;
+      el.style.opacity=py>window.innerHeight*.7?Math.max(0,1-(py-window.innerHeight*.7)/(window.innerHeight*.3)):1;
+      if(py<window.innerHeight+40)requestAnimationFrame(run);else el.remove();f++;};
+    requestAnimationFrame(run);
+  }, i*22);
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if (e.code==='Space') { e.preventDefault(); if(gameActive) togglePause(); }
+  if (!gameActive||paused||ansLocked) return;
+  if (e.code==='ArrowRight'||e.code==='KeyN') doMark('skip');
+  if (e.code==='ArrowUp'   ||e.code==='KeyC') doMark('correct');
+  if (e.code==='ArrowDown' ||e.code==='KeyW') doMark('wrong');
+  if (e.code==='KeyR') doReveal();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+drawRosco();
+</script>
+</body>
+</html>
