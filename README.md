@@ -46,6 +46,16 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 |---|---|---|---|
 | Oral Mediation Quick Guide | B2 | A structured reference guide for the B2 oral mediation task. Covers the four-step format, useful phrases for each stage, and exam strategy. | [Open](https://as1-design.github.io/english-learning-activities/b2-mediation-guide.html) |
 
+## Exam Preparation
+
+| Activity | Level | Summary | Link |
+|---|---|---|---|
+| Grammar Review Activities | B2.1 | Ten-section interactive grammar review covering questions and auxiliary verbs, present perfect, narrative tenses, future forms, wish and unreal conditionals, used to, past modals, the passive, clauses of contrast and purpose, and quantifiers. | [Open](https://as1-design.github.io/english-learning-activities/grammar-review-b21.html) |
+| Grammar Review Activities | B2.2–C1 | Nine-section interactive grammar review covering narrative tenses, conditionals, inversions, modals, relative clauses, distancing language, verb patterns and collocations, discourse markers, and register awareness. | [Open](https://as1-design.github.io/english-learning-activities/grammar-review-activity_b22.html) |
+| Mediation Quiz | B2 | Ten-question self-assessment quiz on B2 oral mediation. Tests knowledge of the format, strategies, and language for the speaking exam. | [Open](https://as1-design.github.io/english-learning-activities/b2-mediation-quiz.html) |
+| EIO Part 1 Quiz — Telling an Anecdote | B2 | Ten-question self-assessment quiz on structuring a narrative and using the right language for Part 1 of the oral exam. | [Open](https://as1-design.github.io/english-learning-activities/b2-eio-part1-quiz.html) |
+| EIO Part 2 Quiz — The Discussion | B2 | Ten-question self-assessment quiz on when to speak, what to say, and how to keep things moving in Part 2 of the oral exam. | [Open](https://as1-design.github.io/english-learning-activities/b2-eio-part2-quiz.html) |
+
 ## Games & Quizzes
 
 | Activity | Level | Summary | Link |
