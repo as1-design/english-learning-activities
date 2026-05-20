@@ -46,9 +46,12 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 |---|---|---|---|
 | Oral Mediation Quick Guide | B2 | A structured reference guide for the B2 oral mediation task. Covers the four-step format, useful phrases for each stage, and exam strategy. | [Open](https://as1-design.github.io/english-learning-activities/b2-mediation-guide.html) |
 
-## Seasonal & Other
+## Games & Quizzes
 
 | Activity | Level | Summary | Link |
 |---|---|---|---|
+| Rosco — Action Verbs & Expression Nouns | B2.2 | Alphabet-wheel game based on the Spanish TV format. Each letter has a definition clue; students must answer with the correct word beginning with that letter. Covers action verbs, expression nouns, and adjectives. Includes a 15-second timer per question and sound effects. | [Open](https://as1-design.github.io/english-learning-activities/rosco-action_b22.html) |
+| Rosco — Personality & Character | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets personality and character vocabulary. Includes a 15-second timer per question and sound effects. | [Open](https://as1-design.github.io/english-learning-activities/rosco-personality_b22.html) |
+| Rosco — Work & Professional Contexts | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets work and professional context vocabulary. Includes a 15-second timer per question and sound effects. | [Open](https://as1-design.github.io/english-learning-activities/rosco-work_b22.html) |
 | Easter Quiz | B2.1 | Seasonal quiz activity for B2.1 students covering Easter traditions, vocabulary, and general knowledge. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b1b2.html) |
 | Easter Quiz | B2.2 | Seasonal quiz activity for B2.2 students with more challenging language and content than the B2.1 version. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b22_1.html) |
