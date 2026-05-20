@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EIO Part 2 Quiz · The Discussion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080f10;
+  --surface: #101a1c;
+  --surface2: #182224;
+  --border: rgba(180,240,255,0.07);
+  --text: #eefcff;
+  --text-soft: rgba(238,252,255,0.55);
+  --text-muted: rgba(238,252,255,0.3);
+  --teal: #2ec8d4;
+  --teal-light: #7de8ef;
+  --teal-pale: rgba(46,200,212,0.13);
+  --coral: #ff7e5f;
+  --coral-pale: rgba(255,126,95,0.12);
+  --correct: #4af07a;
+  --correct-pale: rgba(74,240,122,0.1);
+  --wrong: #ff6b8a;
+  --wrong-pale: rgba(255,107,138,0.1);
+  --amber: #ffb84a;
+  --amber-pale: rgba(255,184,74,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 35% at 10% 8%, rgba(46,200,212,0.14) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 88% 82%, rgba(255,126,95,0.07) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+/* ── INTRO ── */
+#intro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.intro-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--teal-light);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.1s ease forwards;
+}
+
+.intro-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2.1rem, 7.5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.2s ease forwards;
+}
+
+.intro-title .accent { color: var(--teal); }
+
+.intro-sub {
+  font-size: 0.97rem;
+  color: var(--text-soft);
+  margin-bottom: 2.8rem;
+  font-weight: 300;
+  max-width: 380px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.32s ease forwards;
+}
+
+.context-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 2.5rem;
+  text-align: left;
+  max-width: 480px;
+  width: 100%;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.42s ease forwards;
+}
+
+.context-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0.7rem;
+}
+
+.context-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.context-item { display: flex; flex-direction: column; gap: 0.15rem; }
+.context-item .val {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: -0.02em;
+}
+.context-item .lbl { font-size: 0.75rem; color: var(--text-muted); }
+
+.intro-meta {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 2.8rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.5s ease forwards;
+}
+
+.meta-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.4rem 0.9rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.meta-pill span { color: var(--teal-light); }
+
+.btn-start {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--teal);
+  color: #080f10;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.58s ease forwards;
+}
+.btn-start:hover {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 28px rgba(46,200,212,0.28);
+}
+.btn-start:active { transform: scale(0.98); }
+
+/* ── QUIZ ── */
+#quiz { display: none; padding-top: 2.5rem; }
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--coral));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.q-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 1.6rem;
+}
+
+.q-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--teal);
+  letter-spacing: -0.04em;
+}
+
+.q-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.q-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--teal-pale);
+  border: 1px solid rgba(46,200,212,0.2);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-light);
+  margin-bottom: 1.2rem;
+}
+
+.q-text {
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.55;
+  margin-bottom: 1.2rem;
+  color: var(--text);
+}
+.q-text em { font-style: italic; color: var(--teal-light); }
+
+/* ── DIALOGUE SNIPPET ── */
+.dialogue {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.dialogue-line {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+
+.dialogue-speaker {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  margin-top: 0.18rem;
+  min-width: 60px;
+}
+
+.speaker-a { color: var(--teal); }
+.speaker-b { color: var(--coral); }
+.speaker-c { color: #b48afe; }
+.speaker-ex { color: var(--text-muted); }
+
+.dialogue-text {
+  font-size: 0.92rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.dialogue-prompt {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--border);
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+/* ── OPTIONS ── */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+}
+
+.option {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+  user-select: none;
+}
+
+.option:hover:not(.locked) {
+  border-color: var(--teal);
+  background: var(--surface2);
+  transform: translateX(4px);
+}
+
+.option-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.73rem;
+  font-weight: 500;
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.option-text {
+  font-size: 0.93rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+
+.option.selected { border-color: var(--teal); background: var(--teal-pale); }
+.option.selected .option-key { background: var(--teal); border-color: var(--teal); color: #080f10; }
+.option.selected .option-text { color: var(--text); }
+
+.option.correct { border-color: var(--correct); background: var(--correct-pale); animation: correctPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.option.correct .option-key { background: var(--correct); border-color: var(--correct); color: #080f10; }
+.option.correct .option-text { color: var(--correct); }
+
+.option.wrong { border-color: var(--wrong); background: var(--wrong-pale); animation: shake 0.35s ease; }
+.option.wrong .option-key { background: var(--wrong); border-color: var(--wrong); color: white; }
+.option.wrong .option-text { color: var(--wrong); }
+
+.option.reveal-correct { border-color: var(--correct); background: var(--correct-pale); }
+.option.reveal-correct .option-key { background: var(--correct); border-color: var(--correct); color: #080f10; }
+.option.reveal-correct .option-text { color: var(--correct); }
+
+.option.locked { cursor: default; }
+
+.options.tf { flex-direction: row; }
+.options.tf .option {
+  flex: 1; justify-content: center;
+  flex-direction: column; gap: 0.5rem;
+  padding: 1.2rem; text-align: center;
+}
+.options.tf .option-key { display: none; }
+.options.tf .option-text { font-size: 1rem; font-weight: 500; }
+.tf-icon { font-size: 1.8rem; line-height: 1; }
+
+/* ── EXPLANATION ── */
+.explain-box {
+  margin-top: 0.8rem;
+  border-radius: 10px;
+  padding: 0.95rem 1.1rem;
+  font-size: 0.87rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  animation: slideIn 0.25s ease forwards;
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+.explain-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+
+/* ── NAV BUTTONS ── */
+.nav-buttons { display: flex; gap: 0.75rem; align-items: center; }
+
+.btn-next {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--teal);
+  color: #080f10;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  letter-spacing: 0.02em;
+}
+.btn-next.visible { opacity: 1; pointer-events: all; }
+.btn-next:hover { transform: scale(1.03) translateY(-1px); }
+.btn-next:active { transform: scale(0.98); }
+
+.btn-back {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 1.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+}
+.btn-back.visible { opacity: 1; pointer-events: all; }
+.btn-back:hover { border-color: var(--teal-light); color: var(--text-soft); transform: scale(1.02); }
+.btn-back:active { transform: scale(0.98); }
+
+/* ── RESULT ── */
+#result {
+  display: none;
+  min-height: 100vh;
+  padding-top: 3rem;
+  text-align: center;
+}
+
+.result-score-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 2rem auto 1.5rem;
+}
+
+.result-ring { width: 180px; height: 180px; }
+.ring-bg { fill: none; stroke: var(--surface2); stroke-width: 8; }
+.ring-fill {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 502;
+  stroke-dashoffset: 502;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.result-score-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-big {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--teal);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.score-denom {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.result-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.result-sub {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+.review {
+  text-align: left;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.review-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.review-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+.review-dot.ok { background: var(--correct); }
+.review-dot.no { background: var(--wrong); }
+
+.review-q {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.45;
+  flex: 1;
+}
+.review-q strong { color: var(--text); font-weight: 500; }
+
+.btn-restart {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn-restart:hover { border-color: var(--teal-light); transform: scale(1.02); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes correctPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.q-enter { animation: slideIn 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── INTRO ── -->
+  <div id="intro">
+    <div class="intro-eyebrow">EIO · Part 2 · Self-Assessment</div>
+    <h1 class="intro-title">Can you<br>hold a real<br><span class="accent">conversation?</span></h1>
+    <p class="intro-sub">Test your instincts for the discussion: when to speak, what to say, and how to keep things moving.</p>
+
+    <div class="context-card">
+      <div class="context-label">What this part is about</div>
+      <div class="context-row">
+        <div class="context-item">
+          <div class="val">3</div>
+          <div class="lbl">candidates</div>
+        </div>
+        <div class="context-item">
+          <div class="val">1</div>
+          <div class="lbl">shared topic</div>
+        </div>
+        <div class="context-item">
+          <div class="val">Listen</div>
+          <div class="lbl">& respond</div>
+        </div>
+        <div class="context-item">
+          <div class="val">No</div>
+          <div class="lbl">monologues</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-meta">
+      <div class="meta-pill"><span>10</span> questions</div>
+      <div class="meta-pill"><span>~4</span> minutes</div>
+      <div class="meta-pill"><span>5</span> skills</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Start →</button>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="quiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div id="result">
+    <div class="intro-eyebrow" style="opacity:1">Quiz complete</div>
+    <h2 class="result-title" id="resultTitle"></h2>
+    <p class="result-sub" id="resultSub"></p>
+
+    <div class="result-score-wrap">
+      <svg class="result-ring" viewBox="0 0 180 180">
+        <circle class="ring-bg" cx="90" cy="90" r="80"/>
+        <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="result-score-num">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-denom" id="scoreDenom">/ 10</div>
+      </div>
+    </div>
+
+    <div class="review" id="reviewList"></div>
+    <button class="btn-restart" onclick="restartQuiz()">Try again ↺</button>
+  </div>
+
+</div>
+
+<script>
+// dialogue helper — lines: array of { s: 'A'|'B'|'C'|'ex', label, text }
+function dlg(lines, prompt) {
+  const speakerClass = { A: 'speaker-a', B: 'speaker-b', C: 'speaker-c', ex: 'speaker-ex' };
+  const rows = lines.map(l => `
+    <div class="dialogue-line">
+      <span class="dialogue-speaker ${speakerClass[l.s]}">${l.label}</span>
+      <span class="dialogue-text">"${l.text}"</span>
+    </div>`).join('');
+  const footer = prompt ? `<div class="dialogue-prompt">→ ${prompt}</div>` : '';
+  return `<div class="dialogue">${rows}${footer}</div>`;
+}
+
+const questions = [
+
+  // ── EXPRESSING OPINIONS (Q1–3) ──
+
+  {
+    section: "Expressing opinions",
+    type: "mc",
+    text: "The examiner asks the group a question. You want to go first. Which phrase is the most natural way to open?",
+    dialogueLines: [
+      { s: 'ex', label: 'Examiner', text: "Do you think social media has a positive or negative effect on young people?" },
+      { s: 'B', label: 'Cand. B', text: "(waits)" },
+      { s: 'C', label: 'Cand. C', text: "(waits)" },
+    ],
+    dialoguePrompt: "You go first. What do you say?",
+    options: [
+      "\"I will now give my opinion on this topic.\"",
+      "\"There are many things to consider here.\"",
+      "\"This is a very interesting question for young people.\"",
+      "\"Personally, I think social media does more harm than good.\""
+    ],
+    correct: 3,
+    explain: "Option D opens with a clear position straight away. Options A and C are formulaic without actually saying anything. Option B acknowledges complexity but avoids committing to a view, which isn't a strong start."
+  },
+
+  {
+    section: "Expressing opinions",
+    type: "mc",
+    text: "You've stated your opinion. The examiner waits. You need to develop it. Which continuation works best?",
+    dialogueLines: [
+      { s: 'A', label: 'You', text: "I think working from home is a good idea." },
+      { s: 'ex', label: 'Examiner', text: "(waits)" },
+    ],
+    dialoguePrompt: "Keep going.",
+    options: [
+      "\"So yes, I think it's a good idea for people.\"",
+      "\"For example, it saves commuting time and people can focus more easily at home.\"",
+      "\"It has advantages and also some disadvantages.\"",
+      "\"What does Candidate B think about this?\""
+    ],
+    correct: 1,
+    explain: "Option B justifies the opinion with a concrete reason and example, which is exactly what the examiner is waiting for. Option A just repeats the same idea. Option C is vague and non-committal. Option D passes the floor too quickly without developing anything."
+  },
+
+  {
+    section: "Expressing opinions",
+    type: "mc",
+    text: "B and C have agreed that technology makes life easier. You want to add a different angle. Which response shows the most sophisticated thinking?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "Technology definitely makes our lives much easier." },
+      { s: 'C', label: 'Cand. C', text: "Totally. I can't imagine life without my phone." },
+    ],
+    dialoguePrompt: "Your turn.",
+    options: [
+      "\"Yes, I also think technology is good for us in many ways.\"",
+      "\"I agree with both of you completely.\"",
+      "\"Technology is good and bad at the same time.\"",
+      "\"I think it depends on how you use it. For learning, it's great, but it can also be very distracting.\""
+    ],
+    correct: 3,
+    explain: "Option D introduces a nuance rather than just agreeing, which shows independent thinking. Options A and B add nothing new. Option C states a contrast but doesn't develop it, so it lands flat."
+  },
+
+  // ── AGREEING & DISAGREEING (Q4–6) ──
+
+  {
+    section: "Agreeing & disagreeing",
+    type: "mc",
+    text: "Candidate B says public transport should be free. You agree. Which phrase agrees most naturally?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "I think public transport should be free for everyone." },
+      { s: 'C', label: 'Cand. C', text: "(looks at you)" },
+    ],
+    dialoguePrompt: "You agree. Choose the best phrase.",
+    options: [
+      "\"That's a point I can relate to, in a way.\"",
+      "\"Yes, I think so too, although it depends.\"",
+      "\"I couldn't agree more. Free transport would benefit everyone.\"",
+      "\"You make a good point about the transport.\""
+    ],
+    correct: 2,
+    explain: "\"I couldn't agree more\" is a strong, natural agreement phrase at B2 level. Option A is vague and hesitant. Option B half-agrees without committing. Option D acknowledges the point but sounds awkward and doesn't add anything."
+  },
+
+  {
+    section: "Agreeing & disagreeing",
+    type: "mc",
+    text: "B and C both say there's no point learning foreign languages. You disagree. Which opening phrase handles this best?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "I don't think there's any point learning foreign languages. Everyone speaks English." },
+      { s: 'C', label: 'Cand. C', text: "Exactly. It's a waste of time." },
+    ],
+    dialoguePrompt: "You disagree. What do you say first?",
+    options: [
+      "\"I see where you're coming from, but I'd have to disagree.\"",
+      "\"That's completely wrong, actually.\"",
+      "\"Yes, you're right, but maybe not always.\"",
+      "\"I'm not sure I agree with that.\""
+    ],
+    correct: 0,
+    explain: "\"I see where you're coming from, but I'd have to disagree\" acknowledges the other view before pushing back, which is exactly right for polite disagreement. Option B is too blunt. Option C says yes and no at the same time, which is confusing. Option D is fine but quite bare."
+  },
+
+  {
+    section: "Agreeing & disagreeing",
+    type: "mc",
+    text: "Candidate C makes a point you partially agree with. Which phrase shows partial agreement most naturally?",
+    dialogueLines: [
+      { s: 'C', label: 'Cand. C', text: "I think people are much less sociable now because of social media." },
+      { s: 'B', label: 'Cand. B', text: "(waits for your reaction)" },
+    ],
+    dialoguePrompt: "You partly agree. What do you say?",
+    options: [
+      "\"I completely agree. Social media is very bad for socialising.\"",
+      "\"Yes, you could say that about social media for sure.\"",
+      "\"I agree with what you said about people being less sociable.\"",
+      "\"That's true to some extent, though I think it also helps people stay connected.\""
+    ],
+    correct: 3,
+    explain: "\"That's true to some extent, though...\" is a classic partial agreement structure that shows nuance. Options A, B and C are full agreements that close off the discussion rather than opening it up. Partial agreement is one of the most useful moves in a discussion."
+  },
+
+  // ── TURN-TAKING (Q7–8) ──
+
+  {
+    section: "Turn-taking",
+    type: "mc",
+    text: "You've made your point. B and C haven't spoken for a while. Which phrase best invites them in?",
+    dialogueLines: [
+      { s: 'A', label: 'You', text: "...so I think remote work is the future for most industries." },
+      { s: 'B', label: 'Cand. B', text: "(silent)" },
+      { s: 'C', label: 'Cand. C', text: "(silent)" },
+    ],
+    dialoguePrompt: "You want to hear from them. What do you say?",
+    options: [
+      "\"Anyway, that's what I think.\"",
+      "\"I'm going to stop talking now so you can speak.\"",
+      "\"Does anyone have anything to add to my point?\"",
+      "\"What do you two think about this?\""
+    ],
+    correct: 3,
+    explain: "\"What do you two think?\" is direct, natural and invites both candidates at once. Option A closes your turn without engaging anyone. Option B is clumsy and draws attention to itself. Option C is slightly condescending, as if their role is only to support your idea."
+  },
+
+  {
+    section: "Turn-taking",
+    type: "mc",
+    text: "Candidate B has just finished. Candidate C hesitates. You want to respond to B. Which is the most natural way to take the floor?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "...so I think online learning will eventually replace traditional schools." },
+      { s: 'C', label: 'Cand. C', text: "(hesitates)" },
+    ],
+    dialoguePrompt: "You step in. What do you say?",
+    options: [
+      "\"OK. So. Well. I think...\"",
+      "\"Wait, I want to say something now.\"",
+      "\"Building on that, I think face-to-face learning still has real advantages.\"",
+      "\"I disagree.\" (pause)"
+    ],
+    correct: 2,
+    explain: "\"Building on that\" is a smooth, confident way to link your contribution to what was just said and take the floor at the same time. Option A fills time without moving forward. Option B sounds confrontational. Option D starts a disagreement but leaves your turn hanging without a reason."
+  },
+
+  // ── ASKING OTHERS (Q9–10) ──
+
+  {
+    section: "Asking others",
+    type: "mc",
+    text: "Candidate C hasn't spoken for a while. You want to bring them in specifically. Which phrase works best?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "I think most young people don't care much about politics." },
+      { s: 'A', label: 'You', text: "I'm not sure that's true. A lot of young people are very engaged online." },
+      { s: 'C', label: 'Cand. C', text: "(has not spoken)" },
+    ],
+    dialoguePrompt: "You want to hear from C.",
+    options: [
+      "\"Does anyone else want to speak?\"",
+      "\"What do you reckon, [C]? Do you think young people are engaged?\"",
+      "\"[C], do you agree with me or with Candidate B?\"",
+      "\"I think we should let someone else talk now.\""
+    ],
+    correct: 1,
+    explain: "Option B addresses C by name, asks a clear question and frames it around the discussion topic. Option A is too vague. Option C puts C in an awkward either/or position and doesn't leave room for their own view. Option D sounds like you're managing a meeting rather than having a conversation."
+  },
+
+  {
+    section: "Asking others",
+    type: "mc",
+    text: "Candidate B uses a phrase you don't understand. Which response handles it best?",
+    dialogueLines: [
+      { s: 'B', label: 'Cand. B', text: "I think there's a real risk of groupthink in teams that work remotely." },
+      { s: 'C', label: 'Cand. C', text: "(nods)" },
+    ],
+    dialoguePrompt: "You don't know what 'groupthink' means.",
+    options: [
+      "\"Yes, I agree with that too.\"",
+      "\"That's a very interesting point about teams.\"",
+      "\"Could you clarify what you mean by groupthink?\"",
+      "\"I'm not sure that's always true though.\""
+    ],
+    correct: 2,
+    explain: "Asking for clarification directly is an assessed skill and shows active listening. Options A and B pretend you understood when you didn't, which can lead to a disconnected response. Option D disagrees without knowing what you're disagreeing with."
+  }
+
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('quiz').style.paddingTop = '2.5rem';
+  renderQuestion();
+}
+
+function renderQuestion(restoring) {
+  if (!restoring) answered = false;
+  const q = questions[current];
+  const isTF = q.type === 'tf';
+  const keys = ['A','B','C','D'];
+  const prev = answers.find(a => a.q === current);
+  const alreadyAnswered = !!prev;
+
+  document.getElementById('progressBar').style.width = ((current / questions.length) * 100) + '%';
+
+  // Build dialogue HTML if question has one
+  let dialogueBlock = '';
+  if (q.dialogueLines) {
+    dialogueBlock = dlg(q.dialogueLines, q.dialoguePrompt);
+  }
+
+  const html = `
+    <div class="q-enter">
+      <div class="q-counter">
+        <div class="q-num">${String(current + 1).padStart(2,'0')}</div>
+        <div class="q-total">/ ${questions.length}</div>
+      </div>
+      <div class="q-section">${q.section}</div>
+      <div class="q-text">${q.text}</div>
+      ${dialogueBlock}
+      <div class="options ${isTF ? 'tf' : ''}">
+        ${q.options.map((opt, i) => `
+          <div class="option${alreadyAnswered ? ' locked' : ''}" data-index="${i}" ${alreadyAnswered ? '' : `onclick="choose(${i})"`}>
+            ${isTF
+              ? `<div class="tf-icon">${q.icons ? q.icons[i] : (i===0?'✓':'✗')}</div>
+                 <div class="option-text">${opt}</div>`
+              : `<div class="option-key">${keys[i]}</div>
+                 <div class="option-text">${opt}</div>`
+            }
+          </div>
+        `).join('')}
+      </div>
+      ${alreadyAnswered && q.explain ? `
+        <div class="explain-box">
+          <span class="explain-icon">${prev.correct ? '✓' : '→'}</span>
+          <span>${q.explain}</span>
+        </div>` : ''}
+      <div class="nav-buttons">
+        <button class="btn-back ${current > 0 ? 'visible' : ''}" id="btnBack" onclick="goBack()">← Back</button>
+        <button class="btn-next ${alreadyAnswered ? 'visible' : ''}" id="btnNext" onclick="nextQuestion()">
+          ${current === questions.length - 1 ? 'See results →' : 'Next question →'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('questionArea').innerHTML = html;
+
+  if (alreadyAnswered) {
+    const opts = document.querySelectorAll('.option');
+    opts[prev.chosen].classList.add(prev.correct ? 'correct' : 'wrong');
+    if (!prev.correct) opts[q.correct].classList.add('reveal-correct');
+    answered = true;
+  }
+}
+
+function choose(index) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  const isCorrect = index === q.correct;
+
+  opts.forEach(o => o.classList.add('locked'));
+  opts[index].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) opts[q.correct].classList.add('reveal-correct');
+
+  answers.push({ q: current, chosen: index, correct: isCorrect });
+  if (isCorrect) score++;
+
+  if (q.explain) {
+    const icon = isCorrect ? '✓' : '→';
+    const box = document.createElement('div');
+    box.className = 'explain-box';
+    box.innerHTML = `<span class="explain-icon">${icon}</span><span>${q.explain}</span>`;
+    document.querySelector('.options').after(box);
+  }
+
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function goBack() {
+  current--;
+  renderQuestion(true);
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz').style.display = 'none';
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'block';
+
+  const pct = score / questions.length;
+
+  let title, sub;
+  if (pct === 1)        { title = "Flawless! 🎉";        sub = "You'd hold your own in any discussion."; }
+  else if (pct >= 0.8)  { title = "Really strong! 💪";   sub = "A couple of things to polish — check the review."; }
+  else if (pct >= 0.6)  { title = "Good instincts! 🙌";  sub = "Work on the interaction strategies section."; }
+  else if (pct >= 0.4)  { title = "Keep at it 📖";       sub = "Focus on responding to others, not just stating your view."; }
+  else                  { title = "Not there yet…";      sub = "Re-read the guide, then try again."; }
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('scoreDenom').textContent = '/ ' + questions.length;
+
+  const circumference = 502;
+  const offset = circumference - (pct * circumference);
+  setTimeout(() => {
+    const ring = document.getElementById('ringFill');
+    ring.style.strokeDashoffset = offset;
+    if (pct >= 0.8)      ring.style.stroke = 'var(--correct)';
+    else if (pct >= 0.5) ring.style.stroke = 'var(--amber)';
+    else                 ring.style.stroke = 'var(--wrong)';
+  }, 100);
+
+  const reviewHTML = answers.map(a => {
+    const q = questions[a.q];
+    const qShort = q.text.replace(/<[^>]+>/g, '');
+    return `
+      <div class="review-item">
+        <div class="review-dot ${a.correct ? 'ok' : 'no'}"></div>
+        <div class="review-q">
+          <strong>${qShort.length > 80 ? qShort.slice(0,78)+'…' : qShort}</strong><br>
+          ${a.correct
+            ? '✓ Correct'
+            : `✗ You chose: "${q.options[a.chosen]}" — Correct: "${q.options[q.correct]}"`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('reviewList').innerHTML = reviewHTML;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answers = [];
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('ringFill').style.strokeDashoffset = '502';
+  renderQuestion();
+}
+</script>
+</body>
+</html>

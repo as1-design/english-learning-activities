@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mediation Quiz · B2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0e0c1a;
+  --surface: #181528;
+  --surface2: #211e36;
+  --border: rgba(255,255,255,0.08);
+  --text: #f0eeff;
+  --text-soft: rgba(240,238,255,0.55);
+  --text-muted: rgba(240,238,255,0.3);
+  --violet: #7c5cfc;
+  --violet-light: #a48afe;
+  --violet-pale: rgba(124,92,252,0.15);
+  --lime: #b8f04a;
+  --lime-dark: #8ab832;
+  --rose: #ff6b8a;
+  --rose-pale: rgba(255,107,138,0.12);
+  --amber: #ffb84a;
+  --amber-pale: rgba(255,184,74,0.12);
+  --correct: #4af07a;
+  --correct-pale: rgba(74,240,122,0.1);
+  --wrong: #ff6b8a;
+  --wrong-pale: rgba(255,107,138,0.1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(124,92,252,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(184,240,74,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── WRAPPER ── */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+/* ── INTRO SCREEN ── */
+#intro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
+  padding: 3rem 0;
+}
+
+.intro-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--violet-light);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.1s ease forwards;
+}
+
+.intro-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2.2rem, 8vw, 4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.4rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.2s ease forwards;
+}
+
+.intro-title .accent { color: var(--lime); }
+
+.intro-sub {
+  font-size: 1rem;
+  color: var(--text-soft);
+  margin-bottom: 3rem;
+  font-weight: 300;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.35s ease forwards;
+}
+
+.intro-meta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.45s ease forwards;
+}
+
+.meta-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.45rem 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.meta-pill span { color: var(--violet-light); }
+
+.btn-start {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--lime);
+  color: #0e0c1a;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s;
+  box-shadow: 0 0 0 rgba(184,240,74,0);
+  opacity: 0;
+  animation: fadeUp 0.5s 0.55s ease forwards;
+}
+
+.btn-start:hover {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 32px rgba(184,240,74,0.25);
+}
+
+.btn-start:active { transform: scale(0.98); }
+
+/* ── QUIZ SCREEN ── */
+#quiz { display: none; padding-top: 2.5rem; }
+
+/* Progress bar */
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--lime));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+/* Question counter */
+.q-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 1.8rem;
+}
+
+.q-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--violet);
+  letter-spacing: -0.04em;
+}
+
+.q-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Section badge */
+.q-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--violet-pale);
+  border: 1px solid rgba(124,92,252,0.25);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--violet-light);
+  margin-bottom: 1.2rem;
+}
+
+/* Question text */
+.q-text {
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.55;
+  margin-bottom: 1.8rem;
+  color: var(--text);
+}
+
+/* Options */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+}
+
+.option {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+  user-select: none;
+}
+
+.option:hover:not(.locked) {
+  border-color: var(--violet);
+  background: var(--surface2);
+  transform: translateX(4px);
+}
+
+.option-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 500;
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.option-text {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+
+/* Selected */
+.option.selected {
+  border-color: var(--violet);
+  background: var(--violet-pale);
+}
+
+.option.selected .option-key {
+  background: var(--violet);
+  border-color: var(--violet);
+  color: white;
+}
+
+.option.selected .option-text { color: var(--text); }
+
+/* Correct */
+.option.correct {
+  border-color: var(--correct);
+  background: var(--correct-pale);
+  animation: correctPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.option.correct .option-key {
+  background: var(--correct);
+  border-color: var(--correct);
+  color: #0e0c1a;
+}
+
+.option.correct .option-text { color: var(--correct); }
+
+/* Wrong */
+.option.wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-pale);
+  animation: shake 0.35s ease;
+}
+
+.option.wrong .option-key {
+  background: var(--wrong);
+  border-color: var(--wrong);
+  color: white;
+}
+
+.option.wrong .option-text { color: var(--wrong); }
+
+/* Show correct when wrong chosen */
+.option.reveal-correct {
+  border-color: var(--correct);
+  background: var(--correct-pale);
+}
+
+.option.reveal-correct .option-key {
+  background: var(--correct);
+  border-color: var(--correct);
+  color: #0e0c1a;
+}
+
+.option.reveal-correct .option-text { color: var(--correct); }
+
+.option.locked { cursor: default; }
+
+/* True/False layout */
+.options.tf {
+  flex-direction: row;
+}
+
+.options.tf .option {
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.2rem;
+  text-align: center;
+}
+
+.options.tf .option-key { display: none; }
+.options.tf .option-text { font-size: 1rem; font-weight: 500; }
+
+.tf-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+/* Next button */
+.btn-next {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--violet);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  letter-spacing: 0.02em;
+}
+
+.btn-next.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.btn-next:hover { transform: scale(1.03) translateY(-1px); }
+.btn-next:active { transform: scale(0.98); }
+
+/* ── RESULT SCREEN ── */
+#result {
+  display: none;
+  min-height: 100vh;
+  padding-top: 3rem;
+  text-align: center;
+}
+
+.result-score-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 2rem auto 1.5rem;
+}
+
+.result-ring {
+  width: 180px; height: 180px;
+}
+
+.ring-bg { fill: none; stroke: var(--surface2); stroke-width: 8; }
+.ring-fill {
+  fill: none;
+  stroke: var(--lime);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 502;
+  stroke-dashoffset: 502;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.result-score-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-big {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--lime);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.score-denom {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.result-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.result-sub {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+/* Answer review */
+.review {
+  text-align: left;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.review-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.review-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+
+.review-dot.ok { background: var(--correct); }
+.review-dot.no { background: var(--wrong); }
+
+.review-q {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.review-q strong { color: var(--text); font-weight: 500; }
+
+.btn-restart {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-restart:hover {
+  border-color: var(--violet-light);
+  transform: scale(1.02);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes correctPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-enter { animation: slideIn 0.3s ease forwards; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── INTRO ── -->
+  <div id="intro">
+    <div class="intro-eyebrow">B2 Speaking · Self-Assessment</div>
+    <h1 class="intro-title">Do you<br>know your<br><span class="accent">mediation?</span></h1>
+    <p class="intro-sub">10 questions. No pressure. Let's find out.</p>
+    <div class="intro-meta">
+      <div class="meta-pill"><span>10</span> questions</div>
+      <div class="meta-pill"><span>~3</span> minutes</div>
+      <div class="meta-pill"><span>3</span> sections</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Start →</button>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="quiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div id="result">
+    <div class="intro-eyebrow" style="opacity:1">Quiz complete</div>
+    <h2 class="result-title" id="resultTitle"></h2>
+    <p class="result-sub" id="resultSub"></p>
+
+    <div class="result-score-wrap">
+      <svg class="result-ring" viewBox="0 0 180 180">
+        <circle class="ring-bg" cx="90" cy="90" r="80"/>
+        <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="result-score-num">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-denom" id="scoreDenom">/ 10</div>
+      </div>
+    </div>
+
+    <div class="review" id="reviewList"></div>
+    <button class="btn-restart" onclick="restartQuiz()">Try again ↺</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  // ── Section 1: Understanding the Task ──
+  {
+    section: "Understanding the Task",
+    type: "mc",
+    text: "What is the main goal of oral mediation?",
+    options: [
+      "To give your personal opinion about the text",
+      "To help someone else understand a text clearly and efficiently",
+      "To read the text aloud as accurately as possible",
+      "To summarise every detail of the text"
+    ],
+    correct: 1
+  },
+  {
+    section: "Understanding the Task",
+    type: "tf",
+    text: "In oral mediation, you should include all the details from the text to show you understood it fully.",
+    options: ["True", "False"],
+    correct: 1,
+    icons: ["✓", "✗"]
+  },
+  {
+    section: "Understanding the Task",
+    type: "mc",
+    text: "How long should a typical B2 oral mediation last?",
+    options: ["30 seconds", "5 minutes", "Around 2 minutes", "As long as you need"],
+    correct: 2
+  },
+  {
+    section: "Understanding the Task",
+    type: "tf",
+    text: "You are allowed to write notes on a piece of paper before you speak.",
+    options: ["True", "False"],
+    correct: 0,
+    icons: ["✓", "✗"]
+  },
+
+  // ── Section 2: What Good Candidates Do ──
+  {
+    section: "What Good Candidates Do",
+    type: "mc",
+    text: "Which of the following best describes what \"reformulating\" means in mediation?",
+    options: [
+      "Copying the most important sentences from the text",
+      "Translating the text word for word",
+      "Expressing the same idea in different words",
+      "Adding your own ideas to the text"
+    ],
+    correct: 2
+  },
+  {
+    section: "What Good Candidates Do",
+    type: "mc",
+    text: "A student writes this note plan before speaking: social media → pressure · teens vulnerable · solutions: critical thinking. What is the main advantage of this approach?",
+    options: [
+      "It means they can read directly from the page",
+      "It helps them speak naturally without sounding robotic",
+      "It allows them to include more details",
+      "It replaces the need to organise their speech"
+    ],
+    correct: 1
+  },
+  {
+    section: "What Good Candidates Do",
+    type: "tf",
+    text: "Using connectors like \"first of all\", \"in addition\", and \"as a result\" helps listeners follow your ideas and improves your mark.",
+    options: ["True", "False"],
+    correct: 0,
+    icons: ["✓", "✗"]
+  },
+
+  // ── Section 3: Language – Correct vs Incorrect ──
+  {
+    section: "Language: Correct vs Incorrect",
+    type: "mc",
+    text: "Which sentence is the best example of mediation language?",
+    options: [
+      "\"I think this article is really interesting.\"",
+      "\"The article says that social media is bad.\"",
+      "\"The author argues that social media can negatively affect teenagers' self-image.\"",
+      "\"Social media… teenagers… mental health… problems.\""
+    ],
+    correct: 2
+  },
+  {
+    section: "Language: Correct vs Incorrect",
+    type: "mc",
+    text: "A student says: \"In other words, young people find it difficult to separate online life from reality.\" What mediation skill are they showing?",
+    options: [
+      "Giving a personal opinion",
+      "Reading from the text",
+      "Clarifying and simplifying a difficult idea",
+      "Listing unnecessary details"
+    ],
+    correct: 2
+  },
+  {
+    section: "Language: Correct vs Incorrect",
+    type: "tf",
+    text: "\"I agree with the author because I also think social media is harmful\" is a good way to finish a mediation.",
+    options: ["True", "False"],
+    correct: 1,
+    icons: ["✓", "✗"]
+  }
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  const isTF = q.type === 'tf';
+  const keys = ['A','B','C','D'];
+
+  // Progress
+  document.getElementById('progressBar').style.width = ((current / questions.length) * 100) + '%';
+
+  const html = `
+    <div class="q-enter">
+      <div class="q-counter">
+        <div class="q-num">${String(current + 1).padStart(2,'0')}</div>
+        <div class="q-total">/ ${questions.length}</div>
+      </div>
+      <div class="q-section">${q.section}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options ${isTF ? 'tf' : ''}">
+        ${q.options.map((opt, i) => `
+          <div class="option" data-index="${i}" onclick="choose(${i})">
+            ${isTF
+              ? `<div class="tf-icon">${q.icons ? q.icons[i] : (i===0?'✓':'✗')}</div>
+                 <div class="option-text">${opt}</div>`
+              : `<div class="option-key">${keys[i]}</div>
+                 <div class="option-text">${opt}</div>`
+            }
+          </div>
+        `).join('')}
+      </div>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+        ${current === questions.length - 1 ? 'See results →' : 'Next question →'}
+      </button>
+    </div>
+  `;
+
+  document.getElementById('questionArea').innerHTML = html;
+}
+
+function choose(index) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  const isCorrect = index === q.correct;
+
+  opts.forEach(o => o.classList.add('locked'));
+
+  opts[index].classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (!isCorrect) {
+    opts[q.correct].classList.add('reveal-correct');
+  }
+
+  answers.push({ q: current, chosen: index, correct: isCorrect });
+  if (isCorrect) score++;
+
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz').style.display = 'none';
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'block';
+
+  const pct = score / questions.length;
+
+  // Title + sub
+  let title, sub;
+  if (pct === 1)        { title = "Perfect score! 🎉"; sub = "You've got this. Seriously."; }
+  else if (pct >= 0.8)  { title = "Really strong! 💪"; sub = "Almost perfect — review what you missed."; }
+  else if (pct >= 0.6)  { title = "Good effort! 🙌"; sub = "Some gaps to work on — check the guide."; }
+  else if (pct >= 0.4)  { title = "Keep going 📖"; sub = "Re-read the guide, then try again."; }
+  else                  { title = "Not there yet…"; sub = "Back to the guide — you've got this."; }
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('scoreDenom').textContent = '/ ' + questions.length;
+
+  // Ring animation
+  const circumference = 502;
+  const offset = circumference - (pct * circumference);
+  setTimeout(() => {
+    document.getElementById('ringFill').style.strokeDashoffset = offset;
+    // Colour by score
+    const ring = document.getElementById('ringFill');
+    if (pct >= 0.8) ring.style.stroke = 'var(--correct)';
+    else if (pct >= 0.5) ring.style.stroke = 'var(--amber)';
+    else ring.style.stroke = 'var(--rose)';
+  }, 100);
+
+  // Review list
+  const reviewHTML = answers.map(a => {
+    const q = questions[a.q];
+    return `
+      <div class="review-item">
+        <div class="review-dot ${a.correct ? 'ok' : 'no'}"></div>
+        <div class="review-q">
+          <strong>${q.text.length > 80 ? q.text.slice(0,78)+'…' : q.text}</strong><br>
+          ${a.correct
+            ? '✓ Correct'
+            : `✗ You chose: "${q.options[a.chosen]}" — Correct: "${q.options[q.correct]}"`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('reviewList').innerHTML = reviewHTML;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answers = [];
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('ringFill').style.strokeDashoffset = '502';
+  renderQuestion();
+}
+</script>
+</body>
+</html>

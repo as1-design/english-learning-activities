@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B2.2–C1 Grammar Review Activities</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1a1f3a;
+    --cream: #f7f3ec;
+    --warm-white: #fdfaf5;
+    --gold: #e8a020;
+    --gold-light: #fdf0d5;
+    --blue: #2d6be4;
+    --blue-light: #e8f0fd;
+    --green: #2a9d62;
+    --green-light: #e6f7ef;
+    --purple: #6b3fa0;
+    --purple-light: #f0e8fa;
+    --red: #d44a3a;
+    --red-light: #fdecea;
+    --teal: #1a8c8c;
+    --teal-light: #e6f5f5;
+    --orange: #e07030;
+    --orange-light: #fdf0e6;
+    --pink: #c4407a;
+    --pink-light: #fce8f2;
+    --correct: #2a9d62;
+    --incorrect: #d44a3a;
+    --border: #e0d8cc;
+    --text: #2a2620;
+    --text-muted: #7a6e62;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--navy);
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(255,255,255,0.02) 40px,
+      rgba(255,255,255,0.02) 80px
+    );
+  }
+  .site-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .site-header h1 span {
+    color: var(--gold);
+  }
+  .site-header p {
+    color: rgba(247,243,236,0.6);
+    font-size: 0.88rem;
+    margin-top: 6px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  /* ── NAV ── */
+  .activity-nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 0;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 0;
+    scrollbar-width: none;
+  }
+  .activity-nav::-webkit-scrollbar { display: none; }
+
+  .nav-btn {
+    flex: 0 0 auto;
+    padding: 12px 16px 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba(247,243,236,0.5);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-btn:hover { color: var(--cream); }
+  .nav-btn.active {
+    color: var(--cream);
+    border-bottom-color: var(--gold);
+  }
+  .nav-btn .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .nav-btn.completed .nav-dot {
+    background: var(--correct);
+    opacity: 1;
+  }
+  .nav-btn .nav-num {
+    font-size: 0.68rem;
+    opacity: 0.5;
+  }
+
+  /* ── MAIN ── */
+  .main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ── ACTIVITY PANEL ── */
+  .activity {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .activity.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ACTIVITY HEADER ── */
+  .activity-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .activity-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+  .activity-meta h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--navy);
+  }
+  .activity-meta .task-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .activity-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+  }
+  .q-card.answered { pointer-events: none; }
+  .q-card.correct { border-color: var(--correct); background: #f4fbf7; }
+  .q-card.incorrect { border-color: var(--incorrect); background: #fff6f5; }
+
+  .q-number {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+  .q-text em {
+    font-style: italic;
+    color: var(--navy);
+  }
+  .q-text strong {
+    font-weight: 600;
+  }
+
+  /* ── OPTIONS ── */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .option-btn {
+    padding: 11px 16px;
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.45;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--navy);
+    background: white;
+  }
+  .option-btn.selected-correct {
+    border-color: var(--correct);
+    background: var(--green-light);
+    color: #1a6a40;
+    font-weight: 500;
+  }
+  .option-btn.selected-incorrect {
+    border-color: var(--incorrect);
+    background: var(--red-light);
+    color: #8a2010;
+  }
+  .option-btn.reveal-correct {
+    border-color: var(--correct);
+    background: var(--green-light);
+    color: #1a6a40;
+    font-weight: 500;
+  }
+
+  /* ── FEEDBACK ── */
+  .feedback {
+    display: none;
+    margin-top: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: var(--green-light);
+    color: #1a5e35;
+    border-left: 3px solid var(--correct);
+  }
+  .feedback.incorrect-fb {
+    background: var(--red-light);
+    color: #8a2010;
+    border-left: 3px solid var(--incorrect);
+  }
+  .feedback-icon { font-weight: 700; margin-right: 4px; }
+
+  /* ── DROPDOWN FILL ── */
+  .fill-sentence {
+    font-size: 1rem;
+    line-height: 2;
+    color: var(--text);
+  }
+  .fill-select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border: 2px solid var(--blue);
+    border-radius: 6px;
+    background: var(--blue-light);
+    color: var(--navy);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%232d6be4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 26px;
+    min-width: 140px;
+    transition: all 0.2s;
+  }
+  .fill-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(45,107,228,0.2); }
+  .fill-select.correct-select { border-color: var(--correct); background-color: var(--green-light); color: #1a6a40; }
+  .fill-select.incorrect-select { border-color: var(--incorrect); background-color: var(--red-light); color: #8a2010; }
+
+  /* ── CHECK BUTTON ── */
+  .check-btn {
+    margin-top: 16px;
+    padding: 11px 28px;
+    background: var(--navy);
+    color: var(--cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .check-btn:hover { background: #2a304f; transform: translateY(-1px); }
+  .check-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+  /* ── MATCHING ── */
+  .match-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-col-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .match-item {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: var(--cream);
+    font-size: 0.88rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .match-item:hover:not(.matched):not(.wrong-match) {
+    border-color: var(--navy);
+    background: white;
+  }
+  .match-item.selected {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+  .match-item.matched {
+    border-color: var(--correct);
+    background: var(--green-light);
+    color: #1a6a40;
+    cursor: default;
+  }
+  .match-item.wrong-match {
+    border-color: var(--incorrect);
+    background: var(--red-light);
+    animation: shake 0.4s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .match-badge {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SORTING TASK ── */
+  .sort-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .sort-zone {
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    min-height: 140px;
+  }
+  .sort-zone.formal-zone { border-color: #aac4f5; background: #f0f5ff; }
+  .sort-zone.informal-zone { border-color: #f5c8a0; background: #fff8f0; }
+  .sort-zone-label {
+    font-family: 'Fraunces', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .formal-zone .sort-zone-label { color: var(--blue); }
+  .informal-zone .sort-zone-label { color: var(--orange); }
+
+  .sort-chip-wrap {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    width: 100%;
+    margin-bottom: 8px;
+    transition: border-color 0.15s;
+  }
+  .sort-chip-wrap.placed-formal { border-color: var(--blue); background: var(--blue-light); }
+  .sort-chip-wrap.placed-informal { border-color: var(--orange); background: var(--orange-light); }
+  .sort-chip-wrap.correct-sort { border-color: var(--correct); background: var(--green-light); }
+  .sort-chip-wrap.incorrect-sort { border-color: var(--incorrect); background: var(--red-light); }
+
+  .sort-chip-text {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .sort-chip-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .reg-place-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 2px solid;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .formal-btn {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: transparent;
+  }
+  .formal-btn:hover:not(:disabled) { background: var(--blue); color: white; }
+  .informal-btn {
+    border-color: var(--orange);
+    color: var(--orange);
+    background: transparent;
+  }
+  .informal-btn:hover:not(:disabled) { background: var(--orange); color: white; }
+  .reg-remove-btn {
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    background: white;
+    cursor: pointer;
+  }
+  .reg-remove-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
+  .reg-place-btn:disabled, .reg-remove-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* keep sort-items-pool as a column for new wrap layout */
+  .sort-items-pool {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 16px;
+  }
+  .sort-drop-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 60px;
+  }
+
+  /* ── SCORE BAR ── */
+  .score-tracker {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .score-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .score-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .score-fraction {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    white-space: nowrap;
+  }
+
+  /* ── RESULTS SCREEN ── */
+  #results-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: fadeIn 0.4s ease;
+  }
+  #results-screen.show { display: block; }
+  .results-trophy {
+    font-size: 4rem;
+    margin-bottom: 16px;
+  }
+  .results-title {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .results-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 32px;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 32px;
+    text-align: left;
+  }
+  .result-card {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .result-card-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .result-card-score {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .result-card-score.full { color: var(--correct); }
+  .result-card-score.partial { color: var(--gold); }
+  .result-card-score.low { color: var(--incorrect); }
+
+  .restart-btn {
+    padding: 14px 36px;
+    background: var(--navy);
+    color: var(--cream);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .restart-btn:hover { background: var(--blue); transform: translateY(-2px); }
+
+  .next-activity-wrap {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+  .next-btn {
+    padding: 10px 24px;
+    background: transparent;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .next-btn:hover { background: var(--navy); color: var(--cream); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  /* ── COLOUR ACCENTS PER ACTIVITY ── */
+  .act-1 .activity-icon { background: #daeeff; }
+  .act-2 .activity-icon { background: #e6f7ef; }
+  .act-3 .activity-icon { background: #fff3d6; }
+  .act-4 .activity-icon { background: var(--purple-light); }
+  .act-5 .activity-icon { background: var(--pink-light); }
+  .act-6 .activity-icon { background: var(--teal-light); }
+  .act-7 .activity-icon { background: var(--orange-light); }
+  .act-8 .activity-icon { background: #e8f0fd; }
+  .act-9 .activity-icon { background: #f0e8fa; }
+
+  .act-1 .activity-tag { background: #daeeff; color: #1455a0; }
+  .act-2 .activity-tag { background: var(--green-light); color: #1a6a40; }
+  .act-3 .activity-tag { background: #fff3d6; color: #8a5500; }
+  .act-4 .activity-tag { background: var(--purple-light); color: var(--purple); }
+  .act-5 .activity-tag { background: var(--pink-light); color: var(--pink); }
+  .act-6 .activity-tag { background: var(--teal-light); color: var(--teal); }
+  .act-7 .activity-tag { background: var(--orange-light); color: var(--orange); }
+  .act-8 .activity-tag { background: var(--blue-light); color: var(--blue); }
+  .act-9 .activity-tag { background: var(--purple-light); color: var(--purple); }
+
+  @media (max-width: 600px) {
+    .match-container { grid-template-columns: 1fr; }
+    .sort-container { grid-template-columns: 1fr; }
+    .results-grid { grid-template-columns: 1fr 1fr; }
+    .q-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>B2.2–C1 <span>Grammar Review</span> Activities</h1>
+  <p>Nine interactive activities · Immediate feedback · Track your score</p>
+</header>
+
+<nav class="activity-nav" id="activityNav">
+  <button class="nav-btn active" onclick="showActivity(1)" id="nav-1">
+    <span class="nav-dot"></span><span class="nav-num">01</span> Narrative Tenses
+  </button>
+  <button class="nav-btn" onclick="showActivity(2)" id="nav-2">
+    <span class="nav-dot"></span><span class="nav-num">02</span> Conditionals
+  </button>
+  <button class="nav-btn" onclick="showActivity(3)" id="nav-3">
+    <span class="nav-dot"></span><span class="nav-num">03</span> Inversions
+  </button>
+  <button class="nav-btn" onclick="showActivity(4)" id="nav-4">
+    <span class="nav-dot"></span><span class="nav-num">04</span> Modals
+  </button>
+  <button class="nav-btn" onclick="showActivity(5)" id="nav-5">
+    <span class="nav-dot"></span><span class="nav-num">05</span> Relative Clauses
+  </button>
+  <button class="nav-btn" onclick="showActivity(6)" id="nav-6">
+    <span class="nav-dot"></span><span class="nav-num">06</span> Distancing Language
+  </button>
+  <button class="nav-btn" onclick="showActivity(7)" id="nav-7">
+    <span class="nav-dot"></span><span class="nav-num">07</span> Verb Patterns
+  </button>
+  <button class="nav-btn" onclick="showActivity(8)" id="nav-8">
+    <span class="nav-dot"></span><span class="nav-num">08</span> Discourse Markers
+  </button>
+  <button class="nav-btn" onclick="showActivity(9)" id="nav-9">
+    <span class="nav-dot"></span><span class="nav-num">09</span> Register
+  </button>
+  <button class="nav-btn" onclick="showResults()" id="nav-results">
+    <span class="nav-dot"></span>Results
+  </button>
+</nav>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 1 — NARRATIVE TENSES (Gap-fill dropdowns)
+══════════════════════════════════════════ -->
+<section class="activity act-1 visible" id="activity-1">
+  <div class="activity-header">
+    <div class="activity-icon">🕰️</div>
+    <div class="activity-meta">
+      <h2>Narrative Tenses</h2>
+      <p class="task-desc">Choose the correct tense for each gap. Think about whether the action is the main event, background, earlier action, or duration.</p>
+      <span class="activity-tag">Gap-fill · 6 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-1">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-1"></div></div>
+    <span class="score-fraction" id="frac-1">0 / 6</span>
+  </div>
+
+  <div class="q-card" id="nt-card">
+    <div class="q-number">Read the paragraph — select the correct form in each gap</div>
+    <div class="q-text fill-sentence" id="nt-text"></div>
+    <button class="check-btn" id="nt-check" onclick="checkNarrativeTenses()">Check answers</button>
+    <div class="feedback" id="nt-feedback"></div>
+  </div>
+
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(2)">Conditionals →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 2 — CONDITIONALS (Matching)
+══════════════════════════════════════════ -->
+<section class="activity act-2" id="activity-2">
+  <div class="activity-header">
+    <div class="activity-icon">🚦</div>
+    <div class="activity-meta">
+      <h2>Conditionals</h2>
+      <p class="task-desc">Match each sentence opening with the correct ending. Click a sentence half on the left, then click its match on the right.</p>
+      <span class="activity-tag">Matching · 6 pairs</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-2">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-2"></div></div>
+    <span class="score-fraction" id="frac-2">0 / 6</span>
+  </div>
+
+  <div class="q-card" id="cond-card">
+    <div class="q-number">Match the sentence halves</div>
+    <div class="match-container" style="margin-top:10px">
+      <div class="match-col">
+        <div class="match-col-label">Sentence openings</div>
+        <div id="cond-left"></div>
+      </div>
+      <div class="match-col">
+        <div class="match-col-label">Sentence endings</div>
+        <div id="cond-right"></div>
+      </div>
+    </div>
+    <div class="feedback" id="cond-feedback"></div>
+  </div>
+
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(3)">Inversions →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 3 — INVERSIONS (Multiple choice)
+══════════════════════════════════════════ -->
+<section class="activity act-3" id="activity-3">
+  <div class="activity-header">
+    <div class="activity-icon">↑</div>
+    <div class="activity-meta">
+      <h2>Inversions</h2>
+      <p class="task-desc">Each question shows a normal sentence. Choose the correctly inverted version from the three options.</p>
+      <span class="activity-tag">Multiple choice · 5 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-3">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-3"></div></div>
+    <span class="score-fraction" id="frac-3">0 / 5</span>
+  </div>
+  <div id="inv-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(4)">Modals →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 4 — MODALS (Multiple choice)
+══════════════════════════════════════════ -->
+<section class="activity act-4" id="activity-4">
+  <div class="activity-header">
+    <div class="activity-icon">🛡️</div>
+    <div class="activity-meta">
+      <h2>Modals</h2>
+      <p class="task-desc">A meaning cue is given in brackets. Choose the modal that best expresses that meaning in context.</p>
+      <span class="activity-tag">Multiple choice · 6 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-4">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-4"></div></div>
+    <span class="score-fraction" id="frac-4">0 / 6</span>
+  </div>
+  <div id="mod-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(5)">Relative Clauses →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 5 — RELATIVE CLAUSES (Error correction)
+══════════════════════════════════════════ -->
+<section class="activity act-5" id="activity-5">
+  <div class="activity-header">
+    <div class="activity-icon">🔗</div>
+    <div class="activity-meta">
+      <h2>Relative Clauses</h2>
+      <p class="task-desc">Some sentences contain an error with a relative clause. Decide whether the sentence is correct or contains an error — and if so, choose the corrected version.</p>
+      <span class="activity-tag">Error correction · 5 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-5">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-5"></div></div>
+    <span class="score-fraction" id="frac-5">0 / 5</span>
+  </div>
+  <div id="rel-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(6)">Distancing Language →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 6 — DISTANCING LANGUAGE (Multiple choice)
+══════════════════════════════════════════ -->
+<section class="activity act-6" id="activity-6">
+  <div class="activity-header">
+    <div class="activity-icon">🔭</div>
+    <div class="activity-meta">
+      <h2>Distancing Language</h2>
+      <p class="task-desc">A direct or blunt statement is given. Choose the distancing phrase that best softens or qualifies it in an academic or formal context.</p>
+      <span class="activity-tag">Multiple choice · 5 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-6">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-6"></div></div>
+    <span class="score-fraction" id="frac-6">0 / 5</span>
+  </div>
+  <div id="dist-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(7)">Verb Patterns →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 7 — VERB PATTERNS (Multiple choice)
+══════════════════════════════════════════ -->
+<section class="activity act-7" id="activity-7">
+  <div class="activity-header">
+    <div class="activity-icon">🧩</div>
+    <div class="activity-meta">
+      <h2>Verb Patterns &amp; Collocations</h2>
+      <p class="task-desc">Choose the correct verb form to complete each sentence. Pay attention to the pattern required by the main verb.</p>
+      <span class="activity-tag">Multiple choice · 6 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-7">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-7"></div></div>
+    <span class="score-fraction" id="frac-7">0 / 6</span>
+  </div>
+  <div id="vp-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(8)">Discourse Markers →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 8 — DISCOURSE MARKERS (Gap-fill dropdowns)
+══════════════════════════════════════════ -->
+<section class="activity act-8" id="activity-8">
+  <div class="activity-header">
+    <div class="activity-icon">💬</div>
+    <div class="activity-meta">
+      <h2>Discourse Markers</h2>
+      <p class="task-desc">Select the most appropriate discourse marker for each gap. Think about the logical relationship between the ideas.</p>
+      <span class="activity-tag">Gap-fill · 6 questions</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-8">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-8"></div></div>
+    <span class="score-fraction" id="frac-8">0 / 6</span>
+  </div>
+  <div id="dm-questions"></div>
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showActivity(9)">Register →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     ACTIVITY 9 — REGISTER AWARENESS (Sorting)
+══════════════════════════════════════════ -->
+<section class="activity act-9" id="activity-9">
+  <div class="activity-header">
+    <div class="activity-icon">🎩</div>
+    <div class="activity-meta">
+      <h2>Register Awareness</h2>
+      <p class="task-desc">Sort each phrase or sentence into the correct register column by clicking on it. Click again to move it back to the pool.</p>
+      <span class="activity-tag">Sorting task · 8 items</span>
+    </div>
+  </div>
+
+  <div class="score-tracker" id="score-9">
+    <span class="score-label">Score</span>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="bar-9"></div></div>
+    <span class="score-fraction" id="frac-9">0 / 8</span>
+  </div>
+
+  <div class="q-card" id="reg-card">
+    <div class="q-number">Click a phrase to place it — click again to return it to the pool</div>
+    <div class="sort-items-pool" id="reg-pool"></div>
+    <div class="sort-container">
+      <div class="sort-zone formal-zone">
+        <div class="sort-zone-label">📋 Formal</div>
+        <div class="sort-drop-zone" id="reg-formal"></div>
+      </div>
+      <div class="sort-zone informal-zone">
+        <div class="sort-zone-label">💬 Informal</div>
+        <div class="sort-drop-zone" id="reg-informal"></div>
+      </div>
+    </div>
+    <button class="check-btn" id="reg-check" onclick="checkRegister()">Check answers</button>
+    <div class="feedback" id="reg-feedback"></div>
+  </div>
+
+  <div class="next-activity-wrap">
+    <button class="next-btn" onclick="showResults()">See Results →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RESULTS SCREEN
+══════════════════════════════════════════ -->
+<div id="results-screen">
+  <div class="results-trophy" id="results-trophy">🏆</div>
+  <div class="results-title" id="results-title">Well done!</div>
+  <div class="results-subtitle" id="results-subtitle"></div>
+  <div class="results-grid" id="results-grid"></div>
+  <button class="restart-btn" onclick="restartAll()">↺ Start again</button>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const scores = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0 };
+const totals = { 1:6, 2:6, 3:5, 4:6, 5:5, 6:5, 7:6, 8:6, 9:8 };
+const activityNames = {
+  1:'Narrative Tenses', 2:'Conditionals', 3:'Inversions',
+  4:'Modals', 5:'Relative Clauses', 6:'Distancing Language',
+  7:'Verb Patterns', 8:'Discourse Markers', 9:'Register'
+};
+
+function updateScore(act, correct, total) {
+  scores[act] = correct;
+  const pct = total > 0 ? (correct / total) * 100 : 0;
+  document.getElementById('bar-'+act).style.width = pct + '%';
+  document.getElementById('frac-'+act).textContent = correct + ' / ' + total;
+}
+
+function showActivity(n) {
+  document.querySelectorAll('.activity').forEach(a => a.classList.remove('visible'));
+  document.getElementById('results-screen').classList.remove('show');
+  const el = document.getElementById('activity-'+n);
+  if (el) el.classList.add('visible');
+  document.querySelectorAll('.nav-btn').forEach((b,i) => b.classList.toggle('active', i === n-1));
+}
+
+function showResults() {
+  document.querySelectorAll('.activity').forEach(a => a.classList.remove('visible'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-results').classList.add('active');
+  buildResults();
+  document.getElementById('results-screen').classList.add('show');
+}
+
+function buildResults() {
+  let total = 0, scored = 0;
+  Object.keys(totals).forEach(k => { total += totals[k]; scored += scores[k]; });
+  const pct = Math.round((scored / total) * 100);
+  document.getElementById('results-trophy').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '🌟' : '💪';
+  document.getElementById('results-title').textContent =
+    pct >= 80 ? 'Excellent work!' : pct >= 60 ? 'Good effort!' : 'Keep practising!';
+  document.getElementById('results-subtitle').textContent =
+    `You scored ${scored} out of ${total} (${pct}%) across all nine activities.`;
+  const grid = document.getElementById('results-grid');
+  grid.innerHTML = '';
+  for (let i = 1; i <= 9; i++) {
+    const s = scores[i], t = totals[i], p = Math.round((s/t)*100);
+    const cls = p >= 80 ? 'full' : p >= 50 ? 'partial' : 'low';
+    grid.innerHTML += `
+      <div class="result-card">
+        <div class="result-card-title">${activityNames[i]}</div>
+        <div class="result-card-score ${cls}">${s} / ${t}</div>
+      </div>`;
+  }
+}
+
+function restartAll() {
+  location.reload();
+}
+
+// ══════════════════════════════════════════
+// ACTIVITY 1 — NARRATIVE TENSES
+// ══════════════════════════════════════════
+const ntData = [
+  { id:'nt0', correct:'had been travelling', opts:['were travelling','had been travelling','have been travelling','travelled'], label:'A' },
+  { id:'nt1', correct:'were crossing', opts:['crossed','had crossed','were crossing','have crossed'], label:'B' },
+  { id:'nt2', correct:'noticed', opts:['were noticing','had noticed','noticed','notice'], label:'C' },
+  { id:'nt3', correct:'had left', opts:['left','was leaving','had left','have left'], label:'D' },
+  { id:'nt4', correct:'was getting', opts:['got','was getting','had got','gets'], label:'E' },
+  { id:'nt5', correct:'realised', opts:['was realising','had been realising','realised','has realised'], label:'F' },
+];
+
+function buildNTSelect(item) {
+  let html = `<select class="fill-select" id="${item.id}" onchange="onNTChange()">
+    <option value="">— choose —</option>`;
+  item.opts.forEach(o => html += `<option value="${o}">${o}</option>`);
+  html += `</select>`;
+  return html;
+}
+
+(function buildNT() {
+  const text = `By the time they arrived at the coast, the group [A] for nearly three days without a proper rest. As they [B] the beach, one of the hikers [C] that someone [D] a backpack behind on the path. The sun [E] low on the horizon and they [F] they had very little water left.`;
+  let html = text;
+  ntData.forEach(item => {
+    html = html.replace(`[${item.label}]`, buildNTSelect(item));
+  });
+  document.getElementById('nt-text').innerHTML = html;
+})();
+
+function onNTChange() {}
+
+function checkNarrativeTenses() {
+  let correct = 0;
+  const explanations = [
+    'A: <strong>had been travelling</strong> — past perfect continuous shows duration up to a past point.',
+    'B: <strong>were crossing</strong> — past continuous sets the background scene.',
+    'C: <strong>noticed</strong> — past simple for the main event.',
+    'D: <strong>had left</strong> — past perfect for an action earlier than another past action.',
+    'E: <strong>was getting</strong> — past continuous for background state.',
+    'F: <strong>realised</strong> — past simple for the main event.',
+  ];
+  ntData.forEach(item => {
+    const sel = document.getElementById(item.id);
+    if (sel.value === item.correct) {
+      sel.classList.add('correct-select'); correct++;
+    } else {
+      sel.classList.add('incorrect-select');
+    }
+    sel.disabled = true;
+  });
+  updateScore(1, correct, 6);
+  const fb = document.getElementById('nt-feedback');
+  fb.className = 'feedback show ' + (correct === 6 ? 'correct-fb' : 'incorrect-fb');
+  fb.innerHTML = `<span class="feedback-icon">${correct === 6 ? '✓' : '✗'}</span> ${correct}/6 correct.<br><br>` +
+    explanations.map((e,i) => {
+      const sel = document.getElementById(ntData[i].id);
+      const ok = sel.value === ntData[i].correct;
+      return `<span style="color:${ok?'#1a6a40':'#8a2010'}">${ok?'✓':'✗'}</span> ${e}`;
+    }).join('<br>');
+  document.getElementById('nt-check').disabled = true;
+  document.getElementById('nav-1').classList.add('completed');
+}
+
+// ══════════════════════════════════════════
+// ACTIVITY 2 — CONDITIONALS MATCHING
+// ══════════════════════════════════════════
+const condPairs = [
+  { id:0, left:'If you heat water to 100°C,', right:"it boils.", type:'Zero' },
+  { id:1, left:'If she arrives early,', right:"we'll start without the others.", type:'First' },
+  { id:2, left:'If I had more confidence,', right:"I would apply for that position.", type:'Second' },
+  { id:3, left:'Had they read the instructions,', right:"they would have avoided the mistake.", type:'Third (inverted)' },
+  { id:4, left:'Unless you confirm by Friday,', right:"your reservation will be cancelled.", type:'First (unless)' },
+  { id:5, left:'Were I in your position,', right:"I would think very carefully.", type:'Second (inverted)' },
+];
+
+let condSelectedLeft = null, condSelectedRight = null, condMatched = new Set(), condScore = 0;
+
+function buildConditionals() {
+  const leftEl = document.getElementById('cond-left');
+  const rightEl = document.getElementById('cond-right');
+  const shuffledRight = [...condPairs].sort(() => Math.random() - 0.5);
+  condPairs.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'match-item';
+    d.id = 'cl-'+p.id;
+    d.innerHTML = `<span class="match-badge">${p.type}</span>${p.left}`;
+    d.onclick = () => selectCondLeft(p.id);
+    leftEl.appendChild(d);
+  });
+  shuffledRight.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'match-item';
+    d.id = 'cr-'+p.id;
+    d.dataset.id = p.id;
+    d.textContent = p.right;
+    d.onclick = () => selectCondRight(p.id);
+    rightEl.appendChild(d);
+  });
+}
+
+function selectCondLeft(id) {
+  if (condMatched.has('l'+id)) return;
+  document.querySelectorAll('[id^="cl-"]').forEach(el => {
+    if (!condMatched.has('l'+el.id.slice(3))) el.classList.remove('selected');
+  });
+  condSelectedLeft = id;
+  document.getElementById('cl-'+id).classList.add('selected');
+  tryCondMatch();
+}
+function selectCondRight(id) {
+  if (condMatched.has('r'+id)) return;
+  document.querySelectorAll('[id^="cr-"]').forEach(el => {
+    if (!condMatched.has('r'+el.id.slice(3))) el.classList.remove('selected');
+  });
+  condSelectedRight = id;
+  document.getElementById('cr-'+id).classList.add('selected');
+  tryCondMatch();
+}
+
+function tryCondMatch() {
+  if (condSelectedLeft === null || condSelectedRight === null) return;
+  const l = condSelectedLeft, r = condSelectedRight;
+  condSelectedLeft = condSelectedRight = null;
+  if (l === r) {
+    document.getElementById('cl-'+l).classList.remove('selected');
+    document.getElementById('cl-'+l).classList.add('matched');
+    document.getElementById('cr-'+r).classList.remove('selected');
+    document.getElementById('cr-'+r).classList.add('matched');
+    condMatched.add('l'+l); condMatched.add('r'+r);
+    condScore++;
+    updateScore(2, condScore, 6);
+    if (condScore === 6) {
+      const fb = document.getElementById('cond-feedback');
+      fb.className = 'feedback show correct-fb';
+      fb.innerHTML = '<span class="feedback-icon">✓</span> All six pairs matched correctly! Notice how the inverted forms (Had they…, Were I…) replace the standard if-clause.';
+      document.getElementById('nav-2').classList.add('completed');
+    }
+  } else {
+    const lEl = document.getElementById('cl-'+l);
+    const rEl = document.getElementById('cr-'+r);
+    lEl.classList.add('wrong-match');
+    rEl.classList.add('wrong-match');
+    setTimeout(() => {
+      lEl.classList.remove('wrong-match','selected');
+      rEl.classList.remove('wrong-match','selected');
+    }, 500);
+  }
+}
+
+buildConditionals();
+
+// ══════════════════════════════════════════
+// ACTIVITY 3 — INVERSIONS
+// ══════════════════════════════════════════
+const invData = [
+  {
+    prompt: 'I had never seen such a dedicated team before.',
+    correct: 'Never had I seen such a dedicated team before.',
+    options: [
+      'Never I had seen such a dedicated team before.',
+      'Never had I seen such a dedicated team before.',
+      'Never did I seen such a dedicated team before.'
+    ],
+    explanation: '<strong>Never had I seen…</strong> — with negative adverbs like <em>never</em>, auxiliary + subject is inverted. Past perfect → <em>had I seen</em>.'
+  },
+  {
+    prompt: 'We not only finished on time, but we also came in under budget.',
+    correct: 'Not only did we finish on time, but we also came in under budget.',
+    options: [
+      'Not only we finished on time, but we also came in under budget.',
+      'Not only finished we on time, but we also came in under budget.',
+      'Not only did we finish on time, but we also came in under budget.'
+    ],
+    explanation: '<strong>Not only did we finish…</strong> — <em>Not only</em> triggers <em>do/did</em> inversion. Note the base form <em>finish</em> (not <em>finished</em>) after the auxiliary.'
+  },
+  {
+    prompt: 'She realised the consequences only after she had signed the contract.',
+    correct: 'Only after she had signed the contract did she realise the consequences.',
+    options: [
+      'Only after she had signed the contract she realised the consequences.',
+      'Only after she had signed the contract did she realise the consequences.',
+      'Only after had she signed the contract she did realise the consequences.'
+    ],
+    explanation: '<strong>Only after… did she realise…</strong> — <em>Only after</em> + clause triggers inversion in the main clause: <em>did + subject + base verb</em>.'
+  },
+  {
+    prompt: 'I had barely sat down when the phone rang.',
+    correct: 'Hardly had I sat down when the phone rang.',
+    options: [
+      'Hardly I had sat down when the phone rang.',
+      'Hardly did I sit down when the phone rang.',
+      'Hardly had I sat down when the phone rang.'
+    ],
+    explanation: '<strong>Hardly had I sat down…</strong> — <em>Hardly/Scarcely</em> + past perfect inverted: <em>had + subject + past participle</em>. The second action follows with <em>when</em>.'
+  },
+  {
+    prompt: 'You will find such commitment in very few organisations.',
+    correct: 'In very few organisations will you find such commitment.',
+    options: [
+      'In very few organisations you will find such commitment.',
+      'In very few organisations will you find such commitment.',
+      'In very few organisations find you such commitment.'
+    ],
+    explanation: '<strong>In very few organisations will you find…</strong> — restrictive fronted phrases (<em>In very few…</em>) trigger auxiliary inversion: <em>will + subject + base verb</em>.'
+  }
+];
+
+const invShuffled = [];
+function buildInversions() {
+  const container = document.getElementById('inv-questions');
+  invData.forEach((q, i) => {
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    invShuffled[i] = shuffled;
+    let optsHtml = shuffled.map((o, oi) =>
+      `<button class="option-btn" onclick="answerMCIdx(this,'inv',${i},${oi})">${o}</button>`
+    ).join('');
+    container.innerHTML += `
+      <div class="q-card" id="inv-card-${i}">
+        <div class="q-number">Question ${i+1} of 5</div>
+        <div class="q-text">Original: <em>${q.prompt}</em><br><br>Which is the correctly inverted version?</div>
+        <div class="options" id="inv-opts-${i}">${optsHtml}</div>
+        <div class="feedback" id="inv-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildInversions();
+
+// ══════════════════════════════════════════
+// ACTIVITY 4 — MODALS
+// ══════════════════════════════════════════
+const modData = [
+  {
+    prompt: 'She _____ be the new manager — I saw her name on the door. [deduction — positive]',
+    correct: 'must',
+    options: ['should','must','might','will'],
+    explanation: '<strong>Must</strong> = logical deduction (positive). We are almost certain based on evidence.'
+  },
+  {
+    prompt: "That _____ be right — the figures don't add up at all. [deduction — negative]",
+    correct: "can't",
+    options: ["mustn't","couldn't","can't","won't"],
+    explanation: "<strong>Can't</strong> = logical deduction (negative). We are almost certain something is impossible/false."
+  },
+  {
+    prompt: 'All staff _____ complete the training by the end of the month. [obligation]',
+    correct: 'must',
+    options: ['should','might','must','could'],
+    explanation: '<strong>Must</strong> = strong obligation (often imposed by the speaker or authority). <em>Have to</em> would also be correct here.'
+  },
+  {
+    prompt: 'You _____ drive so fast — the speed limit is 50 here. [advice/recommendation]',
+    correct: "shouldn't",
+    options: ["mustn't","needn't","shouldn't","couldn't"],
+    explanation: "<strong>Shouldn't</strong> = advice or recommendation against something. <em>Mustn't</em> would imply prohibition, which is too strong."
+  },
+  {
+    prompt: 'He left early, so he _____ have caught the last train. [possibility in the past]',
+    correct: 'might have',
+    options: ['must have','should have','might have','would have'],
+    explanation: '<strong>Might have</strong> = past possibility (not certain). <em>Must have</em> would express certainty.'
+  },
+  {
+    prompt: 'You _____ bring anything — we have plenty of food. [absence of necessity]',
+    correct: "needn't",
+    options: ["mustn't","shouldn't","needn't","couldn't"],
+    explanation: "<strong>Needn't</strong> = it is not necessary (but it is not forbidden). <em>Mustn't</em> would mean it is forbidden — a very different meaning."
+  }
+];
+
+// Store shuffled modal options so indices can be passed safely (avoids apostrophe/quote issues)
+const modShuffled = [];
+function buildModals() {
+  const container = document.getElementById('mod-questions');
+  modData.forEach((q, i) => {
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    modShuffled[i] = shuffled;
+    let optsHtml = shuffled.map((o, oi) =>
+      `<button class="option-btn" onclick="answerMCIdx(this,'mod',${i},${oi})">${o}</button>`
+    ).join('');
+    container.innerHTML += `
+      <div class="q-card" id="mod-card-${i}">
+        <div class="q-number">Question ${i+1} of 6</div>
+        <div class="q-text">${q.prompt}</div>
+        <div class="options" id="mod-opts-${i}">${optsHtml}</div>
+        <div class="feedback" id="mod-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildModals();
+
+// ══════════════════════════════════════════
+// ACTIVITY 5 — RELATIVE CLAUSES
+// ══════════════════════════════════════════
+const relData = [
+  {
+    prompt: 'The scientist that her research changed the field received an award.',
+    correct: 'The scientist whose research changed the field received an award.',
+    options: [
+      'The scientist that her research changed the field received an award.',
+      'The scientist whose research changed the field received an award.',
+      'The scientist which research changed the field received an award.'
+    ],
+    explanation: '<strong>Whose</strong> is the possessive relative pronoun. <em>That her…</em> is not a valid relative structure; <em>which</em> cannot refer to a person\'s possession.'
+  },
+  {
+    prompt: 'The city where I grew up, has changed enormously.',
+    correct: 'The city where I grew up has changed enormously.',
+    options: [
+      'The city where I grew up, has changed enormously.',
+      'The city where I grew up has changed enormously.',
+      'The city in which I grew up, has changed enormously.'
+    ],
+    explanation: '<strong>No comma</strong> is needed. This is a defining relative clause (it identifies which city), so no commas should be used. <em>In which</em> would also work but still without a comma.'
+  },
+  {
+    prompt: 'She gave me the report, which I read immediately.',
+    correct: 'Correct — no error.',
+    options: [
+      'She gave me the report, that I read immediately.',
+      'She gave me the report which I read immediately.',
+      'Correct — no error.'
+    ],
+    explanation: '<strong>Correct.</strong> Non-defining relative clauses use commas and <em>which</em> (not <em>that</em>). The sentence is already correct.'
+  },
+  {
+    prompt: 'The moment when she heard the news, she burst into tears.',
+    correct: 'The moment she heard the news, she burst into tears.',
+    options: [
+      'The moment when she heard the news, she burst into tears.',
+      'The moment she heard the news, she burst into tears.',
+      'The moment that when she heard the news, she burst into tears.'
+    ],
+    explanation: '<strong>The moment she heard…</strong> — <em>when</em> is redundant after <em>the moment</em>. The zero relative (no pronoun) is idiomatic here.'
+  },
+  {
+    prompt: 'That is the hotel in that we stayed last summer.',
+    correct: 'That is the hotel in which we stayed last summer.',
+    options: [
+      'That is the hotel in that we stayed last summer.',
+      'That is the hotel in which we stayed last summer.',
+      'That is the hotel that in we stayed last summer.'
+    ],
+    explanation: '<strong>In which</strong> — after a preposition, we must use <em>which</em>, not <em>that</em>. <em>That</em> cannot follow a preposition directly.'
+  }
+];
+
+const relShuffled = [];
+function buildRelative() {
+  const container = document.getElementById('rel-questions');
+  relData.forEach((q, i) => {
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    relShuffled[i] = shuffled;
+    let optsHtml = shuffled.map((o, oi) =>
+      `<button class="option-btn" onclick="answerMCIdx(this,'rel',${i},${oi})">${o}</button>`
+    ).join('');
+    container.innerHTML += `
+      <div class="q-card" id="rel-card-${i}">
+        <div class="q-number">Question ${i+1} of 5</div>
+        <div class="q-text">Which version is correct?<br><br><em>${q.prompt}</em></div>
+        <div class="options" id="rel-opts-${i}">${optsHtml}</div>
+        <div class="feedback" id="rel-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildRelative();
+
+// ══════════════════════════════════════════
+// ACTIVITY 6 — DISTANCING LANGUAGE
+// ══════════════════════════════════════════
+const distData = [
+  {
+    prompt: 'Direct statement: <em>"Social media is bad for mental health."</em><br><br>Choose the most appropriately distanced version:',
+    correct: 'It could be argued that social media has a negative impact on mental health.',
+    options: [
+      'Social media might possibly perhaps be bad for mental health.',
+      'It could be argued that social media has a negative impact on mental health.',
+      'Apparently, social media is obviously bad for mental health.',
+      'There is a chance social media is completely terrible.'
+    ],
+    explanation: '<strong>It could be argued that…</strong> is a classic distancing structure that presents a claim cautiously without the speaker fully committing to it.'
+  },
+  {
+    prompt: 'Direct statement: <em>"The policy failed."</em><br><br>Choose the most appropriately distanced version:',
+    correct: 'There appears to have been a degree of failure in the implementation of the policy.',
+    options: [
+      'The policy probably completely failed, it seems.',
+      'There appears to have been a degree of failure in the implementation of the policy.',
+      'Apparently the policy went wrong somehow.',
+      'It seems that the policy failed badly.'
+    ],
+    explanation: '<strong>There appears to have been a degree of…</strong> is formal and hedges on both the extent and certainty of the failure.'
+  },
+  {
+    prompt: 'Direct statement: <em>"Remote work reduces productivity."</em><br><br>Choose the most appropriately distanced version:',
+    correct: 'It seems that remote work may have a negative effect on productivity in some cases.',
+    options: [
+      'Remote work definitely seems to reduce productivity for everyone.',
+      'It seems that remote work may have a negative effect on productivity in some cases.',
+      'Remote work is, it could be said, really quite bad for productivity.',
+      'Obviously, working from home makes people less productive.'
+    ],
+    explanation: '<strong>It seems that… may…</strong> layers two distancing devices: a reporting verb structure and a modal. This appropriately qualifies the claim.'
+  },
+  {
+    prompt: 'Direct statement: <em>"The data proves this theory."</em><br><br>Choose the most appropriately distanced version:',
+    correct: 'The data would appear to lend some support to this theory.',
+    options: [
+      'The data proves this theory, apparently.',
+      'The data would appear to lend some support to this theory.',
+      'It seems obvious that the data shows the theory is right.',
+      'There appears to be some data that definitely proves everything.'
+    ],
+    explanation: '<strong>Would appear to lend some support to</strong> — multiple layers of hedging: a conditional modal, an appearance verb, and the qualified phrase <em>some support</em>.'
+  },
+  {
+    prompt: 'Direct statement: <em>"Technology is making people antisocial."</em><br><br>Choose the most appropriately distanced version:',
+    correct: 'There appears to be a growing concern that technology may be contributing to more antisocial behaviour.',
+    options: [
+      'Technology seems to obviously be ruining social skills.',
+      'There appears to be a growing concern that technology may be contributing to more antisocial behaviour.',
+      'It could be argued that technology is definitely antisocial.',
+      'People are, apparently, becoming antisocial because of technology.'
+    ],
+    explanation: '<strong>There appears to be a growing concern that… may be contributing…</strong> — the claim is presented as a concern held by others, further distanced by <em>may be</em>.'
+  }
+];
+
+const distShuffled = [];
+function buildDistancing() {
+  const container = document.getElementById('dist-questions');
+  distData.forEach((q, i) => {
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    distShuffled[i] = shuffled;
+    let optsHtml = shuffled.map((o, oi) =>
+      `<button class="option-btn" onclick="answerMCIdx(this,'dist',${i},${oi})">${o}</button>`
+    ).join('');
+    container.innerHTML += `
+      <div class="q-card" id="dist-card-${i}">
+        <div class="q-number">Question ${i+1} of 5</div>
+        <div class="q-text">${q.prompt}</div>
+        <div class="options" id="dist-opts-${i}">${optsHtml}</div>
+        <div class="feedback" id="dist-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildDistancing();
+
+// ══════════════════════════════════════════
+// ACTIVITY 7 — VERB PATTERNS
+// ══════════════════════════════════════════
+const vpData = [
+  {
+    prompt: 'She suggested _____ the meeting to Thursday.',
+    correct: 'moving',
+    options: ['to move','move','moving'],
+    explanation: '<strong>Suggest + -ing</strong>: <em>suggest moving</em>. The verb <em>suggest</em> is always followed by the -ing form (or a that-clause).'
+  },
+  {
+    prompt: 'He was accused of _____ company funds.',
+    correct: 'misusing',
+    options: ['to misuse','misuse','misusing'],
+    explanation: '<strong>Accuse of + -ing</strong>: prepositions are always followed by the -ing form.'
+  },
+  {
+    prompt: 'Despite the delays, we managed _____ the project on time.',
+    correct: 'to complete',
+    options: ['to complete','completing','complete'],
+    explanation: '<strong>Manage + to + infinitive</strong>: <em>manage to do</em> implies achieving something with effort. Never followed by -ing.'
+  },
+  {
+    prompt: 'Try to avoid _____ direct eye contact if you want to seem approachable.',
+    correct: 'making',
+    options: ['to make','make','making'],
+    explanation: '<strong>Avoid + -ing</strong>: <em>avoid</em> is always followed by the -ing form.'
+  },
+  {
+    prompt: 'The speaker was expected _____ for at least an hour.',
+    correct: 'to talk',
+    options: ['talking','to talk','talk'],
+    explanation: '<strong>Be expected + to + infinitive</strong>: passive constructions with <em>expect</em> use the to-infinitive.'
+  },
+  {
+    prompt: 'She admitted _____ the email to the wrong address.',
+    correct: 'sending',
+    options: ['to send','send','sending'],
+    explanation: '<strong>Admit + -ing</strong>: <em>admit</em> is followed by the -ing form when referring to a past action.'
+  }
+];
+
+const vpShuffled = [];
+function buildVerbPatterns() {
+  const container = document.getElementById('vp-questions');
+  vpData.forEach((q, i) => {
+    const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+    vpShuffled[i] = shuffled;
+    let optsHtml = shuffled.map((o, oi) =>
+      `<button class="option-btn" onclick="answerMCIdx(this,'vp',${i},${oi})">${o}</button>`
+    ).join('');
+    container.innerHTML += `
+      <div class="q-card" id="vp-card-${i}">
+        <div class="q-number">Question ${i+1} of 6</div>
+        <div class="q-text">${q.prompt}</div>
+        <div class="options" id="vp-opts-${i}">${optsHtml}</div>
+        <div class="feedback" id="vp-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildVerbPatterns();
+
+// ══════════════════════════════════════════
+// ACTIVITY 8 — DISCOURSE MARKERS (dropdowns)
+// ══════════════════════════════════════════
+const dmData = [
+  {
+    id:'dm0',
+    before:'The new policy was introduced with the best intentions.',
+    after:'it led to significant disruption.',
+    correct:'However',
+    opts:['Furthermore','However','Therefore','For instance'],
+    explanation: '<strong>However</strong> — contrast. The second clause contradicts the expectation set by the first.'
+  },
+  {
+    id:'dm1',
+    before:'Stress can have serious physical consequences.',
+    after:', it increases the risk of cardiovascular disease.',
+    correct:'For instance',
+    opts:['However','Moreover','For instance','Consequently'],
+    explanation: '<strong>For instance</strong> — example. The second clause illustrates the claim made in the first.'
+  },
+  {
+    id:'dm2',
+    before:'The research was poorly designed.',
+    after:', the results cannot be considered reliable.',
+    correct:'Consequently',
+    opts:['Consequently','Nevertheless','Furthermore','Although'],
+    explanation: '<strong>Consequently</strong> — cause/result. The unreliable results are a direct consequence of the poor design.'
+  },
+  {
+    id:'dm3',
+    before:'The project was underfunded.',
+    after:', the team delivered impressive results.',
+    correct:'Nevertheless',
+    opts:['Therefore','For instance','Nevertheless','Moreover'],
+    explanation: '<strong>Nevertheless</strong> — concession. The success happened despite the obstacle.'
+  },
+  {
+    id:'dm4',
+    before:'Regular exercise improves cardiovascular health.',
+    after:', it has been shown to reduce symptoms of anxiety and depression.',
+    correct:'Moreover',
+    opts:['However','Moreover','Consequently','Although'],
+    explanation: '<strong>Moreover</strong> — addition. A further, reinforcing point is being added.'
+  },
+  {
+    id:'dm5',
+    before:'The café was expensive.',
+    after:', the service was extremely slow, so we decided not to return.',
+    correct:'Furthermore',
+    opts:['Furthermore','Nevertheless','Therefore','For instance'],
+    explanation: '<strong>Furthermore</strong> — addition. A second negative point is added to reinforce the conclusion.'
+  }
+];
+
+function buildDM() {
+  const container = document.getElementById('dm-questions');
+  dmData.forEach((q, i) => {
+    let optsHtml = q.opts.map(o => `<option value="${o}">${o}</option>`).join('');
+    const mid = q.after.startsWith(',') ? '' : ' ';
+    container.innerHTML += `
+      <div class="q-card" id="dm-card-${i}">
+        <div class="q-number">Question ${i+1} of 6</div>
+        <div class="q-text fill-sentence">
+          ${q.before} <select class="fill-select" id="${q.id}" onchange="checkDMSingle('${q.id}','${q.correct}',${i})">
+            <option value="">— choose —</option>${optsHtml}
+          </select>${mid}${q.after}
+        </div>
+        <div class="feedback" id="dm-fb-${i}"></div>
+      </div>`;
+  });
+}
+buildDM();
+
+let dmScoreTrack = 0;
+function checkDMSingle(id, correct, i) {
+  const sel = document.getElementById(id);
+  if (sel.dataset.answered) return;
+  sel.dataset.answered = 'true';
+  const fb = document.getElementById('dm-fb-'+i);
+  if (sel.value === correct) {
+    sel.classList.add('correct-select');
+    fb.className = 'feedback show correct-fb';
+    fb.innerHTML = `<span class="feedback-icon">✓</span> ${dmData[i].explanation}`;
+    dmScoreTrack++;
+  } else {
+    sel.classList.add('incorrect-select');
+    fb.className = 'feedback show incorrect-fb';
+    fb.innerHTML = `<span class="feedback-icon">✗</span> The correct answer is <strong>${correct}</strong>. ${dmData[i].explanation}`;
+  }
+  sel.disabled = true;
+  updateScore(8, dmScoreTrack, 6);
+  if (dmScoreTrack === 6 || document.querySelectorAll('#dm-questions .fill-select[data-answered]').length === 6) {
+    document.getElementById('nav-8').classList.add('completed');
+  }
+}
+
+// ══════════════════════════════════════════
+// ACTIVITY 9 — REGISTER SORTING
+// ══════════════════════════════════════════
+const regItems = [
+  { id:'r0', text:'We regret to inform you that your application was unsuccessful.', register:'formal' },
+  { id:'r1', text:"Sorry, we can't give you the job.", register:'informal' },
+  { id:'r2', text:'I am writing to express my sincere gratitude for your assistance.', register:'formal' },
+  { id:'r3', text:"Thanks a lot for helping me out!", register:'informal' },
+  { id:'r4', text:'The matter will be addressed at the earliest opportunity.', register:'formal' },
+  { id:'r5', text:"We'll sort it out ASAP.", register:'informal' },
+  { id:'r6', text:'Further to our conversation, please find the document attached.', register:'formal' },
+  { id:'r7', text:"As we talked about, here's the thing you asked for.", register:'informal' },
+];
+
+const regPlacement = {}; // id -> 'formal'|'informal'|null
+
+function buildRegister() {
+  const pool = document.getElementById('reg-pool');
+  regItems.forEach(item => {
+    regPlacement[item.id] = null;
+    pool.appendChild(makeRegChip(item.id, item.text));
+  });
+}
+
+function makeRegChip(id, text) {
+  const wrap = document.createElement('div');
+  wrap.className = 'sort-chip-wrap';
+  wrap.id = 'wrap-'+id;
+  wrap.innerHTML = `
+    <div class="sort-chip-text">${text}</div>
+    <div class="sort-chip-btns" id="btns-${id}">
+      <button class="reg-place-btn formal-btn" onclick="placeReg('${id}','formal')">Formal</button>
+      <button class="reg-place-btn informal-btn" onclick="placeReg('${id}','informal')">Informal</button>
+    </div>`;
+  return wrap;
+}
+
+function placeReg(id, zone) {
+  const item = regItems.find(r => r.id === id);
+  const wrap = document.getElementById('wrap-'+id);
+  const pool = document.getElementById('reg-pool');
+
+  // Remove from wherever it currently is
+  if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+
+  regPlacement[id] = zone;
+
+  // Replace buttons with a × remove button
+  wrap.querySelector('.sort-chip-btns').innerHTML =
+    `<button class="reg-remove-btn" onclick="removeReg('${id}')">✕ Remove</button>`;
+
+  // Style chip according to zone
+  wrap.classList.remove('placed-formal','placed-informal');
+  wrap.classList.add(zone === 'formal' ? 'placed-formal' : 'placed-informal');
+
+  document.getElementById('reg-' + zone).appendChild(wrap);
+}
+
+function removeReg(id) {
+  const wrap = document.getElementById('wrap-'+id);
+  if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+
+  regPlacement[id] = null;
+  wrap.classList.remove('placed-formal','placed-informal');
+
+  // Restore the two placement buttons
+  wrap.querySelector('.sort-chip-btns').innerHTML =
+    `<button class="reg-place-btn formal-btn" onclick="placeReg('${id}','formal')">Formal</button>
+     <button class="reg-place-btn informal-btn" onclick="placeReg('${id}','informal')">Informal</button>`;
+
+  document.getElementById('reg-pool').appendChild(wrap);
+}
+
+buildRegister();
+
+function checkRegister() {
+  let correct = 0;
+  regItems.forEach(item => {
+    const wrap = document.getElementById('wrap-'+item.id);
+    // Disable all buttons inside
+    wrap.querySelectorAll('button').forEach(b => b.disabled = true);
+    wrap.classList.remove('placed-formal','placed-informal');
+    if (regPlacement[item.id] === item.register) {
+      wrap.classList.add('correct-sort');
+      correct++;
+    } else {
+      wrap.classList.add('incorrect-sort');
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:0.75rem;margin-top:4px;color:#8a2010;';
+      hint.textContent = '→ Should be: ' + item.register;
+      wrap.appendChild(hint);
+    }
+  });
+  updateScore(9, correct, 8);
+  const fb = document.getElementById('reg-feedback');
+  fb.className = 'feedback show ' + (correct >= 6 ? 'correct-fb' : 'incorrect-fb');
+  fb.innerHTML = `<span class="feedback-icon">${correct >= 6 ? '✓' : '✗'}</span> ${correct}/8 correct.` +
+    (correct < 8 ? ' Incorrect items are highlighted in red — notice the differences in vocabulary, contraction use, and sentence structure.' : ' Excellent — you correctly identified all formal and informal markers!');
+  document.getElementById('reg-check').disabled = true;
+  if (correct === 8) document.getElementById('nav-9').classList.add('completed');
+}
+
+// ══════════════════════════════════════════
+// GENERIC MC HANDLER
+// ══════════════════════════════════════════
+const mcScores = { inv:0, mod:0, rel:0, dist:0, vp:0 };
+const mcTotals = { inv:5, mod:6, rel:5, dist:5, vp:6 };
+const mcActMap = { inv:3, mod:4, rel:5, dist:6, vp:7 };
+const mcDataMap = { inv:invData, mod:modData, rel:relData, dist:distData, vp:vpData };
+
+// Index-based MC handler (used by modals to avoid apostrophe/quote issues in onclick)
+function answerMCIdx(btn, prefix, qIdx, optIdx) {
+  const shuffledMap = { mod: modShuffled, inv: invShuffled, rel: relShuffled, dist: distShuffled, vp: vpShuffled };
+  const val = shuffledMap[prefix][qIdx][optIdx];
+  const correct = mcDataMap[prefix][qIdx].correct;
+  const card = document.getElementById(prefix+'-card-'+qIdx);
+  if (card.classList.contains('answered')) return;
+  card.classList.add('answered');
+
+  const opts = card.querySelectorAll('.option-btn');
+  opts.forEach(o => {
+    o.disabled = true;
+    if (o.textContent === correct) o.classList.add('reveal-correct');
+  });
+
+  const fb = document.getElementById(prefix+'-fb-'+qIdx);
+  if (val === correct) {
+    btn.classList.add('selected-correct');
+    mcScores[prefix]++;
+    fb.className = 'feedback show correct-fb';
+    fb.innerHTML = `<span class="feedback-icon">✓</span> Correct! ${mcDataMap[prefix][qIdx].explanation}`;
+  } else {
+    btn.classList.add('selected-incorrect');
+    fb.className = 'feedback show incorrect-fb';
+    fb.innerHTML = `<span class="feedback-icon">✗</span> The correct answer is <strong>${correct}</strong>. ${mcDataMap[prefix][qIdx].explanation}`;
+  }
+  updateScore(mcActMap[prefix], mcScores[prefix], mcTotals[prefix]);
+  const allAnswered = document.querySelectorAll(`#${prefix}-questions .q-card.answered`).length;
+  if (allAnswered === mcTotals[prefix]) {
+    document.getElementById('nav-'+mcActMap[prefix]).classList.add('completed');
+  }
+}
+
+</script>
+</body>
+</html>

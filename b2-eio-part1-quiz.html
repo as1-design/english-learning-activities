@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EIO Part 1 Quiz · Telling an Anecdote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #100e08;
+  --surface: #1c1810;
+  --surface2: #252018;
+  --border: rgba(255,240,200,0.08);
+  --text: #fff8ee;
+  --text-soft: rgba(255,248,238,0.55);
+  --text-muted: rgba(255,248,238,0.3);
+  --gold: #f0a030;
+  --gold-light: #ffc566;
+  --gold-pale: rgba(240,160,48,0.14);
+  --sky: #4ab8f0;
+  --sky-pale: rgba(74,184,240,0.12);
+  --rose: #ff6b8a;
+  --rose-pale: rgba(255,107,138,0.12);
+  --correct: #4af07a;
+  --correct-pale: rgba(74,240,122,0.1);
+  --wrong: #ff6b8a;
+  --wrong-pale: rgba(255,107,138,0.1);
+  --amber: #ffb84a;
+  --amber-pale: rgba(255,184,74,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 55% 40% at 15% 5%, rgba(240,160,48,0.14) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 85% 85%, rgba(74,184,240,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+}
+
+/* ── INTRO ── */
+#intro {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.intro-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.1s ease forwards;
+}
+
+.intro-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(2.1rem, 7.5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.2s ease forwards;
+}
+
+.intro-title .accent { color: var(--gold); }
+
+.intro-sub {
+  font-size: 0.97rem;
+  color: var(--text-soft);
+  margin-bottom: 2.8rem;
+  font-weight: 300;
+  max-width: 380px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.32s ease forwards;
+}
+
+/* Context card */
+.context-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.3rem 1.5rem;
+  margin-bottom: 2.5rem;
+  text-align: left;
+  max-width: 480px;
+  width: 100%;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.42s ease forwards;
+}
+
+.context-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.7rem;
+}
+
+.context-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.context-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.context-item .val {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: -0.02em;
+}
+
+.context-item .lbl {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.intro-meta {
+  display: flex;
+  gap: 1.2rem;
+  justify-content: center;
+  margin-bottom: 2.8rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.5s ease forwards;
+}
+
+.meta-pill {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.4rem 0.9rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.meta-pill span { color: var(--gold-light); }
+
+.btn-start {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--gold);
+  color: #100e08;
+  border: none;
+  border-radius: 14px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.15s;
+  opacity: 0;
+  animation: fadeUp 0.5s 0.58s ease forwards;
+}
+
+.btn-start:hover {
+  transform: scale(1.04) translateY(-2px);
+  box-shadow: 0 8px 28px rgba(240,160,48,0.3);
+}
+
+.btn-start:active { transform: scale(0.98); }
+
+/* ── QUIZ ── */
+#quiz { display: none; padding-top: 2.5rem; }
+
+.progress-bar-wrap {
+  height: 3px;
+  background: var(--surface2);
+  border-radius: 2px;
+  margin-bottom: 2.5rem;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--sky));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+
+.q-counter {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 1.6rem;
+}
+
+.q-num {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: -0.04em;
+}
+
+.q-total {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.q-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--gold-pale);
+  border: 1px solid rgba(240,160,48,0.22);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1.2rem;
+}
+
+.q-text {
+  font-size: 1.12rem;
+  font-weight: 500;
+  line-height: 1.55;
+  margin-bottom: 1.8rem;
+  color: var(--text);
+}
+
+.q-text em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2rem;
+}
+
+.option {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s cubic-bezier(0.34,1.56,0.64,1);
+  user-select: none;
+}
+
+.option:hover:not(.locked) {
+  border-color: var(--gold);
+  background: var(--surface2);
+  transform: translateX(4px);
+}
+
+.option-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.73rem;
+  font-weight: 500;
+  width: 26px; height: 26px;
+  border-radius: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.option-text {
+  font-size: 0.93rem;
+  color: var(--text-soft);
+  line-height: 1.4;
+  transition: color 0.15s;
+}
+
+.option.selected { border-color: var(--gold); background: var(--gold-pale); }
+.option.selected .option-key { background: var(--gold); border-color: var(--gold); color: #100e08; }
+.option.selected .option-text { color: var(--text); }
+
+.option.correct { border-color: var(--correct); background: var(--correct-pale); animation: correctPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.option.correct .option-key { background: var(--correct); border-color: var(--correct); color: #0e0c1a; }
+.option.correct .option-text { color: var(--correct); }
+
+.option.wrong { border-color: var(--wrong); background: var(--wrong-pale); animation: shake 0.35s ease; }
+.option.wrong .option-key { background: var(--wrong); border-color: var(--wrong); color: white; }
+.option.wrong .option-text { color: var(--wrong); }
+
+.option.reveal-correct { border-color: var(--correct); background: var(--correct-pale); }
+.option.reveal-correct .option-key { background: var(--correct); border-color: var(--correct); color: #0e0c1a; }
+.option.reveal-correct .option-text { color: var(--correct); }
+
+.option.locked { cursor: default; }
+
+.options.tf { flex-direction: row; }
+.options.tf .option {
+  flex: 1; justify-content: center;
+  flex-direction: column; gap: 0.5rem;
+  padding: 1.2rem; text-align: center;
+}
+.options.tf .option-key { display: none; }
+.options.tf .option-text { font-size: 1rem; font-weight: 500; }
+.tf-icon { font-size: 1.8rem; line-height: 1; }
+
+.btn-next {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--gold);
+  color: #100e08;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+  letter-spacing: 0.02em;
+}
+
+.btn-next.visible { opacity: 1; pointer-events: all; }
+.btn-next:hover { transform: scale(1.03) translateY(-1px); }
+.btn-next:active { transform: scale(0.98); }
+
+.btn-back {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 1.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-back.visible { opacity: 1; pointer-events: all; }
+.btn-back:hover { border-color: var(--gold-light); color: var(--text-soft); transform: scale(1.02); }
+.btn-back:active { transform: scale(0.98); }
+
+.nav-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* ── RESULT ── */
+#result {
+  display: none;
+  min-height: 100vh;
+  padding-top: 3rem;
+  text-align: center;
+}
+
+.result-score-wrap {
+  position: relative;
+  display: inline-block;
+  margin: 2rem auto 1.5rem;
+}
+
+.result-ring { width: 180px; height: 180px; }
+.ring-bg { fill: none; stroke: var(--surface2); stroke-width: 8; }
+.ring-fill {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dasharray: 502;
+  stroke-dashoffset: 502;
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1) 0.3s;
+  transform-origin: center;
+  transform: rotate(-90deg);
+}
+
+.result-score-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-big {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.score-denom {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+.result-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.result-sub {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+.review {
+  text-align: left;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.review-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+}
+
+.review-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 0.45rem;
+}
+
+.review-dot.ok { background: var(--correct); }
+.review-dot.no { background: var(--wrong); }
+
+.review-q {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+  line-height: 1.45;
+  flex: 1;
+}
+
+.review-q strong { color: var(--text); font-weight: 500; }
+
+.btn-restart {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 0.85rem 2rem;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn-restart:hover { border-color: var(--gold-light); transform: scale(1.02); }
+
+/* ── EXPLANATION ── */
+.explain-box {
+  margin-top: 0.8rem;
+  border-radius: 10px;
+  padding: 0.95rem 1.1rem;
+  font-size: 0.87rem;
+  line-height: 1.6;
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  animation: slideIn 0.25s ease forwards;
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+}
+
+.explain-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes correctPop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.q-enter { animation: slideIn 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── INTRO ── -->
+  <div id="intro">
+    <div class="intro-eyebrow">EIO · Part 1 · Self-Assessment</div>
+    <h1 class="intro-title">Can you<br>tell a great<br><span class="accent">story?</span></h1>
+    <p class="intro-sub">Test what you know about structuring a narrative and using the right language.</p>
+
+    <div class="context-card">
+      <div class="context-label">Exam reality check</div>
+      <div class="context-row">
+        <div class="context-item">
+          <div class="val">1 min</div>
+          <div class="lbl">to think</div>
+        </div>
+        <div class="context-item">
+          <div class="val">1 min</div>
+          <div class="lbl">to speak</div>
+        </div>
+        <div class="context-item">
+          <div class="val">5 parts</div>
+          <div class="lbl">to your story</div>
+        </div>
+        <div class="context-item">
+          <div class="val">1 theme</div>
+          <div class="lbl">given to you</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intro-meta">
+      <div class="meta-pill"><span>10</span> questions</div>
+      <div class="meta-pill"><span>~3</span> minutes</div>
+      <div class="meta-pill"><span>3</span> sections</div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">Start →</button>
+  </div>
+
+  <!-- ── QUIZ ── -->
+  <div id="quiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressBar"></div>
+    </div>
+    <div id="questionArea"></div>
+  </div>
+
+  <!-- ── RESULT ── -->
+  <div id="result">
+    <div class="intro-eyebrow" style="opacity:1">Quiz complete</div>
+    <h2 class="result-title" id="resultTitle"></h2>
+    <p class="result-sub" id="resultSub"></p>
+
+    <div class="result-score-wrap">
+      <svg class="result-ring" viewBox="0 0 180 180">
+        <circle class="ring-bg" cx="90" cy="90" r="80"/>
+        <circle class="ring-fill" id="ringFill" cx="90" cy="90" r="80"/>
+      </svg>
+      <div class="result-score-num">
+        <div class="score-big" id="scoreBig">0</div>
+        <div class="score-denom" id="scoreDenom">/ 10</div>
+      </div>
+    </div>
+
+    <div class="review" id="reviewList"></div>
+    <button class="btn-restart" onclick="restartQuiz()">Try again ↺</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+
+  // 1 — Overview
+  {
+    section: "Before you speak",
+    type: "mc",
+    text: "You have one minute to think before you speak. The theme is <em>\"a time you felt proud.\"</em> What's the smartest thing to do with that minute?",
+    options: [
+      "Think of the most impressive vocabulary you know and plan to use it",
+      "Mentally run through your story from beginning to end, checking it has a clear shape",
+      "Decide on the exact sentences you'll say and memorise them",
+      "Think of as many details as possible so your story is rich"
+    ],
+    correct: 1,
+    explain: "One minute is enough to sketch the shape of your story in your head — beginning, middle, end. Memorising sentences makes you sound robotic. Piling in details or vocabulary without structure will leave your listener lost."
+  },
+
+  // 2 — Opening the story
+  {
+    section: "Opening the story",
+    type: "mc",
+    text: "The examiner gives you the theme <em>\"a time you took a risk.\"</em> Which is the best opening line?",
+    options: [
+      "\"I'm going to tell you a story about a risk.\"",
+      "\"Risk is very important in life and I have an experience.\"",
+      "\"A few years ago, I made a decision that completely changed the direction of my life.\"",
+      "\"Today I will speak about a time that was very risky for me.\""
+    ],
+    correct: 2,
+    explain: "The best opening drops the listener straight into a time and place and makes them want to hear more. Options A and D are flat and mechanical. Option B sounds like an essay, not a story."
+  },
+
+  // 3 — Setting the scene
+  {
+    section: "Setting the scene",
+    type: "mc",
+    text: "You've introduced your story. Now you want to describe the atmosphere — the place, the weather, the mood. Which sentence sounds most natural?",
+    options: [
+      "\"The sun shone and people laughed on the beach.\"",
+      "\"The sun was shining and people were laughing on the beach.\"",
+      "\"The sun had shone and people had laughed on the beach.\"",
+      "\"The sun shines and people laugh on the beach.\""
+    ],
+    correct: 1,
+    explain: "For background descriptions — what things looked like, what was happening around you — use the past continuous (was shining, were laughing). It creates atmosphere. Simple past is for completed actions, not ongoing scenes."
+  },
+
+  // 4 — Giving background context
+  {
+    section: "Setting the scene",
+    type: "mc",
+    text: "You want to tell the listener something about your life <em>before</em> the story began. Which sentence works best?",
+    options: [
+      "\"I never visited that city before, so I was very excited.\"",
+      "\"I have never visited that city before, so I was very excited.\"",
+      "\"I had never visited that city before, so I was very excited.\"",
+      "\"I was never visiting that city before, so I was very excited.\""
+    ],
+    correct: 2,
+    explain: "When you want to show something happened — or didn't happen — before your main story, you need the past perfect (had + past participle). \"I had never visited\" signals that this was your situation up until that moment. \"I never visited\" and \"I have never visited\" don't place the action clearly in the past."
+  },
+
+  // 5 — Building up
+  {
+    section: "Building up to the main event",
+    type: "mc",
+    text: "Your story is building up. You want to show that things were normal — and then something changed. Which sentence does this best?",
+    options: [
+      "\"Then something happened and the situation changed.\"",
+      "\"Everything was going well until, suddenly, I realised something was wrong.\"",
+      "\"Next, there was a problem. After that, it got worse.\"",
+      "\"The situation became different because of various reasons.\""
+    ],
+    correct: 1,
+    explain: "\"Everything was going well until…\" creates tension by contrasting the normal with the unexpected. \"Suddenly\" signals the turning point. Options A, C, and D are vague — they tell the listener a change happened but don't make them feel it."
+  },
+
+  // 6 — Climax
+  {
+    section: "The main event",
+    type: "tf",
+    text: "Words like <em>\"suddenly\"</em>, <em>\"just then\"</em>, and <em>\"that's when I realised\"</em> are most useful at the climax of your story.",
+    options: ["True", "False"],
+    correct: 0,
+    icons: ["✓", "✗"],
+    explain: "True. These phrases signal to the listener that the key moment has arrived. They create drama and emphasis — exactly what the climax needs. Using them too early (in the introduction or scene-setting) would confuse the structure."
+  },
+
+  // 7 — Resolution
+  {
+    section: "After the main event",
+    type: "mc",
+    text: "The most dramatic moment of your story has just happened. Which sentence best moves the story forward towards a resolution?",
+    options: [
+      "\"It was a very difficult situation and very stressful.\"",
+      "\"In conclusion, this was the main event of my story.\"",
+      "\"Fortunately, after a while, we managed to find a solution.\"",
+      "\"This is the part where things got better.\""
+    ],
+    correct: 2,
+    explain: "After the climax, you need to show how the situation resolved. \"Fortunately, after a while\" signals relief and moves time forward — exactly right for the falling action. Option B jumps to a conclusion too fast. Options A and D don't move the story anywhere."
+  },
+
+  // 8 — Conclusion
+  {
+    section: "Finishing the story",
+    type: "mc",
+    text: "You're at the end of your story. Which conclusion lands best?",
+    options: [
+      "\"And that's what happened. The end.\"",
+      "\"So, in conclusion, it was a good experience.\"",
+      "\"From that day on, I learned that taking risks can lead to the best experiences of your life.\"",
+      "\"Finally, the story was finished and everyone was happy.\""
+    ],
+    correct: 2,
+    explain: "A strong conclusion does two things: it closes the story and shares what you took from it — a feeling, a lesson, a change. Option C does both. Options A and D close the story abruptly. Option B is vague — \"a good experience\" tells the listener nothing meaningful."
+  },
+
+  // 9 — Handling mistakes
+  {
+    section: "Good storytelling",
+    type: "mc",
+    text: "You're mid-story and you say the wrong verb form. What should you do?",
+    options: [
+      "Stop, apologise, and start the whole story again from the beginning",
+      "Correct it briefly and carry on — \"...went, I mean had gone — anyway, after that...\"",
+      "Ignore it and keep going without correcting",
+      "Stop and stay silent until you remember the correct form"
+    ],
+    correct: 1,
+    explain: "A quick, natural self-correction shows the examiner you know what's correct — that's actually a good sign. Starting again wastes your minute and breaks the flow. Ignoring it is fine for minor slips, but correcting yourself confidently is better. Long silences hurt your fluency mark."
+  },
+
+  // 10 — Clarity over complexity
+  {
+    section: "Good storytelling",
+    type: "tf",
+    text: "A complex story packed with advanced vocabulary will always score better than a simple, clearly structured one.",
+    options: ["True", "False"],
+    correct: 1,
+    icons: ["✓", "✗"],
+    explain: "False. Clarity and structure are what the examiner is looking for. A simple story told fluently and confidently beats a complicated one that loses its thread. Use good language where it fits naturally — don't force it."
+  }
+
+];
+
+let current = 0;
+let score = 0;
+let answers = [];
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('quiz').style.paddingTop = '2.5rem';
+  renderQuestion();
+}
+
+function renderQuestion(restoring) {
+  if (!restoring) answered = false;
+  const q = questions[current];
+  const isTF = q.type === 'tf';
+  const keys = ['A','B','C','D'];
+  const prev = answers.find(a => a.q === current);
+  const alreadyAnswered = !!prev;
+
+  document.getElementById('progressBar').style.width = ((current / questions.length) * 100) + '%';
+
+  const html = `
+    <div class="q-enter">
+      <div class="q-counter">
+        <div class="q-num">${String(current + 1).padStart(2,'0')}</div>
+        <div class="q-total">/ ${questions.length}</div>
+      </div>
+      <div class="q-section">${q.section}</div>
+      <div class="q-text">${q.text}</div>
+      <div class="options ${isTF ? 'tf' : ''}">
+        ${q.options.map((opt, i) => `
+          <div class="option${alreadyAnswered ? ' locked' : ''}" data-index="${i}" ${alreadyAnswered ? '' : `onclick="choose(${i})"`}>
+            ${isTF
+              ? `<div class="tf-icon">${q.icons ? q.icons[i] : (i===0?'✓':'✗')}</div>
+                 <div class="option-text">${opt}</div>`
+              : `<div class="option-key">${keys[i]}</div>
+                 <div class="option-text">${opt}</div>`
+            }
+          </div>
+        `).join('')}
+      </div>
+      ${alreadyAnswered && q.explain ? `
+        <div class="explain-box">
+          <span class="explain-icon">${prev.correct ? '✓' : '→'}</span>
+          <span>${q.explain}</span>
+        </div>` : ''}
+      <div class="nav-buttons">
+        <button class="btn-back ${current > 0 ? 'visible' : ''}" id="btnBack" onclick="goBack()">← Back</button>
+        <button class="btn-next ${alreadyAnswered ? 'visible' : ''}" id="btnNext" onclick="nextQuestion()">
+          ${current === questions.length - 1 ? 'See results →' : 'Next question →'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('questionArea').innerHTML = html;
+
+  // Re-apply answer state colours if restoring
+  if (alreadyAnswered) {
+    const opts = document.querySelectorAll('.option');
+    opts[prev.chosen].classList.add(prev.correct ? 'correct' : 'wrong');
+    if (!prev.correct) opts[q.correct].classList.add('reveal-correct');
+    answered = true;
+  }
+}
+
+function choose(index) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  const isCorrect = index === q.correct;
+
+  opts.forEach(o => o.classList.add('locked'));
+  opts[index].classList.add(isCorrect ? 'correct' : 'wrong');
+  if (!isCorrect) opts[q.correct].classList.add('reveal-correct');
+
+  answers.push({ q: current, chosen: index, correct: isCorrect });
+  if (isCorrect) score++;
+
+  // Show explanation
+  if (q.explain) {
+    const icon = isCorrect ? '✓' : '→';
+    const box = document.createElement('div');
+    box.className = 'explain-box';
+    box.innerHTML = `<span class="explain-icon">${icon}</span><span>${q.explain}</span>`;
+    document.querySelector('.options').after(box);
+  }
+
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function goBack() {
+  current--;
+  renderQuestion(true);
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('quiz').style.display = 'none';
+  const resultEl = document.getElementById('result');
+  resultEl.style.display = 'block';
+
+  const pct = score / questions.length;
+
+  let title, sub;
+  if (pct === 1)        { title = "Flawless! 🎉";        sub = "Your story is going to be great."; }
+  else if (pct >= 0.8)  { title = "Really strong! 💪";   sub = "One or two things to sharpen — check the review."; }
+  else if (pct >= 0.6)  { title = "Good effort! 🙌";     sub = "Review the structure and language sections."; }
+  else if (pct >= 0.4)  { title = "Keep going 📖";       sub = "Re-read the guide, then try again."; }
+  else                  { title = "Not there yet…";      sub = "Back to the guide — focus on structure first."; }
+
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent = sub;
+  document.getElementById('scoreBig').textContent = score;
+  document.getElementById('scoreDenom').textContent = '/ ' + questions.length;
+
+  const circumference = 502;
+  const offset = circumference - (pct * circumference);
+  setTimeout(() => {
+    const ring = document.getElementById('ringFill');
+    ring.style.strokeDashoffset = offset;
+    if (pct >= 0.8)      ring.style.stroke = 'var(--correct)';
+    else if (pct >= 0.5) ring.style.stroke = 'var(--amber)';
+    else                 ring.style.stroke = 'var(--wrong)';
+  }, 100);
+
+  const reviewHTML = answers.map(a => {
+    const q = questions[a.q];
+    const qShort = q.text.replace(/<[^>]+>/g, '');
+    return `
+      <div class="review-item">
+        <div class="review-dot ${a.correct ? 'ok' : 'no'}"></div>
+        <div class="review-q">
+          <strong>${qShort.length > 80 ? qShort.slice(0,78)+'…' : qShort}</strong><br>
+          ${a.correct
+            ? '✓ Correct'
+            : `✗ You chose: "${q.options[a.chosen]}" — Correct: "${q.options[q.correct]}"`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('reviewList').innerHTML = reviewHTML;
+}
+
+function restartQuiz() {
+  current = 0; score = 0; answers = [];
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('ringFill').style.strokeDashoffset = '502';
+  renderQuestion();
+}
+</script>
+</body>
+</html>
