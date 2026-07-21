@@ -8,7 +8,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 
 | Activity | Level | Summary | Link |
 |---|---|---|---|
-| Speaking questions — Crime & Justice | B2.1 | Colour-coded flip cards organised by topic, with a 60-second timer and random question picker. Themes focus on crime, justice, and society. | [Open](https://as1-design.github.io/english-learning-activities/interactive_speaking_board_crime_b2.1.html) |
+| Speaking questions — Crime & Justice | B2.1 | Set of questions that appear individually with a focus on crime, justice, and society. | [Open](https://as1-design.github.io/english-learning-activities/interactive_speaking_board_crime_b2.1.html) |
 | Speaking Board — 1 Minute Anecdote | B2.1 | Flip-card speaking board with a 1-minute timer. Students choose a card and speak for one minute on a personal anecdote prompt. | [Open](https://as1-design.github.io/english-learning-activities/speaking-board%201%20minute%20anecdote_b21.html) |
 | Speaking Board — All Units | B2.2 | Flip-card speaking board covering Units 1–10, colour-coded by unit. Includes a 1-minute timer and random question picker. Each card shows a discussion prompt linked to course topics. | [Open](https://as1-design.github.io/english-learning-activities/speaking_board_1_minute_allunits_b22.html) |
 | Speaking Reference Card | B2.1 | Mobile-friendly reference card with key speaking phrases and structures for the B2.1 oral exam. | [Open](https://as1-design.github.io/english-learning-activities/speaking_reference_b21_mobile.html) |
