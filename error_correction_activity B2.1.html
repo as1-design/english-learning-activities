@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error Correction Activity</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1410;
+    --parchment: #f5efe4;
+    --warm-mid: #e8dcc8;
+    --accent: #8b4a2f;
+    --accent-light: #c4763f;
+    --green: #3a6b3a;
+    --green-bg: #eaf3ea;
+    --red: #8b2020;
+    --red-bg: #f5eaea;
+    --muted: #7a6a5a;
+    --border: #cdbfa8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lora', serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 28px 32px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.025) 60px,
+      rgba(255,255,255,0.025) 61px
+    );
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    position: relative;
+  }
+  header p {
+    margin-top: 6px;
+    font-size: 0.88rem;
+    font-style: italic;
+    opacity: 0.7;
+    position: relative;
+  }
+
+  /* SCORE BAR */
+  .score-bar {
+    background: var(--ink);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    padding: 12px 24px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--parchment);
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Lora', serif;
+  }
+  .score-item span.num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  .score-item.correct .num { color: #7ecb7e; }
+  .score-item.wrong .num { color: #e08080; }
+  .score-item.total .num { color: var(--accent-light); }
+
+  #progress-bar-wrap {
+    width: 160px;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    background: var(--accent-light);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 36px 24px 0;
+  }
+
+  /* CATEGORY */
+  .category {
+    margin-bottom: 40px;
+  }
+  .category-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+  }
+
+  /* CARD */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 20px 16px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+  .card.answered { pointer-events: none; }
+
+  .sentence {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  .sentence em {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+  .blank {
+    display: inline-block;
+    min-width: 60px;
+    text-align: center;
+    border-bottom: 2px solid var(--accent);
+    color: var(--accent);
+    font-weight: 500;
+    padding: 0 4px;
+    font-style: normal;
+  }
+
+  .options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .opt-btn {
+    font-family: 'Lora', serif;
+    font-size: 0.92rem;
+    padding: 7px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 2px;
+    background: var(--parchment);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.01em;
+  }
+  .opt-btn:hover {
+    background: var(--warm-mid);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .opt-btn.correct-choice {
+    background: var(--green-bg);
+    border-color: var(--green);
+    color: var(--green);
+    font-weight: 500;
+  }
+  .opt-btn.wrong-choice {
+    background: var(--red-bg);
+    border-color: var(--red);
+    color: var(--red);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .feedback {
+    margin-top: 10px;
+    font-size: 0.84rem;
+    font-style: italic;
+    color: var(--muted);
+    display: none;
+    line-height: 1.5;
+  }
+  .feedback.show { display: block; }
+  .feedback strong { font-style: normal; color: var(--green); }
+  .feedback .tip { color: var(--accent); font-style: normal; }
+
+  /* RESULTS */
+  #results {
+    display: none;
+    text-align: center;
+    padding: 48px 24px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 40px;
+  }
+  #results h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+  #results p {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  #results .big-score {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin: 16px 0;
+  }
+  #restart-btn {
+    margin-top: 20px;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    padding: 10px 28px;
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+  #restart-btn:hover { background: var(--accent); }
+
+  /* NARRATIVE BOX */
+  .narrative-intro {
+    background: #fffdf7;
+    border: 1.5px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 3px;
+    padding: 18px 20px 16px;
+    margin-bottom: 16px;
+  }
+  .narrative-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .narrative-text {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .nblank {
+    display: inline-block;
+    min-width: 28px;
+    text-align: center;
+    padding: 0 3px;
+    border-bottom: 2px dashed var(--border);
+    color: var(--muted);
+    font-style: normal;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+  }
+  .nblank.filled {
+    border-bottom: 2px solid var(--green);
+    color: var(--green);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 0.97rem;
+  }
+
+
+    header h1 { font-size: 1.4rem; }
+    .score-bar { gap: 16px; }
+    #progress-bar-wrap { width: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Choose the Correct Form</h1>
+  <p>Select the option that completes each sentence correctly.</p>
+</header>
+
+<div class="score-bar">
+  <div class="score-item correct">✓ <span class="num" id="score-correct">0</span></div>
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div class="score-item wrong">✗ <span class="num" id="score-wrong">0</span></div>
+  <div class="score-item total"><span class="num" id="score-total">0</span>/<span class="num" id="score-max">0</span></div>
+</div>
+
+<main id="main-content">
+
+  <!-- TENSE CONSISTENCY -->
+  <div class="category">
+    <div class="category-label">Tense Consistency</div>
+    <div class="narrative-intro">
+      <p class="narrative-label">Read the diary entry. Then answer the questions below.</p>
+      <div class="narrative-text" id="narrative-display">
+        Today I <span class="nblank" id="nb0">①</span> very tired. I <span class="nblank" id="nb1">②</span> my day a bit nervous, not sure why. By mid-morning I realised something was wrong — I hadn't <span class="nblank" id="nb2">③</span> the iron gate was open. I ran to the garden, and when I <span class="nblank" id="nb3">④</span> the back door, I saw fire.
+      </div>
+    </div>
+
+    <div class="card" data-correct="0" data-nbid="nb0" data-nbtext="woke up">
+      <div class="sentence">① Today I <span class="blank">___</span> very tired.</div>
+      <div class="options">
+        <button class="opt-btn">woke up</button>
+        <button class="opt-btn">wake up</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1" data-nbid="nb1" data-nbtext="started">
+      <div class="sentence">② I <span class="blank">___</span> my day a bit nervous.</div>
+      <div class="options">
+        <button class="opt-btn">have started</button>
+        <button class="opt-btn">started</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="0" data-nbid="nb2" data-nbtext="noticed">
+      <div class="sentence">③ I hadn't <span class="blank">___</span> the iron gate was open.</div>
+      <div class="options">
+        <button class="opt-btn">noticed</button>
+        <button class="opt-btn">notice</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="0" data-nbid="nb3" data-nbtext="opened">
+      <div class="sentence">④ When I <span class="blank">___</span> the back door, I saw fire.</div>
+      <div class="options">
+        <button class="opt-btn">opened</button>
+        <button class="opt-btn">open</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- VERB PATTERNS -->
+  <div class="category">
+    <div class="category-label">Verb Patterns</div>
+
+    <div class="card" data-correct="0">
+      <div class="sentence"><span class="blank">___</span> the door, I listened carefully.</div>
+      <div class="options">
+        <button class="opt-btn">Before opening</button>
+        <button class="opt-btn">Before to open</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">She loves <span class="blank">___</span> on the beach.</div>
+      <div class="options">
+        <button class="opt-btn">ran</button>
+        <button class="opt-btn">running</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="0">
+      <div class="sentence">I thought <span class="blank">___</span>.</div>
+      <div class="options">
+        <button class="opt-btn">of relaxing</button>
+        <button class="opt-btn">to have some relax</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- PREPOSITIONS -->
+  <div class="category">
+    <div class="category-label">Prepositions</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">We arrived <span class="blank">___</span> the airport three hours early.</div>
+      <div class="options">
+        <button class="opt-btn">to</button>
+        <button class="opt-btn">at</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">The flight arrived <span class="blank">___</span> Los Angeles on time.</div>
+      <div class="options">
+        <button class="opt-btn">to</button>
+        <button class="opt-btn">in</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence"><span class="blank">___</span> that moment, everything changed.</div>
+      <div class="options">
+        <button class="opt-btn">In</button>
+        <button class="opt-btn">At</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">After the trip, she returned <span class="blank">___</span>.</div>
+      <div class="options">
+        <button class="opt-btn">at home</button>
+        <button class="opt-btn">home</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">Our democratic rules are <span class="blank">___</span>.</div>
+      <div class="options">
+        <button class="opt-btn">in risk</button>
+        <button class="opt-btn">at risk</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- ARTICLES & UNCOUNTABLES -->
+  <div class="category">
+    <div class="category-label">Articles &amp; Uncountable Nouns</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence"><span class="blank">___</span> is the biggest challenge of our time.</div>
+      <div class="options">
+        <button class="opt-btn">The climate change</button>
+        <button class="opt-btn">Climate change</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">He gave me a lot of <span class="blank">___</span> about the city.</div>
+      <div class="options">
+        <button class="opt-btn">informations</button>
+        <button class="opt-btn">information</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="0">
+      <div class="sentence">I totally agree with <span class="blank">___</span>.</div>
+      <div class="options">
+        <button class="opt-btn">this newspaper</button>
+        <button class="opt-btn">these newspaper</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- COLLOCATIONS -->
+  <div class="category">
+    <div class="category-label">Collocations</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">The plane <span class="blank">___</span> two hours late.</div>
+      <div class="options">
+        <button class="opt-btn">laid up</button>
+        <button class="opt-btn">took off</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">Because of the delay, I <span class="blank">___</span> my connection.</div>
+      <div class="options">
+        <button class="opt-btn">loosed</button>
+        <button class="opt-btn">missed</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">I <span class="blank">___</span> really angry when I heard the news.</div>
+      <div class="options">
+        <button class="opt-btn">became</button>
+        <button class="opt-btn">got</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="0">
+      <div class="sentence">It was very difficult to <span class="blank">___</span> a decision.</div>
+      <div class="options">
+        <button class="opt-btn">make</button>
+        <button class="opt-btn">take</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">We need to <span class="blank">___</span> of the problem.</div>
+      <div class="options">
+        <button class="opt-btn">take conscience</button>
+        <button class="opt-btn">become aware</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- WORD CHOICE -->
+  <div class="category">
+    <div class="category-label">Word Choice &amp; False Friends</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">She was a great teacher. <span class="blank">___</span>, she was very kind.</div>
+      <div class="options">
+        <button class="opt-btn">In plus</button>
+        <button class="opt-btn">In addition</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">The government's <span class="blank">___</span> surprised everyone.</div>
+      <div class="options">
+        <button class="opt-btn">actuation</button>
+        <button class="opt-btn">action</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">We had to change our <span class="blank">___</span> at the last minute.</div>
+      <div class="options">
+        <button class="opt-btn">planifications</button>
+        <button class="opt-btn">plans</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">She wasn't fully <span class="blank">___</span> of the danger.</div>
+      <div class="options">
+        <button class="opt-btn">conscient</button>
+        <button class="opt-btn">conscious</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- SUBJECT-VERB AGREEMENT -->
+  <div class="category">
+    <div class="category-label">Subject–Verb Agreement</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">Someone <span class="blank">___</span> to start this change.</div>
+      <div class="options">
+        <button class="opt-btn">have</button>
+        <button class="opt-btn">has</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">Ordinary people <span class="blank">___</span> this way.</div>
+      <div class="options">
+        <button class="opt-btn">starts</button>
+        <button class="opt-btn">start</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <!-- SENTENCE STRUCTURE -->
+  <div class="category">
+    <div class="category-label">Sentence Structure</div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">I <span class="blank">___</span> with a little cry.</div>
+      <div class="options">
+        <button class="opt-btn">pushed it, opened</button>
+        <button class="opt-btn">pushed it open</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="card" data-correct="1">
+      <div class="sentence">Inside, <span class="blank">___</span> only a collection of old photos.</div>
+      <div class="options">
+        <button class="opt-btn">nothing,</button>
+        <button class="opt-btn">there was nothing,</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+  </div>
+
+  <div id="results">
+    <p>Activity complete</p>
+    <div class="big-score" id="final-score">–</div>
+    <p id="result-msg"></p>
+    <button id="restart-btn" onclick="restartActivity()">Try Again</button>
+  </div>
+
+</main>
+
+<script>
+  const feedbackMessages = {
+    // Tense consistency
+    0: { rule: "Past simple for completed actions in a past narrative.", note: "Use past simple with time markers like <em>today</em> (when recounting the day)." },
+    1: { rule: "Past simple, not present perfect, with a finished time reference." },
+    2: { rule: "Both verbs in a when-clause describing simultaneous past events use past simple." },
+    3: { rule: "Past participle after <em>hadn't</em>: <em>noticed</em>, not <em>notice</em>." },
+    // Verb patterns
+    4: { rule: "<em>Before</em> is a preposition → followed by -ing.", note: "<em>before</em> + verb-ing, <em>after</em> + verb-ing." },
+    5: { rule: "<em>Love</em> is followed by the -ing form.", note: "love / like / enjoy / hate + verb-ing." },
+    6: { rule: "<em>Think of</em> + verb-ing.", note: "think of/about + verb-ing (not <em>to</em> + infinitive)." },
+    // Prepositions
+    7: { rule: "<em>Arrive at</em> for specific locations (airports, stations, buildings)." },
+    8: { rule: "<em>Arrive in</em> for cities, countries, and large regions." },
+    9: { rule: "<em>At that moment</em> — fixed time expression.", note: "In contrast: <em>in that period / in those years</em>." },
+    10: { rule: "<em>Return home</em> needs no preposition — home functions as an adverb here." },
+    11: { rule: "<em>At risk</em> — fixed prepositional phrase.", note: "Other fixed phrases: <em>at stake</em>, <em>at fault</em>, <em>at ease</em>." },
+    // Articles & uncountables
+    12: { rule: "No article with abstract nouns used in a general sense: <em>climate change</em>, <em>justice</em>, <em>love</em>." },
+    13: { rule: "<em>Information</em> is uncountable — no plural -s, no article with <em>a</em>.", note: "Same rule: <em>advice</em>, <em>evidence</em>, <em>proof</em>, <em>knowledge</em>." },
+    14: { rule: "<em>This newspaper</em> (singular) — <em>these</em> is only used with plural nouns." },
+    // Collocations
+    15: { rule: "<em>Take off</em> = a plane leaves the ground.", note: "<em>Lay up</em> means to be confined to bed." },
+    16: { rule: "<em>Miss a connection/flight/bus/train</em> — not <em>lose</em>.", note: "<em>Lose</em> is for objects: <em>I lost my passport</em>." },
+    17: { rule: "<em>Get angry / get tired / get better</em> — use <em>get</em> for changes of state in everyday English.", note: "<em>Become</em> is more formal and less idiomatic here." },
+    18: { rule: "<em>Make a decision</em> is the standard English collocation.", note: "<em>Take a decision</em> exists in some varieties but is much less common." },
+    19: { rule: "<em>Become aware of</em> is the natural English collocation.", note: "<em>Take conscience</em> is a direct translation from Spanish/Catalan — it does not exist in English." },
+    // Word choice
+    20: { rule: "<em>In addition</em> (or <em>also / furthermore</em>) — not <em>in plus</em>.", note: "<em>In plus</em> is a direct transfer from French <em>en plus</em>." },
+    21: { rule: "<em>Action</em>, not <em>actuation</em>.", note: "<em>Actuation</em> is a false friend from Spanish <em>actuación</em>." },
+    22: { rule: "<em>Plans</em>, not <em>planifications</em>.", note: "<em>Planification</em> does not exist in English — another false friend." },
+    23: { rule: "<em>Conscious</em>, not <em>conscient</em>.", note: "<em>Conscient</em> is a false friend from Spanish/Catalan <em>consciente</em>." },
+    // S-V agreement
+    24: { rule: "<em>Someone / everybody / nobody</em> → singular verb: <em>has</em>, not <em>have</em>." },
+    25: { rule: "<em>Ordinary people</em> is plural → <em>start</em> (no -s).", note: "Contrast: <em>The government starts</em> (singular)." },
+    // Structure
+    26: { rule: "<em>Push open</em> is a two-word verb: <em>push</em> + <em>open</em> (result).", note: "Other examples: <em>tear open</em>, <em>blow open</em>, <em>kick open</em>." },
+    27: { rule: "Existential <em>there</em> is needed when introducing something for the first time.", note: "The structure <em>there was/were + noun</em> presents new information to the reader." },
+  };
+
+  let correct = 0, wrong = 0, answered = 0;
+  const cards = document.querySelectorAll('.card');
+  const total = cards.length;
+  document.getElementById('score-max').textContent = total;
+
+  cards.forEach((card, cardIndex) => {
+    const correctIndex = parseInt(card.dataset.correct);
+    const buttons = card.querySelectorAll('.opt-btn');
+    const feedback = card.querySelector('.feedback');
+
+    buttons.forEach((btn, btnIndex) => {
+      btn.addEventListener('click', () => {
+        if (card.classList.contains('answered')) return;
+        card.classList.add('answered');
+        answered++;
+
+        const isCorrect = btnIndex === correctIndex;
+        if (isCorrect) {
+          correct++;
+          btn.classList.add('correct-choice');
+          document.getElementById('score-correct').textContent = correct;
+        } else {
+          wrong++;
+          btn.classList.add('wrong-choice');
+          buttons[correctIndex].classList.add('correct-choice');
+          document.getElementById('score-wrong').textContent = wrong;
+        }
+
+        document.getElementById('score-total').textContent = answered;
+        document.getElementById('progress-bar').style.width = (answered / total * 100) + '%';
+
+        // Fill narrative blank if this card has one
+        const nbid = card.dataset.nbid;
+        const nbtext = card.dataset.nbtext;
+        if (nbid && nbtext) {
+          const span = document.getElementById(nbid);
+          if (span) {
+            span.textContent = nbtext;
+            span.classList.add('filled');
+          }
+        }
+
+        
+        let msg = '';
+        if (info.rule) msg += `<strong>${info.rule}</strong>`;
+        if (info.note) msg += ` <span class="tip">${info.note}</span>`;
+        if (msg) {
+          feedback.innerHTML = msg;
+          feedback.classList.add('show');
+        }
+
+        if (answered === total) {
+          setTimeout(showResults, 600);
+        }
+      });
+    });
+  });
+
+  function showResults() {
+    const pct = Math.round(correct / total * 100);
+    document.getElementById('final-score').textContent = correct + ' / ' + total;
+    let msg = pct >= 85 ? 'Excellent work — very strong command of these patterns.'
+            : pct >= 65 ? 'Good effort. Review the items you missed and notice the patterns.'
+            : 'Keep practising — go back through the feedback notes for each item.';
+    document.getElementById('result-msg').textContent = msg;
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function restartActivity() {
+    correct = 0; wrong = 0; answered = 0;
+    document.getElementById('score-correct').textContent = 0;
+    document.getElementById('score-wrong').textContent = 0;
+    document.getElementById('score-total').textContent = 0;
+    document.getElementById('progress-bar').style.width = '0%';
+    document.getElementById('results').style.display = 'none';
+
+    ['nb0','nb1','nb2','nb3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) { el.textContent = ['①','②','③','④'][i]; el.classList.remove('filled'); }
+    });
+
+    cards.forEach(card => {
+      card.classList.remove('answered');
+      card.querySelectorAll('.opt-btn').forEach(btn => {
+        btn.classList.remove('correct-choice', 'wrong-choice');
+      });
+      card.querySelector('.feedback').classList.remove('show');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

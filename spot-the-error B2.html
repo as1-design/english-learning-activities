@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spot the Error — B2 Error Correction Activity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             #EDE8DF;
+      --card:           #FAFAF7;
+      --card-border:    #D5CCBF;
+      --text:           #1E1B19;
+      --text-muted:     #7A756F;
+      --accent:         #2B4C7E;
+      --accent-hover:   #1E3A63;
+      --correct:        #1A5E3A;
+      --correct-bg:     #EAF5EE;
+      --correct-border: #A3D4B4;
+      --wrong:          #8B1A2A;
+      --wrong-bg:       #FCEEF0;
+      --wrong-border:   #E8A8B0;
+      --info-bg:        #EBF2FA;
+      --info-border:    #B8CDE8;
+      --info-text:      #1E3A63;
+      --shadow:         0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 2rem 0.8rem;
+      gap: 1rem;
+    }
+    .header-title-group h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .header-title-group p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 0.1rem;
+    }
+    .score-badge {
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      transition: background 0.3s;
+    }
+    @keyframes scorePop {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .score-badge.pop { animation: scorePop 0.35s cubic-bezier(.36,.07,.19,.97); }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      padding: 0 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      padding: 0.55rem 1.1rem 0.45rem;
+      cursor: pointer;
+      font-family: 'Lora', serif;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.08rem;
+    }
+    .tab .tab-num { font-size: 0.76rem; font-weight: 600; }
+    .tab .tab-sub { font-size: 0.63rem; opacity: 0.8; }
+    .tab.active  { color: var(--text); border-bottom-color: var(--accent); }
+    .tab:hover:not(.active) { color: var(--text); }
+
+    /* PROGRESS BAR */
+    .progress-bar { height: 3px; background: var(--card-border); }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2B4C7E, #4A80C4);
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+      width: 0%;
+    }
+
+    /* MAIN */
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 3rem;
+    }
+    .part-section { display: none; }
+    .part-section.active {
+      display: block;
+      animation: fadeUp 0.2s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* PART HEADER */
+    .part-header { margin-bottom: 1.5rem; }
+    .part-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: 0.2rem;
+    }
+    .part-header p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* SENTENCE CARD */
+    .sentence-card {
+      background: var(--card);
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 0.85rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.35s;
+    }
+    .sentence-card.state-correct  { border-color: var(--correct-border); }
+    .sentence-card.state-wrong    { border-color: var(--wrong-border); }
+
+    .sentence-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* OPTIONS */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .option-btn {
+      background: var(--bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.83rem;
+      color: var(--text);
+      line-height: 1.55;
+      transition: border-color 0.18s, background 0.18s, transform 0.1s;
+      display: grid;
+      grid-template-columns: 1.4rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+    }
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background: var(--card);
+      transform: translateY(-1px);
+    }
+    .option-btn:active:not(:disabled) { transform: scale(0.99); }
+    .option-btn:disabled { cursor: not-allowed; }
+    .option-btn.opt-correct {
+      border-color: var(--correct-border);
+      background: var(--correct-bg);
+      color: var(--correct);
+    }
+    .option-btn.opt-wrong {
+      border-color: var(--wrong-border);
+      background: var(--wrong-bg);
+      color: var(--wrong);
+      opacity: 0.75;
+    }
+    .option-btn.opt-dim { opacity: 0.4; }
+
+    .opt-label {
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+      padding-top: 0.06rem;
+    }
+
+    /* FEEDBACK */
+    .feedback { display: none; margin-top: 0.8rem; }
+    .feedback.visible { display: block; }
+
+    .feedback-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 7px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .feedback-banner.fb-correct {
+      background: var(--correct-bg);
+      border: 1px solid var(--correct-border);
+      color: var(--correct);
+    }
+    .feedback-banner.fb-wrong {
+      background: var(--wrong-bg);
+      border: 1px solid var(--wrong-border);
+      color: var(--wrong);
+    }
+
+    .explanation-box {
+      background: var(--info-bg);
+      border: 1px solid var(--info-border);
+      border-radius: 7px;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.8rem;
+      color: var(--info-text);
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+
+    /* NAV */
+    .part-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .nav-btn {
+      background: var(--card);
+      border: 1.5px solid var(--card-border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.5rem 1.25rem;
+      font-family: 'Lora', serif;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .nav-btn.primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+    .part-progress-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    @media (max-width: 580px) {
+      .header-top { padding: 0.9rem 1rem 0.6rem; }
+      .header-title-group h1 { font-size: 1.2rem; }
+      main { padding: 1.25rem 1rem 2.5rem; }
+      .sentence-card { padding: 1rem 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="header-title-group">
+      <h1>Spot the Error</h1>
+      <p>Error correction activity — B2 English</p>
+    </div>
+    <div class="score-badge" id="scoreBadge">0 / 27</div>
+  </div>
+  <div class="tabs" id="tabsContainer"></div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</header>
+
+<main id="mainContent"></main>
+
+<script>
+var PARTS = [
+  {
+    num: "Part 1",
+    title: "Formal Writing & Grammar",
+    desc: "Which sentence is correct? Choose A or B.",
+    sentences: [
+      {
+        n: 1,
+        wrong:  "I write this letter as the president of the neighbourhood association.",
+        answer: "I am writing this letter as the president of the neighbourhood association.",
+        explanation: "Use the present continuous (I am writing) for formal letter openings — not the simple present."
+      },
+      {
+        n: 2,
+        wrong:  "We are opposed to this planning.",
+        answer: "We are opposed to this plan.",
+        explanation: "Planning refers to the process. Plan is the countable noun for a specific proposal or decision."
+      },
+      {
+        n: 3,
+        wrong:  "We suggest to change the location of the casino.",
+        answer: "We suggest changing the location of the casino.",
+        explanation: "Suggest is followed by a gerund (-ing form), not a to-infinitive."
+      },
+      {
+        n: 4,
+        wrong:  "The decision have been taken without our opinion.",
+        answer: "The decision has been taken without our opinion.",
+        explanation: "The decision is singular, so the verb must be has, not have."
+      },
+      {
+        n: 5,
+        wrong:  "It has been a real preoccupation for the community members.",
+        answer: "It has been a real concern for the community members.",
+        explanation: "Preoccupation is a false friend. The right word here is concern."
+      },
+      {
+        n: 6,
+        wrong:  "We are asking you to reconsider about this decision.",
+        answer: "We are asking you to reconsider this decision.",
+        explanation: "Reconsider is a transitive verb — it takes a direct object with no preposition. Remove about."
+      },
+      {
+        n: 7,
+        wrong:  "We look forward to hear from you.",
+        answer: "We look forward to hearing from you.",
+        explanation: "After look forward to, use a gerund (-ing). Here, to is a preposition — not part of a to-infinitive."
+      },
+      {
+        n: 8,
+        wrong:  "Yours sincerely,",
+        answer: "Yours faithfully,",
+        explanation: "Yours faithfully is used when you do not know the recipient's name (Dear Sir/Madam). Yours sincerely is for when you address them by name."
+      },
+      {
+        n: 9,
+        wrong:  "I am writing this letter as a president of the neighbourhood association.",
+        answer: "I am writing this letter as the president of the neighbourhood association.",
+        explanation: "Use the definite article the — you are THE president of this specific association. It is a unique, named role."
+      }
+    ]
+  },
+  {
+    num: "Part 2",
+    title: "Vocabulary & Collocations",
+    desc: "Which sentence is correct? Choose A or B.",
+    sentences: [
+      {
+        n: 10,
+        wrong:  "The casino could cause addiction and mental problems.",
+        answer: "The casino could cause addiction and mental health problems.",
+        explanation: "The fixed collocation is mental health problems. Mental problems alone is not standard in English."
+      },
+      {
+        n: 11,
+        wrong:  "It could bring new opportunities to find a job.",
+        answer: "It could create new job opportunities.",
+        explanation: "Job opportunities is the natural collocation. The correct verb is create — not bring."
+      },
+      {
+        n: 12,
+        wrong:  "This decision can increase the addiction to gambling in young people.",
+        answer: "This decision can increase gambling addiction among young people.",
+        explanation: "Gambling addiction is the correct noun phrase. Also: use among for groups of people, not in."
+      },
+      {
+        n: 13,
+        wrong:  "The users of the casino are not tourists, so shops will not increase their sells.",
+        answer: "The users of the casino are not tourists, so shops will not increase their sales.",
+        explanation: "Sells is a verb, not a noun. The noun is sales — a false friend with Spanish ventas."
+      },
+      {
+        n: 14,
+        wrong:  "It would attract groups of delinquents, game addicts and alcoholics.",
+        answer: "It would attract groups of criminals, gambling addicts and alcoholics.",
+        explanation: "Delinquent is a false friend (Spanish delincuente = criminal). Also: gambling addicts, not game addicts."
+      },
+      {
+        n: 15,
+        wrong:  "Teenagers should not witness the kind of life attached to casinos.",
+        answer: "Teenagers should not witness the kind of lifestyle associated with casinos.",
+        explanation: "The natural collocation is lifestyle associated with — not life attached to."
+      },
+      {
+        n: 16,
+        wrong:  "It would be a bad example and a bad claim for young people.",
+        answer: "It would set a bad example for young people.",
+        explanation: "Claim is a false friend (Spanish reclamo). The correct fixed expression is set a bad example."
+      },
+      {
+        n: 17,
+        wrong:  "We want a healthy live.",
+        answer: "We want a healthy life.",
+        explanation: "Live is a verb. The noun is life — a false friend with Catalan/Spanish vida / viure."
+      }
+    ]
+  },
+  {
+    num: "Part 3",
+    title: "Prepositions, Articles & Structure",
+    desc: "Which sentence is correct? Choose A or B.",
+    sentences: [
+      {
+        n: 18,
+        wrong:  "We should listen all the community.",
+        answer: "We should listen to the whole community.",
+        explanation: "Listen always needs the preposition to. Also: whole is more natural than all the with a singular noun."
+      },
+      {
+        n: 19,
+        wrong:  "This kind of places should not be near a school.",
+        answer: "These kinds of places should not be near a school.",
+        explanation: "When the noun is plural (places), use these kinds of — not this kind of."
+      },
+      {
+        n: 20,
+        wrong:  "I agree with the idea of doing sport, such as go to the gym or go cycling.",
+        answer: "I agree with the idea of doing sport, such as going to the gym or going cycling.",
+        explanation: "After such as, use gerunds (-ing forms) — not base infinitives."
+      },
+      {
+        n: 21,
+        wrong:  "My mother has no energy for exercising.",
+        answer: "My mother has no energy to exercise.",
+        explanation: "Use a to-infinitive (to exercise) after energy — it expresses purpose more naturally than for + gerund here."
+      },
+      {
+        n: 22,
+        wrong:  "He cannot spend a day without making any kind of sport.",
+        answer: "He cannot spend a day without doing some kind of sport.",
+        explanation: "Do sport, not make sport. Also: use some (not any) in affirmative contexts."
+      },
+      {
+        n: 23,
+        wrong:  "From my point of view, all the obsessions are harmful for your body and brain.",
+        answer: "From my point of view, all obsessions are harmful to your body and brain.",
+        explanation: "No article with general plural nouns (all obsessions). Also: harmful to — not harmful for."
+      },
+      {
+        n: 24,
+        wrong:  "Maybe he just wants to go in the park.",
+        answer: "Maybe he just wants to go to the park.",
+        explanation: "Go to the park — use to for destinations. Go in is not idiomatic here."
+      },
+      {
+        n: 25,
+        wrong:  "This reminds me about my grandmother.",
+        answer: "This reminds me of my grandmother.",
+        explanation: "Remind takes the preposition of, not about. The pattern is: remind someone of something."
+      },
+      {
+        n: 26,
+        wrong:  "It is not necessary to build a casino because people in this district are not the type that tends to look for places like that.",
+        answer: "It is not necessary to build a casino because people in this district are not the kind of people who usually look for places like that.",
+        explanation: "Use the kind of people who — a relative clause with who (not that) when referring to people."
+      },
+      {
+        n: 27,
+        wrong:  "We are a quiet, friendly, familiar neighbourhood.",
+        answer: "We are a quiet, friendly, family-oriented neighbourhood.",
+        explanation: "Familiar is a false friend (Spanish familiar = family-related). The correct English term is family-oriented."
+      }
+    ]
+  }
+];
+
+var TOTAL = 0;
+for (var p = 0; p < PARTS.length; p++) {
+  TOTAL += PARTS[p].sentences.length;
+}
+
+var score = 0;
+var answered = {};
+
+// ── BUILD TABS ──────────────────────────────────────────────────────────────
+
+function buildTabs() {
+  var container = document.getElementById("tabsContainer");
+  for (var i = 0; i < PARTS.length; i++) {
+    (function(idx) {
+      var btn = document.createElement("button");
+      btn.className = idx === 0 ? "tab active" : "tab";
+      var numSpan = document.createElement("span");
+      numSpan.className = "tab-num";
+      numSpan.textContent = PARTS[idx].num;
+      var subSpan = document.createElement("span");
+      subSpan.className = "tab-sub";
+      subSpan.textContent = PARTS[idx].title;
+      btn.appendChild(numSpan);
+      btn.appendChild(subSpan);
+      btn.addEventListener("click", function() { switchPart(idx); });
+      container.appendChild(btn);
+    })(i);
+  }
+}
+
+// ── BUILD MAIN ──────────────────────────────────────────────────────────────
+
+function buildMain() {
+  var main = document.getElementById("mainContent");
+  for (var i = 0; i < PARTS.length; i++) {
+    main.appendChild(buildSection(PARTS[i], i));
+  }
+}
+
+function buildSection(part, pIdx) {
+  var section = document.createElement("div");
+  section.className = pIdx === 0 ? "part-section active" : "part-section";
+  section.id = "part-" + pIdx;
+
+  var hdr = document.createElement("div");
+  hdr.className = "part-header";
+  var h2 = document.createElement("h2");
+  h2.textContent = part.num + ": " + part.title;
+  var desc = document.createElement("p");
+  desc.textContent = part.desc;
+  hdr.appendChild(h2);
+  hdr.appendChild(desc);
+  section.appendChild(hdr);
+
+  for (var s = 0; s < part.sentences.length; s++) {
+    section.appendChild(buildCard(part.sentences[s], pIdx, s));
+  }
+
+  section.appendChild(buildNav(pIdx));
+  return section;
+}
+
+// ── BUILD CARD ──────────────────────────────────────────────────────────────
+
+function buildCard(sent, pIdx, sIdx) {
+  var card = document.createElement("div");
+  card.className = "sentence-card";
+
+  var numEl = document.createElement("div");
+  numEl.className = "sentence-number";
+  numEl.textContent = "Sentence " + sent.n;
+  card.appendChild(numEl);
+
+  // Randomise which option is A and which is B
+  var flipOrder = Math.random() < 0.5;
+  var opts;
+  if (flipOrder) {
+    opts = [
+      { text: sent.wrong,  correct: false },
+      { text: sent.answer, correct: true  }
+    ];
+  } else {
+    opts = [
+      { text: sent.answer, correct: true  },
+      { text: sent.wrong,  correct: false }
+    ];
+  }
+
+  var optContainer = document.createElement("div");
+  optContainer.className = "options";
+
+  var btnA = buildOptionBtn("A", opts[0].text);
+  var btnB = buildOptionBtn("B", opts[1].text);
+  var buttons = [btnA, btnB];
+
+  var feedback = document.createElement("div");
+  feedback.className = "feedback";
+
+  (function(s, pi, si, o, btns, fb, c) {
+    btns[0].addEventListener("click", function() { handleChoice(s, pi, si, o[0].correct, 0, o, btns, fb, c); });
+    btns[1].addEventListener("click", function() { handleChoice(s, pi, si, o[1].correct, 1, o, btns, fb, c); });
+  })(sent, pIdx, sIdx, opts, buttons, feedback, card);
+
+  optContainer.appendChild(btnA);
+  optContainer.appendChild(btnB);
+  card.appendChild(optContainer);
+  card.appendChild(feedback);
+  return card;
+}
+
+function buildOptionBtn(label, text) {
+  var btn = document.createElement("button");
+  btn.className = "option-btn";
+  var labelEl = document.createElement("span");
+  labelEl.className = "opt-label";
+  labelEl.textContent = label;
+  var textEl = document.createElement("span");
+  textEl.textContent = text;
+  btn.appendChild(labelEl);
+  btn.appendChild(textEl);
+  return btn;
+}
+
+// ── HANDLE CHOICE ──────────────────────────────────────────────────────────
+
+function handleChoice(sent, pIdx, sIdx, isCorrect, chosenIdx, opts, buttons, feedback, card) {
+  var key = pIdx + "-" + sIdx;
+  if (answered[key]) { return; }
+  answered[key] = true;
+
+  if (isCorrect) { score++; }
+
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+    if (opts[i].correct) {
+      buttons[i].classList.add("opt-correct");
+    } else if (i === chosenIdx) {
+      buttons[i].classList.add("opt-wrong");
+    } else {
+      buttons[i].classList.add("opt-dim");
+    }
+  }
+
+  var banner = document.createElement("div");
+  banner.className = isCorrect ? "feedback-banner fb-correct" : "feedback-banner fb-wrong";
+  var icon = document.createElement("span");
+  icon.textContent = isCorrect ? "✓" : "✗";
+  var msg = document.createElement("span");
+  msg.textContent = isCorrect ? "Correct!" : "Not quite — the correct version is highlighted above.";
+  banner.appendChild(icon);
+  banner.appendChild(msg);
+  feedback.appendChild(banner);
+
+  if (sent.explanation) {
+    var expBox = document.createElement("div");
+    expBox.className = "explanation-box";
+    var bulb = document.createElement("span");
+    bulb.textContent = "💡";
+    var expText = document.createElement("span");
+    expText.textContent = sent.explanation;
+    expBox.appendChild(bulb);
+    expBox.appendChild(expText);
+    feedback.appendChild(expBox);
+  }
+
+  feedback.classList.add("visible");
+  card.classList.add(isCorrect ? "state-correct" : "state-wrong");
+
+  updateScore();
+  updateProgress(pIdx);
+}
+
+// ── NAV ─────────────────────────────────────────────────────────────────────
+
+function buildNav(pIdx) {
+  var nav = document.createElement("div");
+  nav.className = "part-nav";
+
+  var prev = document.createElement("button");
+  prev.className = "nav-btn";
+  prev.textContent = "← Previous";
+  prev.disabled = pIdx === 0;
+  (function(idx) {
+    prev.addEventListener("click", function() { switchPart(idx - 1); });
+  })(pIdx);
+
+  var prog = document.createElement("span");
+  prog.className = "part-progress-text";
+  prog.id = "prog-" + pIdx;
+  prog.textContent = "0 / " + PARTS[pIdx].sentences.length + " answered";
+
+  var isLast = pIdx === PARTS.length - 1;
+  var next = document.createElement("button");
+  next.className = isLast ? "nav-btn" : "nav-btn primary";
+  next.textContent = isLast ? "All done ✓" : "Next Part →";
+  next.disabled = isLast;
+  if (!isLast) {
+    (function(idx) {
+      next.addEventListener("click", function() { switchPart(idx + 1); });
+    })(pIdx);
+  }
+
+  nav.appendChild(prev);
+  nav.appendChild(prog);
+  nav.appendChild(next);
+  return nav;
+}
+
+function switchPart(idx) {
+  var sections = document.querySelectorAll(".part-section");
+  var tabs = document.querySelectorAll(".tab");
+  for (var i = 0; i < sections.length; i++) {
+    sections[i].classList.remove("active");
+    tabs[i].classList.remove("active");
+  }
+  document.getElementById("part-" + idx).classList.add("active");
+  tabs[idx].classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ── SCORE / PROGRESS ─────────────────────────────────────────────────────────
+
+function updateScore() {
+  var badge = document.getElementById("scoreBadge");
+  badge.textContent = score + " / " + TOTAL;
+  badge.classList.remove("pop");
+  void badge.offsetWidth;
+  badge.classList.add("pop");
+  var pct = score / TOTAL;
+  badge.style.background = pct >= 0.9 ? "#1A5E3A" : pct >= 0.7 ? "#2B6CA3" : "var(--accent)";
+  var done = Object.keys(answered).length;
+  document.getElementById("progressFill").style.width = (done / TOTAL * 100) + "%";
+}
+
+function updateProgress(pIdx) {
+  var el = document.getElementById("prog-" + pIdx);
+  if (!el) { return; }
+  var total = PARTS[pIdx].sentences.length;
+  var done = 0;
+  for (var s = 0; s < total; s++) {
+    if (answered[pIdx + "-" + s]) { done++; }
+  }
+  el.textContent = done + " / " + total + " answered";
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildTabs();
+buildMain();
+</script>
+</body>
+</html>
