@@ -23,7 +23,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Eggs Benedict — Vocabulary Matching | B2.2 | Six click-to-match vocabulary activities based on a cooking video about Eggs Benedict. Category-specific colour accents and score counters. | [Open](https://as1-design.github.io/english-learning-activities/eggs-benedict-matching.html) |
 | Sports Vocabulary | B2.2 | Varied interactive exercises practising sports-related vocabulary across different activity types. | [Open](https://as1-design.github.io/english-learning-activities/sports-vocabulary%20b2-varied.html) |
 | Taboo — Sports Vocabulary Explorer | B2.2 | A companion tool for classroom Taboo card sets. Select a sport to browse its key vocabulary, supporting preparation and consolidation alongside the physical card game. | [Open](https://as1-design.github.io/english-learning-activities/Taboo-sports-vocabulary-explorer.html) |
-| Taboo — Sports Vocabulary Cards | B2 | Printable Taboo card set for 24 sports, with 10 forbidden words per sport. Four pages, ready to print and cut. | [Open](https://as1-design.github.io/english-learning-activities/sports_taboo_vocab_cards%20b2.pdf) |
+| Taboo — Sports Vocabulary Cards | B2.2 | Printable Taboo card set for 24 sports, with 10 forbidden words per sport. Four pages, ready to print and cut. | [Open](https://as1-design.github.io/english-learning-activities/sports_taboo_vocab_cards%20b2.pdf) |
 | News & Media Vocabulary Bank | B2.1 | Contextual practice activities using vocabulary from the textbook's news and media vocabulary bank. | [Open](https://as1-design.github.io/english-learning-activities/news_media_vocab%20bank%20b2.1.html) |
 
 ## Grammar & Language
