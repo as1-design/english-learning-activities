@@ -934,6 +934,45 @@
       }
     }, 150);
   }
+  /* ── localStorage persistence ── */
+(function () {
+  const STORAGE_KEY = 'speaking-ref-en-b22';   // ← unique per file (see note)
+
+  function phraseKey(el) {
+    return el.dataset.section + '│' + el.querySelector('.phrase-text').textContent.trim();
+  }
+
+  function saveState() {
+    const data = {};
+    document.querySelectorAll('.phrase').forEach(p => {
+      if (p.dataset.state) data[phraseKey(p)] = p.dataset.state;
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+  }
+
+  function loadState() {
+    let data = {};
+    try { data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) {}
+    const icons = { used: '✓', want: '★' };
+    document.querySelectorAll('.phrase').forEach(p => {
+      const s = data[phraseKey(p)];
+      if (s === 'used' || s === 'want') {
+        p.dataset.state = s;
+        p.classList.add(s);
+        p.querySelector('.phrase-icon').textContent = icons[s];
+      }
+    });
+    updateStats();
+  }
+
+  // Wrap the existing handlers so state saves after every change
+  const _toggle = toggle, _clearAll = clearAll;
+  toggle   = function (el) { _toggle(el);  saveState(); };
+  clearAll = function ()   { _clearAll();  saveState(); };
+
+  // Restore saved marks on load
+  loadState();
+})();
 </script>
 </body>
 </html>
