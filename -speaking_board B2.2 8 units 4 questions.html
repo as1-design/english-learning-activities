@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f4ff;
+    --surface: #ffffff;
+    --shadow: rgba(80, 80, 160, 0.12);
+    --text: #2d2d4e;
+    --accent: #6c63ff;
+
+    --c1: #ff6b9d; --c1b: #ffd6e7;
+    --c2: #f97316; --c2b: #ffe5cc;
+    --c3: #22c55e; --c3b: #d1fae5;
+    --c4: #6c63ff; --c4b: #e0deff;
+    --c5: #0ea5e9; --c5b: #d0f0fd;
+    --c6: #ec4899; --c6b: #fce7f3;
+    --c7: #a855f7; --c7b: #f3e8ff;
+    --c8: #14b8a6; --c8b: #ccfbf1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 15% 20%, #dde8ff 0%, transparent 45%),
+                      radial-gradient(circle at 85% 80%, #fde8ff 0%, transparent 45%);
+    min-height: 100vh;
+    padding: 32px 20px 60px;
+    color: var(--text);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, #6c63ff, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px var(--shadow); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-random {
+    background: linear-gradient(135deg, #6c63ff, #a78bfa);
+    color: #fff;
+  }
+
+  .btn-reset {
+    background: linear-gradient(135deg, #f97316, #fbbf24);
+    color: #fff;
+  }
+
+  /* Timer block */
+  .timer-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border-radius: 50px;
+    padding: 8px 20px;
+    box-shadow: 0 4px 14px var(--shadow);
+  }
+
+  #timer {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--text);
+    min-width: 52px;
+    text-align: center;
+    transition: color 0.3s;
+  }
+
+  #timer.danger { color: #ef4444; animation: pulse 0.6s infinite alternate; }
+  #timer.done { color: #22c55e; }
+
+  @keyframes pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+  }
+
+  .timer-label {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .btn-start {
+    background: linear-gradient(135deg, #22c55e, #4ade80);
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn-pause {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .btn-restart {
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 18px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Cards */
+  .card {
+    perspective: 1200px;
+    height: 155px;
+  }
+
+  .inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+    cursor: pointer;
+  }
+
+  .card.flipped .inner { transform: rotateY(180deg); }
+
+  .front, .back {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 18px 16px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: 700;
+    box-shadow: 0 5px 20px var(--shadow);
+    transition: box-shadow 0.2s;
+  }
+
+  .card:hover .front,
+  .card:hover .back {
+    box-shadow: 0 10px 28px rgba(80,80,160,0.18);
+  }
+
+  .front {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .card-topic {
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  .back {
+    transform: rotateY(180deg);
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #2d2d4e;
+  }
+
+  /* Unit color theming */
+  .unit-1 .front { background: var(--c1b); border-top: 4px solid var(--c1); }
+  .unit-1 .back  { background: var(--c1b); border-top: 4px solid var(--c1); }
+  .unit-1 .card-topic { color: var(--c1); }
+
+  .unit-2 .front { background: var(--c2b); border-top: 4px solid var(--c2); }
+  .unit-2 .back  { background: var(--c2b); border-top: 4px solid var(--c2); }
+  .unit-2 .card-topic { color: var(--c2); }
+
+  .unit-3 .front { background: var(--c3b); border-top: 4px solid var(--c3); }
+  .unit-3 .back  { background: var(--c3b); border-top: 4px solid var(--c3); }
+  .unit-3 .card-topic { color: var(--c3); }
+
+  .unit-4 .front { background: var(--c4b); border-top: 4px solid var(--c4); }
+  .unit-4 .back  { background: var(--c4b); border-top: 4px solid var(--c4); }
+  .unit-4 .card-topic { color: var(--c4); }
+
+  .unit-5 .front { background: var(--c5b); border-top: 4px solid var(--c5); }
+  .unit-5 .back  { background: var(--c5b); border-top: 4px solid var(--c5); }
+  .unit-5 .card-topic { color: var(--c5); }
+
+  .unit-6 .front { background: var(--c6b); border-top: 4px solid var(--c6); }
+  .unit-6 .back  { background: var(--c6b); border-top: 4px solid var(--c6); }
+  .unit-6 .card-topic { color: var(--c6); }
+
+  .unit-7 .front { background: var(--c7b); border-top: 4px solid var(--c7); }
+  .unit-7 .back  { background: var(--c7b); border-top: 4px solid var(--c7); }
+  .unit-7 .card-topic { color: var(--c7); }
+
+  .unit-8 .front { background: var(--c8b); border-top: 4px solid var(--c8); }
+  .unit-8 .back  { background: var(--c8b); border-top: 4px solid var(--c8); }
+  .unit-8 .card-topic { color: var(--c8); }
+
+  /* Highlighted card */
+  .card.highlight .inner {
+    filter: drop-shadow(0 0 12px rgba(108, 99, 255, 0.5));
+  }
+
+  /* Modal overlay */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 20, 60, 0.55);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 28px;
+    padding: 40px 36px 32px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 24px 60px rgba(60,40,120,0.22);
+    text-align: center;
+    animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.75); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+
+  .modal-emoji { font-size: 3rem; margin-bottom: 10px; }
+
+  .modal-topic {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modal-prompt {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #2d2d4e;
+    margin-bottom: 28px;
+  }
+
+  .modal-close {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6c63ff, #a78bfa);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(108,99,255,0.35);
+    transition: transform 0.15s;
+  }
+  .modal-close:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Speaking <span>Board</span></h1>
+  <p class="subtitle">Click a card to reveal the prompt • Flip back to hide</p>
+</header>
+
+<div class="controls">
+  <button class="btn btn-random" id="randomBtn">🎲 Random Question</button>
+  <button class="btn btn-reset" id="resetBtn">↩ Flip All Back</button>
+
+  <div class="timer-block">
+    <div>
+      <div class="timer-label">Timer</div>
+      <div id="timer">1:00</div>
+    </div>
+    <button class="btn btn-start" id="startBtn">▶ Start</button>
+    <button class="btn btn-pause" id="pauseBtn" style="display:none">⏸ Pause</button>
+    <button class="btn btn-restart" id="restartBtn">↺</button>
+  </div>
+</div>
+
+<div class="grid" id="board"></div>
+
+<!-- Random question modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <div class="modal-emoji" id="modalEmoji"></div>
+    <div class="modal-topic" id="modalTopic"></div>
+    <div class="modal-prompt" id="modalPrompt"></div>
+    <button class="modal-close" id="modalClose">Got it! 👍</button>
+  </div>
+</div>
+
+<script>
+const data = [
+  {unit:1, emoji:"👨‍👩‍👧", topic:"1A – We are family",         prompt:"Tell us about a time when a family member surprised you."},
+  {unit:1, emoji:"👨‍👩‍👧", topic:"1A – We are family",         prompt:"Describe a situation where you had a disagreement with a relative and what happened."},
+  {unit:1, emoji:"💼",      topic:"1B – A job for life?",      prompt:"Tell us about your first job or a job interview that went well or badly."},
+  {unit:1, emoji:"💼",      topic:"1B – A job for life?",      prompt:"Describe a moment when you realised a job wasn't right for you."},
+  {unit:2, emoji:"🧒",      topic:"2A – Do you remember…?",    prompt:"Tell us about a childhood memory you will never forget."},
+  {unit:2, emoji:"🧒",      topic:"2A – Do you remember…?",    prompt:"Describe a moment when something unexpected happened in the past."},
+  {unit:2, emoji:"💬",      topic:"2B – On the tip of my tongue", prompt:"Talk about a time when you couldn't remember something important."},
+  {unit:2, emoji:"💬",      topic:"2B – On the tip of my tongue", prompt:"Describe a situation where you misunderstood something and what happened."},
+  {unit:3, emoji:"❤️‍🔥",    topic:"3A – A love-hate relationship", prompt:"Describe something you love and hate at the same time."},
+  {unit:3, emoji:"❤️‍🔥",    topic:"3A – A love-hate relationship", prompt:"Tell us about a relationship that has changed over time."},
+  {unit:3, emoji:"🎭",      topic:"3B – Dramatic licence",     prompt:"Tell us about a time when someone exaggerated a story or you did."},
+  {unit:3, emoji:"🎭",      topic:"3B – Dramatic licence",     prompt:"Describe a misunderstanding or conflict you experienced."},
+  {unit:4, emoji:"📖",      topic:"4A – An open book",         prompt:"Tell us about a book or film that had a strong impact on you."},
+  {unit:4, emoji:"📖",      topic:"4A – An open book",         prompt:"Describe a time when a story made you see things differently."},
+  {unit:4, emoji:"🤫",      topic:"4B – The sound of silence", prompt:"Talk about a time when silence was important or meaningful."},
+  {unit:4, emoji:"🤫",      topic:"4B – The sound of silence", prompt:"Describe a situation where communication failed."},
+  {unit:5, emoji:"⏰",      topic:"5A – No time for anything", prompt:"Tell us about a time when you were extremely busy or stressed."},
+  {unit:5, emoji:"⏰",      topic:"5A – No time for anything", prompt:"Describe a situation where you had to prioritise important things."},
+  {unit:5, emoji:"💰",      topic:"5B – Not for profit?",      prompt:"Talk about a time when money influenced an important decision."},
+  {unit:5, emoji:"💰",      topic:"5B – Not for profit?",      prompt:"Describe a time when you bought something and later regretted it."},
+  {unit:6, emoji:"🤝",      topic:"6A – Help, I need somebody!", prompt:"Tell us about a time when you needed help and how you got it."},
+  {unit:6, emoji:"🤝",      topic:"6A – Help, I need somebody!", prompt:"Describe a situation where you helped someone else."},
+  {unit:6, emoji:"🔄",      topic:"6B – Can't give it up",     prompt:"Talk about something you tried to stop doing but couldn't."},
+  {unit:6, emoji:"🔄",      topic:"6B – Can't give it up",     prompt:"Describe a habit you managed to change successfully."},
+  {unit:7, emoji:"📜",      topic:"7A – As a matter of fact…", prompt:"Tell us about a time when you had to follow strict rules."},
+  {unit:7, emoji:"📜",      topic:"7A – As a matter of fact…", prompt:"Describe a situation where you broke a rule and what happened."},
+  {unit:7, emoji:"🎨",      topic:"7B – A masterpiece?",       prompt:"Talk about a piece of art that impressed you."},
+  {unit:7, emoji:"🎨",      topic:"7B – A masterpiece?",       prompt:"Describe a creative experience you had."},
+  {unit:8, emoji:"🩺",      topic:"8A – The best medicine?",   prompt:"Tell us about a time when you felt really unwell and what you did."},
+  {unit:8, emoji:"🩺",      topic:"8A – The best medicine?",   prompt:"Describe something you do to stay healthy."},
+  {unit:8, emoji:"✈️",      topic:"8B – A must-see attraction", prompt:"Tell us about a memorable trip or holiday."},
+  {unit:8, emoji:"✈️",      topic:"8B – A must-see attraction", prompt:"Describe a travel experience that went wrong."},
+];
+
+const board = document.getElementById("board");
+
+data.forEach(item => {
+  const card = document.createElement("div");
+  card.classList.add("card", `unit-${item.unit}`);
+
+  card.innerHTML = `
+    <div class="inner">
+      <div class="front">
+        <span class="card-emoji">${item.emoji}</span>
+        <span class="card-topic">${item.topic}</span>
+      </div>
+      <div class="back">${item.prompt}</div>
+    </div>`;
+
+  card.addEventListener("click", () => card.classList.toggle("flipped"));
+  board.appendChild(card);
+});
+
+// Random — show modal overlay
+const backdrop = document.getElementById("modalBackdrop");
+document.getElementById("randomBtn").addEventListener("click", () => {
+  const pick = data[Math.floor(Math.random() * data.length)];
+  const unitColor = getComputedStyle(document.documentElement)
+                      .getPropertyValue(`--c${pick.unit}`).trim();
+  document.getElementById("modalEmoji").textContent  = pick.emoji;
+  document.getElementById("modalTopic").textContent  = pick.topic;
+  document.getElementById("modalTopic").style.color  = unitColor;
+  document.getElementById("modalPrompt").textContent = pick.prompt;
+  backdrop.classList.add("open");
+});
+document.getElementById("modalClose").addEventListener("click", () => backdrop.classList.remove("open"));
+backdrop.addEventListener("click", e => { if (e.target === backdrop) backdrop.classList.remove("open"); });
+
+// Reset all
+document.getElementById("resetBtn").addEventListener("click", () => {
+  document.querySelectorAll(".card").forEach(c => c.classList.remove("flipped", "highlight"));
+});
+
+// Timer
+let totalSeconds = 60;
+let remaining = totalSeconds;
+let interval = null;
+let running = false;
+
+const timerEl   = document.getElementById("timer");
+const startBtn  = document.getElementById("startBtn");
+const pauseBtn  = document.getElementById("pauseBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${String(sec).padStart(2, "0")}`;
+}
+
+function updateDisplay() {
+  timerEl.textContent = formatTime(remaining);
+  timerEl.className = "";
+  if (remaining <= 0) timerEl.classList.add("done");
+  else if (remaining <= 10) timerEl.classList.add("danger");
+}
+
+function stopTimer() {
+  clearInterval(interval);
+  interval = null;
+  running = false;
+  startBtn.style.display = "";
+  pauseBtn.style.display = "none";
+}
+
+startBtn.addEventListener("click", () => {
+  if (remaining <= 0) remaining = totalSeconds;
+  running = true;
+  startBtn.style.display = "none";
+  pauseBtn.style.display = "";
+  interval = setInterval(() => {
+    remaining--;
+    updateDisplay();
+    if (remaining <= 0) {
+      stopTimer();
+      timerEl.textContent = "Done!";
+    }
+  }, 1000);
+  updateDisplay();
+});
+
+pauseBtn.addEventListener("click", () => {
+  stopTimer();
+});
+
+restartBtn.addEventListener("click", () => {
+  stopTimer();
+  remaining = totalSeconds;
+  updateDisplay();
+});
+
+updateDisplay();
+</script>
+</body>
+</html>

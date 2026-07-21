@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rosco – Science & Technology</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #0F0E17;
+  --surface:   #1A1828;
+  --surface2:  #221F35;
+  --border:    rgba(255,255,255,0.08);
+  --text:      #F2EFE9;
+  --muted:     #7B78A0;
+  --green:     #3ECF8E;
+  --green-dim: #0D5A35;
+  --red:       #FF5C5C;
+  --red-dim:   #7A1C1C;
+  --gold:      #FFD166;
+  --active:    #5BC4F5;
+  --active-dim:#1A5A7A;
+  --spring: cubic-bezier(0.34,1.56,0.64,1);
+  --smooth: cubic-bezier(0.25,0.46,0.45,0.94);
+  --r: 16px;
+}
+html, body { height: 100%; }
+body {
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; padding: 18px 14px 48px;
+  overflow-x: hidden; position: relative;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  background-size: 180px; pointer-events: none; z-index: 0;
+}
+.glow { position:fixed; border-radius:50%; pointer-events:none; z-index:0; }
+.glow-a { width:480px;height:480px;top:-160px;right:-130px; background:radial-gradient(circle,var(--active) 0%,transparent 70%);opacity:.07; }
+.glow-b { width:340px;height:340px;bottom:-80px;left:-90px;  background:radial-gradient(circle,var(--active) 0%,transparent 70%);opacity:.05; }
+
+header { text-align:center;margin-bottom:16px;position:relative;z-index:1;animation:fadeUp .45s var(--smooth) both; }
+.eyebrow { font-size:.68rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--active);margin-bottom:4px; }
+h1 { font-size:clamp(1.7rem,5vw,2.6rem);font-weight:900;letter-spacing:-1px;line-height:1; }
+h1 em { font-style:italic;color:var(--active); }
+
+.layout { display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:700px;position:relative;z-index:1; }
+@media (min-width:660px) {
+  .layout { flex-direction:row;align-items:flex-start; }
+  .rosco-wrap { width:min(320px,43vw)!important;height:min(320px,43vw)!important; }
+  .right-col  { flex:1;min-width:220px; }
+}
+
+.rosco-wrap { position:relative;width:min(340px,88vw);height:min(340px,88vw);flex-shrink:0;animation:fadeUp .45s .1s var(--smooth) both; }
+#roscoSvg { width:100%;height:100%;overflow:visible; }
+.rosco-centre { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:43%;text-align:center;pointer-events:none; }
+.c-letter { display:block;font-size:clamp(2.4rem,9vw,3.8rem);font-weight:900;line-height:1;color:var(--active);transition:color .3s; }
+.c-label  { font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:2px; }
+.c-score  { font-size:.95rem;font-weight:700;color:var(--gold);margin-top:5px;font-variant-numeric:tabular-nums; }
+
+.right-col { width:100%;display:flex;flex-direction:column;gap:12px;animation:fadeUp .45s .14s var(--smooth) both; }
+
+.round-badge { display:none;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:5px 14px;font-size:.73rem;font-weight:700;color:var(--muted);width:fit-content; }
+.round-badge.active { display:inline-flex; }
+.round-badge.lap2   { border-color:var(--gold);color:var(--gold); }
+
+.clue-card { background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;min-height:155px;display:flex;flex-direction:column;transition:filter .3s; }
+.clue-card.blurred .clue-body { filter:blur(8px);pointer-events:none;user-select:none; }
+
+.clue-head { padding:13px 18px 11px;display:flex;align-items:center;gap:12px;background:var(--active);transition:background .4s; }
+.ch-letter  { font-size:2.5rem;font-weight:900;color:#fff;line-height:1;text-shadow:0 3px 0 rgba(0,0,0,.2);min-width:36px; }
+.ch-meta    { flex:1; }
+.ch-type    { font-size:.67rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:2px; }
+.ch-preview { font-size:.8rem;color:rgba(255,255,255,.85);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+
+.timer-wrap { width:42px;height:42px;flex-shrink:0;position:relative; }
+.timer-wrap svg { width:100%;height:100%;transform:rotate(-90deg); }
+.t-track { fill:none;stroke:rgba(255,255,255,.18);stroke-width:3; }
+.t-bar   { fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-dasharray:113;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .25s; }
+.t-num   { position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.82rem;font-weight:700;color:#fff; }
+
+.clue-body  { padding:14px 18px 16px;flex:1;display:flex;flex-direction:column;gap:9px; }
+.clue-def   { font-size:.97rem;line-height:1.6;color:var(--text);opacity:0;transform:translateY(8px);transition:opacity .3s var(--smooth),transform .3s var(--smooth); }
+.clue-def.show { opacity:1;transform:translateY(0); }
+.ex-row     { display:flex;align-items:flex-start;gap:9px;opacity:0;transform:translateY(6px);transition:opacity .3s .07s var(--smooth),transform .3s .07s var(--smooth); }
+.ex-row.show { opacity:1;transform:translateY(0); }
+.ex-pill    { font-size:.62rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);padding:3px 8px;border:1px solid var(--border);border-radius:20px;white-space:nowrap;margin-top:2px;flex-shrink:0; }
+.ex-text    { font-size:.9rem;line-height:1.6;color:#BDB8D8; }
+.blank      { display:inline-block;background:rgba(255,255,255,.1);border-radius:4px;padding:0 9px;min-width:56px;color:transparent;font-weight:700;user-select:none;transition:background .25s,color .3s; }
+.blank.shown { background:transparent;color:var(--active);border-bottom:2px solid var(--active);padding:0 3px;animation:inkIn .38s var(--spring) both; }
+@keyframes inkIn { 0%{opacity:0;transform:scale(.8) translateY(5px)} 65%{opacity:1;transform:scale(1.06) translateY(-1px)} 100%{opacity:1;transform:scale(1) translateY(0)} }
+
+.reveal-row { display:none;justify-content:flex-end; }
+.btn-show-ans { background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 13px;font-size:.76rem;font-weight:700;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s; }
+.btn-show-ans:hover:not(:disabled) { border-color:var(--active);color:var(--active); }
+.btn-show-ans:disabled { opacity:.3;cursor:default; }
+
+.answer-btns { display:none;gap:8px; }
+.abtn { flex:1;border:none;border-radius:11px;padding:13px 8px;cursor:pointer;font-size:.8rem;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .14s,box-shadow .14s,opacity .2s;line-height:1.1; }
+.abtn .ico { font-size:1.25rem; }
+.abtn:active:not(:disabled) { transform:scale(.95); }
+.abtn:disabled { opacity:.35;cursor:default; }
+.abtn-correct { background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-dim),0 6px 14px rgba(0,0,0,.3); }
+.abtn-correct:hover:not(:disabled) { transform:translateY(-2px);box-shadow:0 6px 0 var(--green-dim),0 10px 18px rgba(0,0,0,.3); }
+.abtn-wrong   { background:var(--red);color:#fff;box-shadow:0 4px 0 var(--red-dim),0 6px 14px rgba(0,0,0,.3); }
+.abtn-wrong:hover:not(:disabled)   { transform:translateY(-2px);box-shadow:0 6px 0 var(--red-dim),0 10px 18px rgba(0,0,0,.3); }
+.abtn-skip    { background:var(--surface2);color:var(--muted);border:1px solid var(--border);box-shadow:0 4px 0 rgba(0,0,0,.3); }
+.abtn-skip:hover:not(:disabled)    { background:#2E2A45;color:var(--text);transform:translateY(-2px); }
+
+.pause-row { display:none;justify-content:center; }
+.btn-pause { background:var(--surface2);border:1px solid var(--border);border-radius:50px;padding:8px 22px;font-size:.8rem;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;gap:6px;display:flex;align-items:center; }
+.btn-pause:hover { background:#2E2A45;color:var(--text);border-color:rgba(255,255,255,.18); }
+.btn-pause.paused { background:var(--active);border-color:var(--active);color:#fff;box-shadow:0 0 16px rgba(91,196,245,.4); }
+
+.btn-start { width:100%;border:none;border-radius:13px;padding:15px;font-size:.97rem;font-weight:800;cursor:pointer;background:var(--active);color:#fff;box-shadow:0 5px 0 var(--active-dim),0 8px 22px rgba(0,0,0,.3);transition:transform .14s,box-shadow .14s;letter-spacing:.2px; }
+.btn-start:hover  { transform:translateY(-2px);box-shadow:0 7px 0 var(--active-dim),0 12px 28px rgba(0,0,0,.35); }
+.btn-start:active { transform:translateY(3px);box-shadow:0 2px 0 var(--active-dim); }
+
+.end-screen { text-align:center;padding:12px 0; }
+.end-big  { font-size:clamp(2rem,8vw,3.2rem);font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px; }
+.end-sub  { color:var(--muted);font-size:.9rem;margin-bottom:16px; }
+.end-stats { display:flex;gap:9px;justify-content:center;margin-bottom:16px; }
+.stat-box  { background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:10px 15px;text-align:center;min-width:72px; }
+.stat-n    { font-size:1.65rem;font-weight:900;line-height:1; }
+.stat-lbl  { font-size:.6rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-top:2px; }
+
+.prog-row  { display:flex;gap:3px;flex-wrap:wrap;justify-content:center;width:100%; }
+.pdot { width:20px;height:20px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.54rem;font-weight:800;color:var(--muted);transition:all .28s var(--spring); }
+.pdot.correct { background:var(--green);border-color:var(--green);color:#fff;transform:scale(1.1); }
+.pdot.wrong   { background:rgba(255,92,92,.18);border-color:var(--red);color:var(--red); }
+.pdot.skipped { background:var(--surface2);border-color:#3A3660;color:#3A3660;opacity:.55; }
+.pdot.active  { background:var(--surface2);border-color:var(--active);color:var(--active);box-shadow:0 0 8px var(--active);animation:dotPulse 1.8s ease-in-out infinite; }
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 5px var(--active)} 50%{box-shadow:0 0 13px var(--active)} }
+
+#pauseOverlay { display:none;position:fixed;inset:0;z-index:50;background:rgba(15,14,23,.72);backdrop-filter:blur(3px);align-items:center;justify-content:center;flex-direction:column;gap:12px;animation:fadeIn .25s var(--smooth); }
+#pauseOverlay.show { display:flex; }
+.pause-icon  { font-size:4rem;line-height:1; }
+.pause-label { font-size:1.4rem;font-weight:800;color:var(--text);letter-spacing:.5px; }
+.pause-hint  { font-size:.82rem;color:var(--muted); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes shake  { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.shake { animation:shake .34s ease both; }
+</style>
+</head>
+<body>
+<div class="glow glow-a"></div>
+<div class="glow glow-b"></div>
+
+<div id="pauseOverlay">
+  <div class="pause-icon">⏸</div>
+  <div class="pause-label">Paused</div>
+  <div class="pause-hint">Press Space or click Resume to continue</div>
+</div>
+
+<header>
+  <div class="eyebrow">🔬 Science & Technology</div>
+  <h1>The <em>Rosco</em></h1>
+</header>
+
+<div class="layout">
+  <div class="rosco-wrap" id="roscoWrap">
+    <svg id="roscoSvg" viewBox="0 0 380 380"></svg>
+    <div class="rosco-centre">
+      <span class="c-letter" id="cLetter">?</span>
+      <span class="c-label"  id="cLabel">ready</span>
+      <div  class="c-score"  id="cScore">0 / 26</div>
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div class="round-badge" id="roundBadge"><span id="roundText"></span></div>
+
+    <div class="clue-card" id="clueCard">
+      <div class="clue-head" id="clueHead">
+        <span class="ch-letter"  id="chLetter">–</span>
+        <div  class="ch-meta">
+          <div class="ch-type"    id="chType">–</div>
+          <div class="ch-preview" id="chPreview">Start the rosco to get your first clue.</div>
+        </div>
+        <div class="timer-wrap">
+          <svg viewBox="0 0 40 40">
+            <circle class="t-track" cx="20" cy="20" r="18"/>
+            <circle class="t-bar"   cx="20" cy="20" r="18" id="tBar"/>
+          </svg>
+          <div class="t-num" id="tNum">–</div>
+        </div>
+      </div>
+      <div class="clue-body">
+        <div class="clue-def" id="clueDef"></div>
+        <div class="ex-row"   id="exRow">
+          <span class="ex-pill">Example</span>
+          <span class="ex-text" id="exText"></span>
+        </div>
+        <div class="reveal-row" id="revealRow">
+          <button class="btn-show-ans" id="btnShowAns" onclick="doReveal()">👁 Show answer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="answer-btns" id="answerBtns">
+      <button class="abtn abtn-correct" id="btnCorrect" onclick="doMark('correct')"><span class="ico">✅</span><span>Correct</span></button>
+      <button class="abtn abtn-wrong"   id="btnWrong"   onclick="doMark('wrong')"  ><span class="ico">❌</span><span>Wrong</span></button>
+      <button class="abtn abtn-skip"    id="btnSkip"    onclick="doMark('skip')"   ><span class="ico">⏭</span><span>Skip</span></button>
+    </div>
+
+    <div class="pause-row" id="pauseRow">
+      <button class="btn-pause" id="btnPause" onclick="togglePause()">⏸ Pause</button>
+    </div>
+
+    <div id="startArea">
+      <button class="btn-start" onclick="startGame()">▶ Start the Rosco</button>
+    </div>
+
+    <div id="endArea" style="display:none">
+      <div class="end-screen">
+        <div class="end-big" id="endBig">Done!</div>
+        <div class="end-sub" id="endSub"></div>
+        <div class="end-stats">
+          <div class="stat-box"><div class="stat-n" style="color:var(--green)" id="sCorrect">0</div><div class="stat-lbl">Correct</div></div>
+          <div class="stat-box"><div class="stat-n" style="color:var(--red)"   id="sWrong">0</div>  <div class="stat-lbl">Wrong</div></div>
+        </div>
+        <button class="btn-start" onclick="resetGame()">↺ Play Again</button>
+      </div>
+    </div>
+
+    <div class="prog-row" id="progRow"></div>
+  </div>
+</div>
+
+<script>
+const LIST_DATA = {"A": {"word": "Anaesthetic", "type": "noun", "def": "A substance or gas given to patients before surgery so they do not feel pain.", "ex": "The surgeon waited for the local _____ to take full effect before beginning the minor operation."}, "B": {"word": "Biological", "type": "adjective", "def": "Relating to the scientific study of living organisms.", "ex": "She decided to study _____ sciences at university because she has always been fascinated by natural ecosystems."}, "C": {"word": "Clone", "type": "verb/noun", "def": "To use genetic engineering to create an exact copy of an animal or plant.", "ex": "In science fiction films, ambitious researchers often try to _____ prehistoric creatures, which usually ends in disaster."}, "D": {"word": "Discovery", "type": "noun", "def": "The process of finding or uncovering something that was previously unknown.", "ex": "The accidental _____ of penicillin by Alexander Fleming completely revolutionised modern medicine."}, "E": {"word": "Experiment", "type": "noun/verb", "def": "A scientific test conducted under controlled conditions to prove a theory.", "ex": "The university's chemistry department is currently conducting a complex _____ to test the stability of the new compound."}, "F": {"word": "Far-fetched", "type": "adjective", "def": "Highly improbable or difficult to believe.", "ex": "The plot of that new science fiction series felt a bit too _____ to be truly enjoyable."}, "G": {"word": "Geneticist", "type": "noun", "def": "A scientist who specialises in the study of genes and inherited characteristics.", "ex": "A leading _____ spoke on the news tonight about how specific hereditary traits are passed down through generations."}, "H": {"word": "Heat", "type": "noun", "def": "A form of energy arising from the kinetic movement of particles.", "ex": "When you mix these two reactive chemicals together, a significant amount of _____ is instantly released."}, "I": {"word": "Implausible", "type": "adjective", "def": "Not seeming reasonable or probable; failing to convince.", "ex": "His scientific explanation for the data anomaly was entirely _____, so the lab director rejected the report."}, "J": {"word": "Joint", "type": "noun", "def": "A structure in the human body where two distinct bones meet.", "ex": "He severely damaged his knee _____ while playing football, requiring months of specialised physiotherapy."}, "K": {"word": "Kidney", "type": "noun", "def": "An essential organ that filters waste products from the blood.", "ex": "The medical team successfully removed a benign cyst from the patient's left _____."}, "L": {"word": "Laboratory", "type": "noun", "def": "A controlled room or building where scientific research and experiments are performed.", "ex": "Strict safety regulations dictate that technicians must wear protective coats and goggles inside the _____."}, "M": {"word": "Moist", "type": "adjective", "def": "Slightly wet or damp.", "ex": "Certain types of fungi and bacteria thrive best in environments that are warm, dark, and _____."}, "N": {"word": "Nitrogen", "type": "noun", "def": "A chemical element making up about 78% of the Earth's atmosphere.", "ex": "Earth's atmosphere actually consists of roughly seventy-eight per cent _____, rather than mostly oxygen."}, "O": {"word": "Obstacles", "type": "noun", "def": "Problems, hurdles, or barriers that hinder progress.", "ex": "Despite encountering major financial _____, the engineering team successfully built the solar-powered prototype."}, "P": {"word": "Plausible", "type": "adjective", "def": "Seeming reasonable, likely, or believable based on evidence.", "ex": "Given the sudden climate shifts, his hypothesis regarding the migration patterns seems highly _____."}, "Q": {"word": "Quantifiers", "type": "noun", "def": "Words used to express statistical quantities precisely (e.g. each, every, all).", "ex": "When drafting a formal research paper, you must choose your _____ carefully to avoid making unverified, sweeping statements."}, "R": {"word": "Rotate", "type": "verb", "def": "To move or turn in a circle around a central point or axis.", "ex": "Engineers designed the giant blades of the wind turbine to _____ smoothly even in low-wind conditions."}, "S": {"word": "Scientific", "type": "adjective", "def": "Guided by or relying on the established principles and methods of science.", "ex": "To establish a true law of nature, you must follow strict _____ procedures that allow other researchers to replicate your findings."}, "T": {"word": "Theory", "type": "noun", "def": "A formal set of ideas or principles intended to explain a specific phenomenon.", "ex": "Charles Darwin developed a famous _____ of evolution by natural selection after visiting the Galápagos Islands."}, "U": {"word": "Underpaid", "type": "adjective", "def": "Given insufficient financial compensation for work done.", "ex": "Many highly qualified university research assistants argue that they are chronically _____ for the long hours they log."}, "V": {"word": "Volunteer", "type": "noun/verb", "def": "A person who freely offers to take part in medical trials or research.", "ex": "He decided to _____ for a clinical trial investigating a new, fast-acting allergy medication."}, "W": {"word": "Water vapour", "type": "noun", "def": "Water in a gaseous state.", "ex": "As liquid water is boiled on the stove, it changes state and converts into _____."}, "X": {"word": "X-ray", "type": "noun/verb", "def": "High-energy electromagnetic radiation used to photograph internal body structures.", "ex": "The triage nurse ordered an urgent _____ to determine if the patient's wrist was fractured."}, "Y": {"word": "Yuri Gagarin", "type": "proper noun", "def": "The Soviet pilot and cosmonaut who became the first human in outer space.", "ex": "In April 1961, _____ secured his place in history by completing a single orbit of Earth."}, "Z": {"word": "Zoologist", "type": "noun", "def": "A scientist who studies the behaviour, physiology, and classification of animals.", "ex": "Working as a field _____, she spends months in remote rainforests tracking endangered primates."}};
+const LETTERS   = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+const TIMER_MAX = 15;
+const COLOR     = '#5BC4F5';
+
+// ── AUDIO ────────────────────────────────────────────────────────────────
+let _ctx = null;
+function ac() { if (!_ctx) _ctx = new (window.AudioContext||window.webkitAudioContext)(); return _ctx; }
+function resumeAC() { if (_ctx && _ctx.state==='suspended') _ctx.resume(); }
+function playTone(freq,type,dur,vol,delay=0,ramp=false) {
+  try {
+    const c=ac(), o=c.createOscillator(), g=c.createGain();
+    o.connect(g); g.connect(c.destination);
+    o.type=type; o.frequency.setValueAtTime(freq,c.currentTime+delay);
+    g.gain.setValueAtTime(vol,c.currentTime+delay);
+    if(ramp) g.gain.exponentialRampToValueAtTime(0.0001,c.currentTime+delay+dur);
+    o.start(c.currentTime+delay); o.stop(c.currentTime+delay+dur);
+  } catch(e){}
+}
+function sfxCorrect() { resumeAC(); playTone(523,'sine',.12,.4,0,true); playTone(659,'sine',.12,.4,.1,true); playTone(784,'sine',.22,.45,.2,true); }
+function sfxWrong()   { resumeAC(); playTone(220,'sawtooth',.1,.3,0,true); playTone(180,'sawtooth',.1,.3,.1,true); playTone(140,'sawtooth',.15,.3,.2,true); }
+function sfxTick()    { resumeAC(); playTone(880,'square',.05,.15,0,true); }
+function sfxRound()   { resumeAC(); [392,440,523,659].forEach((f,i)=>playTone(f,'triangle',.18,.35,i*.12,true)); }
+function sfxFinish()  { resumeAC(); [523,659,784,659,1047].forEach((f,i)=>playTone(f,'triangle',.22,.4,i*.14,true)); playTone(131,'sine',.9,.18,0,true); }
+function sfxPause()   { resumeAC(); playTone(440,'sine',.08,.2,0,true); playTone(392,'sine',.1,.2,.09,true); }
+function sfxResume()  { resumeAC(); playTone(392,'sine',.08,.2,0,true); playTone(440,'sine',.1,.2,.09,true); }
+
+// ── STATE ────────────────────────────────────────────────────────────────
+let gameActive = false;
+let paused     = false;
+let round      = 1;
+let currentIdx = 0;
+// status per letter: null | 'correct' | 'wrong' | 'skip'
+// KEY CHANGE: only 'correct' and 'wrong' are final.
+// 'skip' means unanswered — keeps re-queuing until marked correct or wrong.
+let status   = new Array(26).fill(null);
+let queue    = [];   // indices remaining this pass
+let timerSec = TIMER_MAX;
+let timerID  = null;
+let ansLocked= false;
+
+// ── ROSCO ────────────────────────────────────────────────────────────────
+function drawRosco() {
+  const svg=document.getElementById('roscoSvg');
+  const n=26,cx=190,cy=190,R=173,r=130;
+  svg.innerHTML=`<defs><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+  for(let i=0;i<n;i++){
+    const mid=(i/n)*2*Math.PI-Math.PI/2+Math.PI/n, half=(Math.PI/n)*0.82;
+    const pt=(a,r2)=>[cx+r2*Math.cos(a),cy+r2*Math.sin(a)];
+    const [x1,y1]=pt(mid-half,R),[x2,y2]=pt(mid+half,R);
+    const [x3,y3]=pt(mid+half,r),[x4,y4]=pt(mid-half,r);
+    const d=`M${x1} ${y1} A${R} ${R} 0 0 1 ${x2} ${y2} L${x3} ${y3} A${r} ${r} 0 0 0 ${x4} ${y4}Z`;
+    const isAct=gameActive&&i===currentIdx, s=status[i];
+    let fill,stroke,tf,gf='';
+    if      (isAct)         {fill=COLOR;stroke=COLOR;tf='#fff';gf='filter="url(#glow)"';}
+    else if (s==='correct') {fill='rgba(62,207,142,.25)';stroke='#3ECF8E';tf='#3ECF8E';}
+    else if (s==='wrong')   {fill='rgba(255,92,92,.18)';stroke='rgba(255,92,92,.65)';tf='#FF5C5C';}
+    else if (s==='skip')    {fill='rgba(255,209,102,.08)';stroke='rgba(255,209,102,.35)';tf='#997A30';}
+    else                    {fill='#1B1929';stroke='#32304A';tf='#8A87B0';}
+    svg.innerHTML+=`<path d="${d}" fill="${fill}" stroke="${stroke}" stroke-width="1.4" ${gf}/>`;
+    const tr=(R+r)/2,[tx,ty]=[cx+tr*Math.cos(mid),cy+tr*Math.sin(mid)];
+    svg.innerHTML+=`<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="central" font-family="system-ui,sans-serif" font-size="${isAct?14:11.5}" font-weight="${isAct?900:700}" fill="${tf}" style="user-select:none;pointer-events:none">${LETTERS[i]}</text>`;
+    if(s==='correct'||s==='wrong'){
+      const dot=s==='correct'?'#3ECF8E':'#FF5C5C';
+      const [dx,dy]=[cx+tr*Math.cos(mid),cy+tr*Math.sin(mid)-11];
+      svg.innerHTML+=`<circle cx="${dx}" cy="${dy}" r="4.5" fill="${dot}" opacity=".85"/>`;
+    }
+  }
+}
+
+// ── CLUE ─────────────────────────────────────────────────────────────────
+function showClue(idx) {
+  const letter=LETTERS[idx], d=LIST_DATA[letter];
+  ansLocked=false;
+  document.getElementById('chLetter').textContent  = letter;
+  document.getElementById('chType').textContent    = d.type;
+  document.getElementById('chPreview').textContent = d.def;
+  document.getElementById('clueHead').style.background = COLOR;
+  const defEl=document.getElementById('clueDef'), exRow=document.getElementById('exRow');
+  defEl.classList.remove('show'); exRow.classList.remove('show');
+  document.getElementById('exText').innerHTML = d.ex.replace('_____',
+    `<span class="blank" id="blankSlot">${d.word}</span>`);
+  document.getElementById('revealRow').style.display='flex';
+  document.getElementById('btnShowAns').disabled=false;
+  setTimeout(()=>{defEl.textContent=d.def;defEl.classList.add('show');},70);
+  setTimeout(()=>{exRow.classList.add('show');},160);
+  document.getElementById('cLetter').textContent = letter;
+  document.getElementById('cLabel').textContent  = round>1 ? `round ${round}` : 'current';
+  setABtnsEnabled(true);
+  updateProgress();
+  updateScore();
+  startTimer();
+}
+
+// ── TIMER ─────────────────────────────────────────────────────────────────
+function startTimer() {
+  clearInterval(timerID); timerSec=TIMER_MAX; renderTimer();
+  timerID=setInterval(()=>{
+    if(paused) return;
+    timerSec--; renderTimer();
+    if(timerSec<=5&&timerSec>0) sfxTick();
+    if(timerSec<=0){ clearInterval(timerID); setTimeout(()=>{ if(gameActive&&!ansLocked&&!paused) doMark('skip',true); },200); }
+  },1000);
+}
+function stopTimer() { clearInterval(timerID); }
+function renderTimer() {
+  const circ=2*Math.PI*18;
+  document.getElementById('tBar').style.strokeDashoffset=circ*(1-timerSec/TIMER_MAX);
+  document.getElementById('tNum').textContent=timerSec>0?timerSec:'–';
+  document.getElementById('tBar').style.stroke=timerSec<=5?'#FF5C5C':timerSec<=9?'#FFD166':'#fff';
+}
+
+// ── PAUSE ─────────────────────────────────────────────────────────────────
+function togglePause() {
+  if(!gameActive) return;
+  paused=!paused;
+  const btn=document.getElementById('btnPause'), ov=document.getElementById('pauseOverlay'), card=document.getElementById('clueCard');
+  if(paused){ btn.textContent='▶ Resume';btn.classList.add('paused');ov.classList.add('show');card.classList.add('blurred');sfxPause(); }
+  else      { btn.textContent='⏸ Pause';btn.classList.remove('paused');ov.classList.remove('show');card.classList.remove('blurred');sfxResume(); }
+}
+
+// ── REVEAL ────────────────────────────────────────────────────────────────
+function doReveal() {
+  const slot=document.getElementById('blankSlot');
+  if(slot) slot.classList.add('shown');
+  document.getElementById('btnShowAns').disabled=true;
+  stopTimer();
+  document.getElementById('tNum').textContent='–';
+}
+
+// ── MARK ──────────────────────────────────────────────────────────────────
+function doMark(verdict) {
+  if(!gameActive||ansLocked||paused) return;
+  ansLocked=true; stopTimer();
+  status[currentIdx]=verdict;
+  if(verdict==='correct'){ sfxCorrect(); confettiBurst(); }
+  else if(verdict==='wrong'){ sfxWrong(); document.getElementById('clueCard').classList.add('shake'); setTimeout(()=>document.getElementById('clueCard').classList.remove('shake'),380); }
+  // 'skip' — no sound, just quietly re-queues
+  drawRosco(); updateProgress(); updateScore();
+  setABtnsEnabled(false);
+  setTimeout(()=>advance(), verdict==='skip'?150:480);
+}
+
+// ── ADVANCE ───────────────────────────────────────────────────────────────
+// KEY CHANGE: after each pass, if any 'skip' remain, start another pass.
+// Game only ends when every letter is 'correct' or 'wrong'.
+function advance() {
+  if(!gameActive) return;
+  queue.shift();
+  if(queue.length===0) {
+    // Are there still skipped (unanswered) letters?
+    const skipped = LETTERS.map((_,i)=>i).filter(i=>status[i]==='skip'||status[i]===null);
+    if(skipped.length>0) { startNextRound(skipped); return; }
+    endGame(); return;
+  }
+  currentIdx=queue[0];
+  drawRosco(); showClue(currentIdx);
+}
+
+function startNextRound(skippedIndices) {
+  round++;
+  // Reset skipped back to null so they show as unanswered on the rosco
+  skippedIndices.forEach(i=>{ status[i]=null; });
+  queue=[...skippedIndices];
+  currentIdx=queue[0];
+
+  const badge=document.getElementById('roundBadge');
+  badge.classList.add('active','lap2');
+  document.getElementById('roundText').textContent=`🔁 Round ${round} — ${skippedIndices.length} word${skippedIndices.length>1?'s':''} remaining`;
+
+  sfxRound();
+  drawRosco(); showClue(currentIdx);
+}
+
+// ── GAME FLOW ─────────────────────────────────────────────────────────────
+function startGame() {
+  resumeAC();
+  gameActive=true; paused=false; round=1; ansLocked=false;
+  status=new Array(26).fill(null);
+  queue=LETTERS.map((_,i)=>i);
+  currentIdx=0;
+  document.getElementById('startArea').style.display  ='none';
+  document.getElementById('endArea').style.display    ='none';
+  document.getElementById('answerBtns').style.display ='flex';
+  document.getElementById('pauseRow').style.display   ='flex';
+  document.getElementById('roundBadge').classList.remove('active','lap2');
+  buildProgress(); drawRosco(); showClue(0);
+}
+
+function endGame() {
+  gameActive=false; paused=false; stopTimer();
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('clueCard').classList.remove('blurred');
+  document.getElementById('answerBtns').style.display='none';
+  document.getElementById('pauseRow').style.display  ='none';
+  document.getElementById('endArea').style.display   ='block';
+  document.getElementById('revealRow').style.display ='none';
+  const c=status.filter(s=>s==='correct').length, w=status.filter(s=>s==='wrong').length;
+  document.getElementById('sCorrect').textContent=c;
+  document.getElementById('sWrong').textContent=w;
+  document.getElementById('cLetter').textContent=c===26?'🏆':'✓';
+  document.getElementById('cLabel').textContent='done';
+  if(c===26){ document.getElementById('endBig').textContent='Perfect!'; document.getElementById('endSub').textContent='All 26 words correct!'; bigConfetti(); }
+  else { document.getElementById('endBig').textContent='Finished!'; document.getElementById('endSub').textContent=`${c} correct · ${w} wrong`; }
+  sfxFinish(); drawRosco(); updateProgress(); updateScore();
+}
+
+function resetGame() {
+  gameActive=false; paused=false; round=1; ansLocked=false;
+  status=new Array(26).fill(null); queue=[]; stopTimer();
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('clueCard').classList.remove('blurred');
+  document.getElementById('endArea').style.display   ='none';
+  document.getElementById('startArea').style.display ='block';
+  document.getElementById('answerBtns').style.display='none';
+  document.getElementById('pauseRow').style.display  ='none';
+  document.getElementById('roundBadge').classList.remove('active','lap2');
+  document.getElementById('revealRow').style.display ='none';
+  document.getElementById('clueDef').textContent=''; document.getElementById('clueDef').classList.remove('show');
+  document.getElementById('exRow').classList.remove('show');
+  document.getElementById('chLetter').textContent='–'; document.getElementById('chType').textContent='–';
+  document.getElementById('chPreview').textContent='Start the rosco to get your first clue.';
+  document.getElementById('cLetter').textContent='?'; document.getElementById('cLabel').textContent='ready';
+  document.getElementById('cScore').textContent='0 / 26';
+  document.getElementById('tNum').textContent='–'; document.getElementById('tBar').style.strokeDashoffset=0;
+  document.getElementById('progRow').innerHTML='';
+  const pb=document.getElementById('btnPause'); pb.textContent='⏸ Pause'; pb.classList.remove('paused');
+  drawRosco();
+}
+
+// ── PROGRESS & SCORE ─────────────────────────────────────────────────────
+function buildProgress() {
+  const row=document.getElementById('progRow'); row.innerHTML='';
+  LETTERS.forEach((l,i)=>{ const d=document.createElement('div'); d.className='pdot'; d.id=`pd${i}`; d.textContent=l; row.appendChild(d); });
+}
+function updateProgress() {
+  LETTERS.forEach((_,i)=>{
+    const d=document.getElementById(`pd${i}`); if(!d) return;
+    d.className='pdot';
+    const s=status[i];
+    if      (s==='correct') d.classList.add('correct');
+    else if (s==='wrong')   d.classList.add('wrong');
+    else if (s==='skip')    d.classList.add('skipped');
+    else if (i===currentIdx&&gameActive) d.classList.add('active');
+  });
+}
+function updateScore() {
+  document.getElementById('cScore').textContent=status.filter(s=>s==='correct').length+' / 26';
+}
+function setABtnsEnabled(on) {
+  ['btnCorrect','btnWrong','btnSkip'].forEach(id=>document.getElementById(id).disabled=!on);
+}
+
+// ── CONFETTI ──────────────────────────────────────────────────────────────
+function confettiBurst() {
+  const cols=['#5BC4F5','#FFD166','#ffffff'];
+  const rect=document.getElementById('roscoWrap').getBoundingClientRect();
+  const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  for(let i=0;i<20;i++) setTimeout(()=>{
+    const el=document.createElement('div'),sz=5+Math.random()*6;
+    Object.assign(el.style,{position:'fixed',width:sz+'px',height:sz+'px',background:cols[Math.floor(Math.random()*cols.length)],borderRadius:Math.random()>.4?'50%':'2px',left:cx+'px',top:cy+'px',pointerEvents:'none',zIndex:9999});
+    document.body.appendChild(el);
+    const a=Math.random()*Math.PI*2,v=65+Math.random()*100;
+    let vx=Math.cos(a)*v,vy=Math.sin(a)*v-75,px=cx,py=cy,f=0;
+    const run=()=>{vy+=3.5;px+=vx*.016;py+=vy*.016;el.style.left=px+'px';el.style.top=py+'px';el.style.opacity=Math.max(0,1-f/52);el.style.transform=`rotate(${f*8}deg)`;if(++f<52)requestAnimationFrame(run);else el.remove();};
+    requestAnimationFrame(run);
+  },i*20);
+}
+function bigConfetti() {
+  const cols=['#5BC4F5','#FFD166','#fff','#FF6B6B','#3ECFB2'];
+  for(let i=0;i<80;i++) setTimeout(()=>{
+    const el=document.createElement('div'),sz=6+Math.random()*9;
+    Object.assign(el.style,{position:'fixed',width:sz+'px',height:sz+'px',background:cols[Math.floor(Math.random()*cols.length)],borderRadius:Math.random()>.4?'50%':'2px',left:Math.random()*window.innerWidth+'px',top:'-20px',pointerEvents:'none',zIndex:9999});
+    document.body.appendChild(el);
+    let py=-20,vy=55+Math.random()*120,vx=(Math.random()-.5)*80,f=0;
+    const run=()=>{vy+=2;py+=vy*.016;el.style.top=py+'px';el.style.left=(parseFloat(el.style.left)+vx*.016)+'px';el.style.transform=`rotate(${f*6}deg)`;el.style.opacity=py>window.innerHeight*.7?Math.max(0,1-(py-window.innerHeight*.7)/(window.innerHeight*.3)):1;if(py<window.innerHeight+40)requestAnimationFrame(run);else el.remove();f++;};
+    requestAnimationFrame(run);
+  },i*22);
+}
+
+// ── KEYBOARD ─────────────────────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.code==='Space'){e.preventDefault();if(gameActive)togglePause();}
+  if(!gameActive||paused||ansLocked) return;
+  if(e.code==='ArrowRight'||e.code==='KeyN') doMark('skip');
+  if(e.code==='ArrowUp'   ||e.code==='KeyC') doMark('correct');
+  if(e.code==='ArrowDown' ||e.code==='KeyW') doMark('wrong');
+  if(e.code==='KeyR') doReveal();
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+drawRosco();
+</script>
+</body>
+</html>
