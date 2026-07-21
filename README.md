@@ -46,7 +46,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 
 | Activity | Level | Summary | Link |
 |---|---|---|---|
-| Spot the Error | B2 | Error correction activity with 27 sentences. Students identify and correct the error in each sentence, with immediate feedback. | [Open](https://as1-design.github.io/english-learning-activities/spot-the-error%20B2.html) |
+| Spot the Error | B2.2 | Error correction activity with 27 sentences. Students identify and correct the error in each sentence, with immediate feedback. | [Open](https://as1-design.github.io/english-learning-activities/spot-the-error%20B2.html) |
 | Error Correction Activity | B2.1 | Multiple choice error correction activity organised by grammar category, including tense consistency and other key B2.1 structures. | [Open](https://as1-design.github.io/english-learning-activities/error_correction_activity%20B2.1.html) |
 
 ## Mediation & Skills
