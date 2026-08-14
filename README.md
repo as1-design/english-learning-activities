@@ -39,7 +39,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Activity | Level | Summary | Link |
 |---|---|---|---|
 | Complaint Letter Detective Academy | B2 | Five-tab interactive activity guiding students through the conventions of formal complaint letters, including a fully guided phrase-picker letter builder. | [Open](https://as1-design.github.io/english-learning-activities/complaint-letter-activities_1.html) |
-| Formal Writing | B2.2–C1 | Interactive reference and practice activity covering formal writing conventions, register, and key phrases for B2.2 and C1 level tasks. | [Open](https://as1-design.github.io/english-learning-activities/formal%20writing%20b2.2%20-%20c1.html) |
+| Formal Writing | B2.2–C1 | Interactive reference page covering formal writing conventions, register, and key phrases for B2.2 and C1 level tasks. | [Open](https://as1-design.github.io/english-learning-activities/formal%20writing%20b2.2%20-%20c1.html) |
 | Describing Places | B2.1 | A simple fill-in-the-blanks activity practising descriptive language for places. | [Open](https://as1-design.github.io/english-learning-activities/describing_places_activity.html) |
 
 ## Error Correction
