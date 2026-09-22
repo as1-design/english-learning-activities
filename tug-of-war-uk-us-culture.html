@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tug of War: UK &amp; US Culture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   Tug of War: UK & US Culture
+   Class of Coffee – with AI assistance
+   ========================================================= */
+:root{
+  --sun:#FFD04A; --sun-deep:#F5B82E;
+  --ink:#1E1B3F; --chalk:#FFFDF5;
+  --a:#E0445B; --a-soft:#FBD3D9;
+  --b:#3456D1; --b-soft:#D3DCFA;
+  --grass:#3DAE6A; --grass-deep:#2E8C54;
+  --rope:#B9854A; --rope-dark:#8C5F2E;
+  --good:#23A35A; --bad:#C9373F;
+  --font:"Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --fh:108px;          /* figure height */
+  --ground:34px;       /* grass strip height */
+  --r-lg:22px; --r-md:14px; --r-sm:10px;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:var(--font); color:var(--ink); background:var(--sun);
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  -webkit-font-smoothing:antialiased;
+}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+/* ---------- bunting ---------- */
+.bunting{height:46px;position:relative;overflow:hidden}
+.bunting svg{width:100%;height:100%;display:block}
+
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 28px}
+
+h1{
+  font-weight:800;font-size:clamp(2.2rem,6vw,4.2rem);line-height:.95;
+  letter-spacing:-.03em;margin:10px 0 6px;
+}
+h1 .vs{display:inline-block;font-size:.5em;vertical-align:middle;padding:.15em .5em;border-radius:999px;background:var(--ink);color:var(--sun);transform:rotate(-4deg);margin:0 .15em}
+.sub{font-size:1.1rem;max-width:56ch;opacity:.85}
+
+/* ---------- setup ---------- */
+.setup{display:grid;gap:18px;margin-top:22px;grid-template-columns:1fr 1fr}
+.panel{background:var(--chalk);border:3px solid var(--ink);border-radius:var(--r-lg);padding:20px 22px;box-shadow:6px 6px 0 var(--ink)}
+.panel h2{font-size:1.25rem;font-weight:800;margin-bottom:12px}
+.team-field{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.swatch{width:34px;height:34px;border-radius:50%;border:3px solid var(--ink);flex:none}
+.team-field input{flex:1;border:3px solid var(--ink);border-radius:var(--r-sm);padding:10px 12px;background:#fff;font-weight:600;font-size:1.05rem;min-width:0}
+.opt-row{margin-bottom:14px}
+.opt-row:last-child{margin-bottom:0}
+.opt-row .lbl{font-weight:600;margin-bottom:6px;display:block}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{border:2.5px solid var(--ink);background:#fff;border-radius:999px;padding:7px 14px;font-weight:600;transition:transform .12s}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sun)}
+.seg button:active{transform:scale(.95)}
+.start-row{grid-column:1/-1;display:flex;justify-content:center;margin-top:4px}
+.big-btn{
+  font-weight:800;font-size:1.35rem;padding:16px 38px;border-radius:999px;
+  border:3px solid var(--ink);background:var(--ink);color:var(--sun);
+  box-shadow:0 6px 0 var(--sun-deep),0 6px 0 3px var(--ink);
+  transition:transform .12s, box-shadow .12s;
+}
+.big-btn:hover{transform:translateY(-2px)}
+.big-btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--sun-deep),0 2px 0 3px var(--ink)}
+.pool-note{grid-column:1/-1;text-align:center;font-size:.95rem;opacity:.75}
+
+/* ---------- game ---------- */
+.hidden{display:none!important}
+.scorebar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:10px 0 12px}
+.tname{font-weight:800;font-size:clamp(1.2rem,3vw,1.8rem);display:flex;align-items:center;gap:10px;min-width:0}
+.tname span.n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tname.right{justify-content:flex-end;text-align:right}
+.pts{font-size:.85rem;font-weight:600;background:var(--chalk);border:2.5px solid var(--ink);border-radius:999px;padding:2px 10px;white-space:nowrap}
+.mid-tools{display:flex;gap:8px}
+.icon-btn{border:2.5px solid var(--ink);background:var(--chalk);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.9rem}
+
+.arena{
+  position:relative;height:calc(var(--fh) + var(--ground) + 70px);
+  border:3px solid var(--ink);border-radius:var(--r-lg);overflow:hidden;
+  background:linear-gradient(#8FD3F4 0%, #C9EBFA 70%);
+  box-shadow:6px 6px 0 var(--ink);
+}
+.half{position:absolute;top:0;bottom:0;width:50%;transition:opacity .4s;opacity:0}
+.half.l{left:0;background:var(--a)} .half.r{right:0;background:var(--b)}
+.half.on{opacity:.22}
+.cloud{position:absolute;background:#fff;border-radius:999px;opacity:.9;animation:drift 40s linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:55%;height:160%;left:15%;bottom:20%}
+.cloud::after{width:40%;height:130%;right:12%;bottom:15%}
+@keyframes drift{from{transform:translateX(-120px)}to{transform:translateX(1200px)}}
+.grass{position:absolute;left:0;right:0;bottom:0;height:var(--ground);background:var(--grass);
+  background-image:repeating-linear-gradient(90deg,var(--grass-deep) 0 3px,transparent 3px 22px)}
+.line{position:absolute;bottom:0;top:18px;width:0;border-left:4px dashed var(--chalk)}
+.line.c{left:50%;border-left-style:solid;opacity:.9}
+.line.wa{left:15%} .line.wb{left:85%}
+.line-tag{position:absolute;top:6px;transform:translateX(-50%);font-size:.75rem;font-weight:800;background:var(--chalk);border:2px solid var(--ink);border-radius:999px;padding:1px 8px;white-space:nowrap}
+
+.rope-group{
+  position:absolute;inset:0;
+  transform:translateX(calc(var(--pos,0) * 35% / var(--n,5)));
+  transition:transform .75s cubic-bezier(.34,1.56,.64,1);
+}
+.rope{position:absolute;left:4%;right:4%;height:9px;border-radius:9px;
+  bottom:calc(var(--ground) + var(--fh) * .49);
+  background:repeating-linear-gradient(115deg,var(--rope) 0 8px,var(--rope-dark) 8px 12px);
+  box-shadow:0 2px 0 rgba(30,27,63,.35)}
+.flag{position:absolute;left:50%;bottom:calc(var(--ground) + var(--fh) * .49 - 44px);width:26px;height:50px;transform:translateX(-50%);transform-origin:top center;animation:sway 1.8s ease-in-out infinite alternate}
+@keyframes sway{from{transform:translateX(-50%) rotate(-7deg)}to{transform:translateX(-50%) rotate(7deg)}}
+.team{position:absolute;bottom:var(--ground);display:flex;gap:2px;height:var(--fh)}
+.team.l{left:3%} .team.r{right:3%;flex-direction:row-reverse}
+.fig{height:100%;width:auto;transform-origin:50% 95%;animation:strain 1.3s ease-in-out infinite alternate}
+.team.r .fig{animation-name:strainR}
+.fig:nth-child(2){animation-delay:.25s} .fig:nth-child(3){animation-delay:.5s}
+@keyframes strain{from{transform:rotate(-2deg)}to{transform:rotate(3deg)}}
+@keyframes strainR{from{transform:scaleX(-1) rotate(-2deg)}to{transform:scaleX(-1) rotate(3deg)}}
+.team.fallen .fig{animation:none;transition:transform .9s cubic-bezier(.5,-0.4,.6,1.4)}
+.team.l.fallen .fig{transform:rotate(78deg) translateY(10px)}
+.team.r.fallen .fig{transform:scaleX(-1) rotate(78deg) translateY(10px)}
+.team.cheer .fig{animation:hop .45s ease-in-out infinite alternate}
+.team.r.cheer .fig{animation-name:hopR}
+@keyframes hop{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+@keyframes hopR{from{transform:scaleX(-1) translateY(0)}to{transform:scaleX(-1) translateY(-14px)}}
+
+.pull-pop{position:absolute;top:34%;font-weight:800;font-size:1.6rem;pointer-events:none;
+  padding:4px 14px;border-radius:999px;border:3px solid var(--ink);background:var(--chalk);
+  animation:pop 1.1s ease-out forwards}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,10px) scale(.6)}25%{opacity:1;transform:translate(-50%,0) scale(1.08)}100%{opacity:0;transform:translate(-50%,-30px) scale(1)}}
+
+/* ---------- question card ---------- */
+.turn-chip{display:inline-flex;align-items:center;gap:8px;margin:20px 0 -14px 18px;position:relative;z-index:2;
+  font-weight:800;font-size:1.05rem;color:#fff;padding:6px 16px;border-radius:999px;border:3px solid var(--ink);background:var(--a);transition:background .3s}
+.qcard{background:var(--chalk);border:3px solid var(--ink);border-radius:var(--r-lg);padding:26px 24px 20px;box-shadow:6px 6px 0 var(--ink);position:relative}
+.qcard.swap{animation:cardIn .45s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes cardIn{from{transform:rotate(-1.5deg) translateY(12px);opacity:0}to{transform:none;opacity:1}}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{font-size:.85rem;font-weight:600;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;background:#fff}
+.chip.uk{background:#FFE3E7} .chip.us{background:#E1E7FD}
+.qtext{font-size:clamp(1.3rem,2.6vw,1.75rem);font-weight:800;line-height:1.2;letter-spacing:-.01em;max-width:44ch}
+.timer{height:8px;border-radius:8px;background:#EDE8D8;margin:14px 0 16px;overflow:hidden}
+.timer i{display:block;height:100%;width:100%;background:var(--ink);transform-origin:left;transition:background .3s}
+.timer.low i{background:var(--bad)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;border:3px solid var(--ink);border-radius:var(--r-md);background:#fff;padding:13px 14px;font-weight:600;font-size:1.08rem;
+  transition:transform .12s, background .2s}
+.opt:hover:not(:disabled){transform:translateY(-2px);background:#FFF6D6}
+.opt:active:not(:disabled){transform:translateY(1px)}
+.opt .k{flex:none;width:30px;height:30px;border-radius:8px;border:2.5px solid var(--ink);display:grid;place-items:center;font-weight:800;font-size:.95rem}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good);color:#fff}
+.opt.right .k{border-color:#fff}
+.opt.wrong{background:var(--bad);color:#fff;text-decoration:line-through}
+.opt.wrong .k{border-color:#fff}
+.opt.dim{opacity:.45}
+.opt.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.feedback{margin-top:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.fb-text{flex:1 1 320px;font-size:1.05rem;line-height:1.45}
+.fb-text strong{font-weight:800}
+.next-btn{font-weight:800;font-size:1.1rem;padding:12px 26px;border-radius:999px;border:3px solid var(--ink);background:var(--sun);box-shadow:0 4px 0 var(--ink);transition:transform .1s, box-shadow .1s}
+.next-btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.q-tools{display:flex;justify-content:flex-end;margin-top:12px}
+.link-btn{background:none;border:none;text-decoration:underline;font-weight:600;opacity:.7;padding:4px}
+.keys-hint{font-size:.85rem;opacity:.6;margin-top:10px}
+
+/* ---------- win overlay ---------- */
+.overlay{position:fixed;inset:0;background:rgba(30,27,63,.55);display:grid;place-items:center;z-index:20;padding:20px}
+.win-card{background:var(--chalk);border:4px solid var(--ink);border-radius:28px;padding:30px 30px 26px;text-align:center;max-width:520px;width:100%;box-shadow:10px 10px 0 var(--ink);animation:winIn .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes winIn{from{transform:scale(.5) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.trophy{font-size:4rem;line-height:1;display:inline-block;animation:bob 1s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-8px) rotate(6deg)}}
+.win-card h2{font-size:clamp(2rem,6vw,2.8rem);font-weight:800;letter-spacing:-.02em;margin:8px 0 4px;line-height:1}
+.stats{display:flex;justify-content:center;gap:12px;margin:18px 0 22px;flex-wrap:wrap}
+.stat{border:3px solid var(--ink);border-radius:var(--r-md);padding:10px 16px;min-width:130px}
+.stat b{display:block;font-size:1.8rem;font-weight:800}
+.win-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.ghost-btn{font-weight:800;font-size:1.05rem;padding:12px 24px;border-radius:999px;border:3px solid var(--ink);background:#fff}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+
+footer{text-align:center;font-size:.9rem;font-weight:600;padding:18px 0 8px;opacity:.8}
+
+@media (max-width:720px){
+  :root{--fh:78px;--ground:26px}
+  .setup{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .team .fig:nth-child(3){display:none}
+  .scorebar{grid-template-columns:1fr 1fr}
+  .mid-tools{grid-column:1/-1;grid-row:2;justify-content:center}
+  .line-tag{font-size:.65rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="bunting" aria-hidden="true"><svg id="bunting" preserveAspectRatio="none"></svg></div>
+
+<main class="wrap">
+
+  <!-- ================= SETUP ================= -->
+  <section id="setup">
+    <h1>Tug of War <span class="vs">UK &amp; US</span><br>Culture Quiz</h1>
+    <p class="sub">Two teams take turns answering questions about British and American culture. Every right answer pulls the rope, and two in a row pull twice as hard. Drag the flag over your line, or be ahead when the questions run out, to win.</p>
+
+    <div class="setup">
+      <div class="panel">
+        <h2>Teams</h2>
+        <label class="team-field"><span class="swatch" style="background:var(--a)"></span><input id="nameA" value="Team Tea" maxlength="18" aria-label="Left team name"></label>
+        <label class="team-field"><span class="swatch" style="background:var(--b)"></span><input id="nameB" value="Team Coffee" maxlength="18" aria-label="Right team name"></label>
+      </div>
+
+      <div class="panel">
+        <h2>Rules</h2>
+        <div class="opt-row"><span class="lbl">Questions about</span>
+          <div class="seg" data-setting="topic">
+            <button data-v="mixed" aria-pressed="true">Both</button>
+            <button data-v="UK" aria-pressed="false">UK only</button>
+            <button data-v="US" aria-pressed="false">US only</button>
+          </div></div>
+        <div class="opt-row"><span class="lbl">Rope length</span>
+          <div class="seg" data-setting="n">
+            <button data-v="3" aria-pressed="false">Short (3 pulls)</button>
+            <button data-v="5" aria-pressed="true">Medium (5)</button>
+            <button data-v="7" aria-pressed="false">Long (7)</button>
+          </div></div>
+        <div class="opt-row"><span class="lbl">Match length</span>
+          <div class="seg" data-setting="rounds">
+            <button data-v="6" aria-pressed="false">6 questions each</button>
+            <button data-v="10" aria-pressed="true">10 each</button>
+            <button data-v="15" aria-pressed="false">15 each</button>
+          </div></div>
+        <div class="opt-row"><span class="lbl">Time per question</span>
+          <div class="seg" data-setting="timer">
+            <button data-v="0" aria-pressed="false">No timer</button>
+            <button data-v="20" aria-pressed="false">20 s</button>
+            <button data-v="30" aria-pressed="true">30 s</button>
+            <button data-v="45" aria-pressed="false">45 s</button>
+          </div></div>
+        <div class="opt-row"><span class="lbl">After a wrong answer</span>
+          <div class="seg" data-setting="wrong">
+            <button data-v="none" aria-pressed="true">Nothing happens</button>
+            <button data-v="steal" aria-pressed="false">The other team pulls</button>
+          </div></div>
+      </div>
+
+      <div class="start-row"><button class="big-btn" id="startBtn">Start the match</button></div>
+      <p class="pool-note"><span id="poolNote"></span> <button class="link-btn" id="resetHist">Reset question history</button></p>
+    </div>
+  </section>
+
+  <!-- ================= GAME ================= -->
+  <section id="game" class="hidden">
+    <div class="scorebar">
+      <div class="tname"><span class="swatch" style="background:var(--a)"></span><span class="n" id="labelA"></span><span class="pts" id="ptsA">0 right</span></div>
+      <div class="mid-tools">
+        <button class="icon-btn" id="soundBtn" aria-pressed="true">Sound on</button>
+        <button class="icon-btn" id="quitBtn">Settings</button>
+      </div>
+      <div class="tname right"><span class="pts" id="ptsB">0 right</span><span class="n" id="labelB"></span><span class="swatch" style="background:var(--b)"></span></div>
+    </div>
+
+    <div class="arena" id="arena" aria-label="Tug of war rope">
+      <div class="half l" id="halfA"></div><div class="half r" id="halfB"></div>
+      <div class="cloud" style="width:90px;height:22px;top:22px;animation-delay:-8s"></div>
+      <div class="cloud" style="width:60px;height:16px;top:52px;animation-delay:-26s;animation-duration:55s"></div>
+      <div class="grass"></div>
+      <div class="line wa"><span class="line-tag" id="tagA"></span></div>
+      <div class="line c"></div>
+      <div class="line wb"><span class="line-tag" id="tagB"></span></div>
+      <div class="rope-group" id="ropeGroup">
+        <div class="rope"></div>
+        <svg class="flag" viewBox="0 0 26 50" aria-hidden="true"><path d="M13 0 L24 34 L13 28 L2 34 Z" fill="var(--sun)" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="13" cy="4" r="4" fill="var(--ink)"/></svg>
+        <div class="team l" id="teamA"></div>
+        <div class="team r" id="teamB"></div>
+      </div>
+    </div>
+
+    <div class="turn-chip" id="turnChip"></div>
+    <div class="qcard" id="qcard">
+      <div class="meta" id="meta"></div>
+      <p class="qtext" id="qtext"></p>
+      <div class="timer" id="timer"><i id="timerFill"></i></div>
+      <div class="opts" id="opts"></div>
+      <div class="feedback hidden" id="feedback">
+        <p class="fb-text" id="fbText"></p>
+        <button class="next-btn" id="nextBtn">Next question</button>
+      </div>
+      <div class="q-tools"><button class="link-btn" id="skipBtn">Skip this question</button></div>
+      <p class="keys-hint">Keyboard: press 1 to 4 to answer, Enter for the next question.</p>
+    </div>
+  </section>
+
+  <footer>Class of Coffee – with AI assistance</footer>
+</main>
+
+<!-- ================= WIN ================= -->
+<div class="overlay hidden" id="winOverlay" role="dialog" aria-modal="true" aria-labelledby="winTitle">
+  <div class="win-card">
+    <div class="trophy" aria-hidden="true">🏆</div>
+    <h2 id="winTitle"></h2>
+    <p id="winSub"></p>
+    <div class="stats" id="stats"></div>
+    <div class="win-actions">
+      <button class="big-btn" id="againBtn">Play again</button>
+      <button class="ghost-btn" id="settingsBtn">Change settings</button>
+    </div>
+  </div>
+</div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* =========================================================
+   QUESTION BANK — edit freely!
+   Each question: region ("UK" or "US"), cat (category),
+   q (question), options (first one listed is ALWAYS the
+   correct answer; the game shuffles them), fact (shown after).
+   ========================================================= */
+const QUESTIONS = [
+  // ---------- UK ----------
+  {region:"UK",cat:"Places",q:"What is the capital of Scotland?",options:["Edinburgh","Glasgow","Aberdeen","Cardiff"],fact:"Glasgow is Scotland's biggest city, but Edinburgh is the capital."},
+  {region:"UK",cat:"Traditions",q:"On 5 November, people in Britain light bonfires and set off fireworks. What is this night called?",options:["Bonfire Night","Burns Night","Twelfth Night","Boxing Night"],fact:"It remembers the Gunpowder Plot of 1605, when Guy Fawkes and others tried to blow up Parliament."},
+  {region:"UK",cat:"Traditions",q:"What is the day after Christmas Day called in the UK?",options:["Boxing Day","Gift Day","Pudding Day","St Andrew's Day"],fact:"Boxing Day (26 December) is a bank holiday, famous for football matches and big sales."},
+  {region:"UK",cat:"Food",q:"Fish and chips is traditionally served with…",options:["mushy peas","maple syrup","sour cream","guacamole"],fact:"Mushy peas are dried peas soaked and cooked until soft. Many people add salt and vinegar to the chips too."},
+  {region:"UK",cat:"Places",q:"Which river flows through London?",options:["The Thames","The Seine","The Severn","The Shannon"],fact:"The Thames is about 346 km long and passes landmarks like the Houses of Parliament and Tower Bridge."},
+  {region:"UK",cat:"Language",q:"In British English, a \"flat\" is…",options:["an apartment","a car tyre","a type of shoe","a garden"],fact:"Americans usually say \"apartment\". A \"flat tyre\" exists in both varieties!"},
+  {region:"UK",cat:"Everyday life",q:"In a British building, the floor at street level is called the…",options:["ground floor","first floor","zero floor","main floor"],fact:"So the British \"first floor\" is the American \"second floor\"."},
+  {region:"UK",cat:"People",q:"The Beatles came from which city?",options:["Liverpool","Manchester","Birmingham","Bristol"],fact:"Liverpool still celebrates the band, from The Cavern Club to the Beatles statue on the waterfront."},
+  {region:"UK",cat:"Places",q:"\"Big Ben\" is actually the name of…",options:["the great bell inside the clock tower","the whole Houses of Parliament","the clock's minute hand","a famous royal guard"],fact:"The tower itself has been called the Elizabeth Tower since 2012."},
+  {region:"UK",cat:"Everyday life",q:"What is the currency of the United Kingdom?",options:["the pound sterling","the euro","the dollar","the crown"],fact:"People often call a pound a \"quid\" in informal English."},
+  {region:"UK",cat:"Sport",q:"Wimbledon is a famous tournament in which sport?",options:["tennis","golf","cricket","rugby"],fact:"It is the oldest tennis tournament in the world, and fans traditionally eat strawberries and cream."},
+  {region:"UK",cat:"Places",q:"How many countries make up the United Kingdom?",options:["four","three","two","six"],fact:"England, Scotland, Wales and Northern Ireland."},
+  {region:"UK",cat:"Language",q:"If a British friend offers you \"a cuppa\", they are offering you…",options:["a cup of tea","a small cake","a lift home","a hug"],fact:"It is often said that the British drink around 100 million cups of tea a day."},
+  {region:"UK",cat:"Food",q:"Which of these is part of a traditional full English breakfast?",options:["black pudding","pancakes with syrup","grits","a bagel"],fact:"A full English often includes eggs, bacon, sausages, beans, tomatoes, mushrooms, toast and black pudding."},
+  {region:"UK",cat:"People",q:"William Shakespeare was born in…",options:["Stratford-upon-Avon","Oxford","York","Canterbury"],fact:"He was born there in 1564, and you can still visit the house today."},
+  {region:"UK",cat:"Traditions",q:"Burns Night, on 25 January, celebrates a poet from which country?",options:["Scotland","Wales","Ireland","England"],fact:"People eat haggis, read Robert Burns' poems and often sing \"Auld Lang Syne\"."},
+  {region:"UK",cat:"Traditions",q:"\"Pancake Day\" is another name for…",options:["Shrove Tuesday","Easter Monday","Good Friday","Mother's Day"],fact:"It is the day before Lent begins. Some towns even hold pancake races!"},
+  {region:"UK",cat:"Language",q:"In British English, the \"boot\" of a car is…",options:["the space at the back for luggage","the front of the car","the steering wheel","the roof"],fact:"Americans call it the \"trunk\". The front cover of the engine is the \"bonnet\" (US: \"hood\")."},
+  {region:"UK",cat:"Everyday life",q:"What do Londoners call the London Underground?",options:["the Tube","the Metro","the Subway","the Loop"],fact:"It opened in 1863 and is the oldest underground railway in the world."},
+  {region:"UK",cat:"Places",q:"Where does the British Prime Minister officially live?",options:["10 Downing Street","Buckingham Palace","Windsor Castle","Baker Street"],fact:"Buckingham Palace is the monarch's official London residence. Baker Street is where Sherlock Holmes \"lived\"."},
+  {region:"UK",cat:"Everyday life",q:"British people are famous for standing patiently in a \"queue\". What is a queue?",options:["a line of people waiting","a crowded party","a type of hat","a bus timetable"],fact:"Pushing in, or \"jumping the queue\", is considered very rude in the UK."},
+  {region:"UK",cat:"Places",q:"Which Scottish lake is said to be home to a mysterious monster?",options:["Loch Ness","Loch Lomond","Lake Windermere","Loch Tay"],fact:"The monster is affectionately called \"Nessie\"."},
+  {region:"UK",cat:"Places",q:"What animal is on the flag of Wales?",options:["a red dragon","a white horse","a golden lion","a unicorn"],fact:"The Welsh dragon is called Y Ddraig Goch."},
+  {region:"UK",cat:"Places",q:"Which famous prehistoric stone circle in England is over 4,000 years old?",options:["Stonehenge","Hadrian's Wall","Tintagel","The Giant's Causeway"],fact:"Thousands of people visit Stonehenge to watch the sunrise on the summer solstice."},
+  {region:"UK",cat:"Everyday life",q:"On the London Underground, the warning \"Mind the gap\" is about…",options:["the space between the train and the platform","a gap in your timetable","people leaving no space","a hole in the road"],fact:"The recorded announcement has become one of London's best-known phrases."},
+  {region:"UK",cat:"People",q:"Which British writer created the detective Sherlock Holmes?",options:["Arthur Conan Doyle","Agatha Christie","Charles Dickens","Roald Dahl"],fact:"Agatha Christie created detectives too: Hercule Poirot and Miss Marple."},
+  {region:"UK",cat:"Language",q:"The sport Americans call \"soccer\", most British people call…",options:["football","rugby","footy ball","kickball"],fact:"The word \"soccer\" actually started in England as a short form of \"association football\"."},
+  {region:"UK",cat:"Food",q:"In a traditional afternoon tea, scones are served with…",options:["clotted cream and jam","ketchup","peanut butter","honey and cheese"],fact:"In Devon they add cream first, then jam. In Cornwall it's jam first. People argue about it!"},
+  {region:"UK",cat:"Traditions",q:"In November, many British people wear a red paper flower to remember soldiers. Which flower is it?",options:["a poppy","a rose","a tulip","a daisy"],fact:"Poppies grew on the battlefields of the First World War. Remembrance Sunday is in November."},
+  {region:"UK",cat:"Language",q:"In the UK, where would you go to buy medicine?",options:["a chemist's","a newsagent's","an off-licence","a greengrocer's"],fact:"A chemist's (US: drugstore or pharmacy) sells medicine. An off-licence sells alcohol."},
+  {region:"UK",cat:"Everyday life",q:"On which side of the road do people drive in the UK?",options:["the left","the right","the middle","it depends on the day"],fact:"Ireland, Japan, Australia and India also drive on the left."},
+  {region:"UK",cat:"Language",q:"If something is \"brilliant\" or \"ace\" in British slang, it is…",options:["excellent","expensive","broken","boring"],fact:"You might also hear \"cracking\", \"smashing\" or \"top-notch\"."},
+
+  // ---------- US ----------
+  {region:"US",cat:"Places",q:"What is the capital of the United States?",options:["Washington, D.C.","New York City","Los Angeles","Chicago"],fact:"D.C. stands for \"District of Columbia\". It is not part of any state."},
+  {region:"US",cat:"Traditions",q:"When do Americans celebrate Thanksgiving?",options:["the fourth Thursday in November","the last Monday in May","4 July","the first Sunday in October"],fact:"Families usually eat roast turkey, stuffing, cranberry sauce and pumpkin pie."},
+  {region:"US",cat:"Traditions",q:"What does the United States celebrate on 4 July?",options:["Independence Day","Thanksgiving","Labor Day","Memorial Day"],fact:"It marks the Declaration of Independence in 1776, and is celebrated with fireworks and barbecues."},
+  {region:"US",cat:"Places",q:"How many stars are there on the US flag?",options:["50","13","48","52"],fact:"One star for each state. The 13 stripes represent the original colonies."},
+  {region:"US",cat:"Language",q:"In American English, \"fall\" is another word for…",options:["autumn","winter","a holiday","a waterfall"],fact:"It comes from the leaves falling from the trees."},
+  {region:"US",cat:"Language",q:"An American \"cookie\" is what British people usually call a…",options:["biscuit","cake","scone","muffin"],fact:"And an American \"biscuit\" is closer to a British scone!"},
+  {region:"US",cat:"Language",q:"If you order \"fries\" in the US, you get what the British call…",options:["chips","crisps","wedges","mash"],fact:"The British \"crisps\" are \"chips\" in the US. Confusing, isn't it?"},
+  {region:"US",cat:"Places",q:"The Statue of Liberty was a gift from which country?",options:["France","the United Kingdom","Spain","Italy"],fact:"France gave it in 1886 to celebrate friendship and freedom."},
+  {region:"US",cat:"Places",q:"Which city is nicknamed \"the Big Apple\"?",options:["New York City","Boston","San Francisco","Miami"],fact:"A sports journalist made the nickname popular in the 1920s, and a tourism campaign brought it back in the 1970s."},
+  {region:"US",cat:"Sport",q:"The Super Bowl is the final game of which sport?",options:["American football","baseball","basketball","ice hockey"],fact:"Millions watch it for the adverts and the half-time show as much as the game."},
+  {region:"US",cat:"Places",q:"Hollywood, the centre of the American film industry, is in…",options:["Los Angeles","Las Vegas","San Diego","New York"],fact:"The famous Hollywood sign was first put up in 1923 to advertise houses."},
+  {region:"US",cat:"Language",q:"Americans say \"elevator\". What do British people say?",options:["lift","raiser","hoist","ladder"],fact:"Other pairs: apartment/flat, truck/lorry, trash/rubbish."},
+  {region:"US",cat:"Places",q:"Where does the President of the United States live and work?",options:["the White House","the Capitol","the Pentagon","the Empire State Building"],fact:"The Capitol is where Congress meets. The Pentagon is the headquarters of the US military."},
+  {region:"US",cat:"Traditions",q:"On which date do American children go \"trick-or-treating\"?",options:["31 October","1 November","25 December","14 February"],fact:"Halloween has Celtic roots, but the American version spread all over the world."},
+  {region:"US",cat:"Places",q:"Which is the largest US state by area?",options:["Alaska","Texas","California","Montana"],fact:"Alaska is more than twice the size of Texas."},
+  {region:"US",cat:"Everyday life",q:"At an American high school or university, a \"sophomore\" is a student in their…",options:["second year","first year","third year","final year"],fact:"The four years are: freshman, sophomore, junior, senior."},
+  {region:"US",cat:"Language",q:"When Americans put \"gas\" in their car, the British would say…",options:["petrol","oil","diesel","fuel water"],fact:"\"Gas\" is short for \"gasoline\"."},
+  {region:"US",cat:"Places",q:"Mount Rushmore has the giant faces of four…",options:["US presidents","astronauts","inventors","singers"],fact:"Washington, Jefferson, Theodore Roosevelt and Lincoln, carved into a mountain in South Dakota."},
+  {region:"US",cat:"Traditions",q:"On Groundhog Day (2 February), what does a groundhog supposedly predict?",options:["how long winter will last","who will win the Super Bowl","next year's weather","the election result"],fact:"If the groundhog sees its shadow, there will be six more weeks of winter. There's a famous 1993 film about it too."},
+  {region:"US",cat:"Places",q:"Route 66 is famous as a…",options:["historic road across the country","New York bus line","national park","rock band"],fact:"It ran from Chicago to Santa Monica, California, and is a symbol of the American road trip."},
+  {region:"US",cat:"Language",q:"An American \"sidewalk\" is a British…",options:["pavement","path","kerb","crossing"],fact:"Other pairs: crosswalk/pedestrian crossing, parking lot/car park."},
+  {region:"US",cat:"People",q:"Which famous speech did Martin Luther King Jr. give in 1963?",options:["\"I Have a Dream\"","\"Yes We Can\"","\"Ask Not What Your Country Can Do\"","\"The Gettysburg Address\""],fact:"He gave it in Washington, D.C., during the March on Washington for civil rights."},
+  {region:"US",cat:"Places",q:"The Grand Canyon is in which state?",options:["Arizona","Nevada","Colorado","Utah"],fact:"The Colorado River carved it over millions of years."},
+  {region:"US",cat:"Sport",q:"The \"World Series\" is the championship of which sport?",options:["baseball","basketball","American football","golf"],fact:"Despite the name, only one team from outside the US plays in it: the Toronto Blue Jays from Canada."},
+  {region:"US",cat:"Places",q:"Which ocean is on the west coast of the United States?",options:["the Pacific","the Atlantic","the Indian","the Arctic"],fact:"The Atlantic is on the east coast."},
+  {region:"US",cat:"Language",q:"In American English, \"candy\" means…",options:["sweets","cakes","fruit","snacks like crisps"],fact:"British English uses \"sweets\"; \"candy\" is understood but sounds American."},
+  {region:"US",cat:"Places",q:"Yellowstone is famous because it was the world's first…",options:["national park","theme park","skyscraper","university"],fact:"It became a national park in 1872 and is famous for its geysers, like Old Faithful."},
+  {region:"US",cat:"People",q:"Which type of music was born in New Orleans?",options:["jazz","country","grunge","hip hop"],fact:"Louis Armstrong, one of the greatest jazz musicians, grew up in New Orleans."},
+  {region:"US",cat:"Everyday life",q:"In a US restaurant, how much do people usually tip?",options:["around 18–20% of the bill","nothing","exactly $1","around 50%"],fact:"About 20% is now the usual tip at a sit-down restaurant. Many American waiters earn a very low basic wage, so tips are expected, not optional."},
+  {region:"US",cat:"Language",q:"When Americans take a \"vacation\", the British would say they are…",options:["on holiday","on leave","on break","on tour"],fact:"In the US, a \"holiday\" usually means an official celebration day, like Thanksgiving."},
+  {region:"US",cat:"Places",q:"Silicon Valley in California is famous for…",options:["technology companies","wine only","film studios","car factories"],fact:"Companies like Apple and Google have their headquarters there."},
+  {region:"US",cat:"Everyday life",q:"\"The Stars and Stripes\" is a nickname for…",options:["the US flag","the national anthem","the army","a baseball team"],fact:"The national anthem is called \"The Star-Spangled Banner\"."}
+];
+
+/* ================= GAME LOGIC ================= */
+const $ = id => document.getElementById(id);
+const settings = {topic:"mixed", n:5, rounds:10, timer:30, wrong:"none"};
+const S = {teams:[], turn:0, pos:0, cur:null, answered:false, over:false, sudden:false, suddenLeft:0, timerId:null};
+let soundOn = true, actx = null;
+
+/* bunting */
+function drawBunting(){
+  const svg = $("bunting"), w = window.innerWidth, h = 46, size = 44;
+  const count = Math.ceil(w/size)+1, cols = ["var(--a)","var(--chalk)","var(--b)"];
+  let s = `<path d="M0 6 Q ${w/2} 18 ${w} 6" stroke="var(--ink)" stroke-width="2.5" fill="none"/>`;
+  for(let i=0;i<count;i++){
+    const x = i*size, t = x/w, y = 6 + 12*4*t*(1-t);
+    s += `<path d="M${x+3} ${y} L${x+size-3} ${y} L${x+size/2} ${y+32} Z" fill="${cols[i%3]}" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>`;
+  }
+  svg.setAttribute("viewBox",`0 0 ${w} ${h}`); svg.innerHTML = s;
+}
+drawBunting(); addEventListener("resize", drawBunting);
+
+/* settings controls */
+document.querySelectorAll(".seg").forEach(seg=>{
+  seg.addEventListener("click",e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    seg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed", x===b));
+    const key = seg.dataset.setting, v = b.dataset.v;
+    settings[key] = (key==="n"||key==="timer"||key==="rounds") ? +v : v;
+    updatePoolNote();
+  });
+});
+function pool(){ return QUESTIONS.filter(q=>settings.topic==="mixed"||q.region===settings.topic); }
+
+/* Question history: remembers which questions have been used across ALL matches
+   (and page reloads), so nothing repeats until every question in the chosen topic
+   has been asked. */
+const SUDDEN_ROUNDS = 3;   // extra questions per team in sudden death before a draw
+const HIST_KEY = "tow-uk-us-used";
+let used = new Set(), recent = [], matchSeen = new Set();
+try{ used = new Set(JSON.parse(localStorage.getItem(HIST_KEY)) || []); }catch(e){}
+function saveHist(){ try{ localStorage.setItem(HIST_KEY, JSON.stringify([...used])); }catch(e){} }
+function drawQuestion(){
+  const p = pool();
+  let avail = p.filter(q=>!used.has(q.q) && !matchSeen.has(q.q));
+  if(!avail.length){                       // every question used: start a fresh cycle
+    p.forEach(q=>used.delete(q.q));
+    avail = p.filter(q=>!matchSeen.has(q.q) && !recent.includes(q.q));   // never repeat within this match
+    if(!avail.length) avail = p.filter(q=>!recent.includes(q.q));
+    if(!avail.length) avail = p;
+  }
+  const q = avail[Math.floor(Math.random()*avail.length)];
+  used.add(q.q); matchSeen.add(q.q); recent.push(q.q); if(recent.length > 12) recent.shift();
+  saveHist();
+  return q;
+}
+function updatePoolNote(){
+  const p = pool(), fresh = p.filter(q=>!used.has(q.q)).length;
+  $("poolNote").textContent = `${fresh} of ${p.length} questions not used yet. You can add your own at the top of the file's script.`;
+}
+$("resetHist").onclick = ()=>{ used.clear(); recent = []; saveHist(); updatePoolNote(); };
+updatePoolNote();
+
+/* figures */
+function figure(color){
+  return `<svg class="fig" viewBox="0 0 60 110" aria-hidden="true">
+    <path d="M30 70 L16 106 M30 70 L44 104" stroke="var(--ink)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M25 34 L30 70" stroke="${color}" stroke-width="16" stroke-linecap="round"/>
+    <path d="M27 42 L60 54" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="22" cy="19" r="12" fill="#F4C9A0" stroke="var(--ink)" stroke-width="3"/>
+    <circle cx="27" cy="17" r="1.8" fill="var(--ink)"/>
+    <path d="M24 25 Q28 23 31 25" stroke="var(--ink)" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </svg>`;
+}
+$("teamA").innerHTML = figure("var(--a)").repeat(3);
+$("teamB").innerHTML = figure("var(--b)").repeat(3);
+
+/* sound */
+function beep(freqs, dur=.12, type="triangle"){
+  if(!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+    freqs.forEach((f,i)=>{
+      const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime + i*dur;
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(.18,t); g.gain.exponentialRampToValueAtTime(.001,t+dur*1.6);
+      o.connect(g).connect(actx.destination); o.start(t); o.stop(t+dur*1.7);
+    });
+  }catch(e){}
+}
+$("soundBtn").onclick = ()=>{ soundOn=!soundOn; $("soundBtn").textContent = soundOn?"Sound on":"Sound off"; $("soundBtn").setAttribute("aria-pressed",soundOn); };
+
+/* helpers */
+function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(s){ return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+const col = t => t===0 ? "var(--a)" : "var(--b)";
+
+/* start */
+function startMatch(){
+  S.teams = [
+    {name:$("nameA").value.trim()||"Team Tea", correct:0, asked:0, streak:0},
+    {name:$("nameB").value.trim()||"Team Coffee", correct:0, asked:0, streak:0}
+  ];
+  S.turn = 0; S.pos = 0; S.over = false; S.sudden = false; S.suddenLeft = 0; matchSeen = new Set();
+  $("labelA").textContent = S.teams[0].name; $("labelB").textContent = S.teams[1].name;
+  $("tagA").textContent = S.teams[0].name + " wins"; $("tagB").textContent = S.teams[1].name + " wins";
+  $("arena").style.setProperty("--n", settings.n);
+  setPos(0);
+  ["teamA","teamB"].forEach(id=>$(id).classList.remove("fallen","cheer"));
+  $("timer").classList.toggle("hidden", settings.timer===0);
+  updatePts();
+  $("setup").classList.add("hidden"); $("game").classList.remove("hidden");
+  $("winOverlay").classList.add("hidden");
+  window.scrollTo({top:0});
+  nextQuestion(true);
+}
+$("startBtn").onclick = startMatch;
+
+function setPos(p){ S.pos = p; $("ropeGroup").style.setProperty("--pos", p); $("ropeGroup").style.setProperty("--n", settings.n); }
+function updatePts(){
+  [["ptsA",0],["ptsB",1]].forEach(([id,k])=>{
+    const t = S.teams[k];
+    $(id).textContent = `${t.correct} right` + (t.streak ? " 🔥" : "");
+    $(id).title = t.streak ? "On a streak: next correct answer pulls twice as hard" : "";
+  });
+}
+
+function nextQuestion(first){
+  if(S.over) return;
+  if(!first) S.turn = 1 - S.turn;
+  const q = drawQuestion();
+  S.cur = {...q, shuffled: shuffle(q.options.map((t,i)=>({t, ok:i===0})))};
+  S.answered = false;
+
+  $("halfA").classList.toggle("on", S.turn===0); $("halfB").classList.toggle("on", S.turn===1);
+  $("turnChip").style.background = col(S.turn);
+  $("turnChip").textContent = `${S.teams[S.turn].name}, your turn` + (S.teams[S.turn].streak ? " 🔥 double pull" : "");
+
+  const done = S.teams[0].asked + S.teams[1].asked, total = settings.rounds*2;
+  const counter = S.sudden ? `Sudden death: ${S.suddenLeft} left each` : `Question ${done+1} of ${total}`;
+  $("meta").innerHTML = `<span class="chip" style="background:var(--ink);color:var(--sun)">${counter}</span><span class="chip ${q.region.toLowerCase()}">${q.region==="UK"?"🇬🇧 UK":"🇺🇸 US"}</span><span class="chip">${esc(q.cat)}</span>`;
+  $("qtext").textContent = q.q;
+  $("opts").innerHTML = S.cur.shuffled.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${i+1}</span><span>${esc(o.t)}</span></button>`).join("");
+  $("feedback").classList.add("hidden");
+  $("skipBtn").parentElement.classList.remove("hidden");
+  const card = $("qcard"); card.classList.remove("swap"); void card.offsetWidth; card.classList.add("swap");
+  card.style.borderColor = ""; 
+  startTimer();
+}
+
+$("opts").addEventListener("click",e=>{
+  const b = e.target.closest(".opt"); if(!b||S.answered) return;
+  answer(+b.dataset.i);
+});
+
+function startTimer(){
+  clearInterval(S.timerId);
+  if(!settings.timer) return;
+  const fill = $("timerFill"), total = settings.timer*1000, t0 = performance.now();
+  $("timer").classList.remove("low");
+  fill.style.transform = "scaleX(1)";
+  S.timerId = setInterval(()=>{
+    const left = Math.max(0, total - (performance.now()-t0));
+    fill.style.transform = `scaleX(${left/total})`;
+    $("timer").classList.toggle("low", left < 6000);
+    if(left<=0){ clearInterval(S.timerId); answer(null); }
+  },100);
+}
+
+function answer(i){
+  if(S.answered) return;
+  S.answered = true; clearInterval(S.timerId);
+  const team = S.turn, other = 1-team, opts = [...$("opts").children];
+  const correctIdx = S.cur.shuffled.findIndex(o=>o.ok);
+  const ok = i!==null && S.cur.shuffled[i].ok;
+  S.teams[team].asked++;
+  opts.forEach((b,k)=>{
+    b.disabled = true;
+    if(k===correctIdx) b.classList.add("right");
+    else if(k===i){ b.classList.add("wrong","shake"); }
+    else b.classList.add("dim");
+  });
+
+  let msg;
+  const right = esc(S.cur.shuffled[correctIdx].t);
+  const T = S.teams[team];
+  if(ok){
+    T.correct++;
+    const steps = T.streak ? 2 : 1;       // 2nd correct in a row (and beyond) pulls double
+    T.streak++;
+    pull(team, steps);
+    beep(steps===2 ? [523,659,784,1047] : [523,659,784]);
+    msg = steps===2
+      ? `<strong>Correct, and that's ${T.streak} in a row!</strong> ${esc(T.name)} pull twice as hard. ${esc(S.cur.fact)}`
+      : `<strong>Correct!</strong> ${esc(T.name)} pull the rope. Get the next one right for a double pull. ${esc(S.cur.fact)}`;
+  }else{
+    const hadStreak = T.streak > 0;
+    T.streak = 0;
+    beep([220,165],.16,"sawtooth");
+    const lead = i===null ? "<strong>Time's up!</strong>" : "<strong>Not quite.</strong>";
+    let extra = hadStreak ? " The streak is over." : "";
+    if(settings.wrong==="steal"){ pull(other, 1); extra += ` ${esc(S.teams[other].name)} get the pull.`; }
+    msg = `${lead} The answer is <strong>${right}</strong>.${extra} ${esc(S.cur.fact)}`;
+  }
+  // Round limit: checked only after both teams have had the same number of turns
+  if(!S.over && S.teams[0].asked === S.teams[1].asked && S.teams[1].asked >= settings.rounds){
+    if(S.pos !== 0){
+      S.over = true;
+      const w = S.pos < 0 ? 0 : 1;
+      msg += ` <strong>That's the last question: ${esc(S.teams[w].name)} are ahead!</strong>`;
+      setTimeout(()=>win(w, "time"), 900);
+    }else if(!S.sudden){
+      S.sudden = true; S.suddenLeft = SUDDEN_ROUNDS;
+      msg += ` <strong>The questions have run out and it's level, so it's sudden death.</strong> Up to ${SUDDEN_ROUNDS} more questions each: the first team ahead after both have answered wins.`;
+    }else if(--S.suddenLeft <= 0){
+      S.over = true;
+      msg += ` <strong>Still level after sudden death: it's a draw!</strong>`;
+      setTimeout(()=>draw(), 900);
+    }
+  }
+  updatePts();
+  $("fbText").innerHTML = msg;
+  $("feedback").classList.remove("hidden");
+  $("skipBtn").parentElement.classList.add("hidden");
+  if(!S.over) $("nextBtn").focus({preventScroll:true});
+}
+
+function pull(team, steps=1){
+  const n = settings.n, p = S.pos + (team===0 ? -steps : steps);
+  setPos(Math.max(-n, Math.min(n, p)));
+  const pop = document.createElement("div");
+  pop.className = "pull-pop"; pop.textContent = steps>1 ? "Double heave!" : "Heave!";
+  pop.style.left = team===0 ? "30%" : "70%"; pop.style.color = col(team);
+  $("arena").appendChild(pop); setTimeout(()=>pop.remove(),1200);
+  if(Math.abs(S.pos) >= settings.n){
+    S.over = true;
+    const winner = S.pos<0 ? 0 : 1;
+    setTimeout(()=>win(winner, "line"), 900);
+  }
+}
+
+function draw(){
+  ["teamA","teamB"].forEach(id=>$(id).classList.add("cheer"));
+  beep([523,659,523,659],.15);
+  setTimeout(()=>{
+    document.querySelector(".trophy").textContent = "🤝";
+    $("winTitle").textContent = "It's a draw!"; $("winTitle").style.color = "var(--ink)";
+    $("winSub").textContent = "Neither team would let go of the rope. Shake hands!";
+    showStats(); confetti();
+  },1100);
+}
+function showStats(){
+  $("stats").innerHTML = S.teams.map((t,k)=>`<div class="stat" style="background:${k===0?"var(--a-soft)":"var(--b-soft)"}"><b>${t.correct}/${t.asked}</b>${esc(t.name)}</div>`).join("");
+  $("winOverlay").classList.remove("hidden");
+  $("againBtn").focus();
+}
+function win(w, reason){
+  const l = 1-w;
+  $(w===0?"teamA":"teamB").classList.add("cheer");
+  $(l===0?"teamA":"teamB").classList.add("fallen");
+  beep([523,659,784,1047],.15);
+  setTimeout(()=>{
+    $("winTitle").textContent = `${S.teams[w].name} win!`;
+    $("winTitle").style.color = col(w);
+    $("winSub").textContent = reason==="line"
+      ? "They dragged the flag all the way over the line."
+      : S.sudden ? "They won it in sudden death." : "The flag was on their side when the questions ran out.";
+    document.querySelector(".trophy").textContent = "🏆";
+    showStats(); confetti();
+  },1100);
+}
+
+$("nextBtn").onclick = ()=>nextQuestion(false);
+$("skipBtn").onclick = ()=>{ if(!S.answered){ clearInterval(S.timerId); S.turn = 1 - S.turn; nextQuestion(false); } };
+$("againBtn").onclick = startMatch;
+$("settingsBtn").onclick = backToSetup;
+$("quitBtn").onclick = ()=>{ if(S.over || confirm("End this match and go back to the settings?")) backToSetup(); };
+function backToSetup(){
+  clearInterval(S.timerId); S.over = true;
+  $("winOverlay").classList.add("hidden"); $("game").classList.add("hidden"); $("setup").classList.remove("hidden");
+  updatePoolNote();
+}
+
+document.addEventListener("keydown",e=>{
+  if($("game").classList.contains("hidden") || e.target.tagName==="INPUT") return;
+  if(!S.answered && /^[1-4]$/.test(e.key)){ const i = +e.key-1; if(i < S.cur.shuffled.length) answer(i); }
+  else if(S.answered && !S.over && e.key==="Enter" && document.activeElement!==$("nextBtn")){ nextQuestion(false); }
+});
+
+/* confetti */
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const c = $("confetti"), x = c.getContext("2d");
+  c.width = innerWidth; c.height = innerHeight;
+  const cols = ["#E0445B","#3456D1","#FFD04A","#3DAE6A","#FFFDF5"];
+  const bits = Array.from({length:160},()=>({x:Math.random()*c.width, y:-20-Math.random()*c.height*.6, w:6+Math.random()*8, h:8+Math.random()*10, vy:2+Math.random()*3.5, vx:-1.5+Math.random()*3, r:Math.random()*6, vr:-.2+Math.random()*.4, c:cols[Math.floor(Math.random()*cols.length)]}));
+  let f = 0;
+  (function tick(){
+    x.clearRect(0,0,c.width,c.height);
+    bits.forEach(b=>{ b.y+=b.vy; b.x+=b.vx+Math.sin((f+b.y)/30); b.r+=b.vr;
+      x.save(); x.translate(b.x,b.y); x.rotate(b.r); x.fillStyle=b.c; x.fillRect(-b.w/2,-b.h/2,b.w,b.h); x.restore(); });
+    if(++f < 260) requestAnimationFrame(tick); else x.clearRect(0,0,c.width,c.height);
+  })();
+}
+</script>
+</body>
+</html>
