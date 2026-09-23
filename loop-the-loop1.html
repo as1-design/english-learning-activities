@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Loop the Loop · Class of Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --table:#1F3FB0; --table-deep:#16308C; --dots:rgba(255,255,255,.09);
+  --paper:#FFFDF7; --paper-2:#F4EFE6; --ink:#1C1411; --ink-soft:#5E4F46;
+  --crema:#F6B93B; --bean:#4A2A1C; --on-table:#FFFFFF; --on-table-soft:rgba(255,255,255,.78);
+  --shadow:rgba(8,18,70,.45);
+  --display:"Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --hand:"Caveat", "Comic Sans MS", cursive;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --table:#132A7A; --table-deep:#0C1C58; --dots:rgba(255,255,255,.07);
+    --paper:#F2ECE2; --paper-2:#E4DCCF; --shadow:rgba(0,4,30,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --table:#132A7A; --table-deep:#0C1C58; --dots:rgba(255,255,255,.07);
+  --paper:#F2ECE2; --paper-2:#E4DCCF; --shadow:rgba(0,4,30,.6);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100%; font-family:var(--display); color:var(--on-table);
+  background-color:var(--table);
+  background-image:radial-gradient(var(--dots) 1.5px, transparent 1.6px), radial-gradient(ellipse at 50% -10%, rgba(255,255,255,.14), transparent 60%);
+  background-size:22px 22px, 100% 100vh;background-repeat:repeat,no-repeat;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--crema);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1040px;margin:0 auto;padding:var(--s6) var(--s5) var(--s7)}
+.hidden{display:none!important}
+
+/* ---------- Home ---------- */
+.hero{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:var(--s6);align-items:center;margin-bottom:var(--s7)}
+.hero h1{font-size:clamp(3.2rem,9vw,6.4rem);line-height:.88;font-weight:800;letter-spacing:-.035em;margin:0 0 var(--s5);font-variation-settings:"opsz" 96}
+.hero h1 span{display:block}
+.hero h1 span:nth-child(2){padding-left:.9em}
+.hero p{font-size:1.15rem;line-height:1.55;max-width:34ch;color:var(--on-table-soft);margin:0}
+.hero p strong{color:var(--on-table);font-weight:600}
+.loopart{width:100%;max-width:380px;justify-self:center;filter:drop-shadow(0 18px 30px var(--shadow))}
+.loopart .ring{fill:none;stroke:#8A5A3B;stroke-width:14;opacity:.9}
+.loopart .ring2{fill:none;stroke:#6B3F26;stroke-width:4;opacity:.7}
+.loopart .saucer{fill:var(--paper)}
+.hand{font-family:var(--hand);font-weight:600}
+
+.sets-title{font-size:1.5rem;font-weight:600;margin:0 0 var(--s4)}
+.sets{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+.set{
+  position:relative;border:0;border-radius:18px;padding:var(--s5) var(--s5) var(--s4);text-align:left;
+  background:var(--c);color:var(--fg);min-height:150px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:0 6px 0 rgba(0,0,0,.18), 0 16px 28px var(--shadow);
+  transform:rotate(var(--r));transition:transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+  overflow:hidden; opacity:0; animation:deal .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.set:hover{transform:rotate(0deg) translateY(-6px) scale(1.03)}
+.set:active{transform:scale(.96);transition-duration:.08s}
+.set .name{font-size:1.9rem;font-weight:800;letter-spacing:-.02em;line-height:1}
+.set .start{font-size:1rem;opacity:.85}
+.set .big{position:absolute;right:-6px;bottom:-26px;font-size:7.5rem;font-weight:800;line-height:1;opacity:.22;letter-spacing:-.05em}
+@keyframes deal{from{opacity:0;transform:translateY(40px) rotate(calc(var(--r) * 4)) scale(.9)}to{opacity:1;transform:rotate(var(--r))}}
+
+.foot{margin-top:var(--s7);display:flex;justify-content:space-between;align-items:center;gap:var(--s4);flex-wrap:wrap;color:var(--on-table-soft);font-size:.95rem}
+.linkbtn{background:none;border:2px solid rgba(255,255,255,.5);border-radius:999px;padding:var(--s2) var(--s4);transition:transform .2s, border-color .2s}
+.linkbtn:hover{transform:translateY(-2px);border-color:#fff}
+.linkbtn:active{transform:scale(.96)}
+
+/* ---------- Play ---------- */
+.topbar{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s5);flex-wrap:wrap}
+.back{background:rgba(255,255,255,.12);border:0;border-radius:999px;padding:var(--s2) var(--s4);transition:transform .2s}
+.back:hover{transform:translateX(-3px)}
+.chip{background:var(--c);color:var(--fg);border-radius:999px;padding:var(--s2) var(--s4);font-weight:800}
+.timer{margin-left:auto;font-variant-numeric:tabular-nums;font-size:1.35rem;font-weight:600;background:rgba(0,0,0,.18);padding:var(--s1) var(--s4);border-radius:10px}
+
+.trail{display:flex;gap:var(--s3);margin-bottom:var(--s6);align-items:flex-end}
+.slot{flex:0 0 auto;width:54px;height:72px;border-radius:9px;border:2px dashed rgba(255,255,255,.35);display:grid;place-items:center;font-weight:800;font-size:1.4rem;position:relative}
+.slot.filled{border:0;background:var(--paper);color:var(--ink);box-shadow:0 4px 10px var(--shadow);border-top:8px solid var(--c);animation:land .45s cubic-bezier(.34,1.56,.64,1)}
+.slot.filled:nth-child(odd){transform:rotate(-3deg)}
+.slot.filled:nth-child(even){transform:rotate(2.5deg)}
+.slot.now{border-color:var(--crema);border-style:solid}
+.trail-note{margin-left:var(--s3);font-family:var(--hand);font-size:1.6rem;color:var(--crema);line-height:1}
+@keyframes land{from{transform:translateY(-30px) scale(1.3) rotate(10deg);opacity:0}}
+
+.stage{position:relative;perspective:1200px;min-height:470px}
+.card{
+  position:relative;max-width:600px;margin:0 auto;background:var(--paper);color:var(--ink);border-radius:20px;
+  box-shadow:0 2px 0 rgba(0,0,0,.08), 0 26px 50px var(--shadow);overflow:hidden;
+}
+.card.in{animation:cardIn .55s cubic-bezier(.34,1.56,.64,1)}
+.card.out{animation:cardOut .35s cubic-bezier(.55,.06,.68,.19) forwards}
+@keyframes cardIn{from{transform:translateX(70px) rotate(6deg);opacity:0}}
+@keyframes cardOut{to{transform:translate(-40px,-160px) rotate(-12deg) scale(.4);opacity:0}}
+.card-head{background:var(--c);color:var(--fg);display:flex;justify-content:space-between;align-items:center;padding:var(--s3) var(--s5)}
+.card-head .setname{font-weight:600;font-size:1rem}
+.card-num{font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-.03em}
+.question{padding:var(--s6) var(--s6) var(--s5);font-size:clamp(1.35rem,3.2vw,1.8rem);line-height:1.3;font-weight:600;min-height:4.2em}
+.gap{display:inline-block;min-width:3.2em;border-bottom:3px solid var(--ink);margin:0 .12em;transform:translateY(-.12em)}
+.options{list-style:none;margin:0;padding:0 var(--s5) var(--s5);display:grid;gap:var(--s2)}
+.opt{
+  width:100%;display:flex;align-items:stretch;border:2px solid var(--ink);border-radius:12px;background:var(--paper);padding:0;overflow:hidden;text-align:left;
+  transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s, background .2s;
+}
+.opt:hover{transform:translateY(-3px);box-shadow:0 5px 0 var(--ink);background:#fff}
+.opt:active{transform:scale(.97);box-shadow:none}
+.opt .txt{flex:1;padding:var(--s3) var(--s4);font-size:1.15rem;line-height:1.3}
+@media (hover:none){.opt .key{display:none}}
+.opt .key{padding:var(--s3) var(--s3);color:var(--ink-soft);font-size:.85rem;align-self:center}
+.opt .num{flex:0 0 64px;display:grid;place-items:center;font-weight:800;font-size:1.35rem;border-left:2px solid var(--ink);background:var(--paper-2)}
+.opt.chosen{background:var(--crema)}
+.opt.chosen .num{background:var(--ink);color:var(--paper)}
+.below{display:flex;justify-content:center;margin-top:var(--s5)}
+.ghost{background:none;border:0;color:var(--on-table-soft);text-decoration:underline;text-underline-offset:4px;padding:var(--s2)}
+.ghost:hover{color:#fff}
+.ghost:disabled{opacity:.35;cursor:default;text-decoration:none}
+
+/* ---------- Result ---------- */
+.result{max-width:760px;margin:0 auto;text-align:center}
+.result h2{font-size:clamp(2.4rem,7vw,4.4rem);line-height:.95;letter-spacing:-.03em;margin:var(--s4) 0 var(--s4);font-weight:800}
+.result .lede{font-size:1.2rem;line-height:1.5;color:var(--on-table-soft);max-width:44ch;margin:0 auto var(--s6)}
+.result .lede b{color:#fff}
+.ringstage{position:relative;width:min(360px,86vw);aspect-ratio:1;margin:0 auto}
+.ringstage svg{position:absolute;inset:0;width:100%;height:100%}
+.stain{fill:none;stroke:#8A5A3B;stroke-width:16;stroke-linecap:round;stroke-dasharray:1000;stroke-dashoffset:1000;opacity:.85}
+.stain.go{animation:draw 1.3s .9s cubic-bezier(.25,.46,.45,.94) forwards}
+.stain2{fill:none;stroke:#6B3F26;stroke-width:3;stroke-dasharray:1000;stroke-dashoffset:1000}
+.stain2.go{animation:draw 1.5s 1s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.mini{position:absolute;width:58px;height:78px;margin:-39px 0 0 -29px;background:var(--paper);color:var(--ink);border-radius:9px;border-top:8px solid var(--c);display:grid;place-items:center;font-weight:800;font-size:1.5rem;box-shadow:0 6px 14px var(--shadow);opacity:0;animation:toRing .6s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes toRing{from{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.3) rotate(40deg)}to{opacity:1;transform:translate(var(--x),var(--y)) rotate(var(--rot))}}
+.ringcentre{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ringcentre .t{font-size:2.6rem;font-weight:800;font-variant-numeric:tabular-nums;opacity:0;animation:pop .5s 2.2s cubic-bezier(.34,1.56,.64,1) forwards}
+.ringcentre .s{font-family:var(--hand);font-size:1.6rem;color:var(--crema);opacity:0;animation:pop .5s 2.4s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.actions{display:flex;gap:var(--s3);justify-content:center;flex-wrap:wrap;margin-top:var(--s6)}
+.btn{border:0;border-radius:999px;padding:var(--s3) var(--s5);font-weight:600;font-size:1.05rem;background:var(--crema);color:var(--ink);box-shadow:0 5px 0 #B9801A;transition:transform .2s cubic-bezier(.34,1.56,.64,1), box-shadow .2s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 #B9801A}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 #B9801A}
+.btn.alt{background:rgba(255,255,255,.14);color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+
+.broken-art{width:170px;margin:0 auto;display:block}
+.review{list-style:none;padding:0;margin:0 auto;text-align:left;display:grid;gap:var(--s3);max-width:680px;counter-reset:none}
+.rv{background:var(--paper);color:var(--ink);border-radius:14px;display:grid;grid-template-columns:62px 1fr auto;align-items:center;gap:var(--s4);padding:0 var(--s4) 0 0;overflow:hidden;box-shadow:0 8px 18px var(--shadow);opacity:0;animation:rvIn .45s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes rvIn{from{opacity:0;transform:translateX(-24px)}to{opacity:1}}
+.rv .n{align-self:stretch;background:var(--c);color:var(--fg);display:grid;place-items:center;font-weight:800;font-size:1.5rem}
+.rv > div{padding:var(--s3) 0}
+.rv .q{font-size:.98rem;line-height:1.35;color:var(--ink-soft)}
+.rv .a{font-size:1.1rem;font-weight:600;color:var(--ink);margin-top:2px}
+.rv .a .arrow{font-weight:800;white-space:nowrap}
+.rv .redo{border:2px solid var(--ink);background:none;border-radius:999px;padding:var(--s2) var(--s3);font-size:.9rem;font-weight:600;white-space:nowrap;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.rv .redo:hover{transform:translateY(-2px);background:var(--crema)}
+.rv .redo:active{transform:scale(.95)}
+.rv.clue{outline:4px solid var(--crema);outline-offset:3px;animation:rvIn .45s forwards, wobble .6s .5s 2}
+@keyframes wobble{25%{transform:rotate(-1deg)}75%{transform:rotate(1deg)}}
+.cluebox{margin:var(--s5) auto 0;font-family:var(--hand);font-size:1.7rem;color:var(--crema)}
+
+/* ---------- Key dialog ---------- */
+dialog{border:0;border-radius:20px;padding:0;max-width:min(900px,94vw);width:100%;background:var(--paper);color:var(--ink);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+dialog::backdrop{background:rgba(6,14,50,.72)}
+.dlg{padding:var(--s6)}
+.dlg h3{font-size:2rem;margin:0 0 var(--s2);letter-spacing:-.02em}
+.dlg p{margin:0 0 var(--s5);color:var(--ink-soft);line-height:1.5}
+.keygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--s5)}
+.keyset h4{margin:0 0 var(--s2);padding:var(--s2) var(--s3);background:var(--c);color:var(--fg);border-radius:10px;font-size:1.1rem}
+.keyset ol{margin:0;padding:0;list-style:none;display:grid;gap:6px;font-size:.95rem;line-height:1.35}
+.keyset li b{display:inline-block;min-width:2.1em}
+.keyset .chain{font-weight:600;margin:0 0 var(--s2);font-variant-numeric:tabular-nums}
+.dlg .close{float:right}
+.dlg .btn{box-shadow:0 4px 0 #B9801A}
+
+/* ---------- Confetti beans ---------- */
+.bean{position:fixed;top:-40px;width:18px;height:26px;border-radius:50%;background:var(--bean);pointer-events:none;z-index:50;animation:fall linear forwards}
+.bean::after{content:"";position:absolute;left:50%;top:12%;bottom:12%;width:3px;margin-left:-1.5px;border-radius:3px;background:#C8925F;transform:rotate(12deg)}
+@keyframes fall{to{transform:translateY(calc(100vh + 80px)) rotate(var(--spin))}}
+
+.shake{animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-3px)}}
+
+@media (max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .loopart{max-width:240px;grid-row:1}
+  .sets{grid-template-columns:repeat(2,1fr);gap:var(--s4)}
+  .set .name{font-size:1.5rem}
+  .question{padding:var(--s5) var(--s5) var(--s4)}
+  .options{padding:0 var(--s4) var(--s4)}
+  .slot{width:42px;height:58px;font-size:1.1rem}
+  .trail{gap:var(--s2)}
+  .trail-note{display:none}
+  .rv{grid-template-columns:52px 1fr;padding-right:var(--s3)}
+  .rv .redo{grid-column:2;justify-self:start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.01ms!important}
+  .loopart animateMotion{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<main id="home" class="wrap">
+  <section class="hero">
+    <div>
+      <h1><span>Loop</span><span>the loop</span></h1>
+      <p>Pick a set and start with its first card. The number beside each answer tells you which card comes next. <strong>Six right answers bring you back to where you started.</strong> One wrong turn, and the loop won't close.</p>
+    </div>
+    <svg class="loopart" viewBox="0 0 320 320" aria-hidden="true">
+      <circle class="saucer" cx="160" cy="160" r="150"/>
+      <circle cx="160" cy="160" r="118" fill="none" stroke="#E7DFD2" stroke-width="2"/>
+      <path id="ringpath" class="ring" d="M160,62 C222,60 258,108 256,162 C254,220 208,258 158,256 C98,254 62,210 64,158 C66,102 104,64 160,62 Z"/>
+      <path class="ring2" d="M163,70 C218,70 250,112 248,160 C246,214 206,248 160,248"/>
+      <g>
+        <ellipse rx="9" ry="13" fill="#4A2A1C"/>
+        <path d="M-1,-9 C3,-3 -3,3 1,9" stroke="#C8925F" stroke-width="2.4" fill="none"/>
+        <animateMotion dur="9s" repeatCount="indefinite" rotate="auto"><mpath href="#ringpath"/></animateMotion>
+      </g>
+      <text x="160" y="152" text-anchor="middle" class="hand" font-size="30" fill="#4A2A1C">6 cards,</text>
+      <text x="160" y="186" text-anchor="middle" class="hand" font-size="30" fill="#4A2A1C">one loop</text>
+    </svg>
+  </section>
+
+  <h2 class="sets-title">Choose your set</h2>
+  <div class="sets" id="sets"></div>
+
+  <footer class="foot">
+    <span>Class of Coffee – with AI assistance</span>
+  </footer>
+</main>
+
+<!-- PLAY -->
+<main id="play" class="wrap hidden">
+  <div class="topbar">
+    <button class="back" id="backBtn">← Sets</button>
+    <span class="chip" id="chip"></span>
+    <span class="timer" id="timer" aria-label="Time">0:00</span>
+  </div>
+  <div class="trail" id="trail" aria-label="Cards played"></div>
+  <div class="stage"><div id="cardHost"></div></div>
+  <div class="below"><button class="ghost" id="takeBack">Take back the last card</button></div>
+</main>
+
+<!-- RESULT -->
+<main id="result" class="wrap hidden"></main>
+
+
+<script>
+const DATA = {"sets": [{"name": "Espresso", "cards": [6, 20, 24, 10, 13, 5]}, {"name": "Tallat", "cards": [22, 18, 30, 12, 27, 15]}, {"name": "Cortado", "cards": [36, 25, 19, 32, 4, 16]}, {"name": "Macchiato", "cards": [11, 33, 34, 8, 26, 28]}, {"name": "Flat white", "cards": [23, 17, 14, 7, 1, 21]}, {"name": "Americano", "cards": [2, 9, 35, 29, 31, 3]}], "cards": {"6": {"q": "I ___ in this town since 2019.", "o": [{"t": "have lived", "n": 20, "ok": true}, {"t": "lived", "n": 13}, {"t": "am living", "n": 5}, {"t": "live", "n": 24}], "set": "Espresso"}, "20": {"q": "Which sentence is CORRECT?", "o": [{"t": "I'm looking forward to seeing you.", "n": 24, "ok": true}, {"t": "I look forward see you.", "n": 13}, {"t": "I'm looking forward to see you.", "n": 5}, {"t": "I'm looking forward for seeing you.", "n": 10}], "set": "Espresso"}, "24": {"q": "I'm really interested ___ photography.", "o": [{"t": "about", "n": 13}, {"t": "on", "n": 5}, {"t": "for", "n": 20}, {"t": "in", "n": 10, "ok": true}], "set": "Espresso"}, "10": {"q": "There's ___ milk left. We need to buy some.", "o": [{"t": "hardly any", "n": 13, "ok": true}, {"t": "a few", "n": 20}, {"t": "few", "n": 24}, {"t": "any", "n": 5}], "set": "Espresso"}, "13": {"q": "I wish I ___ taller.", "o": [{"t": "would be", "n": 10}, {"t": "were", "n": 5, "ok": true}, {"t": "am", "n": 24}, {"t": "will be", "n": 20}], "set": "Espresso"}, "5": {"q": "Can I ___ your pen? I'll give it back in a minute.", "o": [{"t": "borrow", "n": 6, "ok": true}, {"t": "lent", "n": 24}, {"t": "owe", "n": 20}, {"t": "lend", "n": 13}], "set": "Espresso"}, "22": {"q": "By the time we arrived, the film ___.", "o": [{"t": "is already starting", "n": 15}, {"t": "already starts", "n": 12}, {"t": "has already started", "n": 30}, {"t": "had already started", "n": 18, "ok": true}], "set": "Tallat"}, "18": {"q": "The film was so ___ that I fell asleep.", "o": [{"t": "boring", "n": 30, "ok": true}, {"t": "bored", "n": 12}, {"t": "boredom", "n": 27}, {"t": "bore", "n": 15}], "set": "Tallat"}, "30": {"q": "Are we going to the beach? It depends ___ the weather.", "o": [{"t": "from", "n": 15}, {"t": "on", "n": 12, "ok": true}, {"t": "in", "n": 27}, {"t": "of", "n": 18}], "set": "Tallat"}, "12": {"q": "That's the woman ___ son plays for Barça.", "o": [{"t": "which", "n": 15}, {"t": "who's", "n": 30}, {"t": "whose", "n": 27, "ok": true}, {"t": "who", "n": 18}], "set": "Tallat"}, "27": {"q": "The ___ you practise, the better you'll get.", "o": [{"t": "much", "n": 30}, {"t": "more", "n": 15, "ok": true}, {"t": "better", "n": 18}, {"t": "most", "n": 12}], "set": "Tallat"}, "15": {"q": "Which one DOESN'T go with MAKE?", "o": [{"t": "homework", "n": 22, "ok": true}, {"t": "a noise", "n": 18}, {"t": "a decision", "n": 12}, {"t": "a mistake", "n": 30}], "set": "Tallat"}, "36": {"q": "She ___ play the piano when she was little, but she doesn't any more.", "o": [{"t": "is used to", "n": 32}, {"t": "use to", "n": 16}, {"t": "used to", "n": 25, "ok": true}, {"t": "was used to", "n": 4}], "set": "Cortado"}, "25": {"q": "It was ___ good film that we watched it twice.", "o": [{"t": "such", "n": 32}, {"t": "so", "n": 16}, {"t": "such a", "n": 19, "ok": true}, {"t": "so a", "n": 4}], "set": "Cortado"}, "19": {"q": "Could you ___ the music? It's far too loud.", "o": [{"t": "turn into", "n": 16}, {"t": "turn up", "n": 4}, {"t": "turn over", "n": 25}, {"t": "turn down", "n": 32, "ok": true}], "set": "Cortado"}, "32": {"q": "He asked me where ___.", "o": [{"t": "do I live", "n": 19}, {"t": "did I live", "n": 25}, {"t": "lived I", "n": 16}, {"t": "I lived", "n": 4, "ok": true}], "set": "Cortado"}, "4": {"q": "Have you finished your essay ___?", "o": [{"t": "ago", "n": 19}, {"t": "yet", "n": 16, "ok": true}, {"t": "still", "n": 32}, {"t": "since", "n": 25}], "set": "Cortado"}, "16": {"q": "Which word ISN'T a noun?", "o": [{"t": "improvement", "n": 25}, {"t": "decide", "n": 36, "ok": true}, {"t": "happiness", "n": 4}, {"t": "decision", "n": 19}], "set": "Cortado"}, "11": {"q": "If I ___ more time, I'd learn to cook properly.", "o": [{"t": "have", "n": 28}, {"t": "will have", "n": 26}, {"t": "would have", "n": 8}, {"t": "had", "n": 33, "ok": true}], "set": "Macchiato"}, "33": {"q": "I was late because I stopped ___ a coffee on the way.", "o": [{"t": "buy", "n": 28}, {"t": "buying", "n": 8}, {"t": "for buy", "n": 26}, {"t": "to buy", "n": 34, "ok": true}], "set": "Macchiato"}, "34": {"q": "Someone ___ my bike last night!", "o": [{"t": "robbed", "n": 33}, {"t": "has robbed", "n": 28}, {"t": "stole", "n": 8, "ok": true}, {"t": "stolen", "n": 26}], "set": "Macchiato"}, "8": {"q": "You're coming to the party, ___?", "o": [{"t": "aren't you", "n": 26, "ok": true}, {"t": "isn't it", "n": 33}, {"t": "weren't you", "n": 28}, {"t": "don't you", "n": 34}], "set": "Macchiato"}, "26": {"q": "___ people came to the talk, so it was a bit of a disaster.", "o": [{"t": "Little", "n": 33}, {"t": "Much", "n": 8}, {"t": "Few", "n": 28, "ok": true}, {"t": "A little", "n": 34}], "set": "Macchiato"}, "28": {"q": "He's the most interesting person I've ever ___.", "o": [{"t": "meet", "n": 33}, {"t": "to meet", "n": 8}, {"t": "met", "n": 11, "ok": true}, {"t": "meeting", "n": 26}], "set": "Macchiato"}, "23": {"q": "If it rains tomorrow, we ___ the picnic.", "o": [{"t": "had cancelled", "n": 14}, {"t": "would cancel", "n": 21}, {"t": "cancelled", "n": 7}, {"t": "'ll cancel", "n": 17, "ok": true}], "set": "Flat white"}, "17": {"q": "Her light is on. She ___ be at home.", "o": [{"t": "can't", "n": 1}, {"t": "mustn't", "n": 21}, {"t": "needn't", "n": 7}, {"t": "must", "n": 14, "ok": true}], "set": "Flat white"}, "14": {"q": "I've run ___ milk. Can you buy some?", "o": [{"t": "away from", "n": 1}, {"t": "out of", "n": 7, "ok": true}, {"t": "out", "n": 17}, {"t": "off", "n": 21}], "set": "Flat white"}, "7": {"q": "I'm not used to ___ up so early.", "o": [{"t": "get", "n": 17}, {"t": "have got", "n": 14}, {"t": "got", "n": 21}, {"t": "getting", "n": 1, "ok": true}], "set": "Flat white"}, "1": {"q": "The museum ___ in 1890.", "o": [{"t": "built", "n": 17}, {"t": "has built", "n": 14}, {"t": "was built", "n": 21, "ok": true}, {"t": "was build", "n": 7}], "set": "Flat white"}, "21": {"q": "Which sentence is CORRECT?", "o": [{"t": "I need an advice.", "n": 14}, {"t": "The informations are useful.", "n": 1}, {"t": "The news are good.", "n": 17}, {"t": "The news is good.", "n": 23, "ok": true}], "set": "Flat white"}, "2": {"q": "You ___ wear a uniform, but you can if you want to.", "o": [{"t": "don't have to", "n": 9, "ok": true}, {"t": "shouldn't to", "n": 31}, {"t": "mustn't", "n": 35}, {"t": "haven't to", "n": 29}], "set": "Americano"}, "9": {"q": "I can't afford that coat. It isn't cheap ___.", "o": [{"t": "enough", "n": 35, "ok": true}, {"t": "very", "n": 31}, {"t": "too", "n": 3}, {"t": "so", "n": 29}], "set": "Americano"}, "35": {"q": "I ___ my grandparents this weekend. I've already booked the train.", "o": [{"t": "visit", "n": 9}, {"t": "'ve visited", "n": 3}, {"t": "visited", "n": 31}, {"t": "'m visiting", "n": 29, "ok": true}], "set": "Americano"}, "29": {"q": "She has worked here ___ five years.", "o": [{"t": "during", "n": 3}, {"t": "from", "n": 35}, {"t": "since", "n": 9}, {"t": "for", "n": 31, "ok": true}], "set": "Americano"}, "31": {"q": "Which question is INCORRECT?", "o": [{"t": "Can you tell me where the station is?", "n": 9}, {"t": "Do you know what time it is?", "n": 29}, {"t": "Where does she work?", "n": 35}, {"t": "Can you tell me where is the station?", "n": 3, "ok": true}], "set": "Americano"}, "3": {"q": "We ___ dinner when the lights went out.", "o": [{"t": "have been having", "n": 35}, {"t": "are having", "n": 29}, {"t": "have had", "n": 31}, {"t": "were having", "n": 2, "ok": true}], "set": "Americano"}}};
+const COLOURS = {
+  "Espresso":["#4A2A1C","#FFFFFF"],
+  "Tallat":["#E89A3C","#1C1411"],
+  "Cortado":["#E0483E","#FFFFFF"],
+  "Macchiato":["#F4A7C3","#1C1411"],
+  "Flat white":["#6CCB9F","#1C1411"],
+  "Americano":["#FFD84A","#1C1411"]
+};
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const withGap = q => esc(q).replace(/___([.,?!]?)/,'<span style="white-space:nowrap"><span class="gap" aria-label="gap"></span>$1</span>');
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+let S = null; // current game state
+
+function paint(el, name){ const [c,fg]=COLOURS[name]; el.style.setProperty("--c",c); el.style.setProperty("--fg",fg); }
+function show(id){ ["home","play","result"].forEach(x=>$("#"+x).classList.toggle("hidden",x!==id)); scrollTo(0,0); }
+
+/* ---- Home ---- */
+function buildHome(){
+  const host=$("#sets"); host.innerHTML="";
+  const rots=[-1.8,1.2,-.6,1.6,-1.2,.8];
+  DATA.sets.forEach((s,i)=>{
+    const b=document.createElement("button");
+    b.className="set"; paint(b,s.name);
+    b.style.setProperty("--r",rots[i]+"deg"); b.style.animationDelay=(120*i)+"ms";
+    b.innerHTML=`<span class="name">${s.name}</span><span class="start">Start with card ${s.cards[0]}</span><span class="big" aria-hidden="true">${s.cards[0]}</span>`;
+    b.onclick=()=>startSet(i);
+    host.appendChild(b);
+  });
+}
+
+/* ---- Game ---- */
+function startSet(i){
+  const set=DATA.sets[i];
+  S={set, start:set.cards[0], chain:[], current:set.cards[0], attempts:0, t0:Date.now(), done:false, busy:false};
+  const chip=$("#chip"); chip.textContent=set.name; paint(chip,set.name);
+  paint($("#play"),set.name);
+  clearInterval(window._tick); window._tick=setInterval(tick,500); tick();
+  show("play"); renderTrail(); renderCard(true);
+}
+function elapsed(){ const s=Math.floor((Date.now()-S.t0)/1000); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function tick(){ if(S && !S.done) $("#timer").textContent=elapsed(); }
+
+function renderTrail(){
+  const t=$("#trail"); t.innerHTML="";
+  for(let k=0;k<6;k++){
+    const d=document.createElement("div"); d.className="slot"; paint(d,S.set.name);
+    if(k<S.chain.length){ d.classList.add("filled"); d.textContent=S.chain[k].card; }
+    else if(k===S.chain.length){ d.classList.add("now"); d.textContent=S.current; d.style.color="var(--crema)"; }
+    t.appendChild(d);
+  }
+  const note=document.createElement("span"); note.className="trail-note";
+  note.textContent = S.chain.length===5 ? "last card!" : `card ${S.chain.length+1} of 6`;
+  t.appendChild(note);
+  $("#takeBack").disabled = S.chain.length===0;
+}
+
+function renderCard(animate){
+  const c=DATA.cards[S.current];
+  const host=$("#cardHost");
+  const card=document.createElement("article");
+  card.className="card"+(animate?" in":""); paint(card,c.set);
+  card.innerHTML=`
+    <div class="card-head"><span class="setname">${c.set}</span><span class="card-num" aria-label="Card ${S.current}">${S.current}</span></div>
+    <div class="question">${withGap(c.q)}</div>
+    <ul class="options">${c.o.map((o,k)=>`<li><button class="opt" data-k="${k}"><span class="txt">${esc(o.t)}</span><span class="key" aria-hidden="true">${k+1}</span><span class="num">${o.n}</span></button></li>`).join("")}</ul>`;
+  card.querySelectorAll(".opt").forEach(b=>b.onclick=()=>pick(+b.dataset.k,b));
+  host.innerHTML=""; host.appendChild(card);
+}
+
+function pick(k,btn){
+  if(S.busy||S.done) return; S.busy=true;
+  const c=DATA.cards[S.current], target=c.o[k].n;
+  btn.classList.add("chosen");
+  S.chain.push({card:S.current,k});
+  const finished = target===S.start || S.chain.length===6;
+  const card=$("#cardHost .card");
+  setTimeout(()=>{
+    card.classList.add("out");
+    setTimeout(()=>{
+      S.busy=false;
+      if(finished){ finish(target); return; }
+      S.current=target; renderTrail(); renderCard(true);
+    }, reduce?0:330);
+  }, reduce?0:260);
+}
+
+function takeBack(){
+  if(!S.chain.length||S.busy) return;
+  const last=S.chain.pop(); S.current=last.card; renderTrail(); renderCard(true);
+}
+
+function finish(target){
+  const n=S.chain.length, cards=S.chain.map(x=>x.card), distinct=new Set(cards).size;
+  const ok = target===S.start && n===6 && distinct===6;
+  if(ok){ S.done=true; clearInterval(window._tick); return success(); }
+  S.attempts++;
+  let head, lede;
+  if(target===S.start && n<6){
+    head="Too short!"; lede=`You're back at card <b>${S.start}</b> after only <b>${n}</b> card${n>1?"s":""}. A loop needs all six. Somewhere, a card sent you the wrong way.`;
+  } else if(target===S.start){
+    const dup=cards.find((c,i)=>cards.indexOf(c)!==i);
+    head="Close, but…"; lede=`You made it back to card <b>${S.start}</b>, but you played card <b>${dup}</b> twice, so one of your six cards never got a turn.`;
+  } else {
+    head="The loop won't close"; lede=`Your sixth card sends you to card <b>${target}</b>, not back to card <b>${S.start}</b>. Somewhere in your chain, a card went the wrong way.`;
+  }
+  broken(head,lede);
+}
+
+function broken(head,lede){
+  const r=$("#result"); paint(r,S.set.name);
+  const firstWrong=S.chain.findIndex(x=>!DATA.cards[x.card].o[x.k].ok);
+  r.innerHTML=`<div class="result">
+    <svg class="broken-art" viewBox="0 0 200 140" aria-hidden="true">
+      <path d="M128,26 A56,56 0 1,0 150,64" fill="none" stroke="#8A5A3B" stroke-width="13" stroke-linecap="round"/>
+      <text x="148" y="46" font-family="Caveat,cursive" font-size="40" fill="#F6B93B">?</text>
+    </svg>
+    <h2>${head}</h2>
+    <p class="lede">${lede}</p>
+    <ol class="review">${S.chain.map((x,i)=>{const c=DATA.cards[x.card],o=c.o[x.k];return `<li class="rv" id="rv${i}" style="animation-delay:${i*90}ms"><span class="n">${x.card}</span><div><div class="q">${withGap(c.q)}</div><div class="a">${esc(o.t)} <span class="arrow">→ ${o.n}</span></div></div><button class="redo" data-i="${i}">Rethink this card</button></li>`}).join("")}</ol>
+    <div id="clueHost"></div>
+    <div class="actions">
+      ${S.attempts>=2 && firstWrong>=0 ? `<button class="btn" id="clueBtn">Give us a clue</button>`:""}
+      <button class="btn alt" id="restartBtn">Start the set again</button>
+    </div>
+  </div>`;
+  paintAll(r);
+  r.querySelectorAll(".redo").forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i; S.current=S.chain[i].card; S.chain=S.chain.slice(0,i);
+    show("play"); renderTrail(); renderCard(true);
+  });
+  $("#restartBtn").onclick=()=>{ S.chain=[]; S.current=S.start; show("play"); renderTrail(); renderCard(true); };
+  const cb=$("#clueBtn"); if(cb) cb.onclick=()=>{
+    const el=$("#rv"+firstWrong); el.classList.add("clue"); el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+    $("#clueHost").innerHTML=`<p class="cluebox">Have another look at card ${S.chain[firstWrong].card}…</p>`; cb.remove();
+  };
+  show("result");
+  const art=r.querySelector(".result"); art.classList.add("shake");
+}
+function paintAll(root){ root.querySelectorAll(".rv .n").forEach(e=>paint(e,S.set.name)); }
+
+function success(){
+  const r=$("#result"); paint(r,S.set.name);
+  const cards=S.chain.map(x=>x.card);
+  const R=38; // percent radius
+  const minis=cards.map((c,i)=>{
+    const a=(-90+i*60)*Math.PI/180;
+    return `<div class="mini" style="left:50%;top:50%;--x:${(Math.cos(a)*R/100*Math.min(360,innerWidth*.86)).toFixed(1)}px;--y:${(Math.sin(a)*R/100*Math.min(360,innerWidth*.86)).toFixed(1)}px;--fx:0px;--fy:260px;--rot:${(i*60)%360>180?-6:6}deg;animation-delay:${150+i*130}ms">${c}</div>`;
+  }).join("");
+  const note = S.attempts===0 ? "first try!" : `closed on attempt ${S.attempts+1}`;
+  r.innerHTML=`<div class="result">
+    <div class="ringstage">
+      <svg viewBox="0 0 200 200" aria-hidden="true">
+        <path class="stain" d="M100,24 C142,22 176,56 176,100 C176,146 140,178 98,176 C56,174 24,142 25,98 C26,58 58,25 100,24"/>
+        <path class="stain2" d="M104,30 C140,30 168,60 168,100 C168,138 138,166 104,168"/>
+      </svg>
+      ${minis}
+      <div class="ringcentre"><div><div class="t">${elapsed()}</div><div class="s">${note}</div></div></div>
+    </div>
+    <h2>The loop closes!</h2>
+    <p class="lede">All six ${esc(S.set.name)} cards, in the right order, and back to card <b>${S.start}</b>.</p>
+    <div class="actions"><button class="btn" id="againBtn">Play another set</button></div>
+  </div>`;
+  r.querySelectorAll(".mini").forEach(e=>paint(e,S.set.name));
+  show("result");
+  requestAnimationFrame(()=>r.querySelectorAll(".stain,.stain2").forEach(p=>p.classList.add("go")));
+  $("#againBtn").onclick=()=>{ show("home"); buildHome(); };
+  if(!reduce) setTimeout(beans, 1400);
+}
+
+function beans(){
+  for(let i=0;i<46;i++){
+    const b=document.createElement("span"); b.className="bean";
+    b.style.left=Math.random()*100+"vw";
+    b.style.setProperty("--spin",(Math.random()*900-450)+"deg");
+    b.style.animationDuration=(2.2+Math.random()*2.2)+"s";
+    b.style.animationDelay=(Math.random()*.9)+"s";
+    const s=.7+Math.random()*.7; b.style.width=18*s+"px"; b.style.height=26*s+"px";
+    document.body.appendChild(b); setTimeout(()=>b.remove(),6000);
+  }
+}
+
+/* ---- Wiring ---- */
+$("#backBtn").onclick=()=>{ clearInterval(window._tick); show("home"); buildHome(); };
+$("#takeBack").onclick=takeBack;
+document.addEventListener("keydown",e=>{
+  if($("#play").classList.contains("hidden")) return;
+  if(["1","2","3","4"].includes(e.key)){ const b=document.querySelector(`#cardHost .opt[data-k="${+e.key-1}"]`); if(b) b.click(); }
+  if(e.key==="Backspace"){ e.preventDefault(); takeBack(); }
+});
+buildHome();
+</script>
+</body>
+</html>
