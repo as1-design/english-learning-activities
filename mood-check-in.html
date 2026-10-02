@@ -1115,6 +1115,29 @@ function dealOfTheDay(group,force){
 const $=id=>document.getElementById(id);
 let activeGroup=null, activeDeal=null, manualSkin=null;
 
+/* A cached deal stores only what was true when it was dealt. Phrase text,
+   emoji and definition are looked up fresh from the banks every time a grid
+   is drawn, so a deal cached by an older version of this file — or before you
+   edited a phrase — still shows the current wording and still flips. */
+let _indexKey=null,_index=null;
+function phraseIndex(){
+  const key=JSON.stringify(load(K.custom,{}));
+  if(_index&&_indexKey===key) return _index;
+  const map=new Map();
+  for(const lvl of Object.keys(BANKS)) for(const it of bankFor(lvl)) map.set(it.id,it);
+  for(const s of SEASONS) for(const it of seasonBank(s)) map.set(it.id,it);
+  _index=map;_indexKey=key;return map;
+}
+function hydrate(deal){
+  const lib=phraseIndex();
+  deal.cards=deal.cards.map(c=>{
+    const src=lib.get(c.id);
+    return src ? {id:c.id,text:src.text,emoji:src.emoji,def:src.def||'',themed:!!c.themed}
+               : {id:c.id,text:c.text,emoji:c.emoji,def:c.def||'',themed:!!c.themed};
+  });
+  return deal;
+}
+
 function applyVars(v){
   const root=document.documentElement;
   ['--card-ink','--num-font','--pattern','--title-ink'].forEach(k=>root.style.removeProperty(k));
@@ -1173,7 +1196,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 
 function showGroup(group,force){
   activeGroup=group; manualSkin=null;
-  activeDeal=dealOfTheDay(group,force);
+  activeDeal=hydrate(dealOfTheDay(group,force));
   $('lessonName').textContent=group.name;
   const r=timetable().find(x=>x.id===group.id);
   const when=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
