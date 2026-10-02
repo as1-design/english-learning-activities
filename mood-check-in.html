@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mood Check-in — Class of Coffee</title>
+<meta name="theme-color" content="#1a1716">
+<link rel="manifest" href='data:application/manifest+json,{"name":"Mood Check-in","short_name":"Mood","start_url":".","display":"standalone","background_color":"%231a1716","theme_color":"%231a1716","icons":[{"src":"data:image/svg%2Bxml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23e2653f%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2756%27 text-anchor=%27middle%27%3E%E2%98%95%3C/text%3E%3C/svg%3E","sizes":"any","type":"image/svg+xml"}]}'>
+<style>
+/* ============================================================
+   MOOD CHECK-IN · Class of Coffee
+   Single file. No build step, no dependencies, no network.
+   Opens knowing what day it is and which class you have.
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:var(--font);
+  background:var(--bg);background-image:var(--pattern,none);
+  color:var(--ink);-webkit-font-smoothing:antialiased;
+  transition:background-color .5s ease,color .5s ease;overflow-x:hidden;
+}
+.wrap{min-height:100%;display:flex;flex-direction:column}
+
+/* ---------- control bar ---------- */
+.bar{
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:11px 16px;
+  background:color-mix(in srgb,var(--ink) 7%,transparent);
+  border-bottom:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
+  position:sticky;top:0;z-index:30;backdrop-filter:blur(10px);
+}
+.bar .spacer{flex:1}
+.today{
+  display:flex;flex-direction:column;line-height:1.15;padding-right:4px;min-width:0;
+}
+.today .lesson{font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.today .when{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.55;white-space:nowrap}
+.season-chip{
+  font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  padding:5px 10px;border-radius:999px;background:var(--accent);color:var(--on-accent);
+  white-space:nowrap;
+}
+button,select{
+  font:inherit;font-size:.86rem;font-weight:650;color:var(--ink);
+  background:color-mix(in srgb,var(--ink) 8%,transparent);
+  border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);
+  border-radius:9px;padding:8px 13px;cursor:pointer;
+  transition:transform .12s ease,background .2s ease;
+}
+button:hover,select:hover{background:color-mix(in srgb,var(--ink) 15%,transparent)}
+button:active{transform:translateY(1px)}
+button:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button.primary{
+  background:var(--accent);border-color:var(--accent);color:var(--on-accent);
+  box-shadow:0 2px 0 color-mix(in srgb,var(--accent) 55%,#000);
+}
+button.primary:hover{filter:brightness(1.07);background:var(--accent)}
+button[disabled]{opacity:.4;cursor:not-allowed}
+
+/* ---------- board ---------- */
+.board{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(16px,3.2vw,44px);gap:clamp(14px,2.3vw,30px);
+  background:var(--bg);background-image:var(--pattern,none);
+}
+.headline{
+  margin:0;text-align:center;font-family:var(--title-font);
+  font-weight:var(--title-weight);text-transform:var(--title-transform);
+  letter-spacing:var(--title-spacing);font-size:clamp(1.6rem,5vw,3.5rem);
+  line-height:1.03;color:var(--title-ink,var(--ink));text-wrap:balance;
+}
+.headline .dot{color:var(--accent)}
+.grid{
+  display:grid;gap:clamp(10px,1.4vw,19px);grid-template-columns:repeat(3,1fr);
+  max-width:1400px;width:100%;margin:0 auto;
+}
+@media (max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:420px){.grid{grid-template-columns:1fr}}
+.card{
+  position:relative;background:var(--card);border:var(--card-border);
+  border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:clamp(12px,1.7vw,21px) clamp(10px,1.3vw,17px);
+  display:flex;flex-direction:column;align-items:center;gap:clamp(5px,.85vw,11px);
+  min-height:clamp(128px,18.5vh,225px);text-align:center;
+  animation:rise .42s cubic-bezier(.2,.9,.3,1) both;overflow:hidden;
+}
+@keyframes rise{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.card.themed{box-shadow:var(--shadow),inset 0 0 0 2px color-mix(in srgb,var(--accent) 38%,transparent)}
+.card .num{
+  position:absolute;top:8px;left:11px;font-family:var(--num-font,var(--font));
+  font-size:clamp(.76rem,1.05vw,1rem);font-weight:800;color:var(--accent);line-height:1;
+}
+.card .emoji{
+  font-size:clamp(2.1rem,4.8vw,3.8rem);line-height:1.05;margin-top:clamp(6px,.9vw,11px);
+  filter:drop-shadow(0 2px 3px rgba(0,0,0,.14));
+}
+.card .phrase{
+  font-size:clamp(.9rem,1.4vw,1.42rem);font-weight:var(--phrase-weight,650);
+  line-height:1.2;text-wrap:balance;color:var(--card-ink,var(--ink));padding:0 2px;
+}
+.card .flag{
+  position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 24%,transparent);
+}
+.legend{
+  text-align:center;font-size:.76rem;letter-spacing:.05em;opacity:.55;
+  display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;
+}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend .pip{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.legend .sq{width:9px;height:9px;border-radius:3px;box-shadow:inset 0 0 0 2px var(--accent)}
+.footer{
+  text-align:center;padding:10px 16px 18px;font-size:.71rem;
+  letter-spacing:.11em;text-transform:uppercase;opacity:.4;
+}
+.noclass{text-align:center;opacity:.6;font-size:1rem;padding:30px 0}
+
+/* ---------- projection ---------- */
+body.projecting .bar,body.projecting .footer{display:none}
+body.projecting .board{min-height:100vh}
+.exit-hint{
+  display:none;position:fixed;bottom:14px;right:16px;z-index:40;
+  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.28;
+}
+body.projecting .exit-hint{display:block}
+
+/* ---------- panel ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(18,14,12,.55);backdrop-filter:blur(3px);
+  z-index:50;display:none;align-items:flex-start;justify-content:center;
+  padding:24px 16px;overflow:auto;
+}
+.scrim.open{display:flex}
+.panel{
+  background:var(--card);color:var(--card-ink,var(--ink));border-radius:18px;
+  max-width:760px;width:100%;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.35);
+  border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);
+}
+.panel h2{margin:0 0 4px;font-size:1.3rem;font-family:var(--title-font)}
+.panel h3{margin:22px 0 7px;font-size:.76rem;letter-spacing:.11em;text-transform:uppercase;opacity:.6}
+.panel p.help{margin:0 0 10px;font-size:.85rem;line-height:1.5;opacity:.72}
+.panel code{
+  font-family:ui-monospace,Menlo,monospace;font-size:.85em;
+  background:color-mix(in srgb,var(--ink) 9%,transparent);padding:1px 5px;border-radius:4px;
+}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+textarea{
+  font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.83rem;line-height:1.55;
+  width:100%;min-height:140px;padding:11px;border-radius:11px;
+  border:1px solid color-mix(in srgb,var(--ink) 25%,transparent);
+  background:color-mix(in srgb,var(--ink) 5%,transparent);color:inherit;resize:vertical;
+}
+select.inline{font-size:.84rem;padding:6px 9px}
+.statline{
+  display:flex;justify-content:space-between;gap:10px;padding:8px 11px;border-radius:9px;
+  background:color-mix(in srgb,var(--ink) 6%,transparent);font-size:.84rem;margin-bottom:5px;
+}
+.statline .meta{opacity:.6;font-size:.78rem;white-space:nowrap}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(90px);
+  background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;
+  font-size:.85rem;font-weight:650;z-index:80;
+  transition:transform .32s cubic-bezier(.2,.9,.3,1);box-shadow:0 8px 24px rgba(0,0,0,.28);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media print{
+  .bar,.footer,.exit-hint,.scrim,.legend{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  .board{background:#fff!important;background-image:none!important}
+  .card{border:1.5px solid #000!important;box-shadow:none!important;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){.card{animation:none}*{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar" id="bar">
+    <div class="today">
+      <span class="lesson" id="lessonName">—</span>
+      <span class="when" id="whenLine">—</span>
+    </div>
+    <span class="season-chip" id="seasonChip" style="display:none"></span>
+    <button class="primary" id="dealBtn">Deal again ↻</button>
+    <select id="groupSel" aria-label="Switch class" class="inline"></select>
+    <span class="spacer"></span>
+    <button id="skinBtn" title="Change the look, keep the words">Skin</button>
+    <button id="projBtn" title="Full screen">Project ⛶</button>
+    <button id="manageBtn">Manage</button>
+  </div>
+
+  <main class="board" id="board">
+    <h1 class="headline" id="headline">How are you today<span class="dot">?</span></h1>
+    <div class="grid" id="grid"></div>
+    <div class="legend" id="legend"></div>
+  </main>
+
+  <div class="footer">Class of Coffee – with AI assistance</div>
+</div>
+<div class="exit-hint">Esc to exit</div>
+
+<div class="scrim" id="scrim">
+  <div class="panel">
+    <h2>Manage</h2>
+    <p class="help">Stored on this device only. The timetable and the phrase banks are written
+      into the file itself, so they travel with it to any computer; anything you change here is
+      an override that stays on this browser.</p>
+
+    <h3>Timetable</h3>
+    <p class="help">One line per class: <code>Day | Name | Level | 09:00-11:00</code>.
+      Level is <code>b21</code> or <code>b22</code>. Times are optional — add them only when two
+      classes share a day, so it can tell which one you're in.</p>
+    <textarea id="ttBox" style="min-height:120px"></textarea>
+    <div class="row" style="margin-top:9px">
+      <button class="primary" id="saveTtBtn">Save timetable</button>
+      <button id="resetTtBtn">Back to the built-in one</button>
+    </div>
+
+    <h3>Add your own phrases</h3>
+    <p class="help">One per line: <code>phrase | emoji | register</code>, where register is
+      <code>easy</code>, <code>core</code>, <code>idiom</code> or <code>slang</code>.</p>
+    <div class="row">
+      <select id="bankLevel" class="inline"></select>
+      <span id="bankCount" style="font-size:.78rem;opacity:.6"></span>
+    </div>
+    <textarea id="bankBox" placeholder="running on biscuits | 🍪 | slang"></textarea>
+    <div class="row" style="margin-top:9px">
+      <button class="primary" id="saveBankBtn">Save phrases</button>
+    </div>
+
+    <h3>What each class has met</h3>
+    <div id="statList"></div>
+
+    <div class="row" style="margin-top:18px">
+      <button id="exportBtn">Export backup</button>
+      <button id="importBtn">Import backup</button>
+      <span class="spacer"></span>
+      <button id="closeBtn">Close</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json" style="display:none">
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ████████████████████████████████████████████████████████████
+   ① YOUR TIMETABLE  —  edit this block and nothing else breaks
+   ─────────────────────────────────────────────────────────────
+   day:   Mon Tue Wed Thu Fri Sat Sun
+   level: 'b21' or 'b22'
+   from/to: optional. Only needed when two classes share a day,
+            so the tool can work out which one you're teaching.
+   ████████████████████████████████████████████████████████████ */
+
+const TIMETABLE = [
+  { day:'Mon', name:'B2.1-16 A',       level:'b21', from:'16:00', to:'18:15' },
+  { day:'Wed', name:'B2.1-16 A',       level:'b21', from:'16:00', to:'18:15' },
+
+  { day:'Tue', name:'B2.2-16 B',       level:'b22', from:'16:00', to:'18:15' },
+  { day:'Thu', name:'B2.2-16 B',       level:'b22', from:'16:00', to:'18:15' },
+
+  { day:'Tue', name:'B2.2-18:30 B BL', level:'b22', from:'18:30', to:'20:45' },
+  { day:'Wed', name:'B2.1-18:30 A BL', level:'b21', from:'18:30', to:'20:45' },
+];
+
+/* ████████████████████████████████████████████████████████████
+   ② THE LANGUAGE BANKS
+   Format:  phrase | emoji | register
+   register = easy · core · idiom · slang
+   ████████████████████████████████████████████████████████████ */
+
+const LEVELS = { b21:'B2.1', b22:'B2.2' };
+
+const BANKS = {
+b21:`
+tired|😴|easy
+happy|🙂|easy
+a bit sad|🙁|easy
+calm|😌|easy
+busy|🏃|easy
+fine, thanks|👍|easy
+sleepy|🥱|easy
+excited|🤩|easy
+bored|😑|easy
+relaxed|🛋️|easy
+stressed|😣|easy
+nervous|😬|easy
+in a good mood|😀|easy
+hungry|🍞|easy
+cold|🧊|easy
+running on very little sleep|☕|core
+quietly pleased with myself|😏|core
+overwhelmed but coping|🌊|core
+dreading my afternoon|😖|core
+in need of a strong coffee|🫖|core
+fairly upbeat, actually|🎈|core
+a bit under the weather|🤧|core
+easily distracted today|🦋|core
+looking forward to the weekend|🗓️|core
+struggling to concentrate|🌀|core
+glad it's nearly Friday|🎉|core
+slightly out of it|🌫️|core
+in a surprisingly good mood|☀️|core
+not quite awake yet|🌅|core
+feeling the Monday|😵|core
+pretty content, all things considered|⚖️|core
+a little homesick|🏠|core
+secretly counting the hours|⏳|core
+up for anything|🎲|core
+dragging myself through the week|🐌|core
+mentally somewhere else|🪂|core
+weirdly motivated|🚀|core
+getting there, slowly|🪜|core
+desperate for a holiday|🏝️|core
+unusually organised|📋|core
+slightly panicking about everything|😰|core
+perfectly fine, honestly|🆗|core
+buzzing with ideas|💡|core
+flat out all week|🏁|core
+a bit of a mess today|🧶|core
+keeping my head above water|🏊|core
+hanging in there|🪢|core
+in need of a nap|🛏️|core
+quietly hopeful|🌱|core
+slightly frazzled|🔌|core
+full of good intentions|📝|core
+not feeling it today|🫠|core
+ready for whatever|💪|core
+a bit scatterbrained|🪺|core
+unusually cheerful|🌻|core
+somewhere between fine and awful|🎚️|core
+craving something sweet|🍫|core
+slightly over it|🙄|core
+pleased with how the week's going|📈|core
+struggling to get started|🪫|core
+oddly calm about everything|🧘|core
+worried about my to-do list|🗒️|core
+enjoying a slow morning|🌤️|core
+happy to be here, honestly|💐|core
+too warm to think|🥵|core
+making it up as I go|🎺|core
+snowed under|❄️|idiom
+on top of things|🗻|idiom
+under the weather|🌧️|idiom
+over the moon|🌙|idiom
+down in the dumps|🗑️|idiom
+all over the place|🗺️|idiom
+full of beans|🫘|idiom
+on edge|⚡|idiom
+out of sorts|🧩|idiom
+in good spirits|🥂|idiom
+at breaking point|🧨|idiom
+fed up|😤|idiom
+miles away|🌍|idiom
+in the zone|🎯|idiom
+worn out|🧦|idiom
+up to my ears|📚|idiom
+on cloud nine|☁️|idiom
+in one piece|🧱|idiom
+ready to drop|🥀|idiom
+shattered|💥|idiom
+chuffed|😁|idiom
+run off my feet|👟|idiom
+in a rush|💨|idiom
+sick of it all|🤢|idiom
+bright and early|🐓|idiom
+under pressure|🗜️|idiom
+in the mood for a chat|💬|idiom
+having a good day, touch wood|🪵|idiom
+knackered|😵‍💫|slang
+gutted|💔|slang
+buzzing|🐝|slang
+chilling|😎|slang
+meh|😐|slang
+so done|🚪|slang
+vibing|🎧|slang
+wiped out|🧹|slang
+stressed out|🤯|slang
+hyped|🔥|slang
+lowkey tired|🌘|slang
+not a morning person|🌄|slang
+living for Friday|🕺|slang
+running on coffee|⛽|slang
+in my own little world|🫧|slang
+rough|🪨|slang
+can't be bothered|🛑|slang
+half-asleep|🌗|slang
+dead tired|😪|slang
+starving|🍕|slang
+all good|✌️|slang
+peak Monday energy|📅|slang
+`,
+
+b22:`
+tired|😴|easy
+fine|👍|easy
+calm|😌|easy
+busy|🏃|easy
+happy|🙂|easy
+stressed|😣|easy
+excited|🤩|easy
+bored|😑|easy
+sleepy|🥱|easy
+relaxed|🛋️|easy
+nervous|😬|easy
+in a good mood|😀|easy
+a bit sad|🙁|easy
+looking forward to the weekend|🗓️|easy
+hungry|🍞|easy
+running on fumes|⛽|core
+at a bit of a loose end|🧵|core
+dragging my heels|🦶|core
+in two minds about everything|🪙|core
+frazzled but functioning|🔌|core
+quietly thriving|🌿|core
+clinging on until the weekend|🧗|core
+oddly serene|🕊️|core
+firing on all cylinders|🏎️|core
+barely keeping the plates spinning|🍽️|core
+somewhere between coping and collapsing|🎚️|core
+wired but exhausted|🔋|core
+pleasantly surprised by myself|🎁|core
+bracing myself for the afternoon|🛡️|core
+gently unravelling|🧶|core
+weirdly at peace with the chaos|🌪️|core
+mildly allergic to Mondays|🤧|core
+cautiously optimistic|🌤️|core
+stretched a bit thin|📏|core
+riding a small wave of motivation|🌊|core
+in desperate need of a long weekend|🏝️|core
+nursing a low-level dread|🫗|core
+unexpectedly sharp today|🗡️|core
+treading water|🏊|core
+halfway out the door mentally|🚪|core
+running on sheer willpower|💪|core
+quietly counting my blessings|🙏|core
+not firing on all cylinders|🛠️|core
+in a bit of a funk|🎷|core
+surprisingly on top of everything|🗻|core
+teetering|🪜|core
+fuelled entirely by caffeine|☕|core
+living for the small things today|🌸|core
+running on autopilot|🛩️|core
+in a strangely good place|🧭|core
+making peace with my inbox|📥|core
+raring to go|🏇|core
+glad to be out of the house|🚶|core
+slightly dreading my own to-do list|🗒️|core
+quietly proud of this week|🏅|core
+too many tabs open, mentally|🗂️|core
+operating at about 60 per cent|🔅|core
+hungry for something to happen|✨|core
+snowed under|❄️|idiom
+at the end of my tether|🪢|idiom
+on a roll|🎳|idiom
+in the doldrums|⛵|idiom
+burning the candle at both ends|🕯️|idiom
+up to my eyes|👀|idiom
+under a cloud|☁️|idiom
+on top of the world|🌍|idiom
+out of steam|🚂|idiom
+in a spin|🌀|idiom
+off colour|🎨|idiom
+in high spirits|🥂|idiom
+at a low ebb|🪸|idiom
+walking on air|🎈|idiom
+bogged down|🥾|idiom
+flat as a pancake|🥞|idiom
+fit as a fiddle|🎻|idiom
+like a deer in the headlights|🦌|idiom
+running on empty|🪫|idiom
+picking myself up|🧎|idiom
+keeping my chin up|⬆️|idiom
+a shadow of my former self|🫥|idiom
+in deep water|🌊|idiom
+full steam ahead|🚄|idiom
+grinning and bearing it|🦷|idiom
+champing at the bit|🐎|idiom
+in a world of my own|🪐|idiom
+rushed off my feet|👟|idiom
+sitting pretty|🪑|idiom
+having a wobble|🍮|idiom
+on the mend|🩹|idiom
+at sixes and sevens|🎰|idiom
+throwing in the towel|🏳️|idiom
+bright-eyed and bushy-tailed|🐿️|idiom
+hitting my stride|🏃‍♀️|idiom
+knackered|😵‍💫|slang
+shattered|💥|slang
+buzzing|🐝|slang
+gutted|💔|slang
+chuffed to bits|😁|slang
+rough|🪨|slang
+made up|🎊|slang
+can't be bothered|🛑|slang
+so over it|🙄|slang
+vibing|🎧|slang
+lowkey struggling|🌘|slang
+running on vibes|🔮|slang
+absolutely wrecked|🧨|slang
+in bits|🧩|slang
+having a mare|🐴|slang
+living my best life|🕺|slang
+meh|😐|slang
+wiped|🧹|slang
+peak Monday energy|📅|slang
+touch and go|🎢|slang
+sound|👌|slang
+not with it today|🌫️|slang
+on one|🌶️|slang
+knackered but happy|🙃|slang
+dead on my feet|🦵|slang
+`};
+
+/* ████████████████████████████████████████████████████████████
+   ③ SEASONS — themed cards blend into the grid, three of nine,
+      and the whole board changes colour for the week.
+   ████████████████████████████████████████████████████████████ */
+
+const SEASONS = [
+  { id:'santjordi', label:'Sant Jordi',
+    headline:'How are you this Sant Jordi?',
+    when:(d)=>fixed(d,3,20,3,24),
+    skin:{'--bg':'#f7e9df','--card':'#fffbf7','--ink':'#4a1410','--accent':'#b8231f','--on-accent':'#fff',
+      '--radius':'6px','--card-border':'1.5px solid #4a141026','--shadow':'0 5px 16px #4a141014',
+      '--font':'Georgia,"Iowan Old Style",serif','--title-font':'Georgia,serif','--title-weight':'700',
+      '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'600','--pattern':'none'},
+    bank:`
+lost in a book|📖|core
+in a romantic mood|🌹|core
+page-turning|📚|core
+smelling the roses|💐|idiom
+bookish|🤓|slang
+full of stories|✍️|core
+a bit of a dragon today|🐉|core
+feeling poetic|🪶|core
+swept off my feet|💘|idiom
+knight-in-shining-armour energy|🛡️|slang
+word-drunk|🍷|core
+in need of a good book|📕|easy
+soppy|💞|slang
+celebrating|🎊|easy
+charmed|✨|core
+slaying my to-do list|🗡️|slang
+quietly romantic|💌|core
+between chapters|🔖|core
+inspired|💡|easy
+browsing, not buying|🏷️|core
+`},
+
+  { id:'stpatricks', label:"St Patrick's",
+    headline:'Feeling lucky today?',
+    when:(d)=>fixed(d,2,14,2,18),
+    skin:{'--bg':'#e3f3e4','--card':'#ffffff','--ink':'#143a1e','--accent':'#1f8f45','--on-accent':'#fff',
+      '--radius':'999px','--card-border':'2px solid #143a1e12','--shadow':'0 5px 16px #143a1e16',
+      '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'820',
+      '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'650','--pattern':'none'},
+    bank:`
+feeling lucky|🍀|core
+green with envy|💚|idiom
+in high spirits|🥂|idiom
+having the craic|🎻|slang
+chasing rainbows|🌈|idiom
+full of blarney|🗣️|idiom
+lucky, touch wood|🪵|core
+dancing|🕺|easy
+pot-of-gold optimism|🪙|core
+grand, altogether|👌|slang
+gone a bit green|🥬|slang
+up for a singsong|🎵|core
+charmed|✨|core
+no luck today|🎲|easy
+in need of a sit-down|🪑|core
+cheerful|☘️|easy
+the luck's holding|🤞|core
+jigging along|💃|slang
+away with the fairies|🧚|idiom
+an Irish goodbye kind of day|🚪|slang
+`},
+
+  { id:'easter', label:'Setmana Santa',
+    headline:'How are you feeling this week?',
+    when:(d)=>moveable(d,-9,8),
+    skin:{'--bg':'#eef7e6','--card':'#ffffff','--ink':'#27401f','--accent':'#e8963a','--on-accent':'#fff',
+      '--radius':'26px','--card-border':'none','--shadow':'0 6px 18px #27401f16',
+      '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'800',
+      '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'650',
+      '--pattern':'radial-gradient(#27401f0a 1px,transparent 1px)'},
+    bank:`
+ready for a break|🐣|core
+counting down to the holidays|📆|core
+cracking on|🥚|idiom
+blooming|🌷|core
+hopping about|🐰|core
+full of chocolate|🍫|easy
+coming back to life|🌱|core
+with a spring in my step|🌼|idiom
+recharged|🔋|easy
+back with a bump|💥|idiom
+sun-starved|☀️|core
+fresh as a daisy|🌻|idiom
+in holiday mode already|🏖️|slang
+shaking off the winter|🧥|core
+sweet-toothed|🍬|slang
+out of hibernation|🐻|core
+slow-starting|🐌|core
+holiday brain|🧠|slang
+pleasantly idle|🪁|core
+rested, for once|😌|easy
+`},
+
+  { id:'carnival', label:'Carnestoltes',
+    headline:'Who are you today?',
+    when:(d)=>moveable(d,-52,-46),   // Dijous Gras → Dimecres de Cendra
+    skin:{'--bg':'#2b1046','--card':'#ffffff','--ink':'#fdefff','--accent':'#ffcf3d','--on-accent':'#2b1046',
+      '--radius':'20px','--card-border':'none','--shadow':'0 12px 30px #0000004d',
+      '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'880',
+      '--title-transform':'uppercase','--title-spacing':'-.025em','--phrase-weight':'680',
+      '--card-ink':'#2b1046',
+      '--pattern':'linear-gradient(145deg,#2b1046 0%,#7b1d70 50%,#d4365f 100%)'},
+    bank:`
+in disguise|🎭|core
+pretending I'm fine|🙂|core
+up for anything|🎉|easy
+feeling colourful|🌈|core
+loud|📣|easy
+someone else entirely today|🪄|core
+dressed for it|👑|core
+a bit silly|🤡|easy
+dancing through it|💃|core
+off the leash|🎊|idiom
+confetti brain|🎈|slang
+unrecognisable|🕶️|core
+not myself today|🔄|core
+party mode|🥳|slang
+masked up|🥸|core
+full of mischief|😈|core
+noisy|🥁|easy
+out of character|🎬|core
+costume regret|😬|slang
+sardine-level chaos|🐟|slang
+`},
+
+  { id:'valentines', label:"Valentine's",
+    headline:'How is your heart today?',
+    when:(d)=>fixed(d,1,10,1,15),
+    skin:{'--bg':'#fbe4ea','--card':'#fffdfd','--ink':'#4d1026','--accent':'#e02e62','--on-accent':'#fff',
+      '--radius':'28px','--card-border':'none','--shadow':'0 8px 22px #4d102618',
+      '--font':'system-ui,sans-serif','--title-font':'Georgia,serif','--title-weight':'700',
+      '--title-transform':'none','--title-spacing':'-.015em','--phrase-weight':'620','--pattern':'none'},
+    bank:`
+loved-up|💕|slang
+single and thriving|💅|slang
+a bit cynical today|🙄|core
+warm-hearted|🧡|core
+missing someone|💭|core
+all heart|❤️|idiom
+unimpressed by the fuss|🥱|core
+soppy|💌|slang
+blushing|😊|easy
+heart-eyed|😍|slang
+lonely but fine|🌙|core
+in love with my own company|🫖|core
+over it|💔|slang
+secretly pleased|🤫|core
+flowers, please|💐|easy
+sweet on someone|🍬|idiom
+not in the mood for romance|🚫|core
+quietly affectionate|🤍|core
+`},
+
+  { id:'halloween', label:'Halloween · Castanyada',
+    headline:"What's your vibe this Halloween?",
+    when:(d)=>fixed(d,9,25,10,2),
+    skin:{'--bg':'#1a1024','--card':'#2a1838','--ink':'#f6ecff','--accent':'#ff8a1f','--on-accent':'#1a1024',
+      '--radius':'10px','--card-border':'1px solid #ffffff14','--shadow':'0 10px 28px #0008',
+      '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'900',
+      '--title-transform':'uppercase','--title-spacing':'-.02em','--phrase-weight':'620',
+      '--pattern':'radial-gradient(circle at 80% 0%,#ff8a1f1a,transparent 55%)'},
+    bank:`
+haunted by my inbox|👻|core
+dead on my feet|💀|slang
+in a bit of a daze|🕸️|core
+scared of my own to-do list|😱|core
+running on sweets|🍬|slang
+quietly dreading Monday|🎃|core
+back from the dead|🧟|idiom
+spooked but smiling|🫣|core
+a proper night owl today|🦉|idiom
+a bit witchy|🧙|slang
+cosy and candlelit|🕯️|core
+sugar crash|🍭|slang
+something's brewing|🧪|idiom
+creeping along|🕷️|core
+warm and toasty|🌰|easy
+jumpy|😨|easy
+mysteriously fine|🔮|core
+up past my bedtime|🌙|core
+wrapped up warm|🧣|easy
+chestnut weather|🍂|core
+tricked, not treated|🍫|slang
+glowing|🪔|easy
+`},
+
+  { id:'thanksgiving', label:'Thanksgiving',
+    headline:'What are you grateful for today?',
+    when:(d)=>thanksgivingWeek(d),
+    skin:{'--bg':'#f3e7d5','--card':'#fffaf2','--ink':'#3d2414','--accent':'#b35c1e','--on-accent':'#fff',
+      '--radius':'16px','--card-border':'2px solid #3d241414','--shadow':'0 4px 0 #3d241412',
+      '--font':'system-ui,sans-serif','--title-font':'Georgia,serif','--title-weight':'700',
+      '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'640',
+      '--pattern':'radial-gradient(#3d24140a 1px,transparent 1px)'},
+    bank:`
+grateful|🙏|easy
+counting my blessings|🧮|idiom
+full to bursting|🦃|core
+warm-hearted|🧡|core
+glad to be here|🏡|easy
+stuffed|🥧|slang
+missing home|✈️|core
+thankful for small things|🌼|core
+happily surrounded|👨‍👩‍👧|core
+in a food coma|😵|slang
+appreciating the quiet|🤍|core
+reflective|🍂|core
+cosy|🛋️|easy
+generous|🎁|easy
+homesick|🏠|easy
+content|😌|easy
+a bit sentimental|🥹|core
+harvest mood|🌽|core
+giving thanks, grudgingly|😅|slang
+all talked out|💬|slang
+`},
+
+  { id:'christmas', label:'Nadal',
+    headline:'How are you feeling this December?',
+    when:(d)=>fixed(d,11,10,0,7),
+    skin:{'--bg':'#0f2a24','--card':'#15392f','--ink':'#f2fff8','--accent':'#e8c45c','--on-accent':'#0f2a24',
+      '--radius':'18px','--card-border':'1px solid #ffffff1a','--shadow':'0 10px 26px #00000047',
+      '--font':'system-ui,sans-serif','--title-font':'Georgia,serif','--title-weight':'700',
+      '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'630',
+      '--pattern':'radial-gradient(circle at 15% 5%,#e8c45c14,transparent 50%)'},
+    bank:`
+mentally in December|🎄|core
+counting down the days|📆|core
+full of mince pies|🥧|slang
+glowing like a fairy light|✨|core
+in full festive mode|🎅|core
+tired but tinselled|🎀|core
+dreading the family dinner|🍽️|core
+wrapped up warm|🧣|easy
+dreaming of time off|💤|core
+over-catered|🍗|core
+cosy by the radiator|🔥|easy
+shopping-list panic|🛍️|core
+quietly festive|🕯️|core
+sparkling|🪩|slang
+ready for a fresh start|🎆|core
+making resolutions I won't keep|📝|slang
+back to reality|⏰|idiom
+new year, same me|🙃|slang
+hibernating|🐻|slang
+full of good cheer|🥂|idiom
+out of holiday mode, just|🧳|core
+jingling|🔔|slang
+`},
+
+  { id:'exams', label:'Exam season',
+    headline:'How are you holding up?',
+    when:(d)=>fixed(d,0,15,0,31)||fixed(d,4,25,5,20),
+    skin:{'--bg':'#eef1f6','--card':'#ffffff','--ink':'#1b2432','--accent':'#3b62c4','--on-accent':'#fff',
+      '--radius':'12px','--card-border':'1.5px solid #1b243214','--shadow':'0 4px 14px #1b243212',
+      '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'800',
+      '--title-transform':'none','--title-spacing':'-.025em','--phrase-weight':'640','--pattern':'none'},
+    bank:`
+nervous but ready|📝|core
+cramming|📚|slang
+burnt out|🕯️|idiom
+nearly there|🏁|easy
+running on adrenaline|⚡|core
+over-revised|🧠|core
+can't look at another verb tense|😵|slang
+counting the days|📆|core
+relieved|😮‍💨|easy
+dreading the results|📄|core
+quietly confident|😎|core
+exhausted but finishing|🏃|core
+out of steam|🚂|idiom
+holding it together|🧷|core
+ready for it to be over|🚪|core
+proud of getting this far|🏅|core
+blank|⬜|easy
+my brain is full|🫗|slang
+sleep-deprived|🌙|core
+taking it one day at a time|🗓️|idiom
+too tired to panic|😴|slang
+looking forward to doing nothing|🏝️|core
+`},
+];
+
+/* ████████████████████████████████████████████████████████████
+   ④ DATE MATHS
+   ████████████████████████████████████████████████████████████ */
+
+// Easter Sunday, anonymous Gregorian algorithm
+function easter(y){
+  const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,
+        f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+        h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,
+        l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+        mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;
+  return new Date(y,mo-1,da);
+}
+const DAY = 864e5;
+const midnight = d => new Date(d.getFullYear(),d.getMonth(),d.getDate());
+const addDays = (d,n) => new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+
+// inclusive window between two month/day pairs; wraps across New Year
+function fixed(d,m1,d1,m2,d2){
+  const y=d.getFullYear(), t=midnight(d).getTime();
+  const mk=(yy,m,dd)=>new Date(yy,m,dd).getTime();
+  if(m1>m2 || (m1===m2 && d1>d2)){ // wraps
+    return t>=mk(y,m1,d1) || t<=mk(y,m2,d2);
+  }
+  return t>=mk(y,m1,d1) && t<=mk(y,m2,d2);
+}
+// window defined as offsets in days from Easter Sunday
+function moveable(d,o1,o2){
+  const t=midnight(d).getTime();
+  for(const y of [d.getFullYear()-1,d.getFullYear(),d.getFullYear()+1]){
+    const e=easter(y);
+    if(t>=addDays(e,o1).getTime() && t<=addDays(e,o2).getTime()) return true;
+  }
+  return false;
+}
+// Mon–Sat of the week containing the 4th Thursday of November
+function thanksgivingWeek(d){
+  const y=d.getFullYear(), nov=new Date(y,10,1);
+  const firstThu = 1 + ((4 - nov.getDay() + 7) % 7);
+  const tg = new Date(y,10,firstThu+21);
+  const mon = addDays(tg,-3), sat = addDays(tg,2);
+  const t=midnight(d).getTime();
+  return t>=mon.getTime() && t<=sat.getTime();
+}
+function seasonFor(d){ return SEASONS.find(s=>s.when(d)) || null; }
+
+/* ████████████████████████████████████████████████████████████
+   ⑤ SKINS (ordinary weeks)
+   ████████████████████████████████████████████████████████████ */
+
+const SKINS = [
+  { name:'Cortado', v:{'--bg':'#f6ecdf','--card':'#fffaf3','--ink':'#2e211a','--accent':'#d4572a','--on-accent':'#fff',
+    '--radius':'20px','--card-border':'2px solid #2e211a14','--shadow':'0 4px 0 #2e211a12',
+    '--font':'system-ui,-apple-system,"Segoe UI",sans-serif','--title-font':'system-ui,sans-serif',
+    '--title-weight':'850','--title-transform':'none','--title-spacing':'-.025em',
+    '--pattern':'radial-gradient(#2e211a0a 1px,transparent 1px)','--phrase-weight':'680'} },
+  { name:'Carbon', v:{'--bg':'#16181c','--card':'#21242a','--ink':'#f2f0ec','--accent':'#d7f25e','--on-accent':'#16181c',
+    '--radius':'8px','--card-border':'1px solid #ffffff14','--shadow':'0 10px 28px #0007',
+    '--font':'system-ui,-apple-system,sans-serif','--title-font':'system-ui,sans-serif',
+    '--title-weight':'900','--title-transform':'uppercase','--title-spacing':'-.02em',
+    '--pattern':'none','--phrase-weight':'600'} },
+  { name:'Blush', v:{'--bg':'#fbe9ec','--card':'#fffdfd','--ink':'#4a1f33','--accent':'#e0518a','--on-accent':'#fff',
+    '--radius':'28px','--card-border':'none','--shadow':'0 8px 22px #4a1f3318',
+    '--font':'system-ui,sans-serif','--title-font':'Georgia,"Iowan Old Style",serif',
+    '--title-weight':'700','--title-transform':'none','--title-spacing':'-.015em',
+    '--pattern':'none','--phrase-weight':'620'} },
+  { name:'Oat', v:{'--bg':'#ece4d6','--card':'#f8f3ea','--ink':'#3a3126','--accent':'#8a6f3c','--on-accent':'#fff',
+    '--radius':'4px','--card-border':'1.5px solid #3a312633','--shadow':'none',
+    '--font':'ui-monospace,"SF Mono",Menlo,monospace','--title-font':'ui-monospace,Menlo,monospace',
+    '--title-weight':'700','--title-transform':'lowercase','--title-spacing':'-.03em',
+    '--pattern':'repeating-linear-gradient(90deg,#3a312608 0 1px,transparent 1px 28px)',
+    '--phrase-weight':'600','--num-font':'ui-monospace,monospace'} },
+  { name:'Cobalt', v:{'--bg':'#13255c','--card':'#1b3278','--ink':'#eef2ff','--accent':'#ffd166','--on-accent':'#13255c',
+    '--radius':'16px','--card-border':'1px solid #ffffff1f','--shadow':'0 10px 26px #00000040',
+    '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif',
+    '--title-weight':'820','--title-transform':'none','--title-spacing':'-.02em',
+    '--pattern':'radial-gradient(circle at 20% 10%,#ffffff0f,transparent 55%)','--phrase-weight':'620'} },
+  { name:'Paper', v:{'--bg':'#fdfdfb','--card':'#fdfdfb','--ink':'#15171a','--accent':'#c2341f','--on-accent':'#fff',
+    '--radius':'0px','--card-border':'1.5px solid #15171a','--shadow':'none',
+    '--font':'Georgia,"Iowan Old Style",serif','--title-font':'Georgia,serif',
+    '--title-weight':'700','--title-transform':'none','--title-spacing':'-.02em',
+    '--pattern':'none','--phrase-weight':'600'} },
+  { name:'Mint', v:{'--bg':'#e2f2ea','--card':'#ffffff','--ink':'#15332a','--accent':'#17876a','--on-accent':'#fff',
+    '--radius':'999px','--card-border':'2px solid #15332a12','--shadow':'0 5px 16px #15332a14',
+    '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif',
+    '--title-weight':'800','--title-transform':'none','--title-spacing':'-.02em',
+    '--pattern':'none','--phrase-weight':'650'} },
+  { name:'Sunset', v:{'--bg':'#2a1133','--card':'#ffffff','--ink':'#fff3e8','--accent':'#ff8a3d','--on-accent':'#2a1133',
+    '--radius':'22px','--card-border':'none','--shadow':'0 12px 30px #0000004d',
+    '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif',
+    '--title-weight':'880','--title-transform':'uppercase','--title-spacing':'-.025em',
+    '--pattern':'linear-gradient(160deg,#2a1133 0%,#6d1f54 55%,#b83b4a 100%)',
+    '--phrase-weight':'680','--card-ink':'#2a1133'} },
+];
+
+const HEADLINES = [
+  'How are you today?','What’s your vibe today?','Which one are you?',
+  'How are you feeling?','Where are you at today?','Today, I’m…',
+  'Pick your mood','Which one’s you today?','How’s today going?'
+];
+
+/* ████████████████████████████████████████████████████████████
+   ⑥ STORAGE
+   ████████████████████████████████████████████████████████████ */
+
+const K={tt:'cc_wu_tt',custom:'cc_wu_custom',state:'cc_wu_state_',daily:'cc_wu_day_'};
+const load=(k,f)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Could not save — storage is blocked')}};
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+
+function parseBank(txt,prefix){
+  return (txt||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const p=l.split('|').map(s=>s.trim());
+    if(p.length<2||!p[0])return null;
+    return {id:(prefix?prefix+'-':'')+slug(p[0]),text:p[0],emoji:p[1]||'•',reg:(p[2]||'core').toLowerCase()};
+  }).filter(Boolean);
+}
+function dedupe(list){
+  const seen=new Set(),out=[];
+  for(const it of list){ if(!seen.has(it.id)){seen.add(it.id);out.push(it);} }
+  return out;
+}
+function bankFor(level){
+  return dedupe(parseBank(BANKS[level]).concat(parseBank(load(K.custom,{})[level])));
+}
+const seasonBank = s => parseBank(s.bank, s.id);
+
+const getState=id=>load(K.state+id,{n:0,seen:{},combos:[]});
+const setState=(id,s)=>save(K.state+id,s);
+
+/* ---------- timetable ---------- */
+const DAYNAMES=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function timetable(){
+  const override=load(K.tt,null);
+  if(override) return parseTT(override);
+  return TIMETABLE.map(r=>({...r,id:slug(r.name)}));
+}
+function parseTT(txt){
+  return (txt||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+    const p=l.split('|').map(s=>s.trim());
+    if(p.length<3) return null;
+    const day=DAYNAMES.find(d=>d.toLowerCase()===p[0].slice(0,3).toLowerCase());
+    if(!day) return null;
+    const t=(p[3]||'').split('-');
+    return {day,name:p[1],level:(p[2]||'b21').toLowerCase(),
+            from:(t[0]||'').trim()||null,to:(t[1]||'').trim()||null,id:slug(p[1])};
+  }).filter(Boolean);
+}
+const ttToText=rows=>rows.map(r=>
+  [r.day,r.name,r.level,(r.from&&r.to)?r.from+'-'+r.to:''].filter((x,i)=>i<3||x).join(' | ')
+).join('\n');
+
+const mins=t=>{const m=/^(\d{1,2}):(\d{2})$/.exec(t||'');return m?+m[1]*60+ +m[2]:null};
+
+function lessonNow(now){
+  const rows=timetable(), today=rows.filter(r=>r.day===DAYNAMES[now.getDay()]);
+  if(!today.length) return null;
+  if(today.length===1) return today[0];
+  const t=now.getHours()*60+now.getMinutes();
+  // "in this lesson" runs from half an hour before the bell to a quarter hour after.
+  // Back-to-back classes overlap in that margin, so the one starting later wins.
+  const inside=today.filter(r=>{const a=mins(r.from),b=mins(r.to);return a!==null&&b!==null&&t>=a-30&&t<=b+15})
+                    .sort((a,b)=>mins(b.from)-mins(a.from))[0];
+  if(inside) return inside;
+  const upcoming=today.filter(r=>mins(r.from)!==null&&mins(r.from)>=t).sort((a,b)=>mins(a.from)-mins(b.from));
+  return upcoming[0] || today[today.length-1];
+}
+
+/* ████████████████████████████████████████████████████████████
+   ⑦ THE DEAL
+   Two cards per grid are new to that class; the rest come back
+   least-recently-seen first, so language recycles for retrieval
+   instead of vanishing after one lesson.
+   ████████████████████████████████████████████████████████████ */
+
+const MIXES={
+  9:[{easy:2,core:4,idiom:2,slang:1},{easy:2,core:3,idiom:2,slang:2},
+     {easy:1,core:4,idiom:3,slang:1},{easy:2,core:4,idiom:1,slang:2}],
+  6:[{easy:1,core:3,idiom:1,slang:1},{easy:1,core:2,idiom:2,slang:1},{easy:2,core:2,idiom:1,slang:1}]
+};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+
+function pickFrom(pool,n,state,preferNew){
+  if(n<=0||!pool.length) return [];
+  const unseen=shuffle(pool.filter(p=>state.seen[p.id]===undefined));
+  const seen=pool.filter(p=>state.seen[p.id]!==undefined).sort((a,b)=>state.seen[a.id]-state.seen[b.id]);
+  const out=[];
+  if(preferNew>0) out.push(...unseen.slice(0,Math.min(preferNew,n)));
+  const stale=shuffle(seen.slice(0,Math.max(3,Math.ceil(seen.length*0.55))));
+  for(const c of stale){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
+  for(const c of unseen){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
+  for(const c of shuffle(pool)){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
+  return out.slice(0,n);
+}
+
+function buildDeal(level,size,state,season){
+  const themedN = season ? (size>=9?3:2) : 0;
+  const normalN = size - themedN;
+  const bank=bankFor(level), by={easy:[],core:[],idiom:[],slang:[]};
+  for(const it of bank)(by[it.reg]||by.core).push(it);
+
+  const base=rnd(MIXES[size]||MIXES[9]);
+  // scale the mix down to leave room for the themed cards
+  const mix={},keys=['core','idiom','slang','easy'];
+  let running=0;
+  keys.forEach((k,i)=>{
+    const want = i===keys.length-1 ? Math.max(0,normalN-running) : Math.round(base[k]*normalN/size);
+    mix[k]=want; running+=want;
+  });
+
+  let cards=[],newBudget=2;
+  for(const reg of keys){
+    const got=pickFrom(by[reg],mix[reg],state,Math.min(newBudget,1));
+    newBudget-=got.filter(c=>state.seen[c.id]===undefined).length;
+    cards=cards.concat(got);
+  }
+  if(cards.length<normalN){
+    const rest=shuffle(bank.filter(b=>!cards.includes(b)));
+    cards=cards.concat(rest.slice(0,normalN-cards.length));
+  }
+  cards=cards.slice(0,normalN);
+
+  let themed=[];
+  if(season){
+    themed=pickFrom(seasonBank(season),themedN,state,1);
+    for(const t of themed) t.themed=true;
+  }
+  return shuffle(cards.concat(themed));
+}
+
+function makeDeal(group,size,season){
+  const state=getState(group.id);
+  let cards=null;
+  for(let a=0;a<40;a++){
+    const c=buildDeal(group.level,size,state,season);
+    const hash=c.map(x=>x.id).sort().join('~');
+    cards=c;
+    if(!state.combos.includes(hash)){state.combos.push(hash);break}
+  }
+  if(state.combos.length>500) state.combos=state.combos.slice(-500);
+  const fresh=cards.filter(c=>state.seen[c.id]===undefined).map(c=>c.id);
+  state.n+=1;
+  for(const c of cards) state.seen[c.id]=state.n;
+  setState(group.id,state);
+  return {cards:cards.map(c=>({id:c.id,text:c.text,emoji:c.emoji,themed:!!c.themed})),fresh};
+}
+
+/* ---------- deal of the day ----------
+   One deal per class per day, cached. Reopening the link mid-lesson
+   shows the same nine cards; "Deal again" replaces the stored one.  */
+const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+
+function dealOfTheDay(group,force){
+  const key=K.daily+group.id+'_'+todayKey();
+  if(!force){
+    const cached=load(key,null);
+    if(cached&&cached.cards&&cached.cards.length) return cached;
+  }
+  const season=seasonFor(new Date());
+  const deal=makeDeal(group,9,season);
+  const payload={...deal,skin:Math.floor(Math.random()*SKINS.length),
+                 headline:rnd(HEADLINES),season:season?season.id:null};
+  save(key,payload);
+  // keep yesterday's keys from piling up
+  try{
+    const keep=todayKey();
+    for(let i=localStorage.length-1;i>=0;i--){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith(K.daily)&&!k.endsWith(keep)) localStorage.removeItem(k);
+    }
+  }catch(e){}
+  return payload;
+}
+
+/* ████████████████████████████████████████████████████████████
+   ⑧ RENDER
+   ████████████████████████████████████████████████████████████ */
+
+const $=id=>document.getElementById(id);
+let activeGroup=null, activeDeal=null, manualSkin=null;
+
+function applyVars(v){
+  const root=document.documentElement;
+  ['--card-ink','--num-font','--pattern','--title-ink'].forEach(k=>root.style.removeProperty(k));
+  for(const [k,val] of Object.entries(v)) root.style.setProperty(k,val);
+}
+function paint(deal){
+  const season=deal.season?SEASONS.find(s=>s.id===deal.season):null;
+  if(manualSkin!==null) applyVars(SKINS[manualSkin%SKINS.length].v);
+  else if(season) applyVars(season.skin);
+  else applyVars(SKINS[deal.skin%SKINS.length].v);
+
+  const chip=$('seasonChip');
+  if(season){chip.textContent=season.label;chip.style.display=''}else{chip.style.display='none'}
+
+  const head=season?season.headline:deal.headline;
+  $('headline').innerHTML=esc(head).replace(/([?…])$/,'<span class="dot">$1</span>');
+
+  const markNew=deal.fresh.length>0&&deal.fresh.length<deal.cards.length;
+  const grid=$('grid'); grid.innerHTML='';
+  deal.cards.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='card'+(c.themed?' themed':'');
+    el.style.animationDelay=(i*42)+'ms';
+    el.innerHTML='<span class="num">'+(i+1)+'</span>'+
+      ((markNew&&deal.fresh.includes(c.id))?'<span class="flag" title="new for this class"></span>':'')+
+      '<span class="emoji">'+c.emoji+'</span><span class="phrase"></span>';
+    el.querySelector('.phrase').textContent=c.text;
+    grid.appendChild(el);
+  });
+
+  const leg=$('legend'); leg.innerHTML='';
+  if(markNew) leg.innerHTML+='<span><i class="pip"></i> new today</span>';
+  if(season&&deal.cards.some(c=>c.themed)) leg.innerHTML+='<span><i class="sq"></i> '+esc(season.label)+'</span>';
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function showGroup(group,force){
+  activeGroup=group; manualSkin=null;
+  activeDeal=dealOfTheDay(group,force);
+  $('lessonName').textContent=group.name;
+  const r=timetable().find(x=>x.id===group.id);
+  const when=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  $('whenLine').textContent=when+((r&&r.from)?' · '+r.from:'');
+  $('groupSel').value=group.id;
+  paint(activeDeal);
+}
+
+function noClass(){
+  $('lessonName').textContent='No class today';
+  $('whenLine').textContent=new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'});
+  const season=seasonFor(new Date());
+  applyVars(season?season.skin:SKINS[0].v);
+  if(season){$('seasonChip').textContent=season.label;$('seasonChip').style.display=''}
+  $('headline').innerHTML='Nothing scheduled today<span class="dot">.</span>';
+  $('grid').innerHTML='<div class="noclass">Pick a class from the menu above if you’re covering.</div>';
+  $('legend').innerHTML='';
+  $('dealBtn').disabled=true;
+}
+
+function refreshGroupSel(){
+  const rows=timetable(), seen=new Set(), opts=[];
+  for(const r of rows){ if(!seen.has(r.id)){seen.add(r.id);opts.push(r);} }
+  $('groupSel').innerHTML=opts.map(r=>
+    '<option value="'+r.id+'">'+esc(r.name)+' · '+LEVELS[r.level]+'</option>').join('')
+    || '<option value="">No classes set</option>';
+  return opts;
+}
+
+/* ████████████████████████████████████████████████████████████
+   ⑨ WIRING
+   ████████████████████████████████████████████████████████████ */
+
+$('dealBtn').onclick=()=>{ if(activeGroup) showGroup(activeGroup,true) };
+$('groupSel').onchange=()=>{
+  const g=timetable().find(r=>r.id===$('groupSel').value);
+  if(g){ $('dealBtn').disabled=false; showGroup(g,false) }
+};
+$('skinBtn').onclick=()=>{
+  manualSkin=(manualSkin===null?0:manualSkin+1)%SKINS.length;
+  applyVars(SKINS[manualSkin].v); toast(SKINS[manualSkin].name);
+};
+$('projBtn').onclick=()=>{
+  document.body.classList.add('projecting');
+  if(document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(()=>{});
+};
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('projecting')});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.body.classList.remove('projecting');closePanel()}
+  if($('scrim').classList.contains('open'))return;
+  if(e.key===' '||e.key==='ArrowRight'){e.preventDefault();if(activeGroup)showGroup(activeGroup,true)}
+  if(e.key.toLowerCase()==='s')$('skinBtn').click();
+});
+
+/* ---------- panel ---------- */
+function openPanel(){
+  $('ttBox').value=ttToText(timetable());
+  $('bankLevel').innerHTML=Object.entries(LEVELS).map(([k,v])=>'<option value="'+k+'">'+v+' bank</option>').join('');
+  loadBankBox(); renderStats(); $('scrim').classList.add('open');
+}
+function closePanel(){$('scrim').classList.remove('open')}
+$('manageBtn').onclick=openPanel;
+$('closeBtn').onclick=closePanel;
+$('scrim').onclick=e=>{if(e.target===$('scrim'))closePanel()};
+
+function loadBankBox(){
+  const lvl=$('bankLevel').value||'b21';
+  $('bankBox').value=load(K.custom,{})[lvl]||'';
+  $('bankCount').textContent=bankFor(lvl).length+' phrases at this level';
+}
+$('bankLevel').onchange=loadBankBox;
+$('saveBankBtn').onclick=()=>{
+  const all=load(K.custom,{}); all[$('bankLevel').value]=$('bankBox').value;
+  save(K.custom,all); loadBankBox(); toast('Phrases saved');
+};
+$('saveTtBtn').onclick=()=>{
+  const rows=parseTT($('ttBox').value);
+  if(!rows.length){toast('Could not read that — check the format');return}
+  save(K.tt,$('ttBox').value); boot(); toast('Timetable saved');
+};
+$('resetTtBtn').onclick=()=>{
+  try{localStorage.removeItem(K.tt)}catch(e){}
+  $('ttBox').value=ttToText(timetable()); boot(); toast('Back to the built-in timetable');
+};
+
+function renderStats(){
+  const rows=refreshGroupSel(), box=$('statList');
+  if(!rows.length){box.innerHTML='<p class="help">No classes set.</p>';return}
+  box.innerHTML=rows.map(r=>{
+    const st=getState(r.id), total=bankFor(r.level).length;
+    const row=document.createElement('div');
+    row.className='statline';
+    row.innerHTML='<span></span><span class="meta">'+st.n+' deals · '+
+      Object.keys(st.seen).length+'/'+total+' met</span>';
+    row.firstChild.textContent=r.name;
+    return row.outerHTML;
+  }).join('');
+}
+
+$('exportBtn').onclick=()=>{
+  const rows=timetable(), data={v:2,tt:load(K.tt,null),custom:load(K.custom,{}),states:{}};
+  for(const r of rows) data.states[r.id]=getState(r.id);
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='mood-check-in-backup.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+};
+$('importBtn').onclick=()=>$('importFile').click();
+$('importFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(d.tt) save(K.tt,d.tt);
+      if(d.custom) save(K.custom,d.custom);
+      if(d.states) for(const [id,s] of Object.entries(d.states)) setState(id,s);
+      boot(); openPanel(); toast('Backup restored');
+    }catch(err){toast('That file could not be read')}
+  };
+  r.readAsText(f); e.target.value='';
+};
+
+let toastT;
+function toast(msg){
+  const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400);
+}
+
+/* ---------- boot ---------- */
+function boot(){
+  refreshGroupSel();
+  const g=lessonNow(new Date());
+  if(g){ $('dealBtn').disabled=false; showGroup(g,false) } else noClass();
+}
+boot();
+
+// if the page is left open overnight, re-boot when it comes back into view
+let bootedOn=todayKey();
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&todayKey()!==bootedOn){bootedOn=todayKey();boot()}
+});
+</script>
+</body>
+</html>
