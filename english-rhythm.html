@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rhythm of English — a six-layer guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=Nunito:wght@400;600;700;800&family=Montserrat:wght@600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================== CLASS OF COFFEE BRAND TOKENS ===================== */
+:root{
+  /* brand, taken from classofcoffee.com */
+  --coffee-dark:#5a2d0c; --coffee-rust:#a2521a; --coffee-mid:#c8823c;
+  --coffee-tan:#e6c496;  --coffee-cream:#f3e2bf; --gold:#d9b978;
+  --paper:#faf7f2;       --ink:#4a3524;
+  /* derived, contrast-checked against --paper */
+  --ink-mid:#6b5440; --ink-dim:#7a6450; --line:#e3d2b8; --line-soft:#efe3cd;
+  /* reserved meaning colours — these NEVER change across the whole guide */
+  --strong:#9a4a14;   /* a stressed, strong beat */
+  --weak:#1f6f66;     /* a weak form / the schwa */
+  --change:#6b3a6e;   /* a sound that links, drops or changes */
+  --good:#1c7c3c; --bad:#a8321f;
+  --shadow:0 12px 30px rgba(90,45,12,.10);
+  --shadow-lg:0 18px 44px rgba(90,45,12,.14);
+  --toc:clamp(196px,16vw,248px);
+  --display:'Playfair Display',Georgia,serif;
+  --body:'Nunito',system-ui,sans-serif;
+  --ui:'Montserrat',system-ui,sans-serif;
+  --hand:'Caveat',cursive;
+  --mono:ui-monospace,'SF Mono',Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);overflow:hidden;-webkit-font-smoothing:antialiased}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(54vw 54vw at 94% -16%, rgba(217,185,120,.30), transparent 62%),
+    radial-gradient(44vw 44vw at -10% 110%, rgba(200,130,60,.18), transparent 62%);
+}
+/* ===================== HEADER ===================== */
+header.bar{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:40;display:flex;align-items:center;gap:14px;padding:0 18px;
+  background:linear-gradient(90deg,var(--coffee-cream) 0%,var(--coffee-tan) 30%,var(--coffee-mid) 62%,var(--coffee-rust) 100%);
+  border-bottom:3px solid var(--coffee-dark);
+}
+.brand{font-family:var(--display);font-weight:900;font-size:1.06rem;color:var(--coffee-dark);letter-spacing:-.01em;white-space:nowrap}
+.brand em{font-family:var(--hand);font-style:normal;font-size:1.35rem;color:var(--coffee-dark);margin-left:5px;opacity:.85}
+.bar .spacer{flex:1}
+.counter{font:800 .74rem var(--ui);color:var(--coffee-dark);letter-spacing:.1em}
+.progress{position:fixed;top:58px;left:0;height:4px;background:var(--coffee-dark);z-index:41;
+  transition:width .45s cubic-bezier(.3,0,.2,1)}
+/* ===================== CONTENTS ===================== */
+nav.toc{
+  position:fixed;top:58px;bottom:0;left:0;width:var(--toc);z-index:35;overflow-y:auto;
+  background:linear-gradient(180deg,#fffdf9,#f6ece0);border-right:3px solid var(--line);padding:12px 9px 20px;
+}
+nav.toc::-webkit-scrollbar{width:6px}
+nav.toc::-webkit-scrollbar-thumb{background:var(--coffee-tan);border-radius:6px}
+.tocgroup{font:800 .58rem var(--ui);letter-spacing:.19em;text-transform:uppercase;color:var(--ink-dim);padding:14px 9px 5px}
+.tocgroup:first-child{padding-top:2px}
+.tocitem{
+  display:flex;align-items:center;gap:8px;width:100%;text-align:left;cursor:pointer;border:none;background:transparent;
+  padding:7px 9px;margin-bottom:2px;border-radius:9px;font:600 .8rem var(--body);color:var(--ink-mid);line-height:1.25;
+  transition:all .16s ease;
+}
+.tocitem:hover{background:var(--coffee-cream);color:var(--coffee-dark)}
+.tocitem .tn{font:800 .62rem var(--ui);color:var(--ink-dim);min-width:1.5em;flex-shrink:0;padding-top:1px}
+.tocitem .tt{display:flex;flex-direction:column;gap:1px;min-width:0}
+.tocitem .ty{font:800 .53rem var(--ui);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-dim)}
+.tocitem.act{background:color-mix(in srgb,var(--coffee-cream) 60%,transparent)}
+.tocitem.act .ty{color:var(--coffee-rust)}
+.tocitem.act:hover{background:var(--coffee-cream)}
+.tocitem.on{background:var(--coffee-dark);color:#fff;font-weight:800;box-shadow:0 5px 13px rgba(90,45,12,.34)}
+.tocitem.on .tn{color:var(--gold)}
+.tocitem.on .ty{color:var(--gold)}
+/* ===================== SLIDES ===================== */
+main{position:relative;height:100vh;z-index:1}
+.slide{
+  position:absolute;top:0;right:0;bottom:0;left:var(--toc);
+  padding:74px clamp(18px,3.4vw,54px) 68px;
+  display:flex;flex-direction:column;justify-content:safe center;gap:clamp(9px,1.6vh,19px);
+  overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(15px);
+  transition:opacity .4s ease,transform .4s cubic-bezier(.2,.7,.3,1),visibility .4s;
+}
+.slide.active{opacity:1;visibility:visible;transform:none}
+.slide::-webkit-scrollbar{width:8px}
+.slide::-webkit-scrollbar-thumb{background:var(--coffee-tan);border-radius:8px}
+.eyebrow{
+  align-self:flex-start;display:flex;align-items:center;gap:9px;
+  font:800 .66rem var(--ui);letter-spacing:.18em;text-transform:uppercase;color:#fff;
+  background:var(--coffee-dark);padding:7px 14px;border-radius:999px;box-shadow:0 5px 13px rgba(90,45,12,.3);
+}
+.eyebrow .lvl{background:var(--gold);color:var(--coffee-dark);border-radius:999px;padding:2px 8px;font-size:.62rem}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(2rem,4.8vw,4rem);line-height:1.02;
+  letter-spacing:-.025em;color:var(--coffee-dark)}
+h2{font-family:var(--display);font-weight:900;font-size:clamp(1.55rem,3.2vw,2.7rem);line-height:1.08;
+  letter-spacing:-.02em;color:var(--coffee-dark);padding-bottom:9px;position:relative}
+h2::after{content:"";position:absolute;left:0;bottom:0;width:84px;height:5px;border-radius:3px;
+  background:linear-gradient(90deg,var(--coffee-rust),var(--gold))}
+h3{font-family:var(--display);font-weight:700;font-size:clamp(1rem,1.6vw,1.3rem);color:var(--coffee-rust)}
+.lede{font-size:clamp(.93rem,1.3vw,1.18rem);color:var(--ink-mid);max-width:68ch;line-height:1.5}
+.small{font-size:.86rem;color:var(--ink-mid);line-height:1.52}
+.hand{font-family:var(--hand);font-size:1.3rem;color:var(--coffee-rust);line-height:1.2}
+b,strong{font-weight:800}
+/* ===================== CARDS ===================== */
+.grid{display:grid;gap:clamp(10px,1.2vw,15px)}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{background:#fff;border:2px solid var(--line);border-radius:18px;padding:clamp(13px,1.5vw,20px);
+  box-shadow:var(--shadow);position:relative}
+.card.cream{background:linear-gradient(160deg,#fffdf8,var(--coffee-cream))}
+.card.tint-strong{border-color:color-mix(in srgb,var(--strong) 34%,transparent);background:color-mix(in srgb,var(--strong) 5%,#fff)}
+.card.tint-weak{border-color:color-mix(in srgb,var(--weak) 34%,transparent);background:color-mix(in srgb,var(--weak) 5%,#fff)}
+.card.tint-change{border-color:color-mix(in srgb,var(--change) 34%,transparent);background:color-mix(in srgb,var(--change) 5%,#fff)}
+.cardlabel{font:800 .62rem var(--ui);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:7px}
+/* ===================== THE RESERVED MEANING COLOURS ===================== */
+.S{color:var(--strong);font-weight:800}                 /* stressed */
+.W{color:var(--weak);font-weight:600;opacity:.95}        /* weak form */
+.C{color:var(--change);font-weight:700}                  /* sound change */
+.key{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font:700 .76rem var(--ui);color:var(--ink-mid)}
+.key span{display:flex;align-items:center;gap:6px}
+.key i{width:14px;height:14px;border-radius:4px;display:inline-block}
+.ipa{font-family:var(--mono);font-size:.84rem;color:var(--ink-mid);letter-spacing:-.02em}
+.ipa.iw{color:var(--weak);font-weight:600}
+.ipa.is{color:var(--strong);font-weight:600}
+.strike{text-decoration:line-through;text-decoration-color:var(--change);text-decoration-thickness:2px;opacity:.5}
+/* ===================== BEAT DIAGRAM ===================== */
+.beatrow{display:flex;align-items:flex-end;gap:5px;flex-wrap:wrap}
+.syl{
+  border-radius:9px;padding:9px 10px;text-align:center;font-family:var(--display);font-weight:700;
+  border:2px solid var(--line);background:#fff;line-height:1.1;transition:.2s;
+}
+.syl.beat{background:var(--strong);color:#fff;border-color:var(--strong);font-weight:900;
+  font-size:1.22em;padding:13px 16px;box-shadow:0 6px 15px rgba(154,74,20,.3)}
+.syl.off{background:var(--coffee-cream);color:var(--ink-dim);font-size:.84em;padding:7px 8px;border-color:var(--line-soft)}
+.syl.even{background:var(--coffee-tan);color:var(--coffee-dark);border-color:var(--coffee-mid)}
+.ruler{display:flex;gap:5px;margin-top:5px}
+.ruler div{height:7px;border-radius:4px;background:var(--line-soft);flex:1}
+.ruler div.on{background:var(--coffee-dark)}
+.tick{display:flex;align-items:center;gap:6px;font:800 .66rem var(--ui);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-dim)}
+
+/* ===================== TIMING COLUMNS =====================
+   One column per beat. The dashed line on the left of each column is where the
+   beat falls, and the bar underneath is that beat's share of the time. */
+.feet{display:flex;align-items:center;width:100%;min-height:58px}
+.feet .lead{flex:0 0 58px;display:flex;justify-content:flex-end;align-items:center;gap:3px;padding-right:6px}
+.feet .foot{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;padding:4px 7px;
+  border-left:2px dashed var(--coffee-mid)}
+.feet .foot.one{justify-content:center;padding:4px 3px}
+.feet .foot.one .syl{width:100%}
+.feet .syl{white-space:nowrap}
+.feet .syl.off.sq2{font-size:.76em;padding:6px 6px}
+.feet .syl.off.sq3{font-size:.66em;padding:5px 5px}
+.feet-ruler{display:flex;margin-top:6px}
+.feet-ruler .lead{flex:0 0 58px}
+.feet-ruler .bar{flex:1 1 0;height:7px;border-radius:4px;background:var(--coffee-dark);margin:0 3px}
+.cmp{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;align-items:center}
+.cmp-lang{font:800 .64rem var(--ui);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-dim);
+  text-align:right;min-width:62px}
+/* ===================== WORD FAMILY ===================== */
+.fam{display:grid;grid-template-columns:auto auto 1fr;gap:7px 16px;align-items:center;margin-top:6px}
+.fam .fw{font-family:var(--display);font-weight:700;font-size:1.02rem;color:var(--coffee-dark);text-align:right}
+.fam .beatrow{flex-wrap:nowrap}
+/* ===================== RULE BOX ===================== */
+.rule{display:flex;gap:13px;align-items:flex-start;padding:13px 18px;border-radius:14px;font-size:.95rem;line-height:1.5;
+  background:linear-gradient(135deg,#fffdf8,var(--coffee-cream));border:2px solid var(--coffee-tan);color:var(--ink)}
+.rule .mark{font-family:var(--display);font-weight:900;font-size:1.4rem;color:var(--coffee-rust);line-height:1}
+.rule b{color:var(--coffee-dark)}
+.warn{padding:12px 16px;border-radius:13px;border:2px dashed var(--coffee-mid);background:#fffdf8;
+  font-size:.86rem;color:var(--ink-mid);line-height:1.55}
+.warn b{color:var(--coffee-dark)}
+/* ===================== TABLES ===================== */
+table.wf{width:100%;border-collapse:collapse;font-size:.88rem}
+table.wf th{font:800 .62rem var(--ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);
+  text-align:left;padding:6px 9px;border-bottom:2px solid var(--line)}
+table.wf td{padding:6px 9px;border-bottom:1px solid var(--line-soft);vertical-align:middle}
+table.wf tr:last-child td{border-bottom:none}
+table.wf .w{font-family:var(--display);font-weight:700;color:var(--coffee-dark)}
+/* ===================== BUTTONS ===================== */
+.btn{font:800 .8rem var(--ui);padding:10px 17px;border-radius:999px;border:2px solid var(--coffee-tan);
+  background:#fff;color:var(--coffee-dark);cursor:pointer;transition:all .16s ease}
+.btn:hover{border-color:var(--coffee-rust);transform:translateY(-2px)}
+.btn.primary{background:var(--coffee-dark);color:#fff;border-color:var(--coffee-dark);
+  box-shadow:0 6px 15px rgba(90,45,12,.3)}
+.btn.primary:hover{background:var(--coffee-rust);border-color:var(--coffee-rust)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+.btn[hidden]{display:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.actcount{font:800 .7rem var(--ui);letter-spacing:.1em;text-transform:uppercase;color:var(--coffee-rust)}
+/* ===================== ACTIVITY SHELL ===================== */
+.stage{background:#fff;border:3px solid var(--coffee-tan);border-radius:20px;padding:clamp(14px,2.2vw,28px);
+  box-shadow:var(--shadow-lg);text-align:center}
+.qword{font-family:var(--display);font-weight:900;font-size:clamp(1.9rem,4.6vw,3.4rem);color:var(--coffee-dark);
+  letter-spacing:-.02em;line-height:1.1}
+.qsent{font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,2.6vw,2rem);color:var(--ink);line-height:1.35}
+.opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.opt{font-family:var(--display);font-weight:900;font-size:1.5rem;min-width:66px;padding:10px 18px;border-radius:14px;
+  border:3px solid var(--coffee-tan);background:#fff;color:var(--coffee-dark);cursor:pointer;transition:.15s}
+.opt:hover:not([disabled]){border-color:var(--coffee-rust);transform:translateY(-3px)}
+.opt.ok{background:var(--good);border-color:var(--good);color:#fff}
+.opt.no{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.show{border-color:var(--good);border-style:dashed;color:var(--good)}
+.opt[disabled]{cursor:default}
+.opt.wide{font-size:1.05rem;font-family:var(--ui);font-weight:800;min-width:132px;letter-spacing:.04em}
+.fb{margin-top:15px;min-height:4.2em;font-size:clamp(.9rem,1.35vw,1.06rem);line-height:1.52;color:var(--ink-mid);
+  max-width:74ch;margin-inline:auto}
+.fb b{color:var(--ink)}
+.pips{display:flex;gap:5px;justify-content:center}
+.pips i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.2s}
+.pips i.done{background:var(--ink-dim)} .pips i.now{background:var(--coffee-rust);transform:scale(1.4)}
+/* ===================== FOOTER ===================== */
+footer.nav{position:fixed;bottom:0;left:var(--toc);right:0;height:56px;z-index:40;display:flex;align-items:center;
+  gap:14px;padding:0 18px;background:#fffdf9;border-top:3px solid var(--line)}
+.navdots{display:none;gap:7px;flex:1;justify-content:center;flex-wrap:wrap}
+.navdots button{width:10px;height:10px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0}
+.navdots button.on{background:var(--coffee-rust);width:26px;border-radius:6px}
+.navlabel{flex:1;text-align:center;font:700 .8rem var(--body);color:var(--ink-mid)}
+.arrow{width:40px;height:40px;border-radius:50%;border:2px solid var(--coffee-tan);background:#fff;color:var(--coffee-dark);
+  cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:.16s}
+.arrow:hover{border-color:var(--coffee-rust);color:var(--coffee-rust)}
+.credit{font:700 .66rem var(--ui);color:var(--ink-dim);white-space:nowrap;letter-spacing:.02em}
+/* ===================== RESPONSIVE ===================== */
+@media (max-height:780px){
+  .slide{padding:66px 3vw 62px;gap:8px}
+  h1{font-size:clamp(1.8rem,4vw,3rem)}
+  h2{font-size:clamp(1.35rem,2.7vw,2.1rem);padding-bottom:7px}
+  h2::after{height:4px;width:68px}
+  .lede{font-size:.92rem;line-height:1.42}
+  .small,.warn{font-size:.8rem;line-height:1.45}
+  .card{padding:11px 14px}
+  .rule{padding:10px 14px;font-size:.87rem}
+  .eyebrow{font-size:.6rem;padding:6px 12px}
+  .grid{gap:8px}
+  .syl{padding:7px 8px} .syl.beat{padding:10px 13px}
+  table.wf{font-size:.8rem} table.wf td,table.wf th{padding:4px 7px}
+  .fb{min-height:3.6em}
+  .hand{font-size:1.15rem}
+  .warn{padding:9px 13px}
+  .ruler div{height:5px}
+  .tocitem{padding:5px 9px;margin-bottom:1px}
+  .tocgroup{padding:9px 9px 3px}
+  .feet{min-height:50px}
+  .fam{gap:4px 14px}
+  .cardlabel{margin-bottom:5px}
+}
+@media (max-width:980px){
+  :root{--toc:0px}
+  nav.toc{display:none}.navdots{display:flex}.navlabel{display:none}.credit{display:none}
+  .g2,.g3{grid-template-columns:1fr}
+}
+@media (max-width:720px){.slide{padding:68px 15px 60px}header.bar{padding:0 12px}.brand{font-size:.9rem}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.08s!important}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">The Rhythm of English <em>Class of Coffee</em></div>
+  <div class="spacer"></div>
+  <span class="counter" id="counter">01 / 14</span>
+</header>
+<div class="progress" id="progress"></div>
+<nav class="toc" id="toc" aria-label="Contents"></nav>
+
+<main id="deck">
+
+<!-- ========== 1 ========== -->
+<section class="slide active" data-title="What rhythm is" data-group="Start">
+  <div class="eyebrow">Introduction</div>
+  <h1>Strong syllables and<br>weak syllables</h1>
+  <p class="lede">In English some syllables are long, loud and clear. The others are short, quiet and often hard to hear. This pattern of strong and weak syllables is what we call <b>rhythm</b>. It has a large effect on how clear you sound.</p>
+  <div class="grid g2">
+    <div class="card tint-strong">
+      <div class="cardlabel">Said strongly</div>
+      <div class="beatrow"><div class="syl beat">WORK</div><div class="syl beat">BOOK</div><div class="syl beat">LATE</div></div>
+      <p class="small" style="margin-top:10px">These syllables are long and have a clear vowel. They carry the meaning, so they are what a listener follows.</p>
+    </div>
+    <div class="card tint-weak">
+      <div class="cardlabel">Said weakly</div>
+      <div class="beatrow"><div class="syl off">a</div><div class="syl off">of</div><div class="syl off">the</div><div class="syl off">to</div><div class="syl off">for</div><div class="syl off">was</div></div>
+      <p class="small" style="margin-top:10px">These words are short and quiet, and their vowel usually changes to <span class="ipa iw">/ə/</span>. They are still pronounced, but they do not take a beat.</p>
+    </div>
+  </div>
+  <div class="rule"><div class="mark">♪</div><div>The sentence below has eight words and nine syllables. Only <b>four</b> of those syllables carry a beat. The other five are fitted into the spaces between them.</div></div>
+  <div class="card cream">
+    <div class="beatrow" style="justify-content:center">
+      <div class="syl off">I'd</div><div class="syl beat">LIKE</div><div class="syl off">a</div><div class="syl beat">CUP</div>
+      <div class="syl off">of</div><div class="syl beat">COFF</div><div class="syl off">ee</div><div class="syl off">with</div><div class="syl beat">MILK</div>
+    </div>
+    <p class="hand" style="text-align:center;margin-top:10px">nine syllables, four beats</p>
+  </div>
+  <div class="key">
+    <span><i style="background:var(--strong)"></i> a strong beat</span>
+    <span><i style="background:var(--weak)"></i> a weak form or schwa</span>
+    <span><i style="background:var(--change)"></i> a sound that links, drops or changes</span>
+    <span>These three colours mean the same thing on every page of this guide.</span>
+  </div>
+</section>
+
+<!-- ========== 2 ========== -->
+<section class="slide" data-title="Why it feels unfamiliar">
+  <div class="eyebrow">Background</div>
+  <h2>Why English rhythm feels unfamiliar</h2>
+  <p class="lede">Spanish and Catalan give each syllable about the same length, so a sentence keeps a fairly steady pace. English makes the stressed syllables longer and shortens everything in between. Most of the difficulty students have with English rhythm starts here.</p>
+  <div class="card">
+    <div class="cardlabel">The same sentence in both languages · each column is one beat</div>
+    <div class="cmp" style="margin-top:4px">
+      <div class="cmp-lang">Spanish</div>
+      <div>
+        <div class="feet"><div class="lead"></div><div class="foot one"><span class="syl even">Los</span></div><div class="foot one"><span class="syl even">NI</span></div><div class="foot one"><span class="syl even">ños</span></div><div class="foot one"><span class="syl even">han</span></div><div class="foot one"><span class="syl even">co</span></div><div class="foot one"><span class="syl even">MI</span></div><div class="foot one"><span class="syl even">do</span></div><div class="foot one"><span class="syl even">el</span></div><div class="foot one"><span class="syl even">PAN</span></div></div>
+        <div class="feet-ruler"><div class="lead"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      </div>
+      <div class="cmp-lang">English</div>
+      <div>
+        <div class="feet"><div class="lead"><span class="syl off">The</span></div>
+          <div class="foot"><span class="syl beat">CHIL</span><span class="syl off sq2">dren</span><span class="syl off sq2">have</span></div>
+          <div class="foot"><span class="syl beat">EA</span><span class="syl off sq2">ten</span><span class="syl off sq2">the</span></div>
+          <div class="foot"><span class="syl beat">BREAD</span></div></div>
+        <div class="feet-ruler"><div class="lead"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <p class="small"><b>Spanish: nine syllables, nine beats.</b> Spanish has stress too, and <i>NI</i>, <i>MI</i> and <i>PAN</i> are louder than the rest. But a louder syllable does not make its neighbours shorter, and every vowel keeps its full quality.</p>
+      <p class="small"><b>English: eight syllables, three beats.</b> The five unstressed syllables share the time between the beats, and their vowels reduce to <span class="ipa iw">/ə/</span>.</p>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="card tint-weak">
+      <h3>An advantage for Catalan speakers</h3>
+      <p class="small" style="margin-top:8px">Eastern Catalan already reduces unstressed <i>a</i> and <i>e</i> to <span class="ipa iw">/ə/</span>, which is the vowel you hear in <i>pare</i>, <i>casa</i> and <i>dona</i>. You already produce the schwa, so the thing to learn is <b>where English puts it</b>, not how to make it. Spanish has no reduction of this kind, and Western Catalan, towards Lleida and the Ebre, does not reduce vowels in the same way.</p>
+    </div>
+    <div class="card tint-strong">
+      <h3>A habit that comes from Spanish</h3>
+      <p class="small" style="margin-top:8px">Spanish words do not begin with <i>sp-</i>, <i>st-</i> or <i>sk-</i>, so a vowel often appears in front of them: <i>espeak</i>, <i>estudent</i>, <i>Espanish</i>. This adds a syllable that the English rhythm has no room for.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 3 ========== -->
+<section class="slide" data-title="Counting syllables" data-group="The six layers">
+  <div class="eyebrow">Layer <span class="lvl">1 of 6</span> Syllables</div>
+  <h2>How many syllables a word really has</h2>
+  <p class="lede">A syllable is built around a vowel <i>sound</i>, which is not the same as a vowel letter. English spelling often shows syllables that are not pronounced, and this is usually why students count too many.</p>
+  <div class="grid g3">
+    <div class="card">
+      <div class="cardlabel">In the spelling</div>
+      <div class="beatrow"><div class="syl">cho</div><div class="syl">co</div><div class="syl">la</div><div class="syl">te</div></div>
+      <p class="small" style="margin-top:9px">Four syllables, which is exactly right in Spanish.</p>
+    </div>
+    <div class="card tint-strong">
+      <div class="cardlabel">In speech</div>
+      <div class="beatrow"><div class="syl beat">CHOC</div><div class="syl off">late</div></div>
+      <p class="small" style="margin-top:9px">Two in English, because the middle vowel disappears completely: <span class="ipa">/ˈtʃɒklət/</span></p>
+    </div>
+    <div class="card cream">
+      <div class="cardlabel">The same thing happens in</div>
+      <p class="small"><b>comfortable</b> <span class="ipa">/ˈkʌmftəbəl/</span> — three, not four<br>
+      <b>vegetable</b> <span class="ipa">/ˈvedʒtəbəl/</span> — three, not four<br>
+      <b>interesting</b> <span class="ipa">/ˈɪntrəstɪŋ/</span> — three, not four<br>
+      <b>Wednesday</b> <span class="ipa">/ˈwenzdeɪ/</span> — two, not three<br>
+      <b>business</b> <span class="ipa">/ˈbɪznəs/</span> — two, not three</p>
+    </div>
+  </div>
+  <div class="rule"><div class="mark">1</div><div><b>Count the vowel sounds you say, not the letters you see.</b> If you can leave the vowel out and the word still sounds right, the syllable is not there.</div></div>
+  <div class="card">
+    <h3>The <i>-ed</i> ending is worth special attention</h3>
+    <div class="grid g3" style="margin-top:10px">
+      <div><p class="small"><b>Adds no syllable</b> after most sounds<br>
+        <i>walked</i> <span class="ipa">/wɔːkt/</span> — one<br>
+        <i>played</i> <span class="ipa">/pleɪd/</span> — one<br>
+        <i>finished</i> <span class="ipa">/ˈfɪnɪʃt/</span> — two</p></div>
+      <div><p class="small"><b>Adds a syllable</b> only after <b>/t/</b> or <b>/d/</b><br>
+        <i>wanted</i> <span class="ipa">/ˈwɒntɪd/</span> — two<br>
+        <i>decided</i> <span class="ipa">/dɪˈsaɪdɪd/</span> — three</p></div>
+      <div><p class="small"><b>Why it matters</b><br>An extra syllable pushes the beat out of position. The listener then has to re-time the sentence before they can follow it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4 ========== -->
+<section class="slide" data-title="Where the stress falls">
+  <div class="eyebrow">Layer <span class="lvl">2 of 6</span> Word stress</div>
+  <h2>Which syllable carries the stress</h2>
+  <p class="lede">Any English word with more than one syllable has one syllable that is stronger than the rest. Spanish and Catalan mark stress with a written accent when it is needed. English does not mark it at all, so you have to learn the stress together with the word.</p>
+  <div class="card cream">
+    <div class="cardlabel">One family of words, four stress positions</div>
+    <div class="grid g2" style="margin-top:4px">
+      <div class="fam"><div class="fw">photograph</div><div class="beatrow"><div class="syl beat">PHO</div><div class="syl off">to</div><div class="syl off">graph</div></div><span class="ipa">/ˈfəʊtəɡrɑːf/</span><div class="fw">photographer</div><div class="beatrow"><div class="syl off">pho</div><div class="syl beat">TOG</div><div class="syl off">ra</div><div class="syl off">pher</div></div><span class="ipa">/fəˈtɒɡrəfə/</span></div>
+      <div class="fam"><div class="fw">photographic</div><div class="beatrow"><div class="syl off">pho</div><div class="syl off">to</div><div class="syl beat">GRAPH</div><div class="syl off">ic</div></div><span class="ipa">/ˌfəʊtəˈɡræfɪk/</span><div class="fw">photography</div><div class="beatrow"><div class="syl off">pho</div><div class="syl beat">TOG</div><div class="syl off">ra</div><div class="syl off">phy</div></div><span class="ipa">/fəˈtɒɡrəfi/</span></div>
+    </div>
+    <p class="hand" style="margin-top:8px">the stressed vowel is always full, and many of the others reduce to /ə/</p>
+  </div>
+  <div class="grid g2">
+    <div class="card tint-strong">
+      <h3>Stress can change the part of speech</h3>
+      <p class="small" style="margin-top:8px">In a large group of two-syllable words, the noun is stressed on the <b>first</b> syllable and the verb on the <b>second</b>.</p>
+      <p class="small" style="margin-top:8px">a <span class="S">RE</span>cord · to re<span class="S">CORD</span><br>
+      a <span class="S">PRE</span>sent · to pre<span class="S">SENT</span><br>
+      an <span class="S">IN</span>crease · to in<span class="S">CREASE</span><br>
+      an <span class="S">EX</span>port · to ex<span class="S">PORT</span></p>
+    </div>
+    <div class="card tint-change">
+      <h3>Compound nouns are stressed on the first part</h3>
+      <p class="small" style="margin-top:8px">a <span class="S">GREEN</span>house — a building for plants<br>
+      a green <span class="S">HOUSE</span> — a house painted green</p>
+      <p class="small" style="margin-top:8px">Each pair uses the same two words with different meanings, and the stress is what separates them. The same applies to a <span class="S">BLACK</span>bird and a black <span class="S">BIRD</span>.</p>
+    </div>
+  </div>
+  <div class="warn"><b>This is a tendency, not a rule,</b> but some endings fix the position of the stress. The endings <i>-ion</i>, <i>-ic</i>, <i>-ity</i> and <i>-ical</i> put it on the syllable immediately before them: <i>infor<span class="S">MA</span>tion</i>, <i>eco<span class="S">NO</span>mic</i>, <i>possi<span class="S">BI</span>lity</i>. Learning the ending saves learning each word separately.</div>
+</section>
+
+<!-- ========== 5 ACTIVITY ========== -->
+<section class="slide" data-title="Count the syllables" data-act="1">
+  <div class="eyebrow">Activity <span class="lvl">Layer 1</span></div>
+  <h2>Count the syllables</h2>
+  <p class="lede">Decide how many syllables each word has when it is said normally. Say the word to yourself before you choose, and ignore the spelling.</p>
+  <div class="row" style="justify-content:center;gap:14px"><span class="actcount" id="c1Count"></span><div class="pips" id="c1Pips"></div></div>
+  <div class="stage">
+    <div class="qword" id="c1Word"></div>
+    <div class="opts" id="c1Opts"></div>
+    <div class="fb" id="c1Fb"></div>
+  </div>
+  <div class="row" style="justify-content:center">
+    <button class="btn primary" id="c1Next">Next word →</button>
+    <button class="btn" id="c1Reset">Start again</button>
+  </div>
+</section>
+
+<!-- ========== 6 ========== -->
+<section class="slide" data-title="Stressed words">
+  <div class="eyebrow">Layer <span class="lvl">3 of 6</span> Content and function words</div>
+  <h2>Which words are stressed in a sentence</h2>
+  <p class="lede">In a sentence, English treats words in two different ways. One group of words takes a beat. The other does not.</p>
+  <div class="grid g2">
+    <div class="card tint-strong">
+      <div class="cardlabel">Content words — stressed</div>
+      <p class="small">nouns · main verbs · adjectives · adverbs · question words · negatives (<i>not</i>, <i>never</i>, <i>-n't</i>) · demonstratives (<i>this</i>, <i>that</i>)</p>
+      <p class="small" style="margin-top:9px">These words tell the listener <b>what you are talking about</b>. Remove them and the message is lost.</p>
+    </div>
+    <div class="card tint-weak">
+      <div class="cardlabel">Function words — unstressed</div>
+      <p class="small">articles (<i>a</i>, <i>the</i>) · prepositions (<i>of</i>, <i>at</i>, <i>for</i>) · auxiliary verbs (<i>have</i>, <i>was</i>, <i>can</i>) · pronouns (<i>he</i>, <i>them</i>) · conjunctions (<i>and</i>, <i>but</i>) · <i>to</i></p>
+      <p class="small" style="margin-top:9px">These words hold the sentence together. A listener can usually predict them, so English spends very little time on them.</p>
+    </div>
+  </div>
+  <div class="card cream">
+    <div class="cardlabel">The telegram test</div>
+    <div class="beatrow" style="margin-bottom:8px">
+      <div class="syl off">The</div><div class="syl beat">TRAIN</div><div class="syl off">to</div><div class="syl beat">LON</div><div class="syl off">don</div>
+      <div class="syl off">has</div><div class="syl off">been</div><div class="syl beat">CAN</div><div class="syl off">celled</div><div class="syl off">a</div><div class="syl beat">GAIN</div>
+    </div>
+    <p class="small">Keep only the stressed words and you have <b>TRAIN · LONDON · CANCELLED · AGAIN</b>. That is still understandable, and it is how telegrams used to be written. Keep only the unstressed words and you have <i>the, to, has</i> and <i>been</i>, which means nothing.</p>
+  </div>
+  <div class="rule"><div class="mark">3</div><div><b>The stress falls on the words that carry the meaning.</b> A word that answers <i>who</i>, <i>what</i>, <i>which</i>, <i>how</i> or <i>when</i> is almost always stressed. A word whose job is to connect other words is almost always unstressed.</div></div>
+  <div class="warn"><b>There is one exception,</b> covered in Layer 6. Any word can be stressed if you are contrasting it with something else: <i>I said it was <span class="S">on</span> the table, not <span class="S">under</span> it.</i> A contrast always takes priority over the pattern above.</div>
+</section>
+
+<!-- ========== 7 ACTIVITY ========== -->
+<section class="slide" data-title="Squeeze the sentence" data-act="1">
+  <div class="eyebrow">Activity <span class="lvl">Layer 3</span></div>
+  <h2>Squeeze the sentence</h2>
+  <p class="lede">The sentence gets longer at each stage, but it keeps the same three beats. Say the next version aloud before you press the button, and see whether you can fit it in.</p>
+  <div class="row" style="justify-content:center;gap:16px">
+    <span class="actcount" id="sqCount"></span>
+    <span class="actcount" style="color:var(--ink-dim)">Words <b id="sqWords" style="color:var(--coffee-dark);font-size:1.3em">3</b></span>
+    <span class="actcount" style="color:var(--ink-dim)">Beats <b id="sqBeats" style="color:var(--strong);font-size:1.3em">3</b></span>
+  </div>
+  <div class="stage">
+    <div class="feet" id="sqRow" style="max-width:780px;margin:0 auto;min-height:74px"></div>
+    <div class="feet-ruler" id="sqRuler" style="max-width:780px;margin:6px auto 0"></div>
+    <div class="fb" id="sqFb"></div>
+  </div>
+  <div class="row" style="justify-content:center">
+    <button class="btn primary" id="sqNext">Add more words →</button>
+    <button class="btn" id="sqReset">Start again</button>
+  </div>
+</section>
+
+<!-- ========== 8 ========== -->
+<section class="slide" data-title="Unstressed words">
+  <div class="eyebrow">Layer <span class="lvl">4 of 6</span> Weak forms</div>
+  <h2>What happens to the unstressed words</h2>
+  <p class="lede">Unstressed function words do not just become quieter. Their vowel changes as well, nearly always to <span class="ipa iw" style="font-size:1.1em">/ə/</span>. This sound is called the schwa, and it is the most common sound in spoken English.</p>
+  <div class="grid g2">
+    <div class="card">
+      <table class="wf">
+        <tr><th>Word</th><th>Strong</th><th>Weak form</th></tr>
+        <tr><td class="w">a</td><td class="ipa is">/eɪ/</td><td class="ipa iw">/ə/</td></tr>
+        <tr><td class="w">the</td><td class="ipa is">/ðiː/</td><td class="ipa iw">/ðə/ before a consonant<br>/ði/ before a vowel</td></tr>
+        <tr><td class="w">of</td><td class="ipa is">/ɒv/</td><td class="ipa iw">/ə/ before a consonant<br>/əv/ before a vowel</td></tr>
+        <tr><td class="w">to</td><td class="ipa is">/tuː/</td><td class="ipa iw">/tə/</td></tr>
+        <tr><td class="w">and</td><td class="ipa is">/ænd/</td><td class="ipa iw">/ən/ or just /n/</td></tr>
+        <tr><td class="w">for</td><td class="ipa is">/fɔː/</td><td class="ipa iw">/fə/</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <table class="wf">
+        <tr><th>Word</th><th>Strong</th><th>Weak form</th></tr>
+        <tr><td class="w">can</td><td class="ipa is">/kæn/</td><td class="ipa iw">/kən/</td></tr>
+        <tr><td class="w">was</td><td class="ipa is">/wɒz/</td><td class="ipa iw">/wəz/</td></tr>
+        <tr><td class="w">were</td><td class="ipa is">/wɜː/</td><td class="ipa iw">/wə/</td></tr>
+        <tr><td class="w">have</td><td class="ipa is">/hæv/</td><td class="ipa iw">/həv/ or /əv/</td></tr>
+        <tr><td class="w">them</td><td class="ipa is">/ðem/</td><td class="ipa iw">/ðəm/</td></tr>
+        <tr><td class="w">you</td><td class="ipa is">/juː/</td><td class="ipa iw">/jə/</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card cream">
+    <div class="cardlabel">What it sounds like joined up</div>
+    <p class="qsent" style="text-align:center"><span class="W">a</span> <span class="S">CUP</span> <span class="W">of</span> <span class="S">TEA</span> &nbsp;·&nbsp; <span class="S">FISH</span> <span class="W">and</span> <span class="S">CHIPS</span> &nbsp;·&nbsp; <span class="S">NICE</span> <span class="W">to</span> <span class="S">MEET</span> <span class="W">you</span></p>
+    <p class="ipa" style="text-align:center;margin-top:8px;font-size:.95rem">/ə ˈkʌp ə ˈtiː/ &nbsp;·&nbsp; /ˈfɪʃ ən ˈtʃɪps/ &nbsp;·&nbsp; /ˈnaɪs tə ˈmiːt jə/</p>
+  </div>
+  <div class="rule"><div class="mark">!</div><div><b>A function word goes back to its full form in three situations:</b> when it is stressed for contrast, when it comes at the <b>end of a clause</b>, and when it is said on its own. <i>Yes, I <span class="S">can</span>.</i> &nbsp; <i>Where are you <span class="S">from</span>?</i> &nbsp; <i>Who was it <span class="S">for</span>?</i></div></div>
+</section>
+
+<!-- ========== 9 ACTIVITY ========== -->
+<section class="slide" data-title="Strong or weak?" data-act="1">
+  <div class="eyebrow">Activity <span class="lvl">Layer 4</span></div>
+  <h2>Strong or weak?</h2>
+  <p class="lede">Decide how the coloured word is said in each sentence. Where the word sits in the clause matters as much as which word it is.</p>
+  <div class="row" style="justify-content:center;gap:14px"><span class="actcount" id="swCount"></span><div class="pips" id="swPips"></div></div>
+  <div class="stage">
+    <div class="qsent" id="swSent"></div>
+    <div class="opts" id="swOpts"></div>
+    <div class="fb" id="swFb"></div>
+  </div>
+  <div class="row" style="justify-content:center">
+    <button class="btn primary" id="swNext">Next sentence →</button>
+    <button class="btn" id="swReset">Start again</button>
+  </div>
+</section>
+
+<!-- ========== 10 ========== -->
+<section class="slide" data-title="Connected speech">
+  <div class="eyebrow">Layer <span class="lvl">5 of 6</span> Connected speech</div>
+  <h2>How sounds change between words</h2>
+  <p class="lede">The unstressed parts of a sentence are said quickly, so sounds at the edges of words run together, drop out or change. This is not careless speech. It is how the language normally sounds at conversational speed.</p>
+  <div class="grid g3">
+    <div class="card tint-change">
+      <h3>Linking</h3>
+      <p class="small" style="margin-top:8px">A consonant at the end of one word joins onto a vowel at the start of the next. The gap between the two words disappears.</p>
+      <p class="qsent" style="margin-top:10px;font-size:1.15rem">an<span class="C">‿</span>apple &nbsp; pick<span class="C">‿</span>it<span class="C">‿</span>up &nbsp; far<span class="C">‿</span>away</p>
+      <p class="ipa" style="margin-top:7px">/əˈnæpl/ · /pɪkɪˈtʌp/ · /fɑːrəˈweɪ/</p>
+      <p class="small" style="margin-top:8px">In <i>far away</i> a British speaker pronounces the <i>r</i> that would otherwise be silent, because a vowel follows it.</p>
+    </div>
+    <div class="card tint-change">
+      <h3>Elision — a sound disappears</h3>
+      <p class="small" style="margin-top:8px"><span class="C">/t/</span> and <span class="C">/d/</span> are the sounds most often lost, usually when they are caught between two other consonants.</p>
+      <p class="qsent" style="margin-top:10px;font-size:1.15rem">nex<span class="strike">t</span> day<br>san<span class="strike">d</span>wich<br>mus<span class="strike">t</span> be</p>
+      <p class="ipa" style="margin-top:7px">/ˈneks deɪ/ · /ˈsænwɪdʒ/ · /məs ˈbi/</p>
+    </div>
+    <div class="card tint-change">
+      <h3>Assimilation — a sound changes</h3>
+      <p class="small" style="margin-top:8px">A sound changes so that it is easier to say next to the one that follows it.</p>
+      <p class="qsent" style="margin-top:10px;font-size:1.15rem">te<span class="C">n</span> boys → <span class="ipa" style="font-size:1rem">/te<span class="C">m</span> bɔɪz/</span><br>goo<span class="C">d</span> girl → <span class="ipa" style="font-size:1rem">/ɡʊ<span class="C">ɡ</span> ɡɜːl/</span><br>woul<span class="C">d y</span>ou → <span class="ipa" style="font-size:1rem">/ˈwʊ<span class="C">dʒ</span>ə/</span></p>
+      <p class="small" style="margin-top:8px">The last pattern also gives <i>did you</i> and <i>last year</i>. Students miss this one most often when they are listening.</p>
+    </div>
+  </div>
+  <div class="rule"><div class="mark">5</div><div><b>This matters more for listening than for speaking.</b> You will be understood without it. But if you are listening for four separate words in <i>What did you do?</i>, you will miss <span class="ipa" style="font-size:1em">/ˈwɒdʒədʊ/</span>. Students usually describe this as native speakers talking too fast.</div></div>
+</section>
+
+<!-- ========== 11 ========== -->
+<section class="slide" data-title="The main stress">
+  <div class="eyebrow">Layer <span class="lvl">6 of 6</span> Tone units</div>
+  <h2>Chunks and the main stress</h2>
+  <p class="lede">We speak in short chunks rather than in whole sentences. Each chunk has one syllable that stands out more than the others, and that is where the listener's attention goes. If you move it, the meaning changes.</p>
+  <div class="card cream">
+    <div class="cardlabel">The usual position is the last content word</div>
+    <p class="qsent" style="text-align:center;margin-top:6px">When I ar<span class="S">RIVED</span> <span style="color:var(--coffee-mid);font-weight:900">|</span> the door was <span class="S" style="font-size:1.25em;text-decoration:underline;text-decoration-thickness:3px">O</span>pen.</p>
+    <p class="small" style="text-align:center;margin-top:9px">There are two chunks here, each with its own beats and one syllable stronger than the rest. Nothing is being emphasised. This is how the sentence sounds when no special meaning is attached to it.</p>
+  </div>
+  <div class="grid g3">
+    <div class="card tint-strong">
+      <p class="qsent" style="font-size:1.1rem"><span class="S" style="text-decoration:underline">I</span> didn't say she stole it.</p>
+      <p class="small" style="margin-top:8px">Someone else said it.</p>
+    </div>
+    <div class="card tint-strong">
+      <p class="qsent" style="font-size:1.1rem">I didn't say <span class="S" style="text-decoration:underline">SHE</span> stole it.</p>
+      <p class="small" style="margin-top:8px">I said somebody else did.</p>
+    </div>
+    <div class="card tint-strong">
+      <p class="qsent" style="font-size:1.1rem">I didn't say she <span class="S" style="text-decoration:underline">STOLE</span> it.</p>
+      <p class="small" style="margin-top:8px">She borrowed it, perhaps.</p>
+    </div>
+  </div>
+  <p class="hand" style="text-align:center">the same six words, with the stress in a different place</p>
+  <div class="rule"><div class="mark">6</div><div><b>Where you put the main stress is a choice,</b> and it is usually the last part of the system students get control of. In the usual place it sounds neutral. Anywhere else it marks a contrast, whether or not you meant one. This is why a main stress in the wrong place can sound argumentative.</div></div>
+</section>
+
+<!-- ========== 12 ========== -->
+<section class="slide" data-title="Rhythm in poetry" data-group="Wider view">
+  <div class="eyebrow">Poetry</div>
+  <h2>Rhythm in poetry</h2>
+  <p class="lede">English and Spanish poetry count different things when they measure a line of verse. The difference between them shows the two rhythms at work.</p>
+  <div class="card cream">
+    <div class="cardlabel">Two well-known lines, measured in two different ways</div>
+    <div class="cmp" style="margin-top:6px">
+      <div class="cmp-lang">English</div>
+      <div class="beatrow">
+        <div class="syl off">Shall</div><div class="syl beat">I</div><div class="syl off">com</div><div class="syl beat">PARE</div>
+        <div class="syl off">thee</div><div class="syl beat">TO</div><div class="syl off">a</div><div class="syl beat">SUM</div>
+        <div class="syl off">mer's</div><div class="syl beat">DAY</div>
+      </div>
+      <div class="cmp-lang">Spanish</div>
+      <div class="beatrow">
+        <div class="syl even">NUES</div><div class="syl even">tras</div><div class="syl even">VI</div><div class="syl even">das</div>
+        <div class="syl even">son</div><div class="syl even">los</div><div class="syl even">RÍ</div><div class="syl even">os</div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <p class="small"><b>English counts stresses.</b> The opening line of Shakespeare's Sonnet 18 has ten syllables arranged as <b>five weak–strong pairs</b>: de‑<span class="S">DUM</span> de‑<span class="S">DUM</span> de‑<span class="S">DUM</span> de‑<span class="S">DUM</span> de‑<span class="S">DUM</span>. English alternates strong and weak syllables naturally, so the metre follows the language.</p>
+      <p class="small"><b>Spanish counts syllables.</b> This line from Jorge Manrique's <i>Coplas</i> (1476) is an <i>octosílabo</i>, a line of eight syllables. Spanish metres are named after a number because each syllable takes about the same time to say. Catalan verse counts syllables as well, although it stops counting at the last stressed one.</p>
+    </div>
+  </div>
+  <div class="card tint-strong">
+    <div class="cardlabel">Nursery rhymes and the four-beat line</div>
+    <div class="beatrow" style="justify-content:center">
+      <div class="syl beat">JACK</div><div class="syl off">and</div><div class="syl beat">JILL</div><div class="syl off">went</div>
+      <div class="syl beat">UP</div><div class="syl off">the</div><div class="syl beat">HILL</div>
+    </div>
+    <p class="small" style="margin-top:10px;text-align:center">Four beats, with the weak syllables fitted in between them. Children pick up English rhythm from rhymes like this long before they learn any grammar. That is a fair argument for using chants and songs with adults too.</p>
+  </div>
+</section>
+
+<!-- ========== 13 ========== -->
+<section class="slide" data-title="How accurate is this?">
+  <div class="eyebrow">The research</div>
+  <h2>How accurate is this model?</h2>
+  <p class="lede">English is usually described as <i>stress-timed</i> and Spanish as <i>syllable-timed</i>, as though the beats in English fell at regular intervals like a metronome. When phoneticians measured this, they did not find that regularity.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>What the measurements showed</h3>
+      <p class="small" style="margin-top:8px">The intervals between stressed syllables in English are <b>not</b> equal when you time them. The strict form of the theory was tested in the 1980s and was not supported. Languages are now usually placed along a continuum instead of in two separate categories.</p>
+    </div>
+    <div class="card tint-weak">
+      <h3>The real differences</h3>
+      <p class="small" style="margin-top:8px">Two differences are real and measurable. English <b>reduces its unstressed vowels</b> heavily and Spanish does not reduce them at all. English also allows much more crowded consonant clusters, so its syllables vary far more in length.</p>
+      <p class="small" style="margin-top:8px">Together these two facts produce the <i>impression</i> of a regular beat.</p>
+    </div>
+  </div>
+  <div class="rule"><div class="mark">✓</div><div><b>The model is still worth teaching.</b> If you tell a student to keep the stresses even and compress everything between them, you get the right result. It works as an instruction even though it is a rough description, and it seems better to say that than to claim a precision the research does not support.</div></div>
+</section>
+
+<!-- ========== 14 ========== -->
+<section class="slide" data-title="Summary">
+  <div class="eyebrow">Summary</div>
+  <h2>The six layers together</h2>
+  <div class="grid g2">
+    <div class="card"><h3>1 · Syllables</h3><p class="small" style="margin-top:6px">Count the vowel sounds you say, not the letters you see. <i>Chocolate</i> has two.</p></div>
+    <div class="card"><h3>2 · Word stress</h3><p class="small" style="margin-top:6px">One syllable in each word is the strong one. English does not mark it in writing, so it has to be learnt with the word.</p></div>
+    <div class="card"><h3>3 · Content and function words</h3><p class="small" style="margin-top:6px">The beat falls on the words that carry meaning. The grammar words do not get one.</p></div>
+    <div class="card"><h3>4 · Weak forms and the schwa</h3><p class="small" style="margin-top:6px">Unstressed words change their vowel to <span class="ipa iw">/ə/</span>, unless they come at the end of a clause.</p></div>
+    <div class="card"><h3>5 · Connected speech</h3><p class="small" style="margin-top:6px">At conversational speed, sounds link, drop and change across word boundaries. This matters mostly for listening.</p></div>
+    <div class="card"><h3>6 · Tone units</h3><p class="small" style="margin-top:6px">Speech comes in chunks, each with one main stress, and moving that stress changes the meaning.</p></div>
+  </div>
+  <div class="rule"><div class="mark">♪</div><div><b>The most useful change is to stop giving every syllable the same weight.</b> Make the stressed syllables longer than feels comfortable and let the rest shrink. English sounds wrong when it is even.</div></div>
+  <div class="card cream">
+    <div class="cardlabel">Three things worth practising this week</div>
+    <p class="small"><b>1.</b> Take a sentence you have written and mark only the words that carry meaning, then say it with a beat on those words and on nothing else.<br>
+    <b>2.</b> Collect five weak forms from a song or a podcast and write down what they sound like rather than how they are spelt.<br>
+    <b>3.</b> Say a long word slowly and then at speed, and notice which vowel disappears first. It is almost always the one next to the stressed syllable.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="nav">
+  <button class="arrow" id="prev" aria-label="Previous">←</button>
+  <span class="credit">Class of Coffee – with AI assistance</span>
+  <div class="navdots" id="dots"></div>
+  <div class="navlabel" id="navLabel"></div>
+  <button class="arrow" id="next" aria-label="Next">→</button>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== NAVIGATION + CONTENTS ===================== */
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots');
+const toc=document.getElementById('toc');
+const counter=document.getElementById('counter');
+const progress=document.getElementById('progress');
+const navLabel=document.getElementById('navLabel');
+let cur=0;
+const tocItems=[];
+slides.forEach((sl,i)=>{
+  if(sl.dataset.group){
+    const g=document.createElement('div');
+    g.className='tocgroup'; g.textContent=sl.dataset.group; toc.appendChild(g);
+  }
+  const b=document.createElement('button');
+  b.className='tocitem'+(sl.dataset.act?' act':'');
+  b.onclick=()=>go(i);
+  b.innerHTML='<span class="tn">'+String(i+1).padStart(2,'0')+'</span><span class="tt">'
+    +'<span class="tl">'+sl.dataset.title+'</span>'
+    +'<span class="ty">'+(sl.dataset.act?'Activity':'Explanation')+'</span></span>';
+  toc.appendChild(b); tocItems.push(b);
+  const d=document.createElement('button'); d.onclick=()=>go(i); dots.appendChild(d);
+});
+function go(i){
+  if(i<0||i>=slides.length)return;
+  slides[cur].classList.remove('active');
+  cur=i;
+  const sl=slides[cur];
+  sl.classList.add('active'); sl.scrollTop=0;
+  tocItems.forEach((t,j)=>t.classList.toggle('on',j===cur));
+  [...dots.children].forEach((d,j)=>d.classList.toggle('on',j===cur));
+  counter.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+  navLabel.textContent=sl.dataset.title;
+  progress.style.width=((cur+1)/slides.length*100)+'%';
+  tocItems[cur].scrollIntoView({block:'nearest'});
+}
+document.getElementById('next').onclick=()=>go(cur+1);
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+  if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+});
+
+/* ===================== SHARED ACTIVITY BEHAVIOUR =====================
+   One rule for all three activities: "Next" moves forward and is hidden on the
+   last item, and "Start again" is always the only way back to the beginning.
+   On the last item "Start again" becomes the main button, so there is never
+   more than one button offering the same action. */
+function setEnd(nextBtn,resetBtn,isLast){
+  nextBtn.hidden=isLast;
+  resetBtn.classList.toggle('primary',isLast);
+}
+function pips(container,i){
+  [...container.children].forEach((d,j)=>{d.className=j<i?'done':(j===i?'now':'');});
+}
+
+/* ===================== ACTIVITY 1 — COUNT THE SYLLABLES ===================== */
+const c1Data=[
+ {w:'chocolate',n:2,ipa:'/ˈtʃɒklət/',sp:'choc(o)·late',
+  why:'The spelling shows four syllables and Spanish <i>cho-co-la-te</i> has four, but English drops the middle vowel completely.'},
+ {w:'comfortable',n:3,ipa:'/ˈkʌmftəbəl/',sp:'comf(or)·ta·ble',
+  why:'The <i>-or-</i> disappears entirely. Pronouncing all four syllables is one of the most noticeable features of a Spanish accent in English.'},
+ {w:'Wednesday',n:2,ipa:'/ˈwenzdeɪ/',sp:'We(d)n(e)s·day',
+  why:'The middle syllable is not pronounced at all, and the same thing happens in <i>business</i> and <i>evening</i>.'},
+ {w:'walked',n:1,ipa:'/wɔːkt/',sp:'walked',
+  why:'The <i>-ed</i> ending adds a syllable only after /t/ or /d/. Everywhere else it is simply a final /t/ or /d/ sound.'},
+ {w:'wanted',n:2,ipa:'/ˈwɒntɪd/',sp:'want·ed',
+  why:'Here the <i>-ed</i> ending does add a syllable, because the verb already ends in /t/ and the two sounds cannot be run together.'},
+ {w:'interesting',n:3,ipa:'/ˈɪntrəstɪŋ/',sp:'in·t(e)res·ting',
+  why:'Four syllables is possible in very careful speech, but three is what you will hear in ordinary conversation.'},
+ {w:'temperature',n:3,ipa:'/ˈtemprətʃə/',sp:'tem·p(e)ra·ture',
+  why:'The second <i>e</i> is not pronounced. Compare the Spanish <i>temperatura</i>, which has five syllables.'},
+ {w:'clothes',n:1,ipa:'/kləʊðz/',sp:'clothes',
+  why:'The <i>-es</i> ending does not add a syllable here. The word sounds almost exactly like <i>close</i>.'},
+ {w:'vegetable',n:3,ipa:'/ˈvedʒtəbəl/',sp:'veg(e)·ta·ble',
+  why:'The second <i>e</i> is silent in speech, in the same way as in <i>chocolate</i> and <i>comfortable</i>.'},
+ {w:'experience',n:4,ipa:'/ɪkˈspɪəriəns/',sp:'ex·pe·ri·ence',
+  why:'Not every long word loses a syllable, so it is worth counting the sounds rather than assuming that a reduction will happen.'}
+];
+let c1i=0,c1done=false;
+const c1Word=document.getElementById('c1Word'),c1Opts=document.getElementById('c1Opts'),
+      c1Fb=document.getElementById('c1Fb'),c1Pips=document.getElementById('c1Pips'),
+      c1Count=document.getElementById('c1Count'),c1Next=document.getElementById('c1Next'),
+      c1Reset=document.getElementById('c1Reset');
+c1Data.forEach(()=>c1Pips.appendChild(document.createElement('i')));
+function c1render(){
+  const it=c1Data[c1i]; c1done=false;
+  c1Count.textContent='Word '+(c1i+1)+' of '+c1Data.length;
+  setEnd(c1Next,c1Reset,c1i===c1Data.length-1);
+  c1Word.textContent=it.w;
+  c1Fb.innerHTML='<span style="opacity:.65">How many syllables does this word have when you say it naturally?</span>';
+  c1Opts.innerHTML='';
+  [1,2,3,4].forEach(n=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=n;
+    b.onclick=()=>c1answer(n,b); c1Opts.appendChild(b);
+  });
+  pips(c1Pips,c1i);
+}
+function c1answer(n,btn){
+  if(c1done)return; c1done=true;
+  const it=c1Data[c1i];
+  [...c1Opts.children].forEach(b=>{
+    b.disabled=true;
+    if(+b.textContent===it.n) b.classList.add(n===it.n?'ok':'show');
+    else if(b===btn) b.classList.add('no');
+  });
+  const bracket=it.sp.indexOf('(')>-1;
+  c1Fb.innerHTML=(n===it.n?'<b style="color:var(--good)">Yes, '+it.n+'.</b> ':'<b style="color:var(--bad)">It has '+it.n+'.</b> ')
+    +it.why+'<br><b>'+it.sp+'</b> &nbsp; <span class="ipa" style="font-size:1rem">'+it.ipa+'</span>'
+    +(bracket?' &nbsp; <span style="opacity:.65;font-size:.9em">letters in brackets are not pronounced</span>':'')
+    +(c1i===c1Data.length-1?'<br><b style="color:var(--coffee-rust)">That was the last word in the set.</b>':'');
+}
+c1Next.onclick=()=>{ if(c1i<c1Data.length-1){ c1i++; c1render(); } };
+c1Reset.onclick=()=>{ c1i=0; c1render(); };
+c1render();
+
+/* ===================== ACTIVITY 2 — SQUEEZE THE SENTENCE =====================
+   Each beat owns one fixed-width column, and the column starts on the beat.
+   Unstressed syllables after a beat share that beat's column, so as more are
+   added they have to get smaller: the squeeze is visible rather than described.
+   Anything before the first beat sits in the lead-in cell, which is always
+   rendered so the columns never move between stages. */
+const sqStages=[
+ {words:3,lead:[],feet:[['BIRDS'],['EAT'],['WORMS']],
+  note:'Three words and three beats, with nothing unstressed in between them.'},
+ {words:5,lead:['The'],feet:[['BIRDS'],['EAT','the'],['WORMS']],
+  note:'Two articles have been added. <i>The</i> is only /ðə/, so both fit into the gaps without affecting the beats.'},
+ {words:6,lead:['The'],feet:[['BIRDS','have'],['EAT','en','the'],['WORMS']],
+  note:'<i>have</i> is reduced to /əv/ and fits into the space after <i>BIRDS</i>. The sentence is longer, but it takes no more time to say.'},
+ {words:7,lead:['The'],feet:[['BIRDS','would','have'],['EAT','en','the'],['WORMS']],
+  note:'<i>would have</i> is said as a single quick /wʊdəv/, and there are still only three beats.'},
+ {words:8,lead:['The'],feet:[['BIRDS','could','have','been'],['EAT','ing','the'],['WORMS']],
+  note:'<i>could have been</i> is reduced to /kʊdəv bɪn/. There are now eight words rather than three, and the sentence still takes about the same time to say.'}
+];
+let sqi=0;
+const sqRow=document.getElementById('sqRow'),sqRuler=document.getElementById('sqRuler'),
+      sqFb=document.getElementById('sqFb'),sqCount=document.getElementById('sqCount'),
+      sqWords=document.getElementById('sqWords'),sqBeats=document.getElementById('sqBeats'),
+      sqNext=document.getElementById('sqNext'),sqReset=document.getElementById('sqReset');
+function weakSize(n){ return n<=1?'':(n===2?' sq2':' sq3'); }
+function sqrender(){
+  const st=sqStages[sqi], last=sqi===sqStages.length-1;
+  sqCount.textContent='Stage '+(sqi+1)+' of '+sqStages.length;
+  setEnd(sqNext,sqReset,last);
+  sqWords.textContent=st.words; sqBeats.textContent=st.feet.length;
+  sqRow.innerHTML='<div class="lead">'+st.lead.map(w=>'<span class="syl off">'+w+'</span>').join('')+'</div>'
+    +st.feet.map(f=>{
+      const weak=f.length-1;
+      return '<div class="foot"><span class="syl beat">'+f[0]+'</span>'
+        +f.slice(1).map(w=>'<span class="syl off'+weakSize(weak)+'">'+w+'</span>').join('')+'</div>';
+    }).join('');
+  sqRuler.innerHTML='<div class="lead"></div>'+st.feet.map(()=>'<div class="bar"></div>').join('');
+  sqFb.innerHTML=st.note+(last?'<br><b style="color:var(--coffee-rust)">That is the last stage.</b>':'');
+}
+sqNext.onclick=()=>{ if(sqi<sqStages.length-1){ sqi++; sqrender(); } };
+sqReset.onclick=()=>{ sqi=0; sqrender(); };
+sqrender();
+
+/* ===================== ACTIVITY 3 — STRONG OR WEAK? ===================== */
+const T=t=>'<span style="color:var(--strong);font-weight:900;text-decoration:underline;text-decoration-thickness:3px">'+t+'</span>';
+const swData=[
+ {s:'I’d like a cup '+T('of')+' tea.',a:'weak',ipa:'/ə/',
+  why:'A preposition in the middle of a phrase is unstressed. <i>Tea</i> begins with a consonant, so <i>of</i> usually loses its /v/ as well and the phrase runs together as /ə ˈkʌp ə ˈtiː/. Before a vowel the /v/ stays, as in <i>a cup of each</i> /əv ˈiːtʃ/.'},
+ {s:'Where are you '+T('from')+'?',a:'strong',ipa:'/frɒm/',
+  why:'This is the same kind of word, but at the <b>end of a clause</b> it takes its full form. The position in the clause is what decides this, rather than the type of word.'},
+ {s:'Fish '+T('and')+' chips.',a:'weak',ipa:'/ən/',
+  why:'It is reduced to /ən/, and often further to just /n/, giving /ˈfɪʃ n ˈtʃɪps/.'},
+ {s:'Yes, I '+T('can')+'.',a:'strong',ipa:'/kæn/',
+  why:'The auxiliary is left standing at the end of the clause, so it is said in full, with a clear /æ/.'},
+ {s:'I '+T('can')+' swim quite well.',a:'weak',ipa:'/kən/',
+  why:'The same word in the middle of a sentence reduces to /kən/. If you always use /kæn/, it can sound as though you are insisting on something.'},
+ {s:'What '+T('are')+' you doing?',a:'weak',ipa:'/ə/',
+  why:'It is reduced almost to nothing, and in quick informal speech the first three words often run together as /ˈwɒtʃə/.'},
+ {s:'I want '+T('to')+' go home.',a:'weak',ipa:'/tə/',
+  why:'The infinitive <i>to</i> is reduced in almost every sentence you will hear, giving /ˈwɒntə ɡəʊ/.'},
+ {s:'I don’t know where she '+T('was')+'.',a:'strong',ipa:'/wɒz/',
+  why:'The word is at the end of the clause once again. Compare <i>She was late</i>, where it would be /wəz/.'},
+ {s:'He gave the book to '+T('her')+'.',a:'strong',ipa:'/hɜː/',
+  why:'A pronoun at the end of a clause keeps its full vowel. In the middle of the clause it would be /ə/, as in <i>gave her the book</i>.'},
+ {s:'I’ll see you on '+T('Monday')+'.',a:'strong',ipa:'/ˈmʌndeɪ/',
+  why:'<i>Monday</i> is a content word, so it is stressed wherever it appears. The choice between strong and weak forms only ever applies to function words.'}
+];
+let swi=0,swdone=false;
+const swSent=document.getElementById('swSent'),swOpts=document.getElementById('swOpts'),
+      swFb=document.getElementById('swFb'),swPips=document.getElementById('swPips'),
+      swCount=document.getElementById('swCount'),swNext=document.getElementById('swNext'),
+      swReset=document.getElementById('swReset');
+swData.forEach(()=>swPips.appendChild(document.createElement('i')));
+function swrender(){
+  const it=swData[swi]; swdone=false;
+  swCount.textContent='Sentence '+(swi+1)+' of '+swData.length;
+  setEnd(swNext,swReset,swi===swData.length-1);
+  swSent.innerHTML=it.s;
+  swFb.innerHTML='<span style="opacity:.65">How is the coloured word pronounced in this sentence?</span>';
+  swOpts.innerHTML='';
+  [['strong','Strong form'],['weak','Weak form']].forEach(([k,label])=>{
+    const b=document.createElement('button'); b.className='opt wide'; b.textContent=label;
+    b.dataset.k=k; b.onclick=()=>swanswer(k,b); swOpts.appendChild(b);
+  });
+  pips(swPips,swi);
+}
+function swanswer(k,btn){
+  if(swdone)return; swdone=true;
+  const it=swData[swi];
+  [...swOpts.children].forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.k===it.a) b.classList.add(k===it.a?'ok':'show');
+    else if(b===btn) b.classList.add('no');
+  });
+  const cls=it.a==='weak'?'ipa iw':'ipa is';
+  swFb.innerHTML=(k===it.a?'<b style="color:var(--good)">Correct.</b> ':'<b style="color:var(--bad)">Not in this sentence.</b> ')
+    +'<b>'+(it.a==='weak'?'Weak':'Strong')+'</b>, <span class="'+cls+'" style="font-size:1rem">'+it.ipa+'</span>. '+it.why
+    +(swi===swData.length-1?'<br><b style="color:var(--coffee-rust)">That was the last sentence in the set.</b>':'');
+}
+swNext.onclick=()=>{ if(swi<swData.length-1){ swi++; swrender(); } };
+swReset.onclick=()=>{ swi=0; swrender(); };
+swrender();
+
+/* boot last, once every handler exists */
+go(0);
+
+})();
+</script>
+</body>
+</html>
