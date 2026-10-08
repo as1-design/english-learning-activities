@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linker Border Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@600;700;800;900&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   LINKER BORDER CONTROL
+   Career: four shifts, stars, promotions, a passport of stamps.
+   Rush hour: every traveller at once, three lives, a patience bar.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --navy:#1B2A4A; --navy-deep:#121D35;
+  --cream:#FFF7EC; --paper:#FFFFFF;
+  --amber:#FFC531; --amber-deep:#C99400;
+  --stamp:#D93A3A; --pass:#13A05C; --note:#E8870B; --violet:#7B5CF5;
+  --ink:#2A1A14; --mute:#8FA0C0; --line:rgba(255,255,255,.18);
+  --s1:8px; --s2:16px; --s3:24px; --s4:34px;
+  --r:20px; --r-lg:32px;
+  --f-display:'Lilita One','Trebuchet MS',sans-serif;
+  --f-body:'Nunito','Trebuchet MS',sans-serif;
+  --f-ui:'Fredoka','Nunito','Trebuchet MS',sans-serif;
+  --pop:cubic-bezier(.34,1.56,.64,1);
+  --fs:17px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--f-body);font-size:var(--fs);
+  line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+h1,h2,h3,h4{margin:0}
+.bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(75% 55% at 50% -10%, rgba(255,197,49,.20), transparent 62%),
+             radial-gradient(60% 50% at 10% 110%, rgba(217,58,58,.16), transparent 60%),
+             radial-gradient(60% 50% at 95% 100%, rgba(19,160,92,.14), transparent 60%)}
+.bg .beam{position:absolute;top:-18%;left:50%;width:62%;height:135%;transform:translateX(-50%) rotate(7deg);
+  background:linear-gradient(180deg, rgba(255,255,255,.07), transparent 70%);filter:blur(22px)}
+body.rush .bg::before{background:radial-gradient(75% 55% at 50% -10%, rgba(217,58,58,.26), transparent 62%),
+             radial-gradient(60% 50% at 95% 100%, rgba(255,197,49,.16), transparent 60%)}
+.shell{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:var(--s3) var(--s3) var(--s4);
+  min-height:100%;display:flex;flex-direction:column}
+
+/* masthead */
+header.mast{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+.badge{width:48px;height:48px;flex:none}
+.mast h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.6rem,3.6vw,2.7rem);line-height:1;letter-spacing:.02em}
+.mast .tagline{font-family:var(--f-ui);font-size:.86rem;color:var(--mute)}
+.spacer{flex:1}
+.ghost{font-family:var(--f-ui);font-weight:500;font-size:.9rem;padding:10px 18px;border-radius:999px;
+  border:2px solid var(--line);color:var(--cream)}
+.ghost[aria-pressed="true"]{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+
+.panel{background:rgba(255,255,255,.07);border:2px solid var(--line);border-radius:var(--r-lg);padding:var(--s4)}
+.lede{font-size:1.04rem;color:#DCE6F7;max-width:66ch;line-height:1.65;margin:0}
+.lede b{color:var(--cream)}
+.sechead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:var(--s4) 0 var(--s2)}
+.sechead h2{font-family:var(--f-display);font-weight:400;font-size:1.7rem;line-height:1}
+.sechead p{margin:0;color:var(--mute);font-family:var(--f-ui);font-size:.95rem}
+
+/* rank strip */
+.rankbar{display:grid;grid-template-columns:auto 1fr auto;gap:var(--s3);align-items:center;
+  background:rgba(0,0,0,.25);border:2px solid var(--line);border-radius:var(--r-lg);padding:var(--s2) var(--s3)}
+.rankico{width:70px;height:70px}
+.rankname{font-family:var(--f-display);font-size:1.7rem;line-height:1.05}
+.ranklabel{font-family:var(--f-ui);font-weight:600;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.rankprog{height:10px;border-radius:999px;background:rgba(0,0,0,.35);overflow:hidden;margin-top:8px;max-width:420px}
+.rankprog i{display:block;height:100%;background:var(--amber);transition:width .6s var(--pop)}
+.ranknext{font-family:var(--f-ui);font-size:.86rem;color:var(--mute);margin-top:5px}
+.rankstats{text-align:right;font-family:var(--f-ui);font-size:.95rem;line-height:1.7}
+.rankstats b{font-family:var(--f-display);font-weight:400;font-size:1.35rem;color:var(--amber)}
+
+/* stamp key */
+.key{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:var(--s3)}
+.keycard{background:rgba(0,0,0,.22);border-radius:16px;padding:12px 16px;border-left:7px solid}
+.keycard.k-meaning{border-color:var(--stamp)} .keycard.k-structure{border-color:var(--violet)} .keycard.k-register{border-color:var(--note)}
+.keycard h4{font-family:var(--f-ui);font-weight:600;font-size:.9rem;margin-bottom:3px;letter-spacing:.05em}
+.keycard p{margin:0;font-size:.88rem;color:#C8D5EC;line-height:1.45}
+
+/* shift cards */
+.shifts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--s2)}
+.shift{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:var(--s3);text-align:left;
+  box-shadow:0 7px 0 rgba(0,0,0,.33);transition:transform .14s var(--pop),box-shadow .14s;
+  display:flex;flex-direction:column;gap:8px;min-height:190px;position:relative}
+.shift:hover{transform:translateY(-4px);box-shadow:0 11px 0 rgba(0,0,0,.33)}
+.shift .n{font-family:var(--f-ui);font-weight:600;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:#8A7A6E}
+.shift .t{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.1}
+.shift .d{font-size:.92rem;color:#6B5B50;line-height:1.45;flex:1}
+.shift .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.tests{font-family:var(--f-ui);font-weight:600;font-size:.74rem;letter-spacing:.06em;padding:4px 10px;border-radius:999px;color:#fff}
+.t-meaning{background:var(--stamp)} .t-structure{background:var(--violet)} .t-register{background:var(--note)}
+.t-all{background:linear-gradient(90deg,var(--stamp),var(--violet),var(--note))}
+.stars{font-size:1.35rem;letter-spacing:2px;color:#D9CFC4;line-height:1}
+.stars .on{color:var(--amber);text-shadow:0 2px 0 var(--amber-deep)}
+
+.rushcard{margin-top:var(--s2);width:100%;text-align:left;border-radius:var(--r-lg);padding:var(--s3) var(--s4);
+  background:linear-gradient(120deg,#D93A3A,#E8870B 60%,#FFC531);color:#fff;
+  box-shadow:0 9px 0 #7d1f1f;display:grid;grid-template-columns:1fr auto;gap:var(--s3);align-items:center;
+  transition:transform .14s var(--pop),box-shadow .14s}
+.rushcard:hover{transform:translateY(-4px);box-shadow:0 13px 0 #7d1f1f}
+.rushcard .t{font-family:var(--f-display);font-size:clamp(1.8rem,4vw,2.6rem);line-height:1}
+.rushcard .d{font-size:1rem;line-height:1.5;margin-top:6px;max-width:58ch;color:#FFF3E3}
+.rushcard .rules{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rushcard .rules span{font-family:var(--f-ui);font-weight:600;font-size:.8rem;background:rgba(0,0,0,.22);padding:5px 12px;border-radius:999px}
+.rushcard .best{font-family:var(--f-ui);text-align:center;background:rgba(0,0,0,.22);border-radius:18px;padding:12px 18px}
+.rushcard .best b{display:block;font-family:var(--f-display);font-weight:400;font-size:2rem;line-height:1}
+
+/* passport */
+.passport{background:#2B3E6B;border:2px solid var(--line);border-radius:var(--r-lg);padding:var(--s3)}
+.passport .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-top:12px}
+.pstamp{border:3px dashed rgba(255,255,255,.22);border-radius:12px;padding:10px 6px;text-align:center;
+  font-family:var(--f-ui);font-weight:600;font-size:.88rem;color:rgba(255,255,255,.3);min-height:52px;
+  display:flex;align-items:center;justify-content:center}
+.pstamp.got{border:3px solid var(--pass);color:#7EF0B6;transform:rotate(-4deg);background:rgba(19,160,92,.12)}
+.pstamp.got:nth-child(3n){transform:rotate(3deg)} .pstamp.got:nth-child(4n){transform:rotate(-1deg)}
+.pstamp.fresh{animation:slam .45s var(--pop)}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s3)}
+
+/* play */
+.hud{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:var(--s2)}
+.hudchip{font-family:var(--f-ui);font-weight:600;font-size:.92rem;background:rgba(0,0,0,.28);
+  border:2px solid var(--line);padding:9px 16px;border-radius:999px;white-space:nowrap}
+.hudchip.pts{background:var(--amber);color:var(--ink);border-color:var(--amber);font-size:1.02rem}
+.mult{font-family:var(--f-display);font-size:1.15rem;padding:6px 14px;border-radius:999px;background:var(--pass);color:#fff;
+  box-shadow:0 4px 0 #0b6e3f}
+.mult.bump{animation:bump .45s var(--pop)}
+.mult.x1{opacity:.35;background:rgba(0,0,0,.3);box-shadow:none}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.5) rotate(-6deg)}100%{transform:scale(1)}}
+.lives{display:inline-flex;gap:5px;align-items:center;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.28);border:2px solid var(--line)}
+.lives svg{width:24px;height:24px}
+.lives .lost{opacity:.18;filter:grayscale(1)}
+.lives .lost.now{animation:losing .6s ease}
+@keyframes losing{0%{transform:scale(1.6);opacity:1;filter:none}100%{transform:scale(1);opacity:.18}}
+.bar{height:9px;background:rgba(0,0,0,.3);border-radius:999px;overflow:hidden;flex:1;min-width:100px}
+.bar i{display:block;height:100%;background:var(--amber);transition:width .3s}
+
+.teamrow{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:var(--s2)}
+.teamchip{font-family:var(--f-ui);font-weight:600;font-size:1rem;padding:10px 20px;border-radius:999px;
+  background:rgba(0,0,0,.28);border:2px solid var(--line)}
+.teamchip.turn{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+.teamchip.out{opacity:.4;text-decoration:line-through}
+
+.toprow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:var(--s2)}
+.ctx{font-family:var(--f-ui);font-weight:600;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--navy);background:var(--amber);padding:6px 16px;border-radius:999px}
+.twin{font-family:var(--f-ui);font-weight:600;font-size:.86rem;background:var(--violet);color:#fff;
+  padding:6px 16px;border-radius:999px;animation:slam .4s var(--pop)}
+.patience{flex:1;min-width:160px;display:flex;align-items:center;gap:8px;font-family:var(--f-ui);font-size:.8rem;color:var(--mute)}
+.patience .track{flex:1;height:14px;border-radius:999px;background:rgba(0,0,0,.35);overflow:hidden;border:2px solid var(--line)}
+.patience .track i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--pass),#7EF0B6)}
+.patience .track i.low{background:linear-gradient(90deg,var(--stamp),#FF8A6B);animation:throb .5s infinite alternate}
+@keyframes throb{to{opacity:.6}}
+
+.desk{display:grid;grid-template-columns:130px 1fr;gap:var(--s2);align-items:end}
+.traveller{width:130px;height:173px;position:relative}
+.traveller svg{width:100%;height:100%;display:block;overflow:visible}
+.traveller.walkin{animation:walkin .55s var(--pop)}
+.traveller.hop{animation:hop .55s ease}
+.traveller.shake{animation:shake .5s ease}
+.traveller .sad,.traveller.isSad .happy{display:none}
+.traveller.isSad .sad{display:inline}
+@keyframes walkin{from{transform:translateX(-90px);opacity:0}}
+@keyframes hop{30%{transform:translateY(-22px)}60%{transform:translateY(0)}75%{transform:translateY(-7px)}}
+@keyframes shake{20%{transform:translateX(-9px) rotate(-3deg)}40%{transform:translateX(9px) rotate(3deg)}60%{transform:translateX(-6px)}80%{transform:translateX(5px)}}
+.card{background:var(--paper);color:var(--ink);border-radius:var(--r-lg);padding:var(--s4);
+  box-shadow:0 11px 0 rgba(0,0,0,.33);position:relative;display:flex;gap:var(--s3);align-items:center;flex-wrap:wrap;min-height:173px}
+.sentence{font-size:clamp(1.3rem,3.2vw,2.2rem);line-height:1.55;font-weight:700;flex:1 1 320px;min-width:0}
+#stampSlot{flex:0 0 auto;margin:0 auto;position:relative}
+.gap{display:inline-block;min-width:130px;padding:0 10px;border-bottom:5px solid var(--navy);
+  text-align:center;font-family:var(--f-ui);font-weight:600;color:var(--navy)}
+.gap.filled{border-bottom-color:var(--pass)}
+.gap.bad{border-bottom-color:var(--stamp);color:var(--stamp)}
+.stamp{transform:rotate(-8deg);font-family:var(--f-display);font-size:clamp(1.25rem,3vw,2rem);line-height:1;text-align:center;
+  border:6px solid currentColor;border-radius:14px;padding:11px 20px;letter-spacing:.03em;
+  animation:slam .4s var(--pop);pointer-events:none;white-space:nowrap}
+.stamp small{display:block;font-family:var(--f-ui);font-weight:600;font-size:.36em;letter-spacing:.16em;margin-top:6px}
+.stamp.s-ok{color:var(--pass)} .stamp.s-note{color:var(--note)} .stamp.s-no{color:var(--stamp)} .stamp.s-time{color:#6B7A99}
+@keyframes slam{from{transform:rotate(-8deg) scale(2.6);opacity:0}}
+.floatpts{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-family:var(--f-display);
+  font-size:1.6rem;color:var(--pass);white-space:nowrap;animation:floatup 1.2s ease forwards;pointer-events:none}
+@keyframes floatup{0%{opacity:0;transform:translate(-50%,10px)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-48px)}}
+
+.booths{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:var(--s2);margin-top:var(--s3)}
+.booth{background:var(--paper);color:var(--ink);border-radius:var(--r);padding:20px;position:relative;
+  box-shadow:0 7px 0 rgba(0,0,0,.33);font-family:var(--f-ui);font-weight:500;
+  font-size:clamp(1.05rem,2.3vw,1.45rem);min-height:86px;transition:transform .13s var(--pop),box-shadow .13s}
+.booth .num{position:absolute;top:8px;left:12px;font-size:.7rem;font-weight:600;color:#A99A8E;letter-spacing:.1em}
+.booth:hover{transform:translateY(-4px);box-shadow:0 11px 0 rgba(0,0,0,.33)}
+.booth:active{transform:translateY(3px);box-shadow:0 4px 0 rgba(0,0,0,.33)}
+.booth:focus-visible{outline:4px solid var(--amber);outline-offset:3px}
+.booth[disabled]{cursor:default;transform:none}
+.booth.picked-ok{background:var(--pass);color:#fff;box-shadow:0 7px 0 #0b6e3f}
+.booth.picked-note{background:var(--note);color:#fff;box-shadow:0 7px 0 #a05f06}
+.booth.picked-no{background:var(--stamp);color:#fff;box-shadow:0 7px 0 #942727}
+.booth.reveal{outline:4px solid var(--pass);outline-offset:3px}
+.booth.faded{opacity:.42}
+
+.why{margin-top:var(--s3);background:rgba(0,0,0,.26);border:2px solid var(--line);border-radius:var(--r);
+  padding:var(--s3);font-size:1.02rem;line-height:1.6;animation:up .3s var(--pop)}
+@keyframes up{from{transform:translateY(12px);opacity:0}}
+.why .head{font-family:var(--f-ui);font-weight:600;letter-spacing:.06em;display:block;margin-bottom:7px}
+.why.v-ok .head{color:#6FE3A8} .why.v-note .head{color:#FFC98A} .why.v-no .head{color:#FF9B9B} .why.v-time .head{color:#C3CDE2}
+.why b{color:var(--amber)}
+.others{margin-top:16px;padding-top:14px;border-top:2px dashed var(--line)}
+.ohead{display:block;font-family:var(--f-ui);font-weight:600;font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-bottom:9px}
+.oth{background:rgba(255,255,255,.06);border-radius:12px;padding:11px 15px;margin-bottom:8px;border-left:6px solid;color:#D8E3F6;font-size:.97rem}
+.oth.o-ok{border-color:var(--pass)} .oth.o-note{border-color:var(--note)} .oth.o-no{border-color:var(--stamp)}
+.othw{font-family:var(--f-ui);font-weight:600;color:var(--cream)}
+.othl{font-family:var(--f-ui);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-left:10px}
+
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:var(--s3);align-items:center}
+.btn{font-family:var(--f-ui);font-weight:500;font-size:1.05rem;padding:15px 30px;border-radius:999px;
+  background:var(--amber);color:var(--ink);box-shadow:0 6px 0 var(--amber-deep);transition:transform .13s var(--pop)}
+.btn:hover{transform:translateY(-3px)}
+.btn.sec{background:transparent;color:var(--cream);border:2px solid var(--line);box-shadow:none}
+
+/* end */
+.endtitle{font-family:var(--f-display);font-weight:400;font-size:clamp(1.8rem,4.4vw,3rem);line-height:1.05}
+.bigstars{font-size:clamp(3rem,9vw,5.5rem);letter-spacing:10px;line-height:1;margin:var(--s2) 0;color:rgba(255,255,255,.15)}
+.bigstars span{display:inline-block}
+.bigstars .on{color:var(--amber);text-shadow:0 5px 0 var(--amber-deep);animation:slam .45s var(--pop) both}
+.promo{display:inline-flex;align-items:center;gap:12px;background:var(--amber);color:var(--ink);border-radius:999px;
+  padding:10px 22px;font-family:var(--f-ui);font-weight:600;font-size:1.1rem;margin-top:var(--s2);animation:slam .5s var(--pop) both}
+.tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--s2);margin:var(--s3) 0}
+.tal{background:rgba(0,0,0,.26);border-radius:var(--r);padding:var(--s2) var(--s3);text-align:center}
+.tal .n{font-family:var(--f-display);font-size:2.4rem;line-height:1}
+.tal .l{font-family:var(--f-ui);font-size:.86rem;color:var(--mute);margin-top:5px}
+.tal.pts .n{color:var(--amber)} .tal.ok .n{color:#6FE3A8} .tal.no .n{color:#FF9B9B} .tal.st .n{color:#C9B8FF}
+.newstamps{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.misslist{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.miss{background:rgba(0,0,0,.24);border-radius:14px;padding:13px 16px;font-size:.98rem;line-height:1.5;border-left:6px solid var(--stamp)}
+.miss b{color:var(--amber)}
+.subh{font-family:var(--f-ui);font-weight:600;font-size:.86rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin-top:var(--s3)}
+
+footer.foot{margin-top:auto;padding-top:var(--s4);text-align:center;font-family:var(--f-ui);font-size:.86rem;color:var(--mute)}
+[hidden]{display:none !important}
+@media (max-width:760px){
+  .panel{padding:var(--s3)} .card{padding:var(--s3)}
+  .desk{grid-template-columns:1fr} .traveller{width:84px;height:112px}
+  .rankbar{grid-template-columns:auto 1fr} .rankstats{grid-column:1/-1;text-align:left}
+  .rushcard{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="beam"></div></div>
+<div class="shell">
+
+<header class="mast">
+  <svg class="badge" viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="28" fill="none" stroke="#FFC531" stroke-width="5"/>
+    <path d="M18 32h28M32 18v28" stroke="#FFC531" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+    <path d="M20 42c5-14 19-14 24 0" fill="none" stroke="#FFF7EC" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="32" cy="25" r="5" fill="#FFF7EC"/>
+  </svg>
+  <div>
+    <h1>Linker Border Control</h1>
+    <div class="tagline">Nothing gets through with the wrong meaning, the wrong shape or the wrong tone of voice</div>
+  </div>
+  <span class="spacer"></span>
+  <button class="ghost" id="soundBtn" aria-pressed="true" title="Sound (M)">Sound on</button>
+</header>
+
+<!-- ══ THE DESK (start) ══ -->
+<section id="start">
+  <div class="rankbar" id="rankbar"></div>
+
+  <div class="sechead"><h2>Career</h2><p>Learn the desk one stamp at a time. Earn up to three stars per shift — stars get you promoted.</p></div>
+  <div class="shifts" id="shifts"></div>
+
+  <div class="sechead"><h2>Rush hour</h2><p>Once you know the desk, prove it.</p></div>
+  <button class="rushcard" id="rushBtn">
+    <div>
+      <div class="t">Rush hour</div>
+      <div class="d">Every traveller from all four shifts arrives at once — 24 sentences, shuffled. Not new sentences: the whole career in one queue, against the clock.</div>
+      <div class="rules"><span>3 lives</span><span>25-second patience bar</span><span>Streaks multiply your points</span><span>Speed bonus</span></div>
+    </div>
+    <div class="best">best today<b id="rushBest">0</b>points</div>
+  </button>
+
+  <div class="sechead"><h2>The three stamps</h2><p>A rejected sentence is always turned back for one of these reasons.</p></div>
+  <div class="key" style="margin-top:0">
+    <div class="keycard k-meaning"><h4>✗ WRONG MEANING</h4><p>Grammar fine, but it says something nobody meant — a reason where a contrast belongs.</p></div>
+    <div class="keycard k-structure"><h4>✗ WRONG STRUCTURE</h4><p>What follows the gap doesn't fit: a clause where the linker wants a noun, or the other way round.</p></div>
+    <div class="keycard k-register"><h4>✗ WRONG REGISTER</h4><p>Correct English in the wrong clothes: report language in a text, café language in a notice.</p></div>
+  </div>
+  <p class="lede" style="font-size:.94rem;color:#B9C8E2;margin-top:12px">Some answers get through <b>with a note</b>: they work, but a native speaker would probably have chosen differently. They count as a pass, for fewer points.</p>
+
+  <div class="sechead"><h2>Your passport</h2><p id="ppCount"></p></div>
+  <div class="passport"><p class="lede" style="font-size:.94rem">Approve a traveller with the best linker and its stamp goes in your passport. Can the class fill every page today?</p>
+    <div class="grid" id="passport"></div></div>
+
+  <div class="controls">
+    <button class="ghost" id="teamBtn" aria-pressed="false">Two teams</button>
+  </div>
+</section>
+
+<!-- ══ PLAY ══ -->
+<section id="play" hidden>
+  <div class="hud">
+    <span class="hudchip" id="hMode"></span>
+    <span class="hudchip" id="hCount"></span>
+    <span class="hudchip pts" id="hPts">0 pts</span>
+    <span class="mult x1" id="hMult">×1</span>
+    <span class="lives" id="hLives" hidden></span>
+    <span class="bar"><i id="hBar" style="width:0%"></i></span>
+    <button class="ghost" id="quitBtn">End shift</button>
+  </div>
+  <div class="teamrow" id="teamRow" hidden></div>
+  <div class="toprow">
+    <span class="ctx" id="ctxTag"></span>
+    <span class="twin" id="twinTag" hidden></span>
+    <span class="patience" id="patience" hidden>patience<span class="track"><i id="patBar"></i></span></span>
+  </div>
+  <div class="desk">
+    <div class="traveller" id="trav" aria-hidden="true"></div>
+    <div class="card">
+      <div class="sentence" id="sentence"></div>
+      <div id="stampSlot"></div>
+    </div>
+  </div>
+  <div class="booths" id="booths"></div>
+  <div id="whySlot"></div>
+  <div class="actions" id="nextRow" hidden><button class="btn" id="nextBtn">Next traveller →</button></div>
+</section>
+
+<!-- ══ REPORT ══ -->
+<section id="end" hidden>
+  <div class="panel">
+    <div class="ranklabel" id="endKicker"></div>
+    <h2 class="endtitle" id="endTitle"></h2>
+    <div class="bigstars" id="bigStars"></div>
+    <div id="promoSlot"></div>
+    <p class="lede" id="endLede" style="margin-top:var(--s2)"></p>
+    <div class="tally" id="tally"></div>
+    <div id="newStampsWrap"></div>
+    <div id="missWrap"></div>
+    <div class="actions">
+      <button class="btn" id="againBtn">Play it again</button>
+      <button class="btn sec" id="homeBtn">Back to the desk</button>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">Class of Coffee – with AI assistance</footer>
+</div>
+
+<script>
+/* ═══════════════ ITEMS ═══════════════
+   v: 'ok' best · 'note' passes with a note · 'meaning' / 'structure' / 'register' = rejected.
+   twin + tw: the two halves of a pair always arrive back to back, tw 1 then tw 2.
+   Every item keeps at least two options that are grammatically possible in the gap.
+   ════════════════════════════════════ */
+const SHIFTS = [
+ {n:1, t:'The meaning desk', tests:'meaning', tcls:'t-meaning',
+  d:'Every option fits the gap grammatically. Only one of them says what the sentence actually means.'},
+ {n:2, t:'The structure desk', tests:'structure', tcls:'t-structure',
+  d:'Same meaning, different shapes — read what comes after the gap. Three travellers come through twice: same sentence, new shape.'},
+ {n:3, t:'The register desk', tests:'register', tcls:'t-register',
+  d:'All correct English. Which one belongs in a text message, and which on an official notice?'},
+ {n:4, t:'Full control', tests:'all three', tcls:'t-all',
+  d:'Six new travellers, and any of the three stamps can come down on any of them. The final test before Rush hour.'}
+];
+
+const ITEMS = [
+/* ── 1 · MEANING ── */
+{s:1, ctx:'Talking about a friend', pre:'I have stopped emailing her', post:'she never answers.', opts:[
+ {w:'because', v:'ok', why:'Reason — and that is what the sentence is doing: explaining why the emails stopped.'},
+ {w:'although', v:'meaning', why:'Contrast. It would mean you stopped emailing her <em>in spite of</em> her silence, which is the opposite of the point.'},
+ {w:'so that', v:'meaning', why:'Purpose. It would claim you stopped emailing in order to make her stop answering.'}]},
+{s:1, ctx:'About a colleague', pre:'', post:'she is working flat out, she will not catch up.', opts:[
+ {w:'Even though', v:'ok', why:'Contrast: the hard work and the result pull against each other. Exactly right.'},
+ {w:'Because', v:'meaning', why:'Reason. It would say the hard work is <em>why</em> she will not catch up.'},
+ {w:'So that', v:'meaning', why:'Purpose. It would say she is working flat out in order to fall further behind.'}]},
+{s:1, ctx:'In the café', pre:'The grinder broke down,', post:'we served filter coffee all week.', opts:[
+ {w:'so', v:'ok', why:'Result. The breakdown came first, the filter coffee followed.'},
+ {w:'but', v:'meaning', why:'Contrast. It would suggest serving filter coffee was somehow surprising after a breakdown.'},
+ {w:'because', v:'meaning', why:'Reason — but back to front. It would say the filter coffee broke the grinder.'}]},
+{s:1, ctx:'Leaving the house', pre:'Take an umbrella', post:'it rains.', opts:[
+ {w:'in case', v:'ok', why:'You take it <em>now</em>, because rain is possible later. That is precisely what <b>in case</b> is for.'},
+ {w:'because', v:'meaning', why:'That would mean it is already raining. It is not — not yet.'},
+ {w:'so that', v:'meaning', why:'Purpose. It would say you are taking the umbrella in order to make it rain.'}]},
+{s:1, ctx:'In the hallway', pre:'He closed the door quietly', post:'he would not wake the baby.', opts:[
+ {w:'so that', v:'ok', why:'Purpose, with a modal clause after it. The quiet door has a job to do.'},
+ {w:'even though', v:'meaning', why:'Contrast. It would say he closed it quietly <em>in spite of</em> not wanting to wake the baby.'},
+ {w:'because', v:'meaning', why:'Close, but not the same: this makes not waking the baby a fact that already exists, rather than the aim.'}]},
+{s:1, ctx:'Turning down a job', pre:'', post:'I was offered a better salary, I turned the job down.', opts:[
+ {w:'Even though', v:'ok', why:'Contrast, and a strong one — which is just what a surprising decision needs.'},
+ {w:'Because', v:'meaning', why:'Reason. It would say the better salary is why you refused.'},
+ {w:'Seeing as', v:'meaning', why:'Also a reason word, just a chattier one. The logic is still back to front.'}]},
+
+/* ── 2 · STRUCTURE — three twin pairs, always back to back ── */
+{s:2, twin:'late', tw:1, ctx:'Explaining a late arrival', pre:'We were late', post:'the traffic was terrible.', opts:[
+ {w:'because', v:'ok', why:'A clause follows — <em>the traffic was terrible</em> — and <b>because</b> is the one that takes clauses.'},
+ {w:'because of', v:'structure', why:'<b>because of</b> needs a noun or an <em>-ing</em> form: <em>because of the terrible traffic</em>.'},
+ {w:'due to', v:'structure', why:'Same restriction as <em>because of</em>. A clause can never follow it.'}]},
+{s:2, twin:'late', tw:2, ctx:'Explaining a late arrival', pre:'We were late', post:'the terrible traffic.', opts:[
+ {w:'because of', v:'ok', why:'The clause has shrunk into a noun phrase, so the preposition version takes over.'},
+ {w:'because', v:'structure', why:'<b>because</b> wants a clause — someone doing something. <em>The terrible traffic</em> is just a thing.'},
+ {w:'as', v:'structure', why:'<b>as</b> is a reason word too, but like <em>because</em> it needs a whole clause.'}]},
+{s:2, twin:'age', tw:1, ctx:'About a remarkable woman', pre:'', post:'she is eighty-five, she still travels everywhere.', opts:[
+ {w:'Even though', v:'ok', why:'A clause follows, so a clause-taking linker is what the sentence needs.'},
+ {w:'Despite', v:'structure', why:'<b>despite</b> takes a noun or an <em>-ing</em> form: <em>despite being eighty-five</em>.'},
+ {w:'In spite of', v:'structure', why:'Identical grammar to <em>despite</em>, identical problem.'}]},
+{s:2, twin:'age', tw:2, ctx:'About a remarkable woman', pre:'', post:'being eighty-five, she still travels everywhere.', opts:[
+ {w:'In spite of', v:'ok', why:'<em>she is</em> has become <em>being</em> — an <em>-ing</em> form, which is exactly what <b>in spite of</b> takes.'},
+ {w:'Even though', v:'structure', why:'<b>even though</b> needs a clause: <em>even though she is eighty-five</em>.'},
+ {w:'Although', v:'structure', why:'Same problem — <b>although</b> is a joiner and takes a clause, not an <em>-ing</em> form.'}]},
+{s:2, twin:'train', tw:1, ctx:'Catching a train', pre:'She left at six', post:'she could catch the last train.', opts:[
+ {w:'so that', v:'ok', why:'A clause with <em>could</em> follows — the classic <b>so that</b> pattern.'},
+ {w:'in order to', v:'structure', why:'That takes an infinitive, so it cannot be followed by <em>she could</em>.'},
+ {w:'so as to', v:'structure', why:'Same shape as <em>in order to</em>, same mismatch.'}]},
+{s:2, twin:'train', tw:2, ctx:'Catching a train', pre:'She left at six', post:'catch the last train.', opts:[
+ {w:'in order to', v:'ok', why:'<em>she could</em> has gone, leaving a bare infinitive — and <b>in order to</b> is built to take one.'},
+ {w:'so that', v:'structure', why:'<b>so that</b> needs a full clause: <em>so that she could catch the last train</em>.'},
+ {w:'in case', v:'structure', why:'<b>in case</b> also needs a clause with a subject in it.'}]},
+
+/* ── 3 · REGISTER ── */
+{s:3, ctx:'Text to a friend', pre:'Can’t make it tonight', post:'I’m completely shattered.', opts:[
+ {w:'because', v:'ok', why:'Neutral and natural. This is what anybody actually types.'},
+ {w:'as', v:'register', why:'Correct English, but <em>as</em> belongs to written prose. In a text it sounds oddly formal.'},
+ {w:'owing to the fact that', v:'register', why:'Grammatically faultless, and nobody has ever sent this to a friend.'}]},
+{s:3, ctx:'Notice on a public building', pre:'The pool is closed until Friday', post:'essential maintenance.', opts:[
+ {w:'owing to', v:'ok', why:'The register of printed notices, and it takes the noun that follows.'},
+ {w:'due to', v:'note', why:'Through with a note: also correct and extremely common on signs. Slightly less formal than <em>owing to</em>.'},
+ {w:'because of', v:'register', why:'Correct meaning and structure, but it reads as conversation rather than an official notice.'}]},
+{s:3, ctx:'Conclusion of an essay', pre:'The data is inconclusive.', post:'further research is needed.', opts:[
+ {w:'Therefore,', v:'ok', why:'Formal result signpost at the start of a new sentence, with a comma after it. Essay English.'},
+ {w:'So,', v:'register', why:'The meaning is right, but <em>so</em> at the front of a sentence is speech, not academic writing.'},
+ {w:'However,', v:'meaning', why:'Wrong meaning entirely — that sets the two sentences against each other.'}]},
+{s:3, ctx:'Asking a colleague a favour', pre:'', post:'you are in on Thursday, could you open up?', opts:[
+ {w:'Seeing as', v:'ok', why:'Spoken, friendly, and it gives the reason for <em>asking</em> rather than for a fact. Just right between colleagues.'},
+ {w:'In view of the fact that', v:'register', why:'Correct, and absurdly heavy for a favour between colleagues.'},
+ {w:'Since', v:'note', why:'Through with a note: perfectly fine, a little more written than you would normally be in person.'}]},
+{s:3, ctx:'Report to the board', pre:'Sales fell for a third quarter.', post:'no redundancies have been made.', opts:[
+ {w:'Nevertheless,', v:'ok', why:'Formal contrast signpost. The register of a board report.'},
+ {w:'However,', v:'note', why:'Through with a note: correct and common in reports, just a touch lighter than <em>nevertheless</em>.'},
+ {w:'Though,', v:'register', why:'<em>though</em> is spoken English, and it does not sit at the front of a sentence like this.'}]},
+{s:3, ctx:'Chatting about a film', pre:'The plot was ridiculous,', post:'I loved every minute of it.', opts:[
+ {w:'but', v:'ok', why:'The everyday contrast joiner, with its comma already in place. Exactly what you’d say.'},
+ {w:'yet', v:'register', why:'Correct in the same slot, but it sounds literary in a casual chat about a film.'},
+ {w:'nevertheless', v:'structure', why:'A signpost cannot be glued on with a comma. It needs a full stop in front of it.'}]},
+
+/* ── 4 · FULL CONTROL ── */
+{s:4, ctx:'Station announcement', pre:'', post:'the strike, all services have been cancelled.', opts:[
+ {w:'Due to', v:'ok', why:'Formal, takes the noun that follows, and the reason is right. Station English.'},
+ {w:'Because', v:'structure', why:'<b>because</b> needs a clause, and <em>the strike</em> is a noun.'},
+ {w:'Despite', v:'meaning', why:'The structure is fine — it takes a noun — but the meaning is upside down.'}]},
+{s:4, ctx:'Household habits', pre:'I keep a spare key at my sister’s', post:'I lock myself out.', opts:[
+ {w:'in case', v:'ok', why:'A possible future problem, prepared for now. Present simple after it, as always.'},
+ {w:'so that', v:'meaning', why:'Grammatical, but it says you keep the key there <em>in order to</em> lock yourself out.'},
+ {w:'because', v:'meaning', why:'That would mean you are locked out right now, which is not the point.'}]},
+{s:4, ctx:'Reviewing a café', pre:'The coffee is excellent. It is four euros a cup,', post:'', opts:[
+ {w:'though.', v:'ok', why:'The one contrast word that can sit at the end after a comma. Spoken English, and perfect here.'},
+ {w:'however.', v:'structure', why:'<b>however</b> goes at the front of a new sentence, not on the end of this one.'},
+ {w:'although.', v:'structure', why:'<b>although</b> has to be followed by a clause; it cannot be left dangling.'}]},
+{s:4, ctx:'Note to customers', pre:'Our prices have risen', post:'an increase in production costs.', opts:[
+ {w:'due to', v:'ok', why:'Formal register for a customer notice, and it takes the noun phrase that follows.'},
+ {w:'because', v:'structure', why:'A noun follows, not a clause, so <em>because</em> has nothing to attach to.'},
+ {w:'in spite of', v:'meaning', why:'The shape fits — it takes a noun — but it says prices rose <em>despite</em> the costs going up.'}]},
+{s:4, ctx:'Shopping with a friend', pre:'', post:'it was far more than we meant to spend, we bought it.', opts:[
+ {w:'Although', v:'ok', why:'Contrast, clause after it, comma after the first half. Everything in place.'},
+ {w:'However', v:'structure', why:'A signpost cannot hold two halves together. It needs its own sentence.'},
+ {w:'Despite', v:'structure', why:'<b>despite</b> needs a noun or an <em>-ing</em> form, not the clause that follows here.'}]},
+{s:4, ctx:'Quarterly report', pre:'We changed supplier in March.', post:'unit costs have fallen by eight per cent.', opts:[
+ {w:'As a result,', v:'ok', why:'Result signpost, new sentence, comma after. Exactly the register of a report.'},
+ {w:'So,', v:'register', why:'The logic is right, but <em>so</em> at the front of a sentence is too casual for a report.'},
+ {w:'Nevertheless,', v:'meaning', why:'Wrong meaning — it would set the fall in costs <em>against</em> the change of supplier.'}]}
+];
+
+/* ═══════════════ SOUND · synthesised, no files ═══════════════ */
+const SFX = (()=>{
+  let ctx=null, on=true;
+  function ac(){
+    if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; } }
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  }
+  function tone(f,t,dur,type,vol,slide){
+    const c=ac(); if(!c||!on) return;
+    const o=c.createOscillator(), g=c.createGain(), now=c.currentTime+t;
+    o.type=type||'sine'; o.frequency.setValueAtTime(f,now);
+    if(slide) o.frequency.exponentialRampToValueAtTime(slide,now+dur);
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.exponentialRampToValueAtTime(vol||.15,now+.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    o.connect(g); g.connect(c.destination); o.start(now); o.stop(now+dur+.05);
+  }
+  function noise(t,dur,vol,lp){
+    const c=ac(); if(!c||!on) return;
+    const len=Math.max(1,Math.floor(c.sampleRate*dur)), buf=c.createBuffer(1,len,c.sampleRate), d=buf.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+    const s=c.createBufferSource(), f=c.createBiquadFilter(), g=c.createGain();
+    s.buffer=buf; f.type='lowpass'; f.frequency.value=lp||800; g.gain.value=vol||.3;
+    s.connect(f); f.connect(g); g.connect(c.destination); s.start(c.currentTime+t);
+  }
+  const thump=()=>{ noise(0,.16,.7,320); tone(110,0,.16,'sine',.45,48); };
+  return {
+    get on(){return on}, set on(v){on=v},
+    unlock(){ ac(); },
+    tap(){ tone(700,0,.05,'triangle',.06); },
+    bell(){ tone(1318,0,.55,'sine',.10); tone(1046,.14,.7,'sine',.09); },
+    approve(){ thump(); [523,659,784].forEach((f,i)=>tone(f,.09+i*.07,.26,'triangle',.15)); },
+    note(){ thump(); [523,659].forEach((f,i)=>tone(f,.09+i*.09,.3,'triangle',.11)); },
+    reject(){ thump(); tone(170,.07,.38,'sawtooth',.10,110); tone(165,.07,.38,'square',.04,105); },
+    streak(level){ [784,988,1175,1568].forEach((f,i)=>tone(f*(level>=3?1.26:1),i*.05,.2,'sine',.09)); },
+    tick(){ tone(1050,0,.045,'square',.035); },
+    timeout(){ tone(900,0,.65,'sine',.11,210); },
+    life(){ tone(230,0,.25,'triangle',.22,140); tone(150,.18,.4,'triangle',.2,90); },
+    star(i){ tone([880,1108,1318][i]||1318,0,.4,'triangle',.15); tone(([880,1108,1318][i]||1318)*2,.02,.25,'sine',.04); },
+    fanfare(){ [523,659,784,1046].forEach((f,i)=>tone(f,i*.12,.35,'triangle',.14)); tone(1046,.5,.9,'triangle',.12); tone(784,.5,.9,'sine',.07); },
+    promo(){ [392,523,659,784,1046,1318].forEach((f,i)=>tone(f,i*.09,.3,'square',.05)); tone(1568,.62,1.1,'triangle',.13); tone(1046,.62,1.1,'sine',.07); },
+    gameover(){ [392,330,262,196].forEach((f,i)=>tone(f,i*.2,.38,'triangle',.15)); }
+  };
+})();
+document.addEventListener('pointerdown',()=>SFX.unlock(),{once:true});
+
+/* ═══════════════ HELPERS ═══════════════ */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const shuffle = a => a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+const normW = w => w.toLowerCase().replace(/[,.]/g,'').trim();
+const starStr = (n,max) => { let h=''; for(let i=0;i<(max||3);i++) h+='<span class="'+(i<n?'on':'')+'">★</span>'; return h; };
+
+const RANKS = [
+  {min:0,  name:'Trainee'},
+  {min:3,  name:'Officer'},
+  {min:6,  name:'Inspector'},
+  {min:9,  name:'Senior Inspector'},
+  {min:12, name:'Chief of Border Control'}
+];
+const PASSPORT = [...new Set(ITEMS.map(it=>normW(it.opts.find(o=>o.v==='ok').w)))];
+const RUSH_SECS = 25, LIVES = 3;
+
+/* nothing is saved: a fresh desk every lesson */
+const SESSION = {stars:{1:0,2:0,3:0,4:0}, passport:new Set(), rushBest:0};
+const totalStars = () => Object.values(SESSION.stars).reduce((a,b)=>a+b,0);
+const rankIndex = () => { let r=0; RANKS.forEach((k,i)=>{ if(totalStars()>=k.min) r=i; }); return r; };
+
+/* ═══════════════ THE DESK ═══════════════ */
+function rankIcon(i){
+  const stripes = Math.min(i,4);
+  let s='<svg class="rankico" viewBox="0 0 70 70"><path d="M35 4l26 10v20c0 16-11 27-26 32C20 61 9 50 9 34V14z" fill="#FFC531" stroke="#C99400" stroke-width="3"/>';
+  for(let k=0;k<stripes;k++) s+='<path d="M20 '+(42-k*8)+'l15 7 15-7" fill="none" stroke="#1B2A4A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+  if(stripes===0) s+='<circle cx="35" cy="34" r="7" fill="#1B2A4A"/>';
+  return s+'</svg>';
+}
+function renderDesk(){
+  const r=rankIndex(), next=RANKS[r+1], t=totalStars();
+  const prev=RANKS[r].min, pct = next? Math.round((t-prev)/(next.min-prev)*100) : 100;
+  $('#rankbar').innerHTML = rankIcon(r)+
+    '<div><div class="ranklabel">Your rank today</div><div class="rankname">'+RANKS[r].name+'</div>'+
+    '<div class="rankprog"><i style="width:'+pct+'%"></i></div>'+
+    '<div class="ranknext">'+(next? (next.min-t)+' more star'+(next.min-t===1?'':'s')+' to <b>'+next.name+'</b>' : 'Top of the service. Nothing gets past you.')+'</div></div>'+
+    '<div class="rankstats"><b>'+t+'</b> / 12 stars<br><b>'+SESSION.passport.size+'</b> / '+PASSPORT.length+' stamps</div>';
+
+  $('#shifts').innerHTML = SHIFTS.map(s=>
+    '<button class="shift" data-s="'+s.n+'">'+
+    '<span class="n">Shift '+s.n+' · 6 travellers</span><span class="t">'+s.t+'</span>'+
+    '<span class="d">'+s.d+'</span>'+
+    '<span class="foot"><span class="tests '+s.tcls+'">Tests: '+s.tests+'</span>'+
+    '<span class="stars">'+starStr(SESSION.stars[s.n])+'</span></span></button>').join('');
+  $$('#shifts .shift').forEach(b=>b.onclick=()=>{ SFX.tap(); start('career',+b.dataset.s); });
+  $('#rushBest').textContent = SESSION.rushBest;
+
+  $('#passport').innerHTML = PASSPORT.map(w=>'<div class="pstamp'+(SESSION.passport.has(w)?' got':'')+'">'+esc(w)+'</div>').join('');
+  $('#ppCount').textContent = SESSION.passport.size+' of '+PASSPORT.length+' linkers stamped';
+}
+$('#rushBtn').onclick=()=>{ SFX.tap(); start('rush'); };
+
+let teams=false;
+$('#teamBtn').onclick=()=>{ teams=!teams; $('#teamBtn').setAttribute('aria-pressed',teams); SFX.tap(); };
+function setSound(v){ SFX.on=v; $('#soundBtn').setAttribute('aria-pressed',v); $('#soundBtn').textContent= v?'Sound on':'Sound off'; }
+$('#soundBtn').onclick=()=>{ setSound(!SFX.on); SFX.tap(); };
+
+function show(id){
+  ['start','play','end'].forEach(v=>{ $('#'+v).hidden=(v!==id); });
+  document.body.classList.toggle('rush', id==='play' && G.mode==='rush');
+  window.scrollTo({top:0});
+}
+
+/* ═══════════════ GAME STATE ═══════════════ */
+let G = {};
+function buildQueue(items){
+  /* shuffle whole units: a twin pair is one unit, so its halves stay together and in order */
+  const units=[], pairs={};
+  items.forEach(it=>{ if(it.twin){ (pairs[it.twin]=pairs[it.twin]||[]).push(it); } else units.push([it]); });
+  Object.values(pairs).forEach(p=>units.push(p.sort((a,b)=>a.tw-b.tw)));
+  return shuffle(units).flat();
+}
+function start(mode,n){
+  G = {mode:mode, shiftN:n||0,
+       queue: buildQueue(mode==='rush'? ITEMS : ITEMS.filter(i=>i.s===n)),
+       at:0, answered:false, ended:false, finishedAll:false,
+       pts:[0,0], streak:[0,0], best:0, lives:[LIVES,LIVES], team:0,
+       tally:{ok:0,note:0,no:0,time:0}, misses:[], newStamps:[], rankBefore:rankIndex(), timer:null};
+  show('play'); nextItem(true);
+}
+const P = () => teams? G.team : 0;   /* whose turn it is */
+
+/* traveller drawing */
+function travellerSVG(seed){
+  const hue=[8,32,150,195,262,318,90][seed%7];
+  const skin=['#F6D0A8','#E2AE82','#B97B52','#8A5A3A','#F0C29B'][(seed>>1)%5];
+  const hair=['#2A1A14','#6B3E1E','#C9A15A','#1B2A4A','#8E3B2E'][(seed>>2)%5];
+  const hat=seed%4;
+  let h='<svg viewBox="0 0 120 160">'+
+   '<ellipse cx="60" cy="154" rx="40" ry="6" fill="rgba(0,0,0,.28)"/>'+
+   '<rect x="84" y="98" width="30" height="44" rx="7" fill="#FFC531" stroke="#121D35" stroke-width="3"/>'+
+   '<path d="M92 98v-8h14v8" fill="none" stroke="#121D35" stroke-width="3"/>'+
+   '<path d="M90 112h18M90 124h18" stroke="#C99400" stroke-width="3"/>'+
+   '<path d="M22 152v-44a34 34 0 0 1 68 0v44z" fill="hsl('+hue+' 68% 55%)"/>'+
+   '<path d="M56 78l4 14 4-14" fill="hsl('+hue+' 70% 40%)"/>'+
+   '<circle cx="56" cy="52" r="25" fill="'+skin+'"/>';
+  if(hat===0) h+='<path d="M31 50a25 25 0 0 1 50 0c-8-9-20-12-31-8-8 3-14 6-19 8z" fill="'+hair+'"/>';
+  if(hat===1) h+='<path d="M30 44a26 22 0 0 1 52 0z" fill="hsl('+((hue+180)%360)+' 60% 45%)"/><rect x="58" y="40" width="34" height="7" rx="3.5" fill="hsl('+((hue+180)%360)+' 60% 35%)"/>';
+  if(hat===2) h+='<path d="M30 46a26 26 0 0 1 52 0z" fill="hsl('+((hue+120)%360)+' 65% 50%)"/><circle cx="56" cy="20" r="6" fill="#FFF7EC"/>';
+  if(hat===3) h+='<path d="M31 50c0-18 10-26 25-26s25 8 25 26c-4-6-8-9-12-10-6 5-20 6-38 10z" fill="'+hair+'"/><circle cx="82" cy="46" r="7" fill="'+hair+'"/>';
+  h+='<circle cx="47" cy="54" r="3.4" fill="#121D35"/><circle cx="65" cy="54" r="3.4" fill="#121D35"/>'+
+     '<circle cx="42" cy="62" r="4" fill="#FF8A8A" opacity=".45"/><circle cx="70" cy="62" r="4" fill="#FF8A8A" opacity=".45"/>'+
+     '<path class="happy" d="M47 64q9 8 18 0" fill="none" stroke="#121D35" stroke-width="3" stroke-linecap="round"/>'+
+     '<path class="sad" d="M47 69q9-7 18 0" fill="none" stroke="#121D35" stroke-width="3" stroke-linecap="round"/>'+
+     '<rect x="6" y="104" width="22" height="30" rx="3" fill="#7B1E3A" stroke="#121D35" stroke-width="2.5" transform="rotate(-12 17 119)"/>'+
+     '<circle cx="17" cy="116" r="5" fill="none" stroke="#FFC531" stroke-width="2" transform="rotate(-12 17 119)"/>'+
+     '</svg>';
+  return h;
+}
+
+/* HUD */
+function heart(lost,now){ return '<svg class="'+(lost?'lost':'')+(now?' now':'')+'" viewBox="0 0 24 24"><path d="M12 21s-8-5.2-8-11a4.6 4.6 0 0 1 8-3 4.6 4.6 0 0 1 8 3c0 5.8-8 11-8 11z" fill="#FF5A6A" stroke="#fff" stroke-width="1.5"/></svg>'; }
+function renderLives(justLost){
+  const l=G.lives[P()];
+  let h=''; for(let i=0;i<LIVES;i++) h+=heart(i>=l, justLost && i===l);
+  $('#hLives').innerHTML=h;
+}
+function mult(streak){ return streak>=6?3 : streak>=3?2 : 1; }
+function renderHud(){
+  const sh = G.mode==='rush'? null : SHIFTS[G.shiftN-1];
+  $('#hMode').textContent = G.mode==='rush'? 'Rush hour' : 'Shift '+G.shiftN+' · '+sh.t;
+  $('#hCount').textContent = 'Traveller '+Math.min(G.at+1,G.queue.length)+' of '+G.queue.length;
+  $('#hPts').textContent = G.pts[P()]+' pts';
+  const m=mult(G.streak[P()]); const mEl=$('#hMult');
+  mEl.textContent='×'+m; mEl.className='mult'+(m===1?' x1':'');
+  $('#hBar').style.width = Math.round(G.at/G.queue.length*100)+'%';
+  $('#hLives').hidden = (G.mode!=='rush');
+  if(G.mode==='rush'){ renderLives(!!G.justLost && !teams); G.justLost=false; }
+  $('#teamRow').hidden=!teams;
+  if(teams) $('#teamRow').innerHTML=['Team A','Team B'].map((t,i)=>{
+    const out = G.mode==='rush' && G.lives[i]<=0;
+    return '<span class="teamchip'+(i===G.team?' turn':'')+(out?' out':'')+'">'+t+' · '+G.pts[i]+' pts'+
+      (G.mode==='rush'?' · '+G.lives[i]+' ♥':'')+(i===G.team?' — your turn':'')+'</span>';
+  }).join('');
+}
+
+/* one traveller */
+function nextItem(first){
+  if(!first) G.at++;
+  if(G.at>=G.queue.length){ G.finishedAll=true; return finish(); }
+  const it=G.queue[G.at]; G.answered=false;
+  renderHud();
+  $('#ctxTag').textContent=it.ctx;
+  const tw=$('#twinTag');
+  if(it.twin){ tw.hidden=false; tw.textContent = it.tw===1? 'Twin 1 of 2 · this traveller comes back in a new shape' : 'Twin 2 of 2 · same sentence, new shape — which booth now?'; }
+  else tw.hidden=true;
+  $('#sentence').innerHTML=(it.pre?esc(it.pre)+' ':'')+'<span class="gap" id="theGap">?</span>'+(it.post?' '+esc(it.post):'');
+  $('#stampSlot').innerHTML=''; $('#whySlot').innerHTML=''; $('#nextRow').hidden=true;
+  const trav=$('#trav'); trav.className='traveller'; void trav.offsetWidth;
+  trav.innerHTML=travellerSVG(Math.floor(Math.random()*997)); trav.classList.add('walkin');
+  const opts=shuffle(it.opts.map((o,i)=>({o:o,i:i})));
+  $('#booths').innerHTML=opts.map((x,k)=>'<button class="booth" data-i="'+x.i+'"><span class="num">'+(k+1)+'</span>'+esc(x.o.w)+'</button>').join('');
+  $$('#booths .booth').forEach(b=>b.onclick=()=>answer(+b.dataset.i,b));
+  SFX.bell();
+  if(G.mode==='rush') startTimer(); else $('#patience').hidden=true;
+}
+
+/* patience bar (Rush hour only) */
+function startTimer(){
+  stopTimer();
+  $('#patience').hidden=false;
+  G.timer={t0:performance.now(), dur:RUSH_SECS*1000, lastTick:6, raf:0, frac:1};
+  const bar=$('#patBar');
+  const loop=()=>{
+    if(!G.timer) return;
+    const left=Math.max(0, G.timer.dur-(performance.now()-G.timer.t0));
+    G.timer.frac=left/G.timer.dur;
+    bar.style.width=(G.timer.frac*100)+'%';
+    bar.classList.toggle('low', G.timer.frac<.3);
+    const secs=Math.ceil(left/1000);
+    if(secs<=5 && secs<G.timer.lastTick){ G.timer.lastTick=secs; SFX.tick(); }
+    if(left<=0){ G.timer=null; timeOut(); return; }
+    G.timer.raf=requestAnimationFrame(loop);
+  };
+  loop();
+}
+function stopTimer(){ if(G.timer){ cancelAnimationFrame(G.timer.raf); const f=G.timer.frac; G.timer=null; return f; } return 0; }
+
+/* scoring + feedback */
+const STAMPS = {
+  ok:{cls:'s-ok',big:'APPROVED',sub:'through you go'}, note:{cls:'s-note',big:'APPROVED',sub:'with a note'},
+  meaning:{cls:'s-no',big:'REJECTED',sub:'wrong meaning'}, structure:{cls:'s-no',big:'REJECTED',sub:'wrong structure'},
+  register:{cls:'s-no',big:'REJECTED',sub:'wrong register'}, time:{cls:'s-time',big:'TOO SLOW',sub:'the queue complained'}
+};
+const HEADS = {ok:'Approved', note:'Approved — with a note', meaning:'Rejected · wrong meaning',
+  structure:'Rejected · wrong structure', register:'Rejected · wrong register', time:'Too slow — the traveller gave up'};
+
+function answer(i,btn){
+  if(G.answered) return; G.answered=true;
+  const frac=stopTimer();
+  const it=G.queue[G.at], o=it.opts[i], pass=(o.v==='ok'||o.v==='note'), p=P();
+  $('#theGap').textContent=o.w;
+  $('#theGap').className='gap '+(pass?'filled':'bad');
+  $$('#booths .booth').forEach(b=>{ b.disabled=true; if(b!==btn) b.classList.add('faded'); });
+  btn.classList.add(o.v==='ok'?'picked-ok':o.v==='note'?'picked-note':'picked-no');
+  const trav=$('#trav'); trav.classList.remove('walkin','hop','shake'); void trav.offsetWidth;
+
+  let gained=0;
+  if(pass){
+    const before=mult(G.streak[p]);
+    G.streak[p]++; G.best=Math.max(G.best,G.streak[p]);
+    const m=mult(G.streak[p]);
+    gained=(o.v==='ok'?100:60)*m + (G.mode==='rush'? Math.round(50*frac) : 0);
+    G.pts[p]+=gained;
+    if(o.v==='ok'){ G.tally.ok++; SFX.approve(); } else { G.tally.note++; SFX.note(); }
+    trav.classList.add('hop');
+    if(m>before){ setTimeout(()=>SFX.streak(m),380); setTimeout(()=>{ const el=$('#hMult'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); },60); }
+    if(o.v==='ok'){ const w=normW(o.w); if(!SESSION.passport.has(w)){ SESSION.passport.add(w); G.newStamps.push(w); } }
+  } else {
+    G.streak[p]=0; G.tally.no++;
+    G.misses.push({s:(it.pre?it.pre+' ':'')+'___'+(it.post?' '+it.post:''), picked:o.w, why:STAMPS[o.v].sub, best:it.opts.find(x=>x.v==='ok').w});
+    trav.classList.add('shake','isSad'); SFX.reject();
+    if(G.mode==='rush') loseLife();
+  }
+  stampAndExplain(it,o,gained);
+}
+function timeOut(){
+  if(G.answered) return; G.answered=true;
+  const it=G.queue[G.at], p=P();
+  G.streak[p]=0; G.tally.time++;
+  G.misses.push({s:(it.pre?it.pre+' ':'')+'___'+(it.post?' '+it.post:''), picked:'(no answer)', why:'ran out of time', best:it.opts.find(x=>x.v==='ok').w});
+  $$('#booths .booth').forEach(b=>{ b.disabled=true; const o=it.opts[+b.dataset.i]; if(o.v==='ok') b.classList.add('reveal'); else b.classList.add('faded'); });
+  const trav=$('#trav'); trav.classList.remove('walkin'); void trav.offsetWidth; trav.classList.add('shake','isSad');
+  SFX.timeout(); loseLife();
+  stampAndExplain(it,{v:'time',w:'',why:'Nobody chose a booth before the patience bar ran out.'},0);
+}
+function loseLife(){
+  const p=P(); G.lives[p]=Math.max(0,G.lives[p]-1);
+  setTimeout(()=>SFX.life(),300);
+  G.justLost=true;
+}
+function stampAndExplain(it,o,gained){
+  const st=STAMPS[o.v];
+  $('#stampSlot').innerHTML='<div class="stamp '+st.cls+'">'+st.big+'<small>'+st.sub+'</small></div>'+
+    (gained? '<div class="floatpts">+'+gained+'</div>' : '');
+  const vcls = o.v==='ok'?'ok':o.v==='note'?'note':o.v==='time'?'time':'no';
+  let html='<div class="why v-'+vcls+'"><span class="head">'+HEADS[o.v]+'</span>'+o.why;
+  const rest=it.opts.filter(x=>x!==o).sort((a,b)=>(a.v==='ok'?-1:b.v==='ok'?1:0));
+  html+='<div class="others"><span class="ohead">'+(o.v==='time'?'The three booths':'The other booths')+'</span>'+
+    rest.map(x=>'<div class="oth o-'+(x.v==='ok'?'ok':x.v==='note'?'note':'no')+'"><span class="othw">'+esc(x.w)+
+      '</span><span class="othl">'+HEADS[x.v]+'</span><br>'+x.why+'</div>').join('')+'</div></div>';
+  $('#whySlot').innerHTML=html;
+
+  /* hand over the turn, and check for game over */
+  let over=false;
+  if(teams){
+    const other=1-G.team;
+    if(G.mode!=='rush' || G.lives[other]>0) G.team=other;
+    if(G.mode==='rush' && G.lives[0]<=0 && G.lives[1]<=0) over=true;
+  } else if(G.mode==='rush' && G.lives[0]<=0) over=true;
+  G.ended=over;
+  renderHud();
+  if(!teams){ $('#hPts').textContent=G.pts[0]+' pts'; }
+  const last = G.at+1>=G.queue.length;
+  $('#nextBtn').textContent = over? 'Off the desk — see the report →' : last? 'See the shift report →' : 'Next traveller →';
+  $('#nextRow').hidden=false; $('#nextBtn').focus();
+}
+$('#nextBtn').onclick=()=>{ SFX.tap(); if(G.ended) finish(); else nextItem(false); };
+$('#quitBtn').onclick=()=>{ stopTimer(); finish(); };
+$('#againBtn').onclick=()=>{ SFX.tap(); start(G.mode,G.shiftN); };
+$('#homeBtn').onclick=()=>{ SFX.tap(); renderDesk(); show('start'); };
+document.addEventListener('keydown',e=>{
+  if(e.key==='m'||e.key==='M'){ setSound(!SFX.on); return; }
+  if($('#play').hidden) return;
+  if(e.key==='Enter' && !$('#nextRow').hidden){ e.preventDefault(); $('#nextBtn').click(); }
+  if(/^[123]$/.test(e.key) && !G.answered){ const b=$$('#booths .booth')[+e.key-1]; if(b) b.click(); }
+});
+
+/* ═══════════════ REPORT ═══════════════ */
+function finish(){
+  stopTimer();
+  show('end');
+  const done=G.tally.ok+G.tally.note+G.tally.no+G.tally.time;
+  const rej=G.tally.no+G.tally.time;
+  $('#bigStars').innerHTML=''; $('#promoSlot').innerHTML='';
+  let kicker='', title='', lede='';
+
+  if(G.mode==='career'){
+    const sh=SHIFTS[G.shiftN-1];
+    kicker='Shift '+G.shiftN+' · '+sh.t;
+    let stars=0;
+    if(G.finishedAll) stars = rej===0?3 : rej===1?2 : rej<=3?1 : 0;
+    const prevBest=SESSION.stars[G.shiftN];
+    SESSION.stars[G.shiftN]=Math.max(prevBest,stars);
+    title = !G.finishedAll? 'Shift ended early' : stars===3? 'A spotless shift' : stars===2? 'A solid shift' : stars===1? 'Shift complete' : 'A rough shift';
+    const target = stars===2? 'A clean shift earns three stars.' : stars===1? 'One mistake or fewer earns two stars.' : 'Three mistakes or fewer earns a star.';
+    lede = !G.finishedAll? 'Stars are only awarded for a full shift of six travellers.' :
+      (stars===3? 'Not a single traveller got the wrong stamp.' : rej+' traveller'+(rej===1?'':'s')+' got the wrong stamp. '+target)+
+      (stars>prevBest && prevBest>0? ' New best for this shift.':'');
+    $('#bigStars').innerHTML=starStr(stars);
+    $$('#bigStars .on').forEach((el,i)=>{ el.style.animationDelay=(.25+i*.35)+'s'; setTimeout(()=>SFX.star(i),250+i*350); });
+    if(G.finishedAll && stars>0) setTimeout(()=>SFX.fanfare(), 250+stars*350);
+    const rNow=rankIndex();
+    if(rNow>G.rankBefore){
+      $('#promoSlot').innerHTML='<div class="promo" style="animation-delay:'+(.6+stars*.35)+'s">Promoted to '+RANKS[rNow].name+'</div>';
+      setTimeout(()=>SFX.promo(), 900+stars*350);
+    }
+  } else {
+    kicker='Rush hour';
+    const cleared=G.finishedAll;
+    if(teams){
+      title = G.pts[0]===G.pts[1]? 'A draw at the desk' : (G.pts[0]>G.pts[1]?'Team A':'Team B')+' holds the desk';
+    } else {
+      title = cleared? 'Rush hour cleared' : G.lives[0]<=0? 'Three complaints — off the desk' : 'Shift ended early';
+    }
+    const best=Math.max(G.pts[0],G.pts[1]);
+    const isBest = best>SESSION.rushBest && best>0;
+    SESSION.rushBest=Math.max(SESSION.rushBest,best);
+    lede = (teams? 'Team A '+G.pts[0]+' · Team B '+G.pts[1]+'. ' : '')+
+      'You processed '+done+' of '+G.queue.length+' travellers.'+(isBest?' <b>Best score today.</b>':'');
+    if(cleared || teams) setTimeout(()=>SFX.fanfare(),200); else setTimeout(()=>SFX.gameover(),200);
+  }
+  $('#endKicker').textContent=kicker; $('#endTitle').textContent=title; $('#endLede').innerHTML=lede;
+  $('#tally').innerHTML=
+    '<div class="tal pts"><div class="n">'+(teams? Math.max(G.pts[0],G.pts[1]) : G.pts[0])+'</div><div class="l">'+(teams?'top team points':'points')+'</div></div>'+
+    '<div class="tal ok"><div class="n">'+(G.tally.ok+G.tally.note)+'</div><div class="l">approved'+(G.tally.note?' ('+G.tally.note+' with a note)':'')+'</div></div>'+
+    '<div class="tal st"><div class="n">'+G.best+'</div><div class="l">best streak</div></div>'+
+    '<div class="tal no"><div class="n">'+rej+'</div><div class="l">turned back'+(G.tally.time?' ('+G.tally.time+' too slow)':'')+'</div></div>';
+  $('#newStampsWrap').innerHTML = G.newStamps.length?
+    '<div class="subh">New in your passport</div><div class="newstamps">'+G.newStamps.map(w=>'<div class="pstamp got fresh">'+esc(w)+'</div>').join('')+'</div>' : '';
+  $('#missWrap').innerHTML = G.misses.length?
+    '<div class="subh">Worth another look</div><div class="misslist">'+G.misses.map(m=>
+      '<div class="miss"><em>'+esc(m.s)+'</em><br>'+(m.picked==='(no answer)'?'No booth chosen in time':'Sent to <b>'+esc(m.picked)+'</b> — '+m.why)+
+      '. It needed <b>'+esc(m.best)+'</b>.</div>').join('')+'</div>' : '';
+  $('#againBtn').textContent = G.mode==='rush'? 'Rush hour again' : 'Play this shift again';
+}
+
+renderDesk();
+</script>
+</body>
+</html>
