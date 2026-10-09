@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Exquisite Corpse · Narrative tenses &amp; linkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4EFE6; --paper-2:#E9E0CF; --ink:#1A1A1A; --ink-soft:#4A463F;
+  --red:#E63B2E; --blue:#2F5DFF; --yellow:#F2C94C;
+  --bg:var(--paper); --fg:var(--ink); --fg-soft:var(--ink-soft); --card:#FBF8F2; --line:#1A1A1A;
+  --display:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --body:"Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono:"Space Mono", "Courier New", monospace;
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --out:cubic-bezier(0.25,0.46,0.45,0.94);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1C1A17; --fg:#F4EFE6; --fg-soft:#C9C0B0; --card:#2A2622; --line:#F4EFE6;
+  }
+}
+:root[data-theme="dark"]{ --bg:#1C1A17; --fg:#F4EFE6; --fg-soft:#C9C0B0; --card:#2A2622; --line:#F4EFE6; }
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100%; background:var(--bg); color:var(--fg);
+  font-family:var(--body); font-size:18px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+/* paper grain */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.07;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+button{font:inherit; color:inherit; cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--blue); outline-offset:3px}
+.app{position:relative; z-index:1; max-width:1440px; margin:0 auto; padding:24px 40px 32px; min-height:100vh; display:flex; flex-direction:column}
+
+/* cut-paper shapes */
+.shape{position:fixed; pointer-events:none; z-index:0}
+.shape.sun{width:220px;height:220px;border-radius:50%;background:var(--red);right:-70px;top:38%}
+.shape.moon{width:180px;height:360px;border-radius:0 180px 180px 0;background:var(--blue);left:-110px;bottom:-60px;transform:rotate(-12deg)}
+.shape.tri{width:0;height:0;border-left:90px solid transparent;border-right:90px solid transparent;border-bottom:150px solid var(--yellow);right:12%;bottom:-70px;transform:rotate(18deg)}
+.phase-round .shape.sun{opacity:.9; transform:scale(.6) translateX(60px)}
+
+/* top bar */
+.top{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px}
+.brand{display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:14px; color:var(--fg-soft)}
+.top-actions{display:flex; gap:8px}
+.icon-btn{border:2px solid var(--line); background:transparent; border-radius:999px; padding:6px 14px; font-family:var(--mono); font-size:13px; transition:transform .15s var(--spring)}
+.icon-btn:hover{transform:translateY(-2px)} .icon-btn:active{transform:scale(.95)}
+
+/* ===== the strip ===== */
+.strip{display:flex; gap:6px; height:84px; margin-bottom:32px; perspective:900px}
+.panel{
+  position:relative; flex:0 0 64px; border:2px solid var(--line); background:var(--card);
+  display:flex; align-items:center; justify-content:center; overflow:hidden;
+  transition:flex-basis .7s var(--spring), background .4s var(--out), transform .5s var(--spring);
+  font-family:var(--mono); font-size:13px;
+}
+.panel .num{font-family:var(--display); font-size:30px; line-height:1}
+.panel .lab{display:none; margin-left:14px; font-family:var(--body); font-weight:600; font-size:17px; white-space:nowrap}
+.panel[data-state="todo"]{border-style:dashed; background:transparent; color:var(--fg-soft)}
+.panel[data-state="done"]{
+  background:repeating-linear-gradient(135deg, var(--paper-2) 0 10px, #DCD2BF 10px 12px);
+  color:var(--ink); transform:rotateX(18deg); box-shadow:inset 0 -14px 18px -10px rgba(0,0,0,.35);
+}
+.panel[data-state="current"]{flex:1 1 auto; color:#fff}
+.panel[data-state="current"] .lab{display:inline}
+.panel[data-state="current"][data-c="yellow"]{color:var(--ink)}
+.panel[data-c="red"][data-state="current"],.panel[data-c="red"].open{background:var(--red)}
+.panel[data-c="blue"][data-state="current"],.panel[data-c="blue"].open{background:var(--blue)}
+.panel[data-c="yellow"][data-state="current"],.panel[data-c="yellow"].open{background:var(--yellow)}
+.panel[data-c="ink"][data-state="current"],.panel[data-c="ink"].open{background:var(--ink)}
+.panel.open{flex:1 1 0; color:#fff; transform:none; box-shadow:none; border-style:solid; animation:unfold .8s var(--spring) both}
+.panel.open[data-c="yellow"]{color:var(--ink)}
+.panel.open .lab{display:inline; font-size:15px}
+@keyframes unfold{from{transform:rotateX(-90deg); opacity:.2} to{transform:rotateX(0); opacity:1}}
+
+/* ===== setup screen ===== */
+.setup{display:grid; grid-template-columns:1.25fr 1fr; gap:56px; align-items:center; flex:1}
+.hero h1{font-family:var(--display); font-weight:400; font-size:clamp(56px,8vw,124px); line-height:.92; letter-spacing:-.02em; margin:0 0 24px}
+.hero h1 span{display:block}
+.hero h1 .italic{font-style:italic; color:var(--red); padding-left:.6em}
+.hero p.lede{font-size:22px; max-width:30ch; margin:0 0 32px; color:var(--fg-soft)}
+.rules{list-style:none; padding:0; margin:0; display:grid; gap:12px; counter-reset:r}
+.rules li{counter-increment:r; display:flex; gap:16px; align-items:baseline; font-size:19px}
+.rules li::before{content:counter(r); font-family:var(--display); font-size:34px; line-height:1; color:var(--blue); min-width:24px}
+
+.config{background:var(--card); border:2px solid var(--line); padding:32px; position:relative; box-shadow:10px 10px 0 var(--ink)}
+.config h2{font-family:var(--display); font-weight:400; font-size:34px; margin:0 0 24px; line-height:1.1}
+.field{margin-bottom:24px}
+.field .flabel{font-family:var(--mono); font-size:14px; color:var(--fg-soft); margin-bottom:8px; display:block}
+.seg{display:flex; flex-wrap:wrap; gap:8px}
+.seg button{border:2px solid var(--line); background:transparent; padding:10px 16px; font-weight:600; font-size:16px; transition:transform .15s var(--spring), background .2s}
+.seg button:hover{transform:translateY(-2px)}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{background:var(--paper); color:var(--ink)}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .seg button[aria-pressed="true"]{background:var(--paper); color:var(--ink)} }
+.seg .hint{font-size:14px; color:var(--fg-soft); margin-top:8px; width:100%}
+.go{
+  width:100%; margin-top:8px; border:none; background:var(--red); color:#fff; padding:20px 24px;
+  font-family:var(--display); font-size:30px; display:flex; justify-content:space-between; align-items:center;
+  transition:transform .15s var(--spring), box-shadow .2s; box-shadow:0 6px 0 #9E2318;
+}
+.go:hover{transform:translateY(-3px); box-shadow:0 9px 0 #9E2318}
+.go:active{transform:translateY(4px) scale(.99); box-shadow:0 2px 0 #9E2318}
+
+/* the eye */
+.eye{position:absolute; top:-46px; right:28px; width:92px; height:56px}
+.eye .lid{transform-origin:50% 50%; animation:blink 6s infinite}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)} 95%{transform:scaleY(.05)}}
+
+/* ===== round screen ===== */
+.round{display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:48px; flex:1; align-items:start}
+.round-head{display:flex; align-items:flex-end; gap:24px; margin-bottom:16px}
+.big-num{font-family:var(--display); font-size:clamp(110px,13vw,190px); line-height:.78; color:var(--rc); text-shadow:5px 5px 0 var(--numShadow,transparent)}
+.round-meta .of{font-family:var(--mono); font-size:15px; color:var(--fg-soft)}
+.round-meta h2{font-family:var(--display); font-weight:400; font-size:clamp(36px,4vw,56px); margin:4px 0 0; line-height:1}
+.tense{display:inline-flex; gap:8px; flex-wrap:wrap; margin:16px 0 24px}
+.tense span{border:2px solid var(--line); border-radius:999px; padding:6px 16px; font-family:var(--mono); font-size:15px; background:var(--card)}
+.prompt{font-size:clamp(26px,2.6vw,36px); line-height:1.25; font-weight:500; margin:0 0 24px; max-width:26ch}
+.blind{display:flex; gap:12px; align-items:center; font-size:17px; color:var(--fg-soft); margin-bottom:24px}
+.blind svg{flex:none}
+.example{border-left:6px solid var(--rc); padding:12px 20px; background:var(--card); font-size:19px; font-style:italic; display:none}
+.example.show{display:block; animation:rise .4s var(--out)}
+.text-btn{border:none; background:none; padding:0; font-family:var(--mono); font-size:14px; text-decoration:underline; text-underline-offset:4px; color:var(--fg-soft)}
+
+/* timer */
+.timer{background:var(--card); border:2px solid var(--line); padding:24px 28px; margin-bottom:24px; position:relative; overflow:hidden}
+.time{font-family:var(--display); font-size:clamp(72px,8vw,112px); line-height:1; font-variant-numeric:tabular-nums}
+.time.low{color:var(--red); animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.03)}}
+.bar{height:10px; background:var(--paper-2); margin:16px 0 20px; position:relative}
+.bar i{position:absolute; inset:0 auto 0 0; width:100%; background:var(--rc); transition:width 1s linear}
+.timer-row{display:flex; gap:8px; flex-wrap:wrap}
+.btn{border:2px solid var(--line); background:transparent; padding:10px 18px; font-weight:600; font-size:16px; transition:transform .15s var(--spring)}
+.btn:hover{transform:translateY(-2px)} .btn:active{transform:scale(.95)}
+.btn.solid{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.btn.next{background:var(--rc); color:var(--rcText); border-color:var(--rc); margin-left:auto}
+
+/* linker deck */
+.deck-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:12px}
+.deck-head h3{font-family:var(--display); font-weight:400; font-size:28px; margin:0}
+.deck{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px}
+.lcard{perspective:700px; height:118px; border:none; background:none; padding:0; text-align:left}
+.lcard .inner{position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .6s var(--spring)}
+.lcard.flipped .inner{transform:rotateY(180deg)}
+.lcard:hover .inner{transform:translateY(-3px)}
+.lcard.flipped:hover .inner{transform:rotateY(180deg) translateY(-3px)}
+.face{position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; border:2px solid var(--line); padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between}
+.face.front{background:var(--gc); color:var(--gt)}
+.face.front b{font-family:var(--display); font-weight:400; font-size:54px; line-height:.9}
+.face.front small{font-family:var(--mono); font-size:12px}
+.face.back{background:var(--card); transform:rotateY(180deg); border-top:8px solid var(--gc)}
+.face.back small{font-family:var(--mono); font-size:12px; color:var(--fg-soft)}
+.face.back strong{font-family:var(--display); font-weight:400; font-size:24px; line-height:1.05}
+.deck-note{font-size:14px; color:var(--fg-soft); margin-top:12px}
+
+/* time's up overlay */
+.overlay{position:fixed; inset:0; z-index:50; background:var(--ink); color:var(--paper); display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:32px; cursor:pointer}
+.overlay.show{display:flex; animation:fadeIn .25s var(--out)}
+.overlay h2{font-family:var(--display); font-weight:400; font-size:clamp(64px,10vw,150px); line-height:.95; margin:32px 0 16px}
+.overlay h2 em{color:var(--yellow)}
+.overlay p{font-family:var(--mono); font-size:16px; opacity:.8}
+.sheet{width:200px; height:240px; position:relative; perspective:600px}
+.sheet .half{position:absolute; left:0; width:100%; height:50%; background:var(--paper); border:2px solid var(--paper)}
+.sheet .bottom{bottom:0; background:repeating-linear-gradient(transparent 0 22px, #c9bfae 22px 24px), var(--paper)}
+.sheet .topf{top:0; transform-origin:bottom; background:var(--red); border-color:var(--red); animation:fold 1.2s .3s var(--spring) both}
+@keyframes fold{from{transform:rotateX(0)} to{transform:rotateX(-178deg)}}
+
+/* finale */
+.finale{display:grid; grid-template-columns:1fr 1fr; gap:48px; flex:1; align-items:start}
+.finale h1{font-family:var(--display); font-weight:400; font-size:clamp(64px,9vw,140px); line-height:.9; margin:0 0 24px; letter-spacing:-.02em}
+.finale h1 em{color:var(--blue)}
+.finale .lede{font-size:22px; color:var(--fg-soft); max-width:32ch}
+.steps{display:grid; gap:16px}
+.step{border:2px solid var(--line); background:var(--card); padding:20px 24px; display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; text-align:left; transition:transform .2s var(--spring), box-shadow .2s}
+.step:hover{transform:translate(-3px,-3px); box-shadow:6px 6px 0 var(--sc)}
+.step.active{box-shadow:8px 8px 0 var(--sc)}
+.step .sn{font-family:var(--display); font-size:52px; line-height:1; color:var(--sc)}
+.step h3{margin:0; font-size:22px}
+.step p{margin:4px 0 0; font-size:16px; color:var(--fg-soft)}
+.step .mins{font-family:var(--mono); font-size:14px; white-space:nowrap}
+.checklist{margin:12px 0 0; padding:0; list-style:none; font-size:16px}
+.checklist li{padding-left:28px; position:relative; margin-top:6px; color:var(--fg)}
+.checklist li::before{content:""; position:absolute; left:0; top:4px; width:16px; height:16px; border:2px solid var(--fg)}
+.mini-timer{margin-top:24px}
+
+footer{margin-top:32px; font-family:var(--mono); font-size:13px; color:var(--fg-soft); display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap}
+kbd{font-family:var(--mono); border:1px solid var(--fg-soft); padding:0 5px; border-radius:3px}
+
+.hidden{display:none !important}
+@keyframes rise{from{opacity:0; transform:translateY(20px)} to{opacity:1; transform:none}}
+@keyframes fadeIn{from{opacity:0}}
+.enter{animation:rise .55s var(--out) both}
+.d1{animation-delay:.12s}.d2{animation-delay:.24s}.d3{animation-delay:.36s}
+
+@media (max-width:900px){
+  .app{padding:16px 20px 24px}
+  .setup,.round,.finale{grid-template-columns:1fr; gap:32px}
+  .strip{height:64px}
+  .panel{flex-basis:40px} .panel .num{font-size:22px}
+  .panel .lab,.panel.open .lab,.panel[data-state="current"] .lab{display:none}
+  .brand,#keys{display:none}
+  .icon-btn{white-space:nowrap}
+  .shape.sun{width:120px;height:120px}
+  .eye{top:-40px}
+}
+.go-alt{width:100%; margin-top:12px; border:2px solid var(--line); background:transparent; padding:14px 20px; font-weight:600; font-size:17px; display:flex; justify-content:space-between; align-items:center; transition:transform .15s var(--spring)}
+.go-alt:hover{transform:translateY(-2px)} .go-alt:active{transform:scale(.98)}
+
+/* ===== printable worksheet ===== */
+#print{display:none}
+.ws-page{width:190mm; height:274mm; display:flex; font-family:var(--body); color:#1A1A1A; background:#fff}
+.ws-strip{flex:1; display:flex; flex-direction:column; padding:0 4mm; gap:1.5mm; min-height:0}
+.ws-cut{width:0; border-left:1.5px dashed #888; position:relative}
+.ws-cut::before{content:"\2702"; position:absolute; top:40%; left:-2.4mm; font-size:12pt; background:#fff; line-height:1}
+.ws-top{display:flex; justify-content:space-between; align-items:baseline; border-bottom:2px solid #1A1A1A; padding-bottom:1.5mm}
+.ws-top h1{font-family:var(--display); font-weight:400; font-size:17pt; margin:0; line-height:1}
+.ws-top h1 em{color:#E63B2E}
+.ws-top span{font-size:8pt}
+.ws-rules{font-size:7pt; line-height:1.25; margin:0}
+.ws-panel{flex:1 1 0; min-height:0; display:flex; flex-direction:column; border:1.5px solid #1A1A1A; border-left:5mm solid var(--c); padding:1mm 2.5mm .5mm}
+.ws-head{display:flex; align-items:baseline; gap:1.5mm}
+.ws-num{font-family:var(--display); font-size:16pt; line-height:1}
+.ws-t{font-weight:700; font-size:9.5pt; white-space:nowrap}
+.ws-tense{margin-left:auto; font-family:var(--mono); font-size:6.3pt; border:1px solid #1A1A1A; border-radius:99px; padding:0 1.5mm; text-align:right; line-height:1.35}
+.ws-link{font-family:var(--mono); font-size:7pt; margin-top:.5mm; display:flex; align-items:flex-end; gap:2mm}
+.ws-link i{flex:1; border-bottom:1px solid #1A1A1A; height:4mm}
+.ws-write{flex:1; display:flex; flex-direction:column}
+.ws-line{flex:1; min-height:4.5mm; border-bottom:1px solid #9A948A}
+.ws-fold{border-top:1.5px dashed #2F5DFF; position:relative; height:0; margin-top:1.5mm}
+.ws-fold span{position:absolute; right:0; top:-2.4mm; background:#fff; font-family:var(--mono); font-size:6.5pt; color:#2F5DFF; padding-left:1mm}
+.ws-last{height:6mm; flex:none; border-bottom:1.5px solid #1A1A1A; position:relative}
+.ws-last span{position:absolute; right:0; bottom:.5mm; font-family:var(--mono); font-size:6.5pt; color:#777}
+.ws-end{border:1.5px solid #1A1A1A; padding:1mm 2.5mm 1.5mm; font-size:8pt; flex:none}
+.ws-end div{display:flex; gap:2mm; align-items:flex-end; margin-top:1.5mm}
+.ws-end i{flex:1; border-bottom:1px solid #1A1A1A; height:4mm}
+.ws-end small{font-family:var(--mono); font-size:6.5pt; color:#555}
+.ws-credit{font-family:var(--mono); font-size:6.5pt; color:#555; text-align:right}
+@media print{
+  @page{size:A4 portrait; margin:10mm}
+  :root{padding:0}
+  html,body{background:#fff !important; color:#1A1A1A !important; height:auto; min-height:0}
+  body::before,.shape,.app,.overlay{display:none !important}
+  #print{display:block; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body class="phase-setup">
+<div class="shape sun" aria-hidden="true"></div>
+<div class="shape moon" aria-hidden="true"></div>
+<div class="shape tri" aria-hidden="true"></div>
+
+<div class="app">
+  <div class="top">
+    <div class="brand">B2.2 narrative tenses and linkers</div>
+    <div class="top-actions">
+      <button class="icon-btn" id="printTop">Print worksheet</button>
+      <button class="icon-btn" id="soundBtn" aria-pressed="true">Sound on</button>
+      <button class="icon-btn" id="themeBtn">Light / dark</button>
+      <button class="icon-btn hidden" id="restartBtn">Start again</button>
+    </div>
+  </div>
+
+  <div class="strip" id="strip" aria-label="Story progress"></div>
+
+  <!-- SETUP -->
+  <section id="setup" class="setup">
+    <div class="hero">
+      <h1 class="enter"><span>The exquisite</span><span class="italic">corpse</span></h1>
+      <p class="lede enter d1">A sudden-incident story, written by your whole group, one blind sentence at a time.</p>
+      <ol class="rules enter d2">
+        <li>Write one sentence using the tense and the linker your group draws.</li>
+        <li>Fold the paper so only your last sentence shows.</li>
+        <li>Pass it to the left. Keep the story going from that one line.</li>
+      </ol>
+    </div>
+    <div class="config enter d3">
+      <svg class="eye" viewBox="0 0 92 56" aria-hidden="true">
+        <g class="lid"><path d="M4 28 Q46 -10 88 28 Q46 66 4 28Z" fill="var(--card)" stroke="var(--line)" stroke-width="3"/>
+        <circle cx="46" cy="28" r="14" fill="var(--blue)"/><circle cx="46" cy="28" r="6" fill="var(--ink)"/></g>
+      </svg>
+      <h2>Set up the game</h2>
+      <div class="field">
+        <span class="flabel">Version</span>
+        <div class="seg" id="modeSeg">
+          <button data-v="full">Full · 6 rounds</button>
+          <button data-v="express">Express · 4 rounds</button>
+          <div class="hint" id="modeHint"></div>
+        </div>
+      </div>
+      <div class="field">
+        <span class="flabel">Minutes per round</span>
+        <div class="seg" id="minSeg">
+          <button data-v="1.5">1½</button><button data-v="2">2</button><button data-v="2.5">2½</button><button data-v="3">3</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="flabel">Number of groups</span>
+        <div class="seg" id="grpSeg">
+          <button data-v="3">3</button><button data-v="4">4</button><button data-v="5">5</button><button data-v="6">6</button><button data-v="7">7</button><button data-v="8">8</button>
+        </div>
+      </div>
+      <button class="go" id="startBtn"><span>Start round one</span><span aria-hidden="true">✎</span></button>
+      <button class="go-alt" id="printBtn"><span id="printLabel">Print worksheet</span><span aria-hidden="true">⎙</span></button>
+    </div>
+  </section>
+
+  <!-- ROUND -->
+  <section id="round" class="round hidden">
+    <div>
+      <div class="round-head">
+        <div class="big-num" id="rNum">1</div>
+        <div class="round-meta">
+          <div class="of" id="rOf">Round 1 of 6</div>
+          <h2 id="rTitle">The opening</h2>
+        </div>
+      </div>
+      <div class="tense" id="rTense"></div>
+      <p class="prompt" id="rPrompt"></p>
+      <div class="blind">
+        <svg width="40" height="24" viewBox="0 0 40 24" aria-hidden="true"><path d="M2 8 Q20 26 38 8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M10 15 l-3 6M20 18v7M30 15l3 6" stroke="currentColor" stroke-width="2.5"/></svg>
+        <span id="rBlind">You can only see the sentence just above yours.</span>
+      </div>
+      <button class="text-btn" id="exBtn">Show an example</button>
+      <div class="example" id="rEx"></div>
+    </div>
+    <div>
+      <div class="timer">
+        <div class="time" id="time">2:00</div>
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="timer-row">
+          <button class="btn solid" id="playBtn">Start timer</button>
+          <button class="btn" id="plusBtn">+30 s</button>
+          <button class="btn next" id="nextBtn">Next round</button>
+        </div>
+      </div>
+      <div class="deck-head">
+        <h3>Your group's linker</h3>
+        <button class="text-btn" id="dealBtn">Deal again</button>
+      </div>
+      <div class="deck" id="deck"></div>
+      <p class="deck-note">Tap a single card to redraw it for that group.</p>
+    </div>
+  </section>
+
+  <!-- FINALE -->
+  <section id="finale" class="finale hidden">
+    <div>
+      <h1 class="enter">Now <em>unfold</em> it.</h1>
+      <p class="lede enter d1">Open the paper and read the whole story for the first time. Then give your creature a name.</p>
+      <div class="timer mini-timer enter d2" style="--rc:var(--red)">
+        <div class="time" id="fTime">1:00</div>
+        <div class="bar"><i id="fBar"></i></div>
+        <div class="timer-row">
+          <button class="btn solid" id="fPlay">Start timer</button>
+          <button class="btn" id="fPlus">+30 s</button>
+        </div>
+      </div>
+    </div>
+    <div class="steps" id="steps"></div>
+  </section>
+
+  <footer>
+    <span>Class of Coffee – with AI assistance</span>
+    <span id="keys"><kbd>Space</kbd> timer · <kbd>→</kbd> next · <kbd>D</kbd> deal</span>
+  </footer>
+</div>
+
+<div id="print" aria-hidden="true"></div>
+
+<div class="overlay" id="overlay" role="dialog" aria-live="assertive" tabindex="-1">
+  <div class="sheet" aria-hidden="true"><div class="half bottom"></div><div class="half topf"></div></div>
+  <h2>Fold it.<br><em>Pass it on.</em></h2>
+  <p id="ovNote">Only your last sentence should be visible · click to continue</p>
+</div>
+
+<script>
+(function(){
+const COLORS = ["red","blue","yellow","ink","red","blue"];
+const CVAR = {red:"#E63B2E", blue:"#2F5DFF", yellow:"#F2C94C", ink:"#1A1A1A"};
+const CTXT = {red:"#fff", blue:"#fff", yellow:"#1A1A1A", ink:"#F4EFE6"};
+
+const ROUNDS = {
+  full:[
+    {t:"The opening", tense:["past simple","past continuous"],
+     p:"Where and when did it happen, and what was your character doing at that moment?",
+     L:["Just as …","As …","While …","When …"],
+     ex:"Just as the last train was pulling out of Tarragona station, Marc was running down the platform with a cake in his hands."},
+    {t:"The backstory", tense:["past perfect continuous"],
+     p:"What had your character been doing before the story started?",
+     L:["By the time …","Ever since …","… because …","…, which was why …"],
+     ex:"He had been planning his grandmother's surprise party for weeks, which was why he was carrying a three-tier cake."},
+    {t:"The incident", tense:["inversion","past perfect + past simple"],
+     p:"Suddenly, something happened! What was it?",
+     L:["No sooner had … than …","Hardly had … when …","Scarcely had … when …","Barely had … when …"],
+     ex:"No sooner had he jumped onto the train than the doors closed on the cake."},
+    {t:"The cause", tense:["past perfect"],
+     p:"What single action had actually caused the incident?",
+     L:["Owing to the fact that …","Due to the fact that …","This was because …","It turned out that …"],
+     ex:"It turned out that someone had jammed the doors with an umbrella earlier that morning."},
+    {t:"The reaction", tense:["past continuous","past simple"],
+     p:"How were people reacting, and what did your character do about it?",
+     L:["Meanwhile, …","Despite …","In an attempt to …","…, whereas …"],
+     ex:"Meanwhile, the passengers were laughing and filming, so Marc tried to rescue the icing with a ticket."},
+    {t:"The ending", tense:["past simple","present perfect"],
+     p:"How did it end, and how has your character's life changed since then?",
+     L:["Eventually, …","In the end, …","It wasn't until … that …","Since then, …"],
+     ex:"In the end, he arrived with half a cake, and since then he has never travelled without a cake box."}
+  ],
+  express:[
+    {t:"The opening", tense:["past continuous","past perfect continuous"],
+     p:"Where and when did it happen, what was your character doing, and what had they been doing before?",
+     L:["Just as …","While …","Ever since …","By the time …"],
+     ex:"Marc had been planning a surprise party for weeks, and he was running for the last train with a cake while everyone else was walking."},
+    {t:"The incident", tense:["inversion","past perfect + past simple"],
+     p:"Suddenly, something happened! What was it?",
+     L:["No sooner had … than …","Hardly had … when …","Scarcely had … when …","Barely had … when …"],
+     ex:"No sooner had he jumped onto the train than the doors closed on the cake."},
+    {t:"Cause and reaction", tense:["past perfect","past continuous"],
+     p:"What had caused it, and how were people reacting?",
+     L:["Owing to the fact that …","Due to the fact that …","It turned out that …","…, which was why …"],
+     ex:"Owing to the fact that someone had jammed the doors with an umbrella, the train wasn't moving and everyone was staring at Marc."},
+    {t:"The ending", tense:["past simple","present perfect"],
+     p:"How did it end, and how has your character's life changed since then?",
+     L:["Eventually, …","In the end, …","It wasn't until … that …","Since then, …"],
+     ex:"It wasn't until he reached the party that he saw the damage, and since then he has always travelled with a cake box."}
+  ]
+};
+
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem("ecorpse:"+k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{ localStorage.setItem("ecorpse:"+k, JSON.stringify(v)); }catch(e){} }
+};
+const S = { mode:store.get("mode","full"), mins:store.get("mins",2), groups:store.get("groups",6), sound:store.get("sound",true),
+            phase:"setup", r:0, deals:[], remaining:0, total:0, running:false, tick:null };
+
+const $ = id => document.getElementById(id);
+const letters = "ABCDEFGH";
+
+/* ---------- segments ---------- */
+function bindSeg(id, key, cast){
+  const seg=$(id);
+  seg.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click",()=>{ S[key]=cast(b.dataset.v); store.set(key,S[key]); paintSegs(); });
+  });
+}
+function paintSegs(){
+  [["modeSeg","mode"],["minSeg","mins"],["grpSeg","groups"]].forEach(([id,key])=>{
+    $(id).querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.v)===String(S[key])));
+  });
+  const n=ROUNDS[S.mode].length, mins=n*S.mins;
+  const extra = S.mode==="full" ? 10 : 5;
+  $("modeHint").textContent = `About ${Math.round(mins+extra)} minutes with unfolding${S.mode==="full"?", reading aloud and the repair challenge":" and reading aloud"}.`;
+  if(S.phase==="setup") buildStrip();
+  labelPrint();
+}
+bindSeg("modeSeg","mode",String); bindSeg("minSeg","mins",Number); bindSeg("grpSeg","groups",Number);
+
+/* ---------- strip ---------- */
+function buildStrip(){
+  const R=ROUNDS[S.mode], strip=$("strip"); strip.innerHTML="";
+  R.forEach((r,i)=>{
+    const p=document.createElement("div"); p.className="panel"; p.dataset.c=COLORS[i];
+    p.innerHTML=`<span class="num">${i+1}</span><span class="lab">${r.t}</span>`;
+    strip.appendChild(p);
+  });
+  paintStrip();
+}
+function paintStrip(){
+  [...$("strip").children].forEach((p,i)=>{
+    p.classList.remove("open");
+    if(S.phase==="finale"){ p.dataset.state="done"; setTimeout(()=>p.classList.add("open"), 250+i*220); return; }
+    p.dataset.state = S.phase==="setup" ? "todo" : i<S.r ? "done" : i===S.r ? "current" : "todo";
+  });
+}
+
+/* ---------- linkers ---------- */
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function dealAll(){
+  const L=ROUNDS[S.mode][S.r].L; let pool=[];
+  while(pool.length<S.groups) pool=pool.concat(shuffle(L));
+  S.deals=pool.slice(0,S.groups);
+  renderDeck(true);
+}
+function redraw(i){
+  const L=ROUNDS[S.mode][S.r].L.filter(x=>x!==S.deals[i]);
+  S.deals[i]=L[Math.floor(Math.random()*L.length)];
+  const card=$("deck").children[i];
+  card.classList.remove("flipped");
+  setTimeout(()=>{ card.querySelector("strong").textContent=S.deals[i]; card.classList.add("flipped"); },380);
+}
+function renderDeck(animate){
+  const deck=$("deck"); deck.innerHTML="";
+  const gcols=["red","blue","yellow","ink"];
+  S.deals.forEach((l,i)=>{
+    const c=gcols[i%4];
+    const b=document.createElement("button"); b.className="lcard";
+    b.style.setProperty("--gc",CVAR[c]); b.style.setProperty("--gt",CTXT[c]);
+    b.setAttribute("aria-label",`Group ${letters[i]}: ${l}. Click to redraw.`);
+    b.innerHTML=`<div class="inner"><div class="face front"><small>Group</small><b>${letters[i]}</b></div>
+      <div class="face back"><small>Group ${letters[i]} must use</small><strong>${l}</strong></div></div>`;
+    b.addEventListener("click",()=>redraw(i));
+    deck.appendChild(b);
+    if(animate) setTimeout(()=>b.classList.add("flipped"), 350+i*130); else b.classList.add("flipped");
+  });
+}
+
+/* ---------- rounds ---------- */
+function showRound(){
+  const R=ROUNDS[S.mode], r=R[S.r], c=COLORS[S.r];
+  document.documentElement.style.setProperty("--rc",CVAR[c]);
+  document.documentElement.style.setProperty("--rcText",CTXT[c]);
+  document.documentElement.style.setProperty("--numShadow", c==="yellow" ? "#1A1A1A" : "transparent");
+  $("rNum").textContent=S.r+1;
+  $("rOf").textContent=`Round ${S.r+1} of ${R.length}`;
+  $("rTitle").textContent=r.t;
+  $("rTense").innerHTML=r.tense.map(t=>`<span>${t}</span>`).join("");
+  $("rPrompt").textContent=r.p;
+  $("rBlind").textContent = S.r===0 ? "Start on a fresh strip of paper. Write at the very top." : "You can only see the sentence just above yours.";
+  $("rEx").textContent=r.ex; $("rEx").classList.remove("show"); $("exBtn").textContent="Show an example";
+  $("nextBtn").textContent = S.r===R.length-1 ? "Unfold the story" : "Next round";
+  ["rNum","rTense","rPrompt"].forEach((id,i)=>{ const el=$(id); el.classList.remove("enter","d1","d2"); void el.offsetWidth; el.classList.add("enter", i?("d"+i):"x"); });
+  resetTimer(S.mins*60);
+  dealAll(); paintStrip();
+}
+$("exBtn").addEventListener("click",()=>{ const e=$("rEx"); e.classList.toggle("show"); $("exBtn").textContent=e.classList.contains("show")?"Hide the example":"Show an example"; });
+
+/* ---------- timer ---------- */
+let active = {time:"time", bar:"barFill", play:"playBtn", onEnd:roundEnd};
+function fmt(s){ s=Math.max(0,Math.ceil(s)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); }
+function paintTimer(){
+  $(active.time).textContent=fmt(S.remaining);
+  $(active.time).classList.toggle("low", S.running && S.remaining<=15);
+  $(active.bar).style.width=(S.total? (S.remaining/S.total*100):0)+"%";
+  $(active.play).textContent = S.running ? "Pause" : (S.remaining<S.total && S.remaining>0 ? "Resume" : "Start timer");
+}
+function resetTimer(sec){ stopTick(); S.total=sec; S.remaining=sec; paintTimer(); }
+function stopTick(){ clearInterval(S.tick); S.tick=null; S.running=false; }
+function toggleTimer(){
+  if(S.running){ stopTick(); paintTimer(); return; }
+  if(S.remaining<=0) S.remaining=S.total;
+  S.running=true; let last=Date.now();
+  S.tick=setInterval(()=>{
+    const now=Date.now(); S.remaining-=(now-last)/1000; last=now;
+    if(S.remaining<=0){ S.remaining=0; stopTick(); paintTimer(); active.onEnd(); return; }
+    paintTimer();
+  },250);
+  paintTimer();
+}
+function addTime(){ S.remaining+=30; S.total=Math.max(S.total,S.remaining); paintTimer(); }
+$("playBtn").addEventListener("click",toggleTimer); $("plusBtn").addEventListener("click",addTime);
+$("fPlay").addEventListener("click",toggleTimer); $("fPlus").addEventListener("click",addTime);
+
+function chime(){
+  if(!S.sound) return;
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [659.25,523.25,392].forEach((f,i)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain(); o.type="sine"; o.frequency.value=f;
+      o.connect(g); g.connect(ctx.destination);
+      const t=ctx.currentTime+i*.22; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.25,t+.02); g.gain.exponentialRampToValueAtTime(.001,t+.9);
+      o.start(t); o.stop(t+1);
+    });
+  }catch(e){}
+}
+function roundEnd(){
+  chime();
+  const last = S.r===ROUNDS[S.mode].length-1;
+  $("overlay").querySelector("h2").innerHTML = last ? "Last line.<br><em>Don't fold it.</em>" : "Fold it.<br><em>Pass it on.</em>";
+  $("ovNote").textContent = last ? "Pass it on one more time, then click to unfold" : "Only your last sentence should be visible · click to continue";
+  const sheet=$("overlay").querySelector(".topf"); sheet.style.animation="none"; void sheet.offsetWidth; sheet.style.animation="";
+  $("overlay").classList.add("show"); $("overlay").focus();
+}
+$("overlay").addEventListener("click",()=>{ $("overlay").classList.remove("show"); next(); });
+
+/* ---------- finale ---------- */
+const STEPS = [
+  {t:"Name it", d:"Agree on a title for the story and a name for the main character.", m:1, c:"red"},
+  {t:"Read it aloud", d:"One reader per group. Everyone else listens for the strangest join.", m:5, c:"blue"},
+  {t:"Repair one seam", d:"Pick the weakest join between two sentences and rewrite it so the story flows.", m:5, c:"yellow", full:true,
+   list:["Each sentence uses the tense from its round","Inversion is followed by past perfect + than / when","Your new linker makes the cause or the time order clear"]}
+];
+function showFinale(){
+  const steps=$("steps"); steps.innerHTML="";
+  STEPS.filter(s=>!s.full || S.mode==="full").forEach((s,i)=>{
+    const b=document.createElement("button"); b.className="step enter d"+(i+1); b.style.setProperty("--sc",CVAR[s.c]);
+    b.innerHTML=`<span class="sn">${i+1}</span><span><h3>${s.t}</h3><p>${s.d}</p>${s.list?`<ul class="checklist">${s.list.map(x=>`<li>${x}</li>`).join("")}</ul>`:""}</span><span class="mins">${s.m} min</span>`;
+    b.addEventListener("click",()=>{
+      steps.querySelectorAll(".step").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+      document.querySelector(".mini-timer").style.setProperty("--rc",CVAR[s.c]);
+      resetTimer(s.m*60);
+    });
+    steps.appendChild(b);
+  });
+  steps.firstChild.classList.add("active");
+  document.querySelector(".mini-timer").style.setProperty("--rc",CVAR.red);
+  resetTimer(60);
+}
+
+/* ---------- flow ---------- */
+function setPhase(p){
+  S.phase=p; document.body.className="phase-"+p;
+  $("setup").classList.toggle("hidden",p!=="setup");
+  $("round").classList.toggle("hidden",p!=="round");
+  $("finale").classList.toggle("hidden",p!=="finale");
+  $("restartBtn").classList.toggle("hidden",p==="setup");
+  active = p==="finale" ? {time:"fTime", bar:"fBar", play:"fPlay", onEnd:chime} : {time:"time", bar:"barFill", play:"playBtn", onEnd:roundEnd};
+}
+function start(){ S.r=0; setPhase("round"); buildStrip(); showRound(); }
+function next(){
+  if(S.phase!=="round") return;
+  if(S.r < ROUNDS[S.mode].length-1){ S.r++; showRound(); }
+  else { stopTick(); setPhase("finale"); paintStrip(); showFinale(); }
+}
+$("startBtn").addEventListener("click",start);
+$("nextBtn").addEventListener("click",()=>{ stopTick(); next(); });
+$("dealBtn").addEventListener("click",dealAll);
+$("restartBtn").addEventListener("click",()=>{ stopTick(); setPhase("setup"); buildStrip(); paintSegs(); });
+
+$("soundBtn").addEventListener("click",()=>{ S.sound=!S.sound; store.set("sound",S.sound); $("soundBtn").textContent=S.sound?"Sound on":"Sound off"; $("soundBtn").setAttribute("aria-pressed",S.sound); });
+$("soundBtn").textContent=S.sound?"Sound on":"Sound off";
+$("themeBtn").addEventListener("click",()=>{
+  const root=document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark"; store.set("theme",root.dataset.theme);
+});
+const th=store.get("theme",null); if(th) document.documentElement.dataset.theme=th;
+
+document.addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest("button") && e.key===" ") return;
+  if($("overlay").classList.contains("show")){ if(e.key==="Enter"||e.key===" "||e.key==="ArrowRight"){ e.preventDefault(); $("overlay").click(); } return; }
+  if(S.phase==="setup") return;
+  if(e.key===" "){ e.preventDefault(); toggleTimer(); }
+  else if(e.key==="ArrowRight" && S.phase==="round"){ stopTick(); next(); }
+  else if((e.key==="d"||e.key==="D") && S.phase==="round"){ dealAll(); }
+});
+
+/* ---------- printable worksheet ---------- */
+function labelPrint(){
+  const el=$("printLabel"); if(!el) return;
+  el.textContent = `Print worksheet (${S.mode==="full"?"Full, 6 rounds":"Express, 4 rounds"})`;
+}
+function buildWorksheet(){
+  const R=ROUNDS[S.mode], n=S.mode==="full"?2:4;
+  const panels=R.map((r,i)=>`
+    <div class="ws-panel" style="--c:${CVAR[COLORS[i]]}">
+      <div class="ws-head"><span class="ws-num">${i+1}</span><span class="ws-t">${r.t}</span><span class="ws-tense">${r.tense.join(" + ").replace("inversion + past perfect + past simple","inversion + past perfect").replace(/^.{30,}$/, s=>s.replace(/continuous/g,"cont.").replace("past perfect cont.","past perf. cont."))}</span></div>
+      <div class="ws-link">My linker:<i></i></div>
+      <div class="ws-write">${'<div class="ws-line"></div>'.repeat(n)}</div>
+      ${i<R.length-1?'<div class="ws-fold"><span>fold back here</span></div>':''}
+      <div class="ws-last"><span>${i<R.length-1?"leave this line showing":"last line: don't fold"}</span></div>
+    </div>`).join("");
+  const strip=`
+    <div class="ws-strip">
+      <div class="ws-top"><h1>The exquisite <em>corpse</em></h1><span>Group ______</span></div>
+      <p class="ws-rules">Write in your panel with its tense and your group's linker. Fold back on the dashed line so only your last line shows. Pass it left.</p>
+      ${panels}
+      <div class="ws-end"><small>After you unfold</small>
+        <div>Title<i></i></div><div>Main character<i></i></div></div>
+      <div class="ws-credit">Class of Coffee – with AI assistance</div>
+    </div>`;
+  $("print").innerHTML=`<div class="ws-page">${strip}<div class="ws-cut"></div>${strip}</div>`;
+}
+function printWorksheet(){ buildWorksheet(); setTimeout(()=>window.print(),60); }
+$("printBtn").addEventListener("click",printWorksheet);
+$("printTop").addEventListener("click",printWorksheet);
+
+paintSegs(); buildStrip();
+})();
+</script>
+</body>
+</html>
