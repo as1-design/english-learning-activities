@@ -136,24 +136,24 @@ body[data-mood="table"] .title{color:#FFF0F6;text-shadow:0 0 3px #fff,0 0 10px #
 .stepper button{width:38px;height:38px;border:0;border-radius:50%;background:transparent;font-size:22px;font-weight:700;line-height:1}
 .stepper button:hover{background:var(--ctrl-on);color:var(--ctrl-on-ink)}
 .stepper output{min-width:2.2ch;text-align:center;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:26px}
-.go{margin-left:auto;display:flex;align-items:center;gap:16px}
-.summary{margin:0;font-size:15px;color:var(--muted);max-width:26ch;text-align:right}
+.go{display:flex;align-items:center;gap:16px}
+.summary{margin:0;font-size:15px;color:var(--muted);max-width:30ch;text-align:right}
 .shuffle{border:0;border-radius:999px;background:var(--go);color:var(--go-ink);font-family:var(--display),sans-serif;font-weight:800;font-size:22px;padding:12px 30px;transition:transform .12s,box-shadow .12s}
 body[data-kit="pop"] .shuffle{border:3px solid var(--line);box-shadow:4px 4px 0 var(--shadow)}
 body[data-kit="pop"] .shuffle:active{box-shadow:1px 1px 0 var(--shadow);transform:translate(3px,3px)}
 body[data-mood="summer"] .shuffle{background:repeating-linear-gradient(135deg,#FF5E5B 0 16px,#FFD23F 16px 32px,#4FD1C5 32px 48px);text-shadow:-2px -2px 0 #0B3954,2px -2px 0 #0B3954,-2px 2px 0 #0B3954,2px 2px 0 #0B3954}
 body[data-mood="table"] .shuffle{border:4px dashed rgba(255,255,255,.9);box-shadow:0 0 0 5px #C8102E,0 7px 0 5px #7d0a1c,0 12px 20px 5px rgba(0,0,0,.3);color:#fff}
 body[data-mood="table"] .shuffle:active{transform:translateY(5px);box-shadow:0 0 0 5px #C8102E,0 2px 0 5px #7d0a1c}
-body[data-mood="coffee"] .shuffle{--led:#FFB347;width:104px;height:104px;padding:0;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#2b2b2b;font-family:"Bricolage Grotesque",sans-serif;font-size:16px;
+body[data-mood="coffee"] .shuffle{--led:#FFB347;width:86px;height:86px;padding:0;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#2b2b2b;font-family:"Bricolage Grotesque",sans-serif;font-size:16px;
   background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.55),transparent 55%),conic-gradient(from 20deg,#dfe3e6,#a3aab0,#f1f3f5,#979ea4,#e4e7e9,#aab1b6,#f3f5f6,#9aa1a6,#dfe3e6);
   border:3px solid #3A2214;
   box-shadow:inset 0 -5px 8px rgba(0,0,0,.25),inset 0 4px 6px rgba(255,255,255,.8),0 0 0 7px #2b2b2b,0 0 0 10px var(--led),0 0 22px 10px color-mix(in srgb,var(--led) 55%,transparent),0 6px 0 10px #1a1a1a}
-body[data-mood="coffee"] .shuffle svg{width:34px;height:34px}
+body[data-mood="coffee"] .shuffle svg{width:28px;height:28px}
 body[data-mood="coffee"] .shuffle:active,body[data-mood="coffee"] .shuffle.brewing{transform:scale(.93);box-shadow:inset 0 5px 10px rgba(0,0,0,.35),0 0 0 7px #2b2b2b,0 0 0 10px var(--led),0 0 22px 10px color-mix(in srgb,var(--led) 55%,transparent),0 2px 0 10px #1a1a1a}
 body[data-mood="coffee"] .shuffle.brewing{animation:led .25s steps(2) infinite}
 @keyframes led{50%{--led:#5a4a30}}
-body[data-mood="coffee"] .controls{background:#F3E3C7;border-bottom:10px solid #8A4B2A;box-shadow:0 10px 0 rgba(0,0,0,.18);padding-bottom:22px;margin-bottom:28px}
-.credit{width:100%;font-size:11px;color:var(--muted);opacity:.6;margin:-4px 0 0}
+body[data-mood="coffee"] .controls{background:#F3E3C7;border-bottom:10px solid #8A4B2A;box-shadow:0 10px 0 rgba(0,0,0,.18);padding-bottom:16px;margin-bottom:18px}
+.credit{position:absolute;right:22px;bottom:3px;font-size:11px;color:var(--muted);opacity:.6;margin:0}
 
 /* ================= TABLE ================= */
 .table{flex:1;overflow:auto;padding:16px 22px 30px;display:flex;flex-wrap:wrap;gap:calc(var(--cw)*.24) calc(var(--cw)*.26);align-content:flex-start;justify-content:center}
@@ -161,7 +161,7 @@ body[data-mood="coffee"] .controls{background:#F3E3C7;border-bottom:10px solid #
 .twine,.peg{display:none}
 .group{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(var(--cw)*.1);padding:calc(var(--cw)*.12) calc(var(--cw)*.14) calc(var(--cw)*.16);rotate:var(--tilt,0deg)}
 .glabel{font-family:var(--display),sans-serif;font-weight:800;font-size:max(15px,calc(var(--cw)*.2));line-height:1;text-align:center}
-.cards{display:flex;gap:calc(var(--cw)*.1)}
+.cards{display:flex;flex-wrap:wrap;justify-content:center;gap:calc(var(--cw)*.1);max-width:calc(var(--cols,5)*var(--cw)*1.1 - var(--cw)*.1 + 1px)}
 
 /* table: betting boxes + chips */
 body[data-mood="table"] .table{padding-top:calc(var(--cw)*.42 + 12px);row-gap:calc(var(--cw)*.48)}
@@ -173,12 +173,14 @@ body[data-mood="table"] .gw:nth-child(5n+4) .glabel{--chip:#6A2BB8}
 body[data-mood="table"] .gw:nth-child(5n+5) .glabel{--chip:#D9850B}
 
 /* coffee: café tables seen from above */
-body[data-mood="coffee"] .gw{padding:calc(var(--cw)*.3)}
+body[data-mood="coffee"] .gw{padding:calc(var(--cw)*.24)}
+body[data-mood="coffee"] .table{gap:calc(var(--cw)*.1) calc(var(--cw)*.14)}
 .chair{position:absolute;width:calc(var(--cw)*.42);height:calc(var(--cw)*.3);margin:calc(var(--cw)*-.15) 0 0 calc(var(--cw)*-.21);border-radius:calc(var(--cw)*.08) calc(var(--cw)*.08) calc(var(--cw)*.14) calc(var(--cw)*.14);background:#8A4B2A;border:3px solid #3A2214;box-shadow:inset 0 calc(var(--cw)*-.06) 0 #6b3a20;z-index:0}
-body[data-mood="coffee"] .group{z-index:1;background:radial-gradient(ellipse at 35% 30%,#FFF8EC,#EBD7B4 75%);border:4px solid #3A2214;border-radius:calc(var(--cw)*.7);box-shadow:0 9px 0 rgba(58,34,20,.35);padding:calc(var(--cw)*.14) calc(var(--cw)*.3) calc(var(--cw)*.22);rotate:none}
+body[data-mood="coffee"] .group{z-index:1;background:radial-gradient(ellipse at 35% 30%,#FFF8EC,#EBD7B4 75%);border:4px solid #3A2214;border-radius:calc(var(--cw)*.7);box-shadow:0 9px 0 rgba(58,34,20,.35);padding:calc(var(--cw)*.1) calc(var(--cw)*.22) calc(var(--cw)*.16);rotate:none}
 body[data-mood="coffee"] .glabel{font-family:"Bricolage Grotesque",sans-serif;font-size:max(13px,calc(var(--cw)*.15));background:#3A2214;color:#F3E3C7;padding:.3em .7em;border-radius:7px;box-shadow:0 3px 0 #1d110a}
 body[data-mood="coffee"] .front{border:2.5px solid #3A2214;box-shadow:2px 3px 0 #3A2214}
 body[data-mood="coffee"] .back{border:2.5px solid #3A2214}
+body[data-mood="coffee"] .gw.long .group{border-radius:calc(var(--cw)*.3)}
 .back svg,.stack span svg{width:84%;height:auto}
 .stack span{display:flex;align-items:center;justify-content:center}
 
@@ -245,6 +247,27 @@ body[data-mood="christmas"] .lights{display:block}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px}
 
+/* ================= CARD PICKER ================= */
+.ctlrow{display:flex;align-items:center;gap:8px}
+.pickbtn{border:0;border-radius:999px;background:var(--ctrl);padding:12px 16px;font-weight:600;font-size:14px}
+.pickbtn[aria-pressed="true"]{background:var(--ctrl-on);color:var(--ctrl-on-ink)}
+.overlay{position:fixed;inset:0;z-index:30;background:rgba(28,28,40,.94);overflow:auto;color:#1d1d1d;font-family:"Figtree",sans-serif}
+.overlay[hidden]{display:none}
+.pk-count{font-weight:700;font-size:16px;margin-right:6px}
+.pk-count.bad{color:#C8102E}
+.pv-bar .btn:disabled{opacity:.4;cursor:not-allowed}
+.pk-grid{--cw:92px;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:28px 14px;max-width:760px;margin:24px auto;padding:0 20px}
+.pk{position:relative;width:var(--cw);height:calc(var(--cw)*1.32);justify-self:center;border:0;padding:0;border-radius:10px;background:#fff;color:#1d1d1d;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#D9D9E2;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:background .15s,transform .15s;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.pk > *{opacity:.45}
+.pk[aria-pressed="true"]{background:#fff;box-shadow:0 0 0 4px #2EB872,0 4px 10px rgba(0,0,0,.35)}
+.pk[aria-pressed="true"]::after{content:"✓";position:absolute;top:-9px;right:-9px;width:24px;height:24px;border-radius:50%;background:#2EB872;color:#fff;font-weight:800;font-size:15px;display:grid;place-items:center}
+.pk[aria-pressed="true"] > *{opacity:1}
+.pk.missing{background:#8a8a96;filter:grayscale(1)}
+.pk.missing > *{opacity:.3}
+.pk.missing::before{content:"";position:absolute;inset:0;border-radius:10px;background:linear-gradient(45deg,transparent 47%,#C8102E 47% 53%,transparent 53%),linear-gradient(-45deg,transparent 47%,#C8102E 47% 53%,transparent 53%)}
+.pk.missing::after{content:"missing";position:absolute;bottom:-20px;left:0;right:0;font-size:11px;font-weight:700;color:#fff}
+.pk:active{transform:scale(.95)}
+
 /* ================= PRINT VIEW ================= */
 #printView{position:fixed;inset:0;z-index:30;background:rgba(20,20,30,.72);overflow:auto;color:#1d1d1d;font-family:"Figtree",sans-serif}
 #printView[hidden]{display:none}
@@ -274,7 +297,7 @@ body[data-mood="christmas"] .lights{display:block}
   .page{margin:0;padding:0;width:auto;min-height:0;box-shadow:none}
 }
 @media (max-width:760px){
-  .go{margin-left:0;width:100%;justify-content:space-between}
+  .go{width:100%;justify-content:space-between;order:3}
   .summary{text-align:left}
   .drawer{grid-template-columns:repeat(2,auto);left:12px}
   .cup{display:none !important}
@@ -295,6 +318,10 @@ body[data-mood="christmas"] .lights{display:block}
 
 <header class="bar">
   <button class="title" id="titleBtn" aria-expanded="false" aria-controls="drawer">Table Talk<span class="te" id="titleEmoji"></span></button>
+  <div class="go">
+    <p class="summary" id="summary"></p>
+    <button class="shuffle" id="shuffle">Shuffle</button>
+  </div>
   <div class="seg" id="moodSeg" role="group" aria-label="Mood">
     <button data-v="table">Card table</button>
     <button data-v="coffee">Coffee shop</button>
@@ -318,10 +345,13 @@ body[data-mood="christmas"] .lights{display:block}
 <section class="controls">
   <div class="ctl">
     <span class="lbl" id="studentsLbl">Students</span>
-    <div class="stepper" role="group" aria-labelledby="studentsLbl">
-      <button id="minus" aria-label="One fewer student">−</button>
-      <output id="count" aria-live="polite">18</output>
-      <button id="plus" aria-label="One more student">+</button>
+    <div class="ctlrow">
+      <div class="stepper" role="group" aria-labelledby="studentsLbl">
+        <button id="minus" aria-label="One fewer student">−</button>
+        <output id="count" aria-live="polite">18</output>
+        <button id="plus" aria-label="One more student">+</button>
+      </div>
+      <button class="pickbtn" id="pickBtn" aria-pressed="false">Choose cards</button>
     </div>
   </div>
   <div class="ctl">
@@ -330,6 +360,14 @@ body[data-mood="christmas"] .lights{display:block}
       <button data-v="2">Pairs</button>
       <button data-v="3">Threes</button>
       <button data-v="4">Fours</button>
+    </div>
+  </div>
+  <div class="ctl">
+    <span class="lbl">Or split into</span>
+    <div class="seg" id="teamSeg" role="group" aria-label="Number of teams">
+      <button data-v="2">2 teams</button>
+      <button data-v="3">3 teams</button>
+      <button data-v="4">4 teams</button>
     </div>
   </div>
   <div class="ctl">
@@ -347,10 +385,6 @@ body[data-mood="christmas"] .lights{display:block}
       <button data-v="shapes">Shapes</button>
     </div>
   </div>
-  <div class="go">
-    <p class="summary" id="summary"></p>
-    <button class="shuffle" id="shuffle">Shuffle</button>
-  </div>
   <p class="credit">Class of Coffee – with AI assistance</p>
 </section>
 
@@ -364,11 +398,25 @@ body[data-mood="christmas"] .lights{display:block}
       <button data-v="emoji">Emoji</button>
       <button data-v="shapes">Shapes</button>
     </div>
+    <button class="btn secondary" id="missingOnly" aria-pressed="false">Missing cards only</button>
     <button class="btn primary" id="doPrint">Print</button>
     <button class="btn secondary" id="closePrint">Close</button>
     <p class="pv-hint">One A4 sheet, 25 cards. Keep the deck sorted by the small corner numbers and always hand out from 1 upwards. If the Print button doesn’t respond, press Ctrl+P (or ⌘P).</p>
   </div>
   <div class="page"><div class="sheet" id="sheet"></div></div>
+</div>
+
+<div id="picker" class="overlay" hidden role="dialog" aria-modal="true" aria-labelledby="pkTitle">
+  <div class="pv-bar">
+    <h2 id="pkTitle">Cards in play</h2>
+    <span class="pk-count" id="pkCount"></span>
+    <button class="btn secondary" id="pkAll">All</button>
+    <button class="btn secondary" id="pkNone">None</button>
+    <button class="btn secondary" id="pkCancel">Cancel</button>
+    <button class="btn primary" id="pkDone">Done</button>
+    <p class="pv-hint">Tap a card to choose it. Long-press (or right-click) to mark it missing; do the same again to bring it back.</p>
+  </div>
+  <div class="pk-grid" id="pkGrid"></div>
 </div>
 
 <script>
@@ -432,10 +480,18 @@ function face(deck,i){
 }
 
 /* ---------- state ---------- */
-const state={n:18,size:2,left:"join",deck:"emoji",mood:"candy",muted:false,groups:null};
+const state={n:18,size:2,left:"join",mode:"size",teams:2,deck:"emoji",mood:"candy",muted:false,missing:{numbers:[],emoji:[],shapes:[]},chosen:null,groups:null};
 try{const s=JSON.parse(localStorage.getItem("tabletalk")||"null");if(s)Object.assign(state,s,{groups:null});}catch(e){}
 if(!MOODS[state.mood])state.mood="candy";
-function save(){try{const{groups,...rest}=state;localStorage.setItem("tabletalk",JSON.stringify(rest));}catch(e){}}
+state.chosen=null;
+if(!state.missing||typeof state.missing!=="object")state.missing={};
+["numbers","emoji","shapes"].forEach(d=>{if(!Array.isArray(state.missing[d]))state.missing[d]=[];});
+function save(){try{const{groups,chosen,...rest}=state;localStorage.setItem("tabletalk",JSON.stringify(rest));}catch(e){}}
+function avail(){const m=state.missing[state.deck];return [...Array(MAX).keys()].filter(i=>!m.includes(i));}
+function activeCards(){return state.chosen?[...state.chosen].sort((a,b)=>a-b):avail().slice(0,state.n);}
+function count(){return activeCards().length;}
+function clampN(){state.n=Math.max(MIN,Math.min(state.n,avail().length));}
+clampN();
 
 const $=id=>document.getElementById(id);
 const table=$("table");
@@ -500,6 +556,22 @@ function plan(n,s,left){
   for(let i=0;i<g;i++)sizes.push(base+(i>=g-extra?1:0));
   return sizes;
 }
+function currentPlan(){
+  if(state.mode==="teams"){
+    const n=count(),g=Math.max(1,Math.min(state.teams,Math.floor(n/2)));
+    const base=Math.floor(n/g),extra=n%g,sizes=[];
+    for(let i=0;i<g;i++)sizes.push(base+(i<extra?1:0));
+    return sizes;
+  }
+  return plan(count(),state.size,state.left);
+}
+function describeAny(sizes){
+  if(state.mode!=="teams")return describe(sizes);
+  const g=sizes.length;if(g===1)return "1 team of "+sizes[0];
+  const sorted=[...sizes].sort((a,b)=>b-a);
+  if(sorted[0]===sorted[g-1])return `${g} teams of ${sorted[0]}`;
+  return `${g} teams of ${sorted.slice(0,-1).join(", ")} and ${sorted[g-1]}`;
+}
 function describe(sizes){
   const c={};sizes.forEach(z=>c[z]=(c[z]||0)+1);
   return Object.keys(c).map(Number).sort((a,b)=>a-b).map(z=>{const k=c[z];return z===2?k+(k===1?" pair":" pairs"):k+(k===1?" group of ":" groups of ")+z;}).join(" and ");
@@ -532,45 +604,71 @@ function syncUI(){
   b.dataset.mood=state.mood;
   b.dataset.kit=(state.mood==="table"||state.mood==="coffee")?"":"pop";
   $("titleEmoji").textContent=MOODS[state.mood].emoji||"";
-  $("count").textContent=state.n;
-  syncSeg("moodSeg",state.mood);syncSeg("drawer",state.mood);syncSeg("sizeSeg",state.size);syncSeg("leftSeg",state.left);syncSeg("deckSeg",state.deck);
-  $("leftSeg").classList.toggle("off",state.size===2);
-  $("leftSeg").title=state.size===2?"With pairs, an odd number always makes one group of 3":"";
-  $("summary").textContent=`${state.n} students: ${describe(plan(state.n,state.size,state.left))}`;
+  $("count").textContent=count();
+  $("pickBtn").setAttribute("aria-pressed",String(!!state.chosen));
+  syncSeg("moodSeg",state.mood);syncSeg("drawer",state.mood);syncSeg("sizeSeg",state.mode==="size"?state.size:null);syncSeg("teamSeg",state.mode==="teams"?state.teams:null);syncSeg("leftSeg",state.left);syncSeg("deckSeg",state.deck);
+  const leftOff=state.mode==="teams"||state.size===2;
+  $("leftSeg").classList.toggle("off",leftOff);
+  $("leftSeg").title=state.mode==="teams"?"Teams are always as even as possible":state.size===2?"With pairs, an odd number always makes one group of 3":"";
+  $("summary").textContent=`${count()} ${state.chosen?"cards chosen":"students"}: ${describeAny(currentPlan())}`;
   $("shuffle").innerHTML=state.mood==="coffee"?CUP_ICON+"<span>Serve!</span>":"Shuffle";
   $("soundBtn").textContent=state.muted?"🔇":"🔊";
   $("soundBtn").setAttribute("aria-label",state.muted?"Sound off":"Sound on");
 }
+function emptyText(){
+  const go=state.mood==="coffee"?"Serve!":"Shuffle";
+  if(state.chosen)return `<strong>${count()}</strong> cards chosen. Press ${go}.`;
+  const act=activeCards(),last=act[act.length-1]+1;
+  const skipped=state.missing[state.deck].filter(i=>i<last).sort((a,b)=>a-b).map(i=>face(state.deck,i).name);
+  if(!skipped.length)return `Hand out cards 1 to <strong>${state.n}</strong>, then press ${go}.`;
+  return `Hand out cards 1 to <strong>${last}</strong>, skipping the missing ${skipped.join(", ")}. Then press ${go}.`;
+}
 function showEmpty(){
   state.groups=null;
-  table.innerHTML=`<div class="empty"><div class="stack" aria-hidden="true">${[0,1,2].map(k=>`<span>${state.mood==="coffee"?DRINKS[(k*3+1)%DRINKS.length]:""}</span>`).join("")}</div><p>Hand out cards 1 to <strong>${state.n}</strong>, then press Shuffle.</p></div>`;
+  table.innerHTML=`<div class="empty"><div class="stack" aria-hidden="true">${[0,1,2].map(k=>`<span>${state.mood==="coffee"?DRINKS[(k*3+1)%DRINKS.length]:""}</span>`).join("")}</div><p>${emptyText()}</p></div>`;
 }
+function fits(){return table.scrollHeight<=table.clientHeight+1&&table.scrollWidth<=table.clientWidth+1;}
 function setCardSize(){
   if(!state.groups)return;
-  const n=state.n,g=state.groups.length;
-  const W=table.clientWidth-44;
-  const H=Math.max(260,window.innerHeight-table.getBoundingClientRect().top-44);
-  let cw=Math.sqrt((W*H)/(1.32*(1.4*n+1.3*g)))*.86;
-  cw=Math.max(54,Math.min(190,cw));
-  const maxInGroup=Math.max(...state.groups.map(x=>x.length));
-  cw=Math.min(cw,(W-20)/(maxInGroup*1.1+.4));
-  document.documentElement.style.setProperty("--cw",cw.toFixed(1)+"px");
+  const root=document.documentElement.style;
+  const maxLen=Math.max(...state.groups.map(x=>x.length));
+  const colOpts=[];
+  if(maxLen<=5)colOpts.push(maxLen);else for(let c=Math.min(maxLen,13);c>=3;c--)colOpts.push(c);
+  let best={cw:50,cols:colOpts[0]};
+  const MINW=46,MAXW=200;
+  for(const cols of colOpts){
+    table.style.setProperty("--cols",cols);
+    root.setProperty("--cw",MINW+"px");
+    if(!fits())continue;
+    let lo=MINW,hi=MAXW;
+    root.setProperty("--cw",hi+"px");
+    if(fits())lo=hi;
+    else for(let k=0;k<9;k++){const mid=(lo+hi)/2;root.setProperty("--cw",mid+"px");if(fits())lo=mid;else hi=mid;}
+    if(lo>best.cw||!best.ok)best={cw:lo,cols,ok:true};
+    if(best.cw>=MAXW)break;
+  }
+  table.style.setProperty("--cols",best.cols);
+  root.setProperty("--cw",Math.floor(best.cw)+"px");
 }
-
 let timers=[];
 function clearTimers(){timers.forEach(clearTimeout);timers=[];}
 function render(animate){
   const groups=state.groups,mood=MOODS[state.mood];
-  clearTimers();table.innerHTML="";setCardSize();
+  clearTimers();table.innerHTML="";
   const G=groups.length,cardEls=[];
   groups.forEach((grp,gi)=>{
     const gw=document.createElement("section");gw.className="gw";
     const lab=mood.label(gi)||("Group "+(gi+1));
     gw.setAttribute("aria-label",`${lab}: ${grp.map(i=>face(state.deck,i).name).join(", ")}`);
-    if(state.mood==="coffee"){
+    if(state.mood==="coffee"&&grp.length>5){
+      const k=grp.length,top=Math.ceil(k/2),bot=k-top;let ch="";gw.classList.add("long");
+      const row=(cnt,isTop)=>{for(let c=0;c<cnt;c++){const f=((c+.5)/cnt).toFixed(3);
+        ch+=`<span class="chair" style="left:calc(var(--cw)*.3 + (100% - var(--cw)*.6) * ${f});top:${isTop?"calc(var(--cw)*.1)":"calc(100% - var(--cw)*.1)"};rotate:${isTop?0:180}deg"></span>`;}};
+      row(top,true);row(bot,false);gw.innerHTML=ch;
+    }else if(state.mood==="coffee"){
       const k=grp.length,start=k===2?0:-Math.PI/2;let ch="";
       for(let c=0;c<k;c++){const a=start+c*2*Math.PI/k,cx=Math.cos(a),cy=Math.sin(a);
-        ch+=`<span class="chair" style="left:calc(50% + ${cx.toFixed(3)} * (50% - var(--cw)*.13));top:calc(50% + ${cy.toFixed(3)} * (50% - var(--cw)*.13));rotate:${(a*180/Math.PI+90).toFixed(1)}deg"></span>`;}
+        ch+=`<span class="chair" style="left:calc(50% + ${cx.toFixed(3)} * (50% - var(--cw)*.1));top:calc(50% + ${cy.toFixed(3)} * (50% - var(--cw)*.1));rotate:${(a*180/Math.PI+90).toFixed(1)}deg"></span>`;}
       gw.innerHTML=ch;
     }
     const panel=document.createElement("div");panel.className="group";
@@ -586,11 +684,12 @@ function render(animate){
     });
     panel.appendChild(row);gw.appendChild(panel);table.appendChild(gw);
   });
+  setCardSize();
   if(!animate)return;
   const snd=SOUNDS[state.mood];
   if(reduced){snd.reveal();return;}
   const o=$("shuffle").getBoundingClientRect(),ox=o.left+o.width/2,oy=o.top+o.height/2;
-  const step=Math.min(48,1300/state.n);let last=0;
+  const step=Math.min(48,1300/count());let last=0;
   document.querySelectorAll(".gw").forEach((p,k)=>p.animate([{opacity:0},{opacity:1}],{duration:260,delay:k*30,fill:"backwards"}));
   cardEls.forEach(({el,order})=>{
     const r=el.getBoundingClientRect(),dx=ox-(r.left+r.width/2),dy=oy-(r.top+r.height/2),delay=order*step;
@@ -605,7 +704,7 @@ let brewing=false;
 function shuffle(){
   if(brewing)return;
   audio();
-  const n=state.n,sizes=plan(n,state.size,state.left),idx=[...Array(n).keys()];
+  const idx=activeCards(),n=idx.length,sizes=currentPlan();
   for(let i=n-1;i>0;i--){const j=rnd(i+1);[idx[i],idx[j]]=[idx[j],idx[i]];}
   let p=0;state.groups=sizes.map(z=>idx.slice(p,p+=z));
   if(state.mood==="coffee"&&!reduced){
@@ -634,11 +733,12 @@ function setMood(m){
 function changeInvalidating(fn){fn();save();syncUI();clearTimers();showEmpty();}
 
 /* ---------- wiring ---------- */
-$("minus").onclick=()=>changeInvalidating(()=>state.n=Math.max(MIN,state.n-1));
-$("plus").onclick=()=>changeInvalidating(()=>state.n=Math.min(MAX,state.n+1));
-$("sizeSeg").onclick=e=>{const b=e.target.closest("button");if(b)changeInvalidating(()=>state.size=+b.dataset.v);};
+$("minus").onclick=()=>changeInvalidating(()=>{const c=count();state.chosen=null;state.n=Math.max(MIN,c-1);});
+$("plus").onclick=()=>changeInvalidating(()=>{const c=count();state.chosen=null;state.n=Math.min(avail().length,c+1);});
+$("sizeSeg").onclick=e=>{const b=e.target.closest("button");if(b)changeInvalidating(()=>{state.size=+b.dataset.v;state.mode="size";});};
+$("teamSeg").onclick=e=>{const b=e.target.closest("button");if(b)changeInvalidating(()=>{state.teams=+b.dataset.v;state.mode="teams";});};
 $("leftSeg").onclick=e=>{const b=e.target.closest("button");if(b)changeInvalidating(()=>state.left=b.dataset.v);};
-$("deckSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.deck=b.dataset.v;save();syncUI();state.groups?render(false):showEmpty();};
+$("deckSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.deck=b.dataset.v;clampN();save();syncUI();state.groups?render(false):showEmpty();};
 $("moodSeg").onclick=e=>{const b=e.target.closest("button");if(b)setMood(b.dataset.v);};
 $("shuffle").onclick=shuffle;
 
@@ -650,9 +750,10 @@ document.addEventListener("click",()=>{if(!drawer.hidden)toggleDrawer(false);});
 
 $("soundBtn").onclick=()=>{state.muted=!state.muted;save();syncUI();if(!state.muted)SOUNDS[state.mood].deal();};
 
-addEventListener("resize",()=>{if(state.groups)setCardSize();});
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(state.groups)setCardSize();},120);});
 document.addEventListener("keydown",e=>{
   if(!$("printView").hidden){if(e.key==="Escape")closePrint();return;}
+  if(!$("picker").hidden){if(e.key==="Escape")closePicker();return;}
   if(e.key==="Escape"&&!drawer.hidden){toggleDrawer(false);titleBtn.focus();return;}
   if(e.target.tagName==="BUTTON")return;
   if(e.key===" "||e.key==="Enter"){e.preventDefault();shuffle();}
@@ -666,13 +767,64 @@ fsBtn.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():docu
 document.addEventListener("fullscreenchange",()=>{fsBtn.textContent=document.fullscreenElement?"Exit fullscreen":"Fullscreen";setTimeout(setCardSize,100);});
 
 /* ---------- print ---------- */
-let printDeck=state.deck;
-function buildSheet(){syncSeg("printDeckSeg",printDeck);$("sheet").innerHTML=Array.from({length:MAX},(_,i)=>`<div class="pcard">${face(printDeck,i).html}</div>`).join("");}
+let printDeck=state.deck,missingOnly=false;
+function buildSheet(){
+  syncSeg("printDeckSeg",printDeck);
+  const m=state.missing[printDeck];
+  $("missingOnly").setAttribute("aria-pressed",String(missingOnly));
+  $("missingOnly").disabled=!m.length;
+  if(!m.length)missingOnly=false;
+  const list=missingOnly?[...m].sort((a,b)=>a-b):[...Array(MAX).keys()];
+  $("sheet").innerHTML=list.map(i=>`<div class="pcard">${face(printDeck,i).html}</div>`).join("");
+}
+$("missingOnly").onclick=()=>{missingOnly=!missingOnly;buildSheet();};
 function closePrint(){$("printView").hidden=true;$("printBtn").focus();}
-$("printBtn").onclick=()=>{printDeck=state.deck;buildSheet();$("printView").hidden=false;$("doPrint").focus();};
+$("printBtn").onclick=()=>{printDeck=state.deck;missingOnly=false;buildSheet();$("printView").hidden=false;$("doPrint").focus();};
 $("printDeckSeg").onclick=e=>{const b=e.target.closest("button");if(b){printDeck=b.dataset.v;buildSheet();}};
 $("closePrint").onclick=closePrint;
 $("doPrint").onclick=()=>{try{window.print();}catch(e){}};
+
+/* ---------- card picker ---------- */
+let pkSel=new Set(),pkDefault=true,lpTimer=null,lpFired=false;
+function pkRender(){
+  const m=state.missing[state.deck];
+  $("pkGrid").innerHTML=[...Array(MAX).keys()].map(i=>{
+    const miss=m.includes(i),f=face(state.deck,i);
+    return `<button class="pk${miss?" missing":""}" data-i="${i}" aria-pressed="${pkSel.has(i)}" aria-label="${f.name}${miss?", missing":""}">${f.html}</button>`;
+  }).join("");
+  const n=pkSel.size;
+  $("pkCount").textContent=n<MIN?`${n} chosen (choose at least ${MIN})`:`${n} chosen`;
+  $("pkCount").classList.toggle("bad",n<MIN);
+  $("pkDone").disabled=n<MIN;
+}
+function openPicker(){pkDefault=!state.chosen;pkSel=new Set(activeCards());pkRender();$("picker").hidden=false;$("pkDone").focus();}
+function closePicker(){$("picker").hidden=true;$("pickBtn").focus();}
+function toggleMissing(i){
+  const m=state.missing[state.deck],k=m.indexOf(i);
+  if(k>=0)m.splice(k,1);
+  else{
+    m.push(i);
+    if(pkSel.delete(i)&&pkDefault){const next=avail().find(x=>!pkSel.has(x));if(next!==undefined)pkSel.add(next);}
+  }
+  save();pkRender();
+}
+$("pickBtn").onclick=openPicker;
+$("pkCancel").onclick=()=>{closePicker();clampN();syncUI();if(!state.groups)showEmpty();};
+$("pkAll").onclick=()=>{pkSel=new Set(avail());pkRender();};
+$("pkNone").onclick=()=>{pkSel=new Set();pkRender();};
+$("pkDone").onclick=()=>{
+  const sel=[...pkSel].sort((a,b)=>a-b),def=avail().slice(0,sel.length);
+  if(sel.length===def.length&&sel.every((v,k)=>v===def[k])){state.chosen=null;state.n=sel.length;}
+  else state.chosen=sel;
+  closePicker();clampN();save();syncUI();clearTimers();showEmpty();
+};
+const grid=$("pkGrid");
+grid.addEventListener("pointerdown",e=>{const c=e.target.closest(".pk");if(!c)return;lpFired=false;clearTimeout(lpTimer);lpTimer=setTimeout(()=>{lpFired=true;toggleMissing(+c.dataset.i);},550);});
+["pointerup","pointerleave","pointercancel"].forEach(t=>grid.addEventListener(t,()=>clearTimeout(lpTimer)));
+grid.addEventListener("contextmenu",e=>{const c=e.target.closest(".pk");if(!c)return;e.preventDefault();clearTimeout(lpTimer);if(!lpFired)toggleMissing(+c.dataset.i);});
+grid.addEventListener("click",e=>{const c=e.target.closest(".pk");if(!c)return;if(lpFired){lpFired=false;return;}
+  const i=+c.dataset.i;if(state.missing[state.deck].includes(i))return;
+  pkSel.has(i)?pkSel.delete(i):pkSel.add(i);pkRender();});
 
 buildLights();syncUI();buildAmbient();showEmpty();
 })();
