@@ -114,6 +114,26 @@ body[data-mood="table"] .title{color:#FFF0F6;text-shadow:0 0 3px #fff,0 0 10px #
 .tools{display:flex;gap:8px}
 .ghost{background:transparent;border:2px solid var(--muted);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px}
 .ghost:hover{border-color:var(--ink)}
+.ghost{display:inline-flex;align-items:center;gap:6px}
+.g-ico{display:none;font-family:var(--emoji);line-height:1}
+@media (max-width:1320px){
+  .g-txt{display:none}.g-ico{display:inline-flex}
+  .ghost{padding:7px 11px}
+  #moodSeg button{padding:8px 11px;font-size:14px}
+  .summary{width:13em;font-size:14px}
+  .bar{gap:12px}
+}
+@media (max-width:1120px){
+  .title{font-size:24px}
+  body[data-mood="coffee"] .title{font-size:24px}
+  .summary{width:10.5em;font-size:13px}
+  #moodSeg button{padding:7px 9px;font-size:13px}
+  .shuffle{font-size:19px;padding:10px 20px}
+  body[data-mood="coffee"] .shuffle{width:74px;height:74px;font-size:14px}
+  body[data-mood="table"] .bar,body[data-mood="table"] .controls{padding-left:12px;padding-right:12px}
+  body[data-mood="table"] .bar{gap:10px}
+  .tools{gap:6px}
+}
 .ghost.icon{font-family:var(--emoji);padding:6px 11px;font-size:16px}
 
 /* season drawer */
@@ -157,7 +177,7 @@ body[data-mood="coffee"] .controls{background:#F3E3C7;border-bottom:10px solid #
 .credit{position:absolute;right:22px;bottom:3px;font-size:11px;color:var(--muted);opacity:.6;margin:0}
 
 /* ================= TABLE ================= */
-.table{flex:1;overflow:auto;padding:16px 22px 30px;display:flex;flex-wrap:wrap;gap:calc(var(--cw)*.24) calc(var(--cw)*.26);align-content:flex-start;justify-content:center}
+.table{flex:1;overflow:auto;padding:16px 22px 84px;display:flex;flex-wrap:wrap;gap:calc(var(--cw)*.24) calc(var(--cw)*.26);align-content:flex-start;justify-content:center}
 .gw{position:relative}
 .twine,.peg{display:none}
 .group{position:relative;display:flex;flex-direction:column;align-items:center;gap:calc(var(--cw)*.1);padding:calc(var(--cw)*.12) calc(var(--cw)*.14) calc(var(--cw)*.16);rotate:var(--tilt,0deg)}
@@ -247,6 +267,32 @@ body[data-mood="christmas"] .lights{display:block}
 .amb .bubble{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.9);background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.8),transparent 40%)}
 .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px}
+
+/* ================= PICK ================= */
+.card{position:relative}
+.p-pill{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:25;width:58px;height:58px;border-radius:50%;border:3px solid var(--line,#1a1a1a);background:#fff;font-family:var(--emoji);font-size:26px;display:grid;place-items:center;box-shadow:3px 3px 0 var(--shadow,var(--line,#1a1a1a))}
+.p-pill[hidden],.p-panel[hidden],.p-spot[hidden]{display:none}
+body[data-mood="table"] .p-pill{left:34px;bottom:34px}
+.p-panel{position:fixed;left:18px;bottom:18px;z-index:25;width:240px;background:#fff;color:#1B1B3A;border:3px solid var(--line,#1a1a1a);border-radius:22px;box-shadow:5px 5px 0 var(--shadow,var(--line,#1a1a1a));padding:10px 14px 12px;font-family:"Figtree",sans-serif;display:flex;flex-direction:column;gap:8px}
+body[data-mood="table"] .p-panel{left:34px;bottom:34px}
+.p-panel .t-head{cursor:default}
+.p-btn{width:100%}
+.p-btn:disabled{opacity:.4;cursor:not-allowed}
+.p-note{margin:0;font-size:12px;color:#666;min-height:1em}
+.p-foot{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:#444}
+.p-links{display:flex;gap:10px}
+.p-link{border:0;background:none;padding:0;font-weight:700;font-size:13px;text-decoration:underline;color:#1B1B3A}
+.p-link[hidden]{display:none}
+.table.picking .card{opacity:.32;filter:saturate(.4);transition:opacity .3s,filter .3s}
+.card.picked,.card.spot{opacity:1 !important;filter:none !important;translate:0 calc(var(--cw)*-.07);scale:1.06;transition:translate .3s,scale .3s;z-index:2}
+.card.picked .front,.card.spot .front{box-shadow:0 0 0 calc(var(--cw)*.035) #FFD23F,0 0 calc(var(--cw)*.2) calc(var(--cw)*.05) rgba(255,210,63,.85)}
+.card.picked::after,.card.spot::after{content:"★";position:absolute;top:calc(var(--cw)*-.12);right:calc(var(--cw)*-.12);width:calc(var(--cw)*.3);height:calc(var(--cw)*.3);min-width:20px;min-height:20px;border-radius:50%;background:#FFD23F;color:#1B1B3A;border:2px solid #1B1B3A;display:grid;place-items:center;font-size:max(12px,calc(var(--cw)*.17));z-index:3}
+.p-spot{position:fixed;inset:0;z-index:27;background:color-mix(in srgb,var(--bg) 90%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:max(18px,3vh);padding:20px}
+.p-card{--cw:min(34vmin,280px);position:relative;width:var(--cw);height:calc(var(--cw)*1.32);border-radius:calc(var(--cw)*.09);background:#fff;color:#1B1B3A;border:4px solid var(--line,#1a1a1a);box-shadow:8px 8px 0 var(--shadow,var(--line,#1a1a1a)),0 0 0 12px rgba(255,210,63,.55);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.p-card.land{animation:pland .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pland{from{transform:scale(.8)}to{transform:scale(1)}}
+.p-group{margin:0;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(22px,4vmin,38px);color:var(--ink);min-height:1.2em;text-align:center}
+@media (prefers-reduced-motion:reduce){.p-card.land{animation:none}}
 
 /* ================= TIMER ================= */
 .t-pill{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:25;min-width:58px;height:58px;padding:0 16px;border-radius:999px;border:3px solid var(--line,#1a1a1a);background:var(--go);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:20px;box-shadow:3px 3px 0 var(--shadow,var(--line,#1a1a1a))}
@@ -363,8 +409,8 @@ body[data-mood="table"] .t-pill{right:34px;bottom:34px}
   </div>
   <div class="tools">
     <button class="ghost icon" id="soundBtn" aria-label="Sound on">🔊</button>
-    <button class="ghost" id="printBtn">Print cards</button>
-    <button class="ghost" id="fsBtn">Fullscreen</button>
+    <button class="ghost" id="printBtn" aria-label="Print cards" title="Print cards"><span class="g-ico" aria-hidden="true">🖨️</span><span class="g-txt">Print cards</span></button>
+    <button class="ghost" id="fsBtn" aria-label="Fullscreen" title="Fullscreen"><span class="g-ico" aria-hidden="true"><svg viewBox="0 0 20 20" width="16" height="16"><path d="M2 7V2h5M13 2h5v5M18 13v5h-5M7 18H2v-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span><span class="g-txt" id="fsTxt">Fullscreen</span></button>
   </div>
   <div class="drawer" id="drawer" hidden role="group" aria-label="Seasonal moods">
     <button data-v="autumn"><span>🍂</span>Autumn</button>
@@ -440,6 +486,19 @@ body[data-mood="table"] .t-pill{right:34px;bottom:34px}
   <div class="page"><div class="sheet" id="sheet"></div></div>
 </div>
 
+<button id="pPill" class="p-pill" aria-label="Pick students"><span aria-hidden="true">🎯</span></button>
+<section id="pPanel" class="p-panel" hidden aria-label="Pick students">
+  <div class="t-head"><span class="t-title">Pick</span><span class="t-hbtns"><button id="pMin" aria-label="Close pick panel" title="Close">–</button></span></div>
+  <button class="t-main p-btn" id="pOne">Pick a student</button>
+  <button class="t-sec p-btn" id="pGroup">One per group</button>
+  <p class="p-note" id="pNote"></p>
+  <div class="p-foot"><span id="pLeft"></span><span class="p-links"><button id="pClear" class="p-link">Clear</button><button id="pReset" class="p-link">Start over</button></span></div>
+</section>
+<div id="pSpot" class="p-spot" hidden role="dialog" aria-label="Picked student">
+  <div class="p-card" id="pCard"></div>
+  <p class="p-group" id="pGroupLbl" aria-live="polite"></p>
+  <div class="t-actions"><button class="t-main" id="pAgain">Pick again</button><button class="t-sec" id="pClose">Close</button></div>
+</div>
 <button id="tPill" class="t-pill" aria-label="Open timer"><span class="t-ico" aria-hidden="true">⏱</span><span id="tPillTime"></span></button>
 <section id="tWidget" class="t-widget" hidden aria-label="Timer">
   <div class="t-head" id="tHead"><span class="t-title">Timer</span><span class="t-hbtns"><button id="tBig" aria-label="Show timer full-screen" title="Full-screen">⤢</button><button id="tMin" aria-label="Minimise timer" title="Minimise">–</button></span></div>
@@ -655,6 +714,7 @@ function syncUI(){
   $("titleEmoji").textContent=MOODS[state.mood].emoji||"";
   if(document.activeElement!==$("count"))$("count").value=count();
   $("pickBtn").setAttribute("aria-pressed",String(!!state.chosen));
+  if(typeof syncPick==="function"&&$("pPanel"))syncPick();
   syncSeg("moodSeg",state.mood);syncSeg("drawer",state.mood);syncSeg("sizeSeg",state.mode==="size"?state.size:null);syncSeg("teamSeg",state.mode==="teams"?state.teams:null);syncSeg("leftSeg",state.left);syncSeg("deckSeg",state.deck);
   const leftOff=state.mode==="teams"||state.size===2;
   $("leftSeg").classList.toggle("off",leftOff);
@@ -726,7 +786,7 @@ function render(animate){
     panel.innerHTML=`<div class="glabel">${lab}</div>`;
     const row=document.createElement("div");row.className="cards";
     grp.forEach((i,pos)=>{
-      const c=document.createElement("div");c.className="card";
+      const c=document.createElement("div");c.className="card";c.dataset.i=i;
       c.style.setProperty("--ctilt",((rnd(7)-3)*.7)+"deg");
       c.innerHTML=`<div class="inner"><div class="face front">${face(state.deck,i).html}</div><div class="face back">${state.mood==="coffee"?DRINKS[rnd(DRINKS.length)]:""}</div></div>`;
       row.appendChild(c);cardEls.push({el:c,order:pos*G+gi});
@@ -734,6 +794,7 @@ function render(animate){
     panel.appendChild(row);gw.appendChild(panel);table.appendChild(gw);
   });
   setCardSize();
+  applyPicks();
   if(!animate)return;
   const snd=SOUNDS[state.mood];
   if(reduced){snd.reveal();return;}
@@ -756,6 +817,7 @@ function shuffle(){
   const idx=activeCards(),n=idx.length,sizes=currentPlan();
   for(let i=n-1;i>0;i--){const j=rnd(i+1);[idx[i],idx[j]]=[idx[j],idx[i]];}
   let p=0;state.groups=sizes.map(z=>idx.slice(p,p+=z));
+  resetPicks();
   if(state.mood==="coffee"&&!reduced){
     brewing=true;clearTimers();const btn=$("shuffle");btn.classList.add("brewing");SOUNDS.coffee.brew();
     setTimeout(()=>{btn.classList.remove("brewing");brewing=false;render(true);},780);
@@ -779,7 +841,7 @@ function setMood(m){
   state.groups?render(false):showEmpty();
   SOUNDS[m].deal();
 }
-function changeInvalidating(fn){fn();save();syncUI();clearTimers();showEmpty();}
+function changeInvalidating(fn){resetPicks();fn();save();syncUI();clearTimers();showEmpty();}
 
 /* ---------- wiring ---------- */
 $("minus").onclick=()=>changeInvalidating(()=>{const c=count();state.chosen=null;state.n=Math.max(MIN,c-1);});
@@ -819,6 +881,7 @@ $("soundBtn").onclick=()=>{state.muted=!state.muted;save();syncUI();if(!state.mu
 let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(state.groups)setCardSize();},120);});
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&T.st==="done"){tReset();return;}
+  if(!$("pSpot").hidden){if(e.key==="Escape")closeSpot();return;}
   if(!$("printView").hidden){if(e.key==="Escape")closePrint();return;}
   if(!$("picker").hidden){if(e.key==="Escape")closePicker();return;}
   if(!$("tBigView").hidden){if(e.key==="Escape")closeBig();return;}
@@ -832,7 +895,7 @@ document.addEventListener("keydown",e=>{
 const fsBtn=$("fsBtn");
 if(!document.documentElement.requestFullscreen)fsBtn.hidden=true;
 fsBtn.onclick=()=>{try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{});}catch(e){}};
-document.addEventListener("fullscreenchange",()=>{fsBtn.textContent=document.fullscreenElement?"Exit fullscreen":"Fullscreen";setTimeout(setCardSize,100);});
+document.addEventListener("fullscreenchange",()=>{$("fsTxt").textContent=document.fullscreenElement?"Exit fullscreen":"Fullscreen";setTimeout(setCardSize,100);});
 
 /* ---------- print ---------- */
 let printDeck=state.deck,missingOnly=false;
@@ -975,6 +1038,76 @@ $("tHead").addEventListener("pointermove",e=>{if(!drag)return;state.tPos=[e.clie
 ["pointerup","pointercancel"].forEach(t=>$("tHead").addEventListener(t,()=>{if(drag){drag=null;save();}}));
 addEventListener("resize",()=>{if(!wid.hidden)placeWidget();});
 tDraw();
+
+/* ---------- pick ---------- */
+const PK={done:new Set(),per:null,single:null};
+function resetPicks(){PK.done=new Set();PK.per=null;PK.single=null;if(typeof syncPick==="function")syncPick();}
+function applyPicks(){
+  table.classList.toggle("picking",!!PK.per);
+  table.querySelectorAll(".card").forEach(c=>{
+    const i=+c.dataset.i;
+    c.classList.toggle("picked",!!PK.per&&PK.per.includes(i));
+    c.classList.toggle("spot",!PK.per&&PK.single===i);
+  });
+}
+function syncPick(){
+  if(!$("pPanel"))return;
+  const all=activeCards(),left=all.filter(i=>!PK.done.has(i)).length;
+  $("pLeft").textContent=`${left} of ${all.length} still to pick`;
+  $("pGroup").disabled=!state.groups;
+  $("pNote").textContent=state.groups?"":"Shuffle first to use One per group.";
+  $("pClear").hidden=!(PK.per||PK.single!==null);
+  if(state.groups)applyPicks();
+}
+function groupOf(i){if(!state.groups)return -1;return state.groups.findIndex(g=>g.includes(i));}
+function drawFrom(list){
+  let pool=list.filter(i=>!PK.done.has(i));
+  if(!pool.length)pool=list;
+  return pool[rnd(pool.length)];
+}
+function pickOne(){
+  audio();
+  let all=activeCards(),pool=all.filter(i=>!PK.done.has(i)),restarted=false;
+  if(!pool.length){PK.done=new Set();pool=all;restarted=true;}
+  const pick=pool[rnd(pool.length)];
+  PK.done.add(pick);PK.per=null;PK.single=pick;
+  const card=$("pCard"),lbl=$("pGroupLbl"),snd=SOUNDS[state.mood];
+  $("pSpot").hidden=false;$("pAgain").disabled=true;lbl.textContent="";
+  const finish=()=>{
+    card.innerHTML=face(state.deck,pick).html;
+    card.classList.remove("land");void card.offsetWidth;card.classList.add("land");
+    const g=groupOf(pick);
+    lbl.textContent=(restarted?"Everyone has had a turn, so starting again. ":"")+(g>=0?(l=>l.length<=2?"Group "+l:l)(MOODS[state.mood].label(g)):"");
+    snd.reveal();$("pAgain").disabled=false;$("pAgain").focus();syncPick();
+  };
+  if(reduced||all.length<2){finish();return;}
+  let k=0,delay=55;const steps=14;
+  const spin=()=>{
+    if(k>=steps){finish();return;}
+    card.innerHTML=face(state.deck,all[rnd(all.length)]).html;
+    snd.deal();k++;delay*=1.12;setTimeout(spin,delay);
+  };
+  spin();
+}
+function pickPerGroup(){
+  if(!state.groups)return;
+  audio();
+  PK.single=null;
+  PK.per=state.groups.map(g=>{const i=drawFrom(g);PK.done.add(i);return i;});
+  syncPick();
+  if(!reduced)table.querySelectorAll(".card.picked").forEach((c,k)=>c.animate([{scale:"1"},{scale:"1.18"},{scale:"1.06"}],{duration:420,delay:k*60,easing:"ease-out"}));
+  SOUNDS[state.mood].reveal();
+}
+function closeSpot(){$("pSpot").hidden=true;syncPick();}
+function openPanel(){$("pPill").hidden=true;$("pPanel").hidden=false;syncPick();$("pOne").focus();}
+function closePanel(){$("pPanel").hidden=true;$("pPill").hidden=false;$("pPill").focus();}
+$("pPill").onclick=openPanel;$("pMin").onclick=closePanel;
+$("pOne").onclick=pickOne;$("pAgain").onclick=pickOne;$("pClose").onclick=closeSpot;
+$("pSpot").addEventListener("click",e=>{if(e.target===$("pSpot"))closeSpot();});
+$("pGroup").onclick=pickPerGroup;
+$("pClear").onclick=()=>{PK.per=null;PK.single=null;applyPicks();syncPick();};
+$("pReset").onclick=()=>{PK.done=new Set();syncPick();};
+syncPick();
 
 buildLights();syncUI();buildAmbient();showEmpty();
 })();
