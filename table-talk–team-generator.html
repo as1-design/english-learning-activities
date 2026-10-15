@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Table Talk – group shuffler</title>
+<title>table-talk–team-generator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Cabin+Sketch:wght@700&family=Figtree:wght@400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -818,6 +818,7 @@ $("soundBtn").onclick=()=>{state.muted=!state.muted;save();syncUI();if(!state.mu
 
 let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(state.groups)setCardSize();},120);});
 document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&T.st==="done"){tReset();return;}
   if(!$("printView").hidden){if(e.key==="Escape")closePrint();return;}
   if(!$("picker").hidden){if(e.key==="Escape")closePicker();return;}
   if(!$("tBigView").hidden){if(e.key==="Escape")closeBig();return;}
@@ -903,7 +904,7 @@ function tDraw(){
   const frac=T.total?T.rem/T.total:0,off=(C*(1-frac)).toFixed(2),txt=fmt(T.rem);
   ["tProg","tProgBig"].forEach(id=>$(id).style.strokeDashoffset=off);
   $("tTime").textContent=txt;$("tTimeBig").textContent=txt;
-  const lab=T.st==="running"?"Pause":T.st==="paused"?"Resume":"Start";
+  const lab=T.st==="running"?"Pause":T.st==="paused"?"Resume":T.st==="done"?"Stop":"Start";
   $("tStart").textContent=lab;$("tStartBig").textContent=lab;
   $("tPillTime").textContent=T.st==="done"?"Time!":T.st==="idle"?"":txt;
   [pill,wid,big].forEach(el=>el.classList.toggle("done",T.st==="done"));
@@ -917,17 +918,32 @@ function tLoop(){
     T.lastSec=sec;
     if(sec>0&&sec<=10)tone({f:sec%2?1250:950,dur:.06,g:.14,type:"triangle"});
   }
-  if(T.rem<=0){T.st="done";clearInterval(T.iv);SOUNDS[state.mood].reveal();}
+  if(T.rem<=0){T.st="done";clearInterval(T.iv);startAlarm();}
   tDraw();
 }
+let alarmT=null,alarmStart=0,alarmCycle=0;
+function startAlarm(){
+  stopAlarm();alarmStart=Date.now();alarmCycle=0;
+  const step=()=>{
+    if(T.st!=="done")return;
+    if(alarmCycle%3===0)SOUNDS[state.mood].reveal();
+    else{tone({f:1400,dur:.12,g:.22,type:"triangle"});tone({f:1050,t:.16,dur:.14,g:.22,type:"triangle"});tone({f:1400,t:.32,dur:.12,g:.18,type:"triangle"});}
+    alarmCycle++;
+    const el=Math.min(1,(Date.now()-alarmStart)/20000);
+    alarmT=setTimeout(step,Math.round(2200-el*1400));
+  };
+  step();
+}
+function stopAlarm(){clearTimeout(alarmT);alarmT=null;}
 function tStart(){
   audio();
+  if(T.st==="done"){tReset();return;}
   if(T.st==="running"){T.rem=Math.max(0,(T.endAt-Date.now())/1000);T.st="paused";clearInterval(T.iv);tDraw();return;}
   if(T.st==="idle"||T.st==="done")T.rem=T.total;
   T.endAt=Date.now()+T.rem*1000;T.st="running";T.lastSec=null;
   clearInterval(T.iv);T.iv=setInterval(tLoop,100);tLoop();
 }
-function tReset(){clearInterval(T.iv);T.st="idle";T.rem=T.total;tDraw();}
+function tReset(){stopAlarm();clearInterval(T.iv);T.st="idle";T.rem=T.total;tDraw();}
 function tSet(secs){secs=Math.max(5,Math.min(5999,Math.round(secs)));T.total=secs;state.tSecs=secs;save();tReset();}
 function parseTime(v){
   v=v.trim().replace(",",".");if(!v)return null;
@@ -949,7 +965,7 @@ function placeWidget(){
 }
 function openWidget(){pill.hidden=true;wid.hidden=false;placeWidget();$("tStart").focus();}
 function minimise(){wid.hidden=true;pill.hidden=false;pill.focus();}
-pill.onclick=openWidget;$("tMin").onclick=minimise;
+pill.onclick=()=>{if(T.st==="done"){tReset();return;}openWidget();};$("tMin").onclick=minimise;
 function openBig(){big.hidden=false;wid.hidden=true;pill.hidden=true;$("tStartBig").focus();}
 function closeBig(){big.hidden=true;openWidget();}
 $("tBig").onclick=openBig;$("tExitBig").onclick=closeBig;
