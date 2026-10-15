@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Looking back: phrases for talking about the past</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef3ff; --page:#ffffff; --ink:#1f2a44; --muted:#56627f; --line:#dbe3f6; --line-2:#c5d0ec;
+  --blue:#3b5bdb; --blue-dark:#2742a8; --blue-soft:#e3e9ff;
+  --sun:#ffd166; --coral:#ff8a7a; --sky:#7cc4ff; --lilac:#b9a4ff; --pink:#ff9ecd; --tang:#ffb26b;
+  --gold:#f2b705; --gold-dark:#b88600;
+  --ok:#1b8a4b; --ok-ink:#11592f; --ok-bg:#e4f6eb; --ok-line:#9ed8b6;
+  --no:#d23b3b; --no-ink:#972121; --no-bg:#fdeaea;
+  --f-fun:"Fredoka","Baloo 2","Trebuchet MS","Verdana",sans-serif;
+  --f-body:"Nunito","Segoe UI","Helvetica Neue",Helvetica,sans-serif;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  color-scheme:light; --w:760px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:90px;-webkit-text-size-adjust:100%}
+body{margin:0;color:var(--ink);font-family:var(--f-body);font-size:1.0625rem;line-height:1.55;
+  background-color:var(--bg);
+  background-image:radial-gradient(rgba(59,91,219,.09) 1.4px, transparent 1.6px);
+  background-size:22px 22px;}
+button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+button:focus-visible,summary:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+em{font-style:italic}
+.ipa{font-family:"Charis SIL","Doulos SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-style:normal}
+
+/* ---------- Top bar ---------- */
+.bar{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:2px solid var(--line)}
+.bar-in{max-width:var(--w);margin:0 auto;display:flex;align-items:center;gap:var(--s2);padding:var(--s2) var(--s3)}
+.iconbtn{width:44px;height:44px;flex:none;border-radius:14px;border:2px solid var(--line);background:#fff;display:grid;place-items:center;box-shadow:0 3px 0 var(--line)}
+.iconbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.iconbtn svg{width:22px;height:22px}
+.bar-title{flex:1;min-width:0;font-family:var(--f-fun);font-weight:600;font-size:1.08rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score{flex:none;font-family:var(--f-fun);font-weight:600;font-size:.95rem;background:var(--sun);border-radius:999px;padding:6px 12px;box-shadow:0 3px 0 #e0b23e;white-space:nowrap}
+.score.bump{animation:bump .45s var(--spring)}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.22)}100%{transform:scale(1)}}
+.bankbtn{flex:none;font-family:var(--f-fun);font-weight:600;font-size:.98rem;background:var(--blue);color:#fff;border:0;border-radius:14px;padding:10px 12px;box-shadow:0 4px 0 var(--blue-dark);white-space:nowrap}
+.bankbtn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--blue-dark)}
+.progress{height:6px;background:var(--blue-soft)}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--coral),var(--tang),var(--sun));border-radius:0 6px 6px 0;transition:width .5s var(--spring)}
+@media (max-width:370px){.bankbtn .bt{display:none}}
+
+/* ---------- Screen ---------- */
+main{max-width:var(--w);margin:0 auto;padding:var(--s4) var(--s3) var(--s5)}
+.enter > *{animation:rise .5s var(--spring) both}
+.enter > *:nth-child(2){animation-delay:.08s}
+.enter > *:nth-child(3){animation-delay:.16s}
+.enter > *:nth-child(4){animation-delay:.24s}
+.enter > *:nth-child(5){animation-delay:.32s}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+h1,h2,h3{font-family:var(--f-fun);font-weight:600;line-height:1.15;margin:0}
+.lead{color:var(--muted);margin:var(--s2) 0 0;max-width:60ch}
+.panel{background:var(--page);border:2px solid var(--line);border-radius:22px;padding:var(--s4);box-shadow:0 6px 0 var(--line)}
+.stack > * + *{margin-top:var(--s4)}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);font-family:var(--f-fun);font-weight:600;font-size:1.12rem;background:var(--blue);color:#fff;border:0;border-radius:16px;padding:14px 22px;min-height:52px;box-shadow:0 5px 0 var(--blue-dark);transition:transform .08s, box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--blue-dark)}
+.btn.wide{width:100%}
+.btn.quiet{background:#fff;color:var(--blue-dark);border:2px solid var(--line-2);box-shadow:0 4px 0 var(--line-2);font-size:1rem;min-height:46px;padding:10px 18px}
+.btn.quiet.armed{background:var(--no-bg);color:var(--no-ink);border-color:var(--no);box-shadow:0 4px 0 #f0b3b3}
+.restart{display:flex;justify-content:center;margin-top:var(--s5)}
+
+/* ---------- Stickers ---------- */
+.stk{--size:56px;--r:0deg;width:var(--size);height:var(--size);border-radius:30%;display:grid;place-items:center;font-size:calc(var(--size)*.5);line-height:1;
+  border:4px solid #fff;box-shadow:0 0 0 1.5px rgba(31,42,68,.12),0 4px 8px rgba(31,42,68,.18);transform:rotate(var(--r));position:relative}
+.stk.shiny{border-color:var(--gold);box-shadow:0 0 0 2px #fff,0 0 0 4px var(--gold),0 4px 10px rgba(184,134,0,.35)}
+.stk.shiny::after{content:"";position:absolute;inset:-4px;border-radius:30%;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);background-size:250% 100%;animation:shine 5s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,70%{background-position:120% 0}100%{background-position:-120% 0}}
+.stk.pop{animation:pop .7s var(--spring) both}
+@keyframes pop{0%{transform:scale(.1) rotate(-40deg);opacity:0}60%{transform:scale(1.25) rotate(var(--r));opacity:1}100%{transform:scale(1) rotate(var(--r))}}
+.c-sun{background:var(--sun)} .c-coral{background:var(--coral)} .c-sky{background:var(--sky)}
+.c-lilac{background:var(--lilac)} .c-pink{background:var(--pink)} .c-tang{background:var(--tang)}
+.slot{--size:56px;width:var(--size);height:var(--size);border-radius:30%;border:3px dashed var(--line-2);display:grid;place-items:center;font-family:var(--f-fun);font-weight:600;color:#93a0c2;background:rgba(255,255,255,.6)}
+.slot.next{border-color:var(--blue);color:var(--blue);animation:breathe 4s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+/* Album strip on the matching screen */
+.album-strip{background:var(--page);border:2px solid var(--line);border-radius:20px;padding:var(--s3) var(--s4) var(--s4);box-shadow:0 5px 0 var(--line)}
+.album-strip .lbl{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);font-family:var(--f-fun);font-weight:600;margin-bottom:var(--s3)}
+.album-strip .lbl{font-size:.98rem;line-height:1.25}
+.album-strip .lbl small{font-family:var(--f-body);font-weight:700;color:var(--muted);font-size:.85rem;white-space:nowrap}
+.slots{display:flex;justify-content:space-between;gap:var(--s2)}
+.slots .slot,.slots .stk{--size:min(56px,15vw)}
+
+/* Phrase card */
+.phrase-card{position:relative;text-align:center;background:var(--page);border:2px solid var(--line);border-radius:26px;padding:var(--s5) var(--s4);box-shadow:0 7px 0 var(--line);overflow:hidden}
+.phrase-card::before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-52px;top:-58px;background:var(--accent,var(--sun));opacity:.9}
+.phrase-card::after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;left:-42px;bottom:-50px;background:var(--accent2,var(--sky));opacity:.85}
+.phrase-card > *{position:relative}
+.phrase-card.fresh{animation:rise .45s var(--spring) both}
+.steps{display:flex;justify-content:center;gap:var(--s2);margin-bottom:var(--s3)}
+.chip{font-family:var(--f-fun);font-weight:600;font-size:.88rem;padding:4px 12px;border-radius:999px;background:#fff;border:2px solid var(--line-2);color:var(--muted)}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.done{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-ink)}
+.phrase-big{font-family:var(--f-fun);font-weight:700;font-size:clamp(2rem,9vw,3rem);line-height:1.05;margin:var(--s2) 0 0;letter-spacing:-.01em}
+.phrase-mean{margin:var(--s3) auto 0;max-width:36ch;font-weight:600;color:var(--muted);min-height:1.5em}
+.phrase-mean.shown{color:var(--ink)}
+
+.th{display:flex;justify-content:space-between;align-items:center;gap:var(--s2);font-family:var(--f-fun);font-weight:600;font-size:.9rem;color:var(--muted)}
+.streak{color:#c2410c;background:#fff1e6;border-radius:999px;padding:2px 10px}
+.tq{font-family:var(--f-fun);font-weight:600;font-size:1.15rem;margin:var(--s1) 0 var(--s3);line-height:1.25}
+.opts{display:flex;flex-direction:column;gap:var(--s2)}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:2px solid var(--line-2);border-radius:16px;padding:12px 14px;min-height:50px;font-size:1.02rem;line-height:1.4;box-shadow:0 4px 0 var(--line-2);transition:transform .08s, box-shadow .08s}
+.opt:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 var(--line-2)}
+.opt.right{border-color:var(--ok);background:var(--ok-bg);color:var(--ok-ink);font-weight:700;box-shadow:0 4px 0 var(--ok-line)}
+.opt.right::before{content:"✓";font-weight:800;margin-right:.45em}
+.opt.wrong{border-color:var(--no);background:var(--no-bg);color:var(--no-ink);box-shadow:none;text-decoration:line-through;text-decoration-thickness:1.5px}
+.opt.wrong::before{content:"✗";text-decoration:none;display:inline-block;margin-right:.45em}
+.opt[disabled]{cursor:default}
+.shake{animation:shake .32s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.tmsg{margin:var(--s3) 0 0;font-weight:700;color:var(--no-ink);min-height:0}
+.tmsg:empty{display:none}
+.fb{margin-top:var(--s3);border-radius:16px;padding:var(--s3) var(--s4);background:var(--ok-bg);border:2px solid var(--ok-line)}
+.fb .label{font-family:var(--f-fun);font-weight:600;color:var(--ok-ink);font-size:1.08rem;display:block}
+.fb p{margin:var(--s1) 0}
+.fb.no{background:var(--no-bg);border-color:#f2b8b8}
+.fb.no .label{color:var(--no-ink)}
+.why{margin:var(--s2) 0 0;padding:0;list-style:none}
+.why li{margin:var(--s2) 0 0;padding-left:1.3em;position:relative}
+.why li::before{content:"✗";position:absolute;left:0;color:var(--no);font-weight:800}
+.more{margin-top:var(--s3);display:grid;gap:var(--s2)}
+.more div{background:#f6f8ff;border-radius:12px;padding:var(--s2) var(--s3)}
+.more b{font-family:var(--f-fun);font-weight:600;display:block;font-size:.92rem;color:var(--blue-dark)}
+.stk-note{display:flex;align-items:center;gap:var(--s3);margin-top:var(--s3);font-weight:700}
+.stk-note .stk{--size:46px;flex:none}
+
+/* ---------- Home ---------- */
+.hero{position:relative;padding:var(--s5) var(--s1) var(--s2)}
+.hero h1{font-size:clamp(2.6rem,12vw,4rem);font-weight:700;letter-spacing:-.02em;line-height:.95}
+.hero h1 span{display:inline-block;transform:rotate(-3deg);background:var(--sun);padding:0 .18em;border-radius:12px;margin-top:.1em}
+.hero .deco{position:absolute;right:4px;top:6px;font-size:clamp(3.2rem,15vw,5rem);transform:rotate(12deg);filter:drop-shadow(0 6px 6px rgba(31,42,68,.18))}
+.album-page h2{font-size:1.25rem}
+.album-page .count{color:var(--muted);font-weight:700;margin:var(--s1) 0 var(--s3)}
+.grid15{display:grid;grid-template-columns:repeat(5,1fr);gap:var(--s3);justify-items:center}
+.grid15 .slot,.grid15 .stk{--size:min(58px,14vw)}
+.acts{display:grid;gap:var(--s3);margin-top:var(--s5)}
+.album-page{margin-top:var(--s3)}
+.act{display:flex;gap:var(--s4);align-items:center;text-align:left;width:100%;background:#fff;border:2px solid var(--line);border-radius:22px;padding:var(--s4);box-shadow:0 6px 0 var(--bar,var(--line));transition:transform .1s, box-shadow .1s;border-left:10px solid var(--bar,var(--line))}
+.act:active{transform:translateY(4px);box-shadow:0 2px 0 var(--bar,var(--line))}
+.act .em{font-size:2.3rem;flex:none;width:58px;height:58px;display:grid;place-items:center;border-radius:18px;background:var(--tint,#f3f5fb)}
+.act h3{font-size:1.25rem}
+.act p{margin:var(--s1) 0 0;color:var(--muted);font-size:.97rem;line-height:1.4}
+.act .st{display:inline-block;margin-top:var(--s2);font-family:var(--f-fun);font-weight:600;font-size:.85rem;background:var(--tint,#f3f5fb);border-radius:999px;padding:2px 10px;color:var(--ink)}
+
+/* ---------- Results ---------- */
+.result{text-align:center}
+.result h2{font-size:clamp(1.8rem,7vw,2.4rem)}
+.stars{font-size:2.4rem;letter-spacing:.08em;margin:var(--s2) 0}
+.stars .on{color:var(--gold);display:inline-block;animation:pop .6s var(--spring) both}
+.stars .on:nth-child(2){animation-delay:.15s}.stars .on:nth-child(3){animation-delay:.3s}
+.stars .off{color:#cfd7ec}
+.result .big5{display:flex;justify-content:center;gap:var(--s2);margin:var(--s4) 0}
+.result .big5 .stk{--size:min(64px,14vw)}
+.result p{margin:var(--s2) auto;max-width:44ch}
+.rows{display:grid;gap:var(--s2);margin-top:var(--s4);text-align:left}
+.rows div{display:flex;justify-content:space-between;align-items:center;gap:var(--s3);background:#f6f8ff;border-radius:14px;padding:var(--s2) var(--s4);font-weight:700}
+.rows .s{color:var(--gold);font-size:1.3rem;letter-spacing:.05em;white-space:nowrap}
+.rows .s .off{color:#cfd7ec}
+
+/* ---------- Situations ---------- */
+.sit-head{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s3)}
+.sit-head .em{font-size:2rem;width:52px;height:52px;flex:none;display:grid;place-items:center;border-radius:16px;background:var(--tint)}
+.sit-head small{display:block;font-family:var(--f-fun);font-weight:600;color:var(--muted);font-size:.85rem}
+.sit-head h2{font-size:1.3rem}
+.gap{display:inline-block;min-width:7.6em;text-align:center;font-family:var(--f-fun);font-weight:600;font-size:.92em;color:var(--muted);border-bottom:3px solid var(--line-2);padding:0 .2em;line-height:1.45;border-radius:6px 6px 0 0}
+.gap.now{background:#fff1c2;border-bottom-color:#e8a500;color:#7a5200}
+.gap.filled{min-width:0;padding:0;color:var(--ok-ink);font-family:inherit;font-size:1em;font-weight:800;border-bottom-color:var(--ok);background:none;border-radius:0}
+.gap.filled.flash{animation:hilite 1.2s ease}
+@keyframes hilite{0%{background:#c9f0d6}100%{background:transparent}}
+.chat{display:flex;flex-direction:column;gap:var(--s2)}
+.bubble{max-width:86%;padding:10px 14px;border-radius:20px;background:#f1f4fb}
+.bubble.r{align-self:flex-end;background:var(--blue-soft);border-bottom-right-radius:6px}
+.bubble.l{align-self:flex-start;border-bottom-left-radius:6px}
+.bubble .who{display:block;font-family:var(--f-fun);font-weight:600;font-size:.82rem;color:var(--blue-dark)}
+.bubble.l .who{color:#b4410b}
+.bubble p{margin:0}
+.email{border:2px solid var(--line);border-radius:16px;overflow:hidden}
+.ehead{background:#f6f8ff;padding:var(--s2) var(--s4);font-size:.95rem;border-bottom:2px solid var(--line)}
+.ehead div{display:flex;gap:var(--s2)}
+.ehead span{font-family:var(--f-fun);font-weight:600;color:var(--muted);min-width:4.4rem}
+.ebody{padding:var(--s1) var(--s4)}
+.ebody p{margin:var(--s3) 0}
+.dlg p{margin:var(--s3) 0}
+.who-tag{display:inline-block;font-family:var(--f-fun);font-weight:600;font-size:.82rem;border-radius:999px;padding:1px 10px;margin-right:6px;vertical-align:1px;background:var(--tint,#eee)}
+.leaflet{background:#fffaf0;border:3px dashed var(--tang);border-radius:18px;padding:var(--s4)}
+.leaflet h3{font-size:1.5rem;color:#9a4b00}
+.leaflet p{margin:var(--s3) 0}
+
+/* ---------- Speaking ---------- */
+.sp-grid{list-style:none;margin:0;padding:0;display:grid;gap:var(--s3)}
+@media (min-width:640px){.sp-grid{grid-template-columns:1fr 1fr}}
+.sp-card{background:#fff;border:2px solid var(--line);border-radius:20px;padding:var(--s4);box-shadow:0 5px 0 var(--line);border-top:8px solid var(--bar)}
+.sp-card .n{font-family:var(--f-fun);font-weight:700;font-size:1.05rem;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--bar);margin-bottom:var(--s2)}
+.sp-card p{margin:0;font-size:1.06rem}
+.hl{background:none;border:0;padding:0;font-weight:800;color:var(--blue-dark);border-bottom:2px dotted var(--blue);font-size:inherit;line-height:inherit;text-align:inherit}
+.might{margin-top:var(--s3)!important;padding-top:var(--s2);border-top:2px dashed var(--line);font-size:.97rem!important}
+.might b{font-family:var(--f-fun);font-weight:600}
+
+/* ---------- Word bank sheet ---------- */
+.sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(31,42,68,.4)}
+.sheet[hidden]{display:none}
+.sheet-in{background:#fff;width:100%;max-width:var(--w);height:92vh;height:92dvh;border-radius:26px 26px 0 0;display:flex;flex-direction:column;animation:slideup .35s var(--spring)}
+@keyframes slideup{from{transform:translateY(40%);opacity:.4}to{transform:none;opacity:1}}
+.sheet-head{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4) var(--s2)}
+.sheet-head h2{flex:1;font-size:1.45rem}
+.tabs{display:flex;gap:var(--s2);overflow-x:auto;padding:var(--s1) var(--s4) var(--s3);border-bottom:2px solid var(--line);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;font-family:var(--f-fun);font-weight:600;font-size:.92rem;border:2px solid var(--line-2);background:#fff;border-radius:999px;padding:6px 11px}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sheet-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:var(--s3) var(--s4) calc(var(--s6) + env(safe-area-inset-bottom,0px))}
+.sheet-body h3{font-size:1.15rem;margin:var(--s4) 0 var(--s2)}
+.sheet-body > p{margin:var(--s2) 0;color:var(--muted)}
+details.wb{border:2px solid var(--line);border-radius:16px;margin:var(--s2) 0;background:#fff}
+details.wb[open]{border-color:var(--line-2);box-shadow:0 4px 0 var(--line)}
+details.wb.hi{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft)}
+details.wb summary{display:flex;align-items:center;gap:var(--s3);padding:var(--s2) var(--s3);list-style:none;cursor:pointer}
+details.wb summary::-webkit-details-marker{display:none}
+details.wb summary .stk{--size:40px;border-width:3px;flex:none}
+details.wb summary .t{flex:1;min-width:0}
+details.wb summary .t b{font-family:var(--f-fun);font-weight:600;font-size:1.08rem;display:block;line-height:1.2}
+details.wb summary .t span{color:var(--muted);font-size:.93rem;line-height:1.3;display:block}
+details.wb summary::after{content:"+";font-family:var(--f-fun);font-weight:700;font-size:1.4rem;color:var(--blue)}
+details.wb[open] summary::after{content:"–"}
+.wb-body{padding:0 var(--s3) var(--s3);display:grid;gap:var(--s2)}
+.wb-body div{background:#f6f8ff;border-radius:12px;padding:var(--s2) var(--s3)}
+.wb-body b{font-family:var(--f-fun);font-weight:600;display:block;font-size:.9rem;color:var(--blue-dark)}
+.frame{border:2px solid var(--line);border-radius:18px;padding:var(--s3) var(--s4);margin:var(--s3) 0;border-left:8px solid var(--bar,var(--sky))}
+.frame h3{margin:0 0 var(--s1)!important}
+.frame p{margin:var(--s1) 0}
+.ex{list-style:none;margin:var(--s2) 0 0;padding:0}
+.ex li{padding:3px 0 3px 1.6em;position:relative}
+.ex li.y::before{content:"✓";position:absolute;left:0;color:var(--ok);font-weight:800}
+.ex li.n{color:var(--no-ink)}
+.ex li.n::before{content:"✗";position:absolute;left:0;color:var(--no);font-weight:800}
+.say-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--s2)}
+.say-list li{background:#fff;border:2px solid var(--line);border-radius:14px;padding:var(--s2) var(--s3)}
+.say-list b{font-family:var(--f-fun);font-weight:600;font-size:1.05rem;display:block}
+.say-list span{color:var(--muted);font-size:.95rem}
+.ukus{display:grid;gap:var(--s2)}
+.ukus .row{border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.ukus .pair{display:grid;grid-template-columns:1fr 1fr}
+.ukus .pair div{padding:var(--s2) var(--s3)}
+.ukus .pair div:first-child{background:#fff1f3;border-right:2px solid var(--line)}
+.ukus .pair div:last-child{background:#eef4ff}
+.ukus .pair small{display:block;font-family:var(--f-fun);font-weight:600;font-size:.78rem;color:var(--muted)}
+.ukus .pair b{font-weight:800}
+.ukus .note{padding:var(--s2) var(--s3);font-size:.93rem;color:var(--muted);border-top:2px solid var(--line)}
+
+footer.credit{max-width:var(--w);margin:0 auto;padding:var(--s3) var(--s4) var(--s5);font-size:.85rem;color:var(--muted);font-weight:600;text-align:center}
+
+/* Confetti */
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.confetti i{position:absolute;width:10px;height:14px;border-radius:3px;top:-20px;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot));opacity:.9}}
+
+.fresh{animation:rise .45s var(--spring) both}
+.album-group + .album-group{margin-top:var(--s4)}
+.ag-name{font-family:var(--f-fun);font-weight:600;margin:0 0 var(--s2);display:flex;justify-content:space-between;gap:var(--s2);font-size:.98rem;line-height:1.25}
+.ag-name small{font-family:var(--f-body);font-weight:700;color:var(--muted);white-space:nowrap}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);justify-items:center}
+.grid4 .slot,.grid4 .stk{--size:min(60px,15vw)}
+@media (min-width:640px){.grid4{grid-template-columns:repeat(8,1fr)}.grid4 .slot,.grid4 .stk{--size:58px}}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-top:var(--s5);background:#fff;border:2px solid var(--line);border-radius:20px;padding:6px}
+.seg-b{border:0;background:none;border-radius:14px;padding:10px 8px;text-align:center;line-height:1.2}
+.seg-b b{display:block;font-family:var(--f-fun);font-weight:600;font-size:1.08rem}
+.seg-b span{display:block;font-size:.82rem;color:var(--muted);margin-top:2px}
+.seg-b[aria-selected="true"]{background:var(--ink);color:#fff;box-shadow:0 4px 0 #0e1527}
+.seg-b[aria-selected="true"] span{color:#d5dcf0}
+.acts{margin-top:var(--s3)!important}
+.sec-h{font-size:1.2rem;margin:var(--s5) 0 0}
+.fresh-box{margin-top:var(--s5);text-align:center;color:var(--muted);font-size:.95rem}
+.fresh-box p{margin:0 0 var(--s2)}
+.big8{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s2) var(--s3);margin:var(--s4) 0}
+.big8 .stk,.big8 .slot{--size:min(60px,15vw)}
+.post{border:2px solid var(--line);border-radius:18px;padding:var(--s3) var(--s4);background:#fff}
+.post-head{display:flex;align-items:center;gap:var(--s3);margin-bottom:var(--s1)}
+.post-head .avatar{width:42px;height:42px;border-radius:50%;background:var(--tang);display:grid;place-items:center;font-family:var(--f-fun);font-weight:700;font-size:1.2rem}
+.post-head b{display:block;font-family:var(--f-fun);font-weight:600}
+.post-head small{color:var(--muted);font-weight:600}
+.post p{margin:var(--s3) 0}
+.post-foot{border-top:2px solid var(--line);padding-top:var(--s2);color:var(--muted);font-weight:700;font-size:.9rem}
+.rv-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s2);flex-wrap:wrap;margin-bottom:var(--s3)}
+.rv-badge{font-family:var(--f-fun);font-weight:600;font-size:.9rem;background:#ffe6e1;border-radius:999px;padding:4px 12px}
+.rv-badge.spot{background:#efe7ff}
+.rv-count{font-family:var(--f-fun);font-weight:600;color:var(--muted);font-size:.9rem}
+.rv-label{font-family:var(--f-fun);font-weight:600;color:var(--muted);margin:0 0 var(--s1)}
+.rv-text{font-size:clamp(1.25rem,5vw,1.6rem);line-height:1.45;margin:0;font-weight:700}
+.rv-small{font-size:1.05rem;font-weight:600;color:var(--muted)}
+.review-card{border-top:8px solid var(--coral)}
+.spot-card{border-top:8px solid var(--lilac)}
+.spot-s{font-size:clamp(1.3rem,5.4vw,1.7rem);line-height:1.4;font-weight:700;margin:0}
+.spot-s.ok{color:var(--ok-ink)}
+.spot-s .was{display:block;color:var(--no-ink);text-decoration:line-through;text-decoration-thickness:2px;font-size:.8em;opacity:.85}
+.spot-s .fixed{display:block;color:var(--ok-ink);margin-top:var(--s2);animation:rise .4s var(--spring) both}
+.opt.big{font-family:var(--f-fun);font-weight:600;font-size:1.08rem;text-align:center}
+.rv-score{font-family:var(--f-fun);font-weight:600;font-size:1.3rem}
+.sec-h3{font-size:1.1rem;margin:var(--s4) 0 var(--s2);text-align:left}
+.again{list-style:none;margin:0;padding:0;text-align:left;display:grid;gap:var(--s2)}
+.again li{background:#f6f8ff;border-radius:14px;padding:var(--s2) var(--s3)}
+.again li > span{display:block;font-weight:700}
+.again li > span.n{color:var(--no-ink);text-decoration:line-through}
+.again small{display:block;font-size:.95rem;color:var(--ink);margin-top:2px}
+/* ---------- Activity layout: question and answers side by side or stacked ---------- */
+.stage{display:grid;gap:var(--s3)}
+.q-col{min-width:0}
+.a-col{min-width:0}
+.ans{background:#fff;border:2px solid var(--line);border-radius:22px;padding:var(--s3) var(--s4) var(--s4);box-shadow:0 6px 0 var(--line)}
+.fade{animation:fadein .3s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.opt.right::before{animation:tick .45s var(--spring) both}
+@keyframes tick{0%{transform:scale(0)}100%{transform:scale(1)}}
+.opt.static{cursor:default}
+.next-row{margin-top:var(--s3)}
+details.more-d{margin-top:var(--s3);border:2px solid var(--line);border-radius:14px;background:#fff}
+details.more-d summary{padding:10px 14px;font-family:var(--f-fun);font-weight:600;color:var(--blue-dark);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:var(--s2);min-height:44px}
+details.more-d summary::-webkit-details-marker{display:none}
+details.more-d summary::after{content:"+";font-size:1.3rem;line-height:1}
+details.more-d[open] summary::after{content:"–"}
+details.more-d > .md{padding:0 14px 12px}
+details.more-d .why{margin-top:0}
+.sit-scroll{max-height:40vh;max-height:40dvh;overflow-y:auto;overscroll-behavior:contain;padding:2px 6px 2px 2px;margin:0 -6px 0 -2px;scrollbar-width:thin}
+.result-actions{display:flex;flex-direction:column;gap:var(--s3);align-items:center;margin-top:var(--s4)}
+.result-actions .btn{width:100%;max-width:420px}
+.home-wrap{max-width:820px;margin:0 auto}
+footer.credit[hidden]{display:none}
+.tile-wrap{display:grid;gap:var(--s2)}
+.tile-wrap .again-btn{justify-self:end;font-size:.9rem;min-height:40px;padding:6px 14px}
+.slots{flex-wrap:wrap;justify-content:center;gap:6px 8px}
+.slots{display:grid;grid-template-columns:repeat(var(--n),auto);justify-content:center;gap:6px}
+.slots .slot,.slots .stk{--size:min(44px,calc((100vw - 84px - (var(--n) - 1) * 6px) / var(--n)));border-width:3px}
+.slots .slot{border-width:2.5px}
+.chip.count{background:#f3f5fb;border-color:#f3f5fb}
+
+@media (max-width:480px){
+  .album-strip{padding:var(--s2) var(--s3) var(--s3)}
+  .album-strip .lbl{margin-bottom:var(--s2)}
+  .phrase-card{padding:var(--s4) var(--s3)}
+  .steps{margin-bottom:var(--s2)}
+}
+@media (max-width:899px){
+  .album-strip .lbl{margin-bottom:var(--s2);font-size:.92rem}
+  .phrase-card{padding:var(--s3) var(--s3) var(--s5)}
+  .phrase-big{font-size:clamp(1.8rem,8.5vw,2.6rem);margin-top:var(--s1)}
+  .steps{margin-bottom:var(--s1);gap:6px}
+  .chip{font-size:.8rem;padding:3px 10px}
+  .opt{padding:10px 12px;min-height:46px;font-size:.98rem;line-height:1.35}
+  .tq{font-size:1.06rem;margin:0 0 var(--s2)}
+  .ans{padding:var(--s3)}
+  .sit-scroll.more-below{-webkit-mask-image:linear-gradient(#000 calc(100% - 36px),transparent);mask-image:linear-gradient(#000 calc(100% - 36px),transparent)}
+  .stage{gap:var(--s3)}
+  main{padding-top:var(--s3)}
+}
+@media (max-width:899px) and (max-height:740px){
+  .album-strip{display:none}
+  .phrase-card{padding:var(--s3) var(--s3)}
+  .phrase-big{font-size:clamp(1.7rem,8vw,2.2rem)}
+  .phrase-mean{margin-top:var(--s1);font-size:.95rem}
+  .steps{margin-bottom:var(--s1)}
+  .opt{padding:9px 12px;min-height:44px;font-size:.97rem}
+  .tq{font-size:1.05rem;margin-bottom:var(--s2)}
+  .sit-scroll{max-height:33vh;max-height:33dvh}
+  .sit-head{margin-bottom:var(--s2)}
+  .sit-head .em{width:40px;height:40px;font-size:1.5rem}
+  .sit-head h2{font-size:1.1rem}
+  main{padding-top:var(--s3)}
+  .rv-text,.spot-s{font-size:1.2rem}
+}
+@media (min-width:900px){
+  :root{--w:1180px}
+  body{font-size:1.1rem}
+  .stage{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:var(--s5);align-items:start}
+  .a-col{position:sticky;top:86px}
+  .sit-scroll{max-height:calc(100vh - 220px);max-height:calc(100dvh - 220px)}
+  .phrase-big{font-size:3.1rem}
+  .phrase-card{padding:var(--s6) var(--s5)}
+  .opt{font-size:1.08rem}
+  .sp-grid{grid-template-columns:1fr 1fr 1fr}
+}
+@media (min-width:1400px) and (min-height:900px){
+  :root{--w:1320px}
+  html{font-size:122%}
+  .a-col{top:100px}
+  .slots .slot,.slots .stk{--size:62px}
+  .grid4 .slot,.grid4 .stk{--size:70px}
+}
+
+.bank-credit{text-align:center;font-size:.85rem;font-weight:600;margin-top:var(--s5)!important}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <button class="iconbtn" id="homeBtn" aria-label="Back to the start screen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#1f2a44" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>
+    </button>
+    <div class="bar-title" id="barTitle">Home</div>
+    <div class="score" id="score" role="status" aria-label="0 points"><span aria-hidden="true">🪙 </span><span id="scoreN">0</span></div>
+    <button class="bankbtn" id="bankBtn" aria-haspopup="dialog"><span aria-hidden="true">📖</span><span class="bt"> Word bank</span></button>
+  </div>
+  <div class="progress" aria-hidden="true"><i id="prog"></i></div>
+</header>
+
+<main id="screen"></main>
+<footer class="credit" id="credit">Class of Coffee – with AI assistance</footer>
+
+<div class="sheet" id="bank" hidden>
+  <div class="sheet-in" role="dialog" aria-modal="true" aria-labelledby="bankTitle">
+    <div class="sheet-head">
+      <h2 id="bankTitle">📖 Word bank</h2>
+      <button class="iconbtn" id="bankClose" aria-label="Close the word bank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1f2a44" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="phrases" aria-selected="true">Phrases</button>
+      <button class="tab" role="tab" data-tab="grammar" aria-selected="false">Grammar</button>
+      <button class="tab" role="tab" data-tab="talk" aria-selected="false">Speaking</button>
+      <button class="tab" role="tab" data-tab="ukus" aria-selected="false">UK and US</button>
+    </div>
+    <div class="sheet-body" id="bankBody"></div>
+  </div>
+</div>
+<script>
+
+/* =========================================================
+   Sessions and phrases
+   ========================================================= */
+const SESS = [
+  {name:"Remembering and forgetting", ids:["bell","slip","stick","flooding","memories","lane","lookback","thinkback"]},
+  {name:"People, places and time", ids:["brought","across","runinto","touch","endup","date","hindsight"]}
+];
+
+const P = [
+ {id:"bell", phrase:"ring a bell",
+  meaning:"to seem familiar, although you cannot remember exactly why",
+  pattern:"The thing that seems familiar is the subject, and no person follows the verb: <em>That name rings a bell.</em> It is common in questions and negatives: <em>Does this place ring a bell? It doesn’t ring a bell.</em>",
+  opts:["Her name rings a bell, but I can’t remember why.","Her name rings me a bell, but I can’t remember why.","I ring a bell with her name, but I can’t remember why."],
+  why:"The name is the subject, and no person follows the verb. Spanish and Catalan speakers often add <em>me</em> because of <em>me suena</em> and <em>em sona</em>, but English does not."},
+ {id:"slip", phrase:"slip your mind",
+  meaning:"to be forgotten, usually something that you intended to do",
+  pattern:"The thing you forgot is the subject: <em>Sorry, it completely slipped my mind.</em> It is a common and polite way of admitting that you forgot something.",
+  opts:["Sorry, your birthday completely slipped my mind.","Sorry, I completely slipped my mind about your birthday.","Sorry, I completely slipped your birthday."],
+  why:"The birthday is what slipped, so it is the subject. The person who forgot only appears in <em>my mind</em>."},
+ {id:"stick", phrase:"stick in your mind",
+  meaning:"to stay in your memory for a long time, usually because it was unusual or important",
+  pattern:"The memory is the subject: <em>One thing that stuck in my mind was her laugh.</em> The verb is irregular: <em>stick, stuck, stuck</em>.",
+  opts:["One thing that has always stuck in my mind is her laugh.","One thing that has always sticked in my mind is her laugh.","One thing that I have always stuck in my mind is her laugh."],
+  why:"The past participle of <em>stick</em> is <em>stuck</em>, and the thing you remember is the subject of the verb, not the person who remembers it."},
+ {id:"flooding", phrase:"come flooding back",
+  meaning:"to return suddenly and very strongly, used about memories or feelings",
+  pattern:"The memories are the subject, often <em>it all</em> or <em>everything</em>: <em>When I saw the house, it all came flooding back.</em> The word order is fixed.",
+  opts:["When I walked into the classroom, it all came flooding back.","When I walked into the classroom, I came flooding back.","When I walked into the classroom, it all came back flooding."],
+  why:"The memories come back, not the person, and <em>flooding</em> always goes between <em>come</em> and <em>back</em>.",
+  say:'<em>flooding</em> <span class="ipa">/ˈflʌdɪŋ/</span>. The <em>oo</em> sounds like the <em>u</em> in <em>cup</em>.'},
+ {id:"memories", phrase:"bring back memories",
+  meaning:"to make you remember your past, used about a song, a smell, a place or an object",
+  pattern:"The subject is the thing that causes the memories, such as a song, a smell or a place. The preposition is <em>of</em>: <em>This song brings back memories of our first holiday.</em>",
+  opts:["This song brings back memories of our first holiday.","This song brings me back memories of our first holiday.","I bring back memories of our first holiday with this song."],
+  why:"The song is what brings the memories back, so it is the subject. You can add <em>for me</em> at the end of the sentence, but you cannot put <em>me</em> after <em>brings</em>.",
+  say:'<em>memories</em> <span class="ipa">/ˈmeməriz/</span>'},
+ {id:"lane", phrase:"take a trip down memory lane",
+  meaning:"to spend time enjoying memories of the past, for example by looking at old photos with other people",
+  pattern:"<em>Take</em> or <em>go on</em> + <em>a trip down memory lane</em>. People are the subject. It is often used in a light, friendly way.",
+  opts:["We looked at old photos and took a trip down memory lane.","We looked at old photos and made a trip down memory lane.","We looked at old photos and took a trip down the memory lane."],
+  why:"The verb is <em>take</em> or <em>go on</em>, not <em>make</em>, and there is no article before <em>memory lane</em>, in the same way as with a street name."},
+ {id:"lookback", phrase:"look back on",
+  meaning:"to think about a period of your past and how you feel about it now",
+  pattern:"<em>Look back on</em> + noun or <em>-ing</em> form, often with <em>with</em> + a feeling: <em>I look back on those years with affection.</em> When there is no object, start the sentence with <em>Looking back,</em>.",
+  opts:["I look back on my school years with real affection.","I look back my school years with real affection.","I look back of my school years with real affection."],
+  why:"You need <em>on</em> before the object, so all three words are necessary. If there is no object, use <em>Looking back,</em> at the start of the sentence."},
+ {id:"thinkback", phrase:"think back to",
+  meaning:"to try hard to remember one particular moment or event",
+  pattern:"<em>Think back to</em> + a time or an event. It is often used as an instruction: <em>Think back to your first day at work.</em>",
+  opts:["When I think back to my first job, I remember being terrified.","When I think back at my first job, I remember being terrified.","When I think my first job back, I remember being terrified."],
+  why:"The usual particle before the time or event is <em>to</em>, and the object goes after it, never in the middle. Compare <em>look back on</em>, which has a similar meaning but different particles."},
+
+ {id:"brought", phrase:"be brought up",
+  meaning:"to be looked after and educated as a child by particular people or in a particular place",
+  pattern:"<em>Be brought up</em> + <em>in</em> + a place, <em>by</em> + a person, or <em>to</em> + a verb: <em>I was brought up to say please.</em> In the active, the parents are the subject: <em>My grandparents brought me up.</em>",
+  opts:["I was brought up by my grandparents in a small village.","I was grown up by my grandparents in a small village.","I brought up by my grandparents in a small village."],
+  why:"<em>Grow up</em> has no passive: you grow up, but other people bring you up. The passive needs the verb <em>be</em>, so <em>was</em> cannot be left out.",
+  say:'<em>brought</em> <span class="ipa">/brɔːt/</span>, which rhymes with <em>caught</em>',
+  us:"Americans more often say <em>be raised</em>: <em>I was raised by my grandparents.</em> Both are understood everywhere."},
+ {id:"across", phrase:"come across",
+  meaning:"to find something by chance, especially an object or a piece of information",
+  pattern:"<em>Come across</em> + object. The object always goes after <em>across</em>: <em>I came across it</em>, not <em>I came it across</em>. <em>Come across as</em> has a different meaning: to seem.",
+  opts:["I came across some old letters while I was tidying the attic.","I came some old letters across while I was tidying the attic.","I came across with some old letters while I was tidying the attic."],
+  why:"The object goes straight after <em>across</em>, with no extra preposition.",
+  say:'<em>across</em> <span class="ipa">/əˈkrɒs/</span> in British English and <span class="ipa">/əˈkrɔːs/</span> in American English'},
+ {id:"runinto", phrase:"run into",
+  meaning:"to meet someone you know by chance",
+  pattern:"<em>Run into</em> + a person, with the person after <em>into</em>. It describes one short event, so in a story it is usually in the past simple, with the past continuous for the background: <em>I was waiting for the train when I ran into my old teacher.</em>",
+  opts:["I ran into an old classmate at the station last week.","I ran an old classmate into at the station last week.","I was running into an old classmate at the station last week."],
+  why:"The person goes after <em>into</em>. Meeting someone is a short, complete event, so the past simple is used, not the past continuous.",
+  us:"<em>Run into</em> is used in both varieties. British speakers also often say <em>bump into</em>, which has the same meaning."},
+ {id:"touch", phrase:"lose touch with",
+  meaning:"to stop being in contact with someone",
+  pattern:"<em>Lose touch</em> (<em>with</em> + a person), with no article: <em>We lost touch after university.</em> The opposite is <em>keep in touch</em> or <em>stay in touch</em>.",
+  opts:["We lost touch after she moved to Canada.","We lost the touch after she moved to Canada.","We lost in touch after she moved to Canada."],
+  why:"There is no article before <em>touch</em>. <em>In</em> belongs to <em>keep in touch</em> and <em>get in touch</em>, not to <em>lose touch</em>.",
+  say:'<em>touch</em> <span class="ipa">/tʌtʃ/</span>'},
+ {id:"endup", phrase:"end up",
+  meaning:"to be in a place or situation at the end of a process, usually without planning it",
+  pattern:"<em>End up</em> + <em>-ing</em> form, <em>in</em> or <em>at</em> + a place, or <em>with</em> + a noun: <em>We ended up sleeping in the car.</em>",
+  opts:["We got lost and ended up sleeping in the car.","We got lost and ended up to sleep in the car.","We got lost and ended up sleep in the car."],
+  why:"When a verb follows <em>end up</em>, it is in the <em>-ing</em> form."},
+ {id:"date", phrase:"date back to",
+  meaning:"to have existed since a particular time in the past",
+  pattern:"A building, tradition or object + <em>dates back to</em> + a date or period. It describes a state, so it is not used in the continuous. <em>Date from</em> has the same meaning.",
+  opts:["The castle dates back to the twelfth century.","The castle is dating back to the twelfth century.","The castle dates back from the twelfth century."],
+  why:"It describes a state, so the present simple is used. You can say <em>dates back to</em> or <em>dates from</em>, but not a mixture of the two."},
+ {id:"hindsight", phrase:"in hindsight",
+  meaning:"when you think about a past event later, knowing things that you did not know at the time",
+  pattern:"Usually at the start of the sentence, often with <em>should have</em> or <em>could have</em> + past participle: <em>In hindsight, I should have accepted the job.</em>",
+  opts:["In hindsight, I should have accepted the job.","In my hindsight, I should have accepted the job.","In hindsight, I should accept the job last year."],
+  why:"<em>Hindsight</em> does not take a possessive. Because you are judging something in the past, the verb refers to the past: <em>should have accepted</em>.",
+  say:'<em>hindsight</em> <span class="ipa">/ˈhaɪndsaɪt/</span>',
+  us:"<em>In hindsight</em> is used in both varieties, and <em>with hindsight</em> is more common in British English. American English also has the saying <em>Hindsight is 20/20</em> (twenty-twenty), which means that it is easy to judge events after they have happened."}
+];
+
+/* Meanings that are too close to appear together as options */
+const EXCL = [["lookback","thinkback"],["flooding","memories"],["lane","memories"],["lane","lookback"],["across","runinto"]];
+
+/* =========================================================
+   Situations for In context (three per session)
+   ========================================================= */
+const SIT = [[
+ {kind:"Messages between two old school friends", type:"chat", emoji:"💬", tint:"#e3e9ff",
+  blocks:[
+   {who:"Marta", side:"r", t:"Do you remember Mr Prats, our maths teacher? He’s retiring at the end of this year."},
+   {who:"Jo", side:"l", t:"Mr Prats? The name {0}, but I can’t picture his face."},
+   {who:"Marta", side:"r", t:"He used to wear a yellow tie every Friday, and he would always start the lesson with a terrible joke."},
+   {who:"Jo", side:"l", t:"Oh, him! Now I remember. A few of us are meeting at the old café on Saturday to look at photos and {1}. Do you want to come?"},
+   {who:"Marta", side:"r", t:"I’d love to. Send me a message on Friday, though, or it’ll {2}!"}
+  ],
+  gaps:[
+   {ans:"rings a bell", note:"The name seems familiar to Jo, but she cannot remember the person clearly.",
+    wrong:[["sticks in my mind","<em>Stick in your mind</em> means that you remember something clearly, which contradicts the second half of the sentence."],
+           ["comes flooding back","<em>Come flooding back</em> describes memories returning suddenly and strongly, but Jo cannot even picture his face."]]},
+   {ans:"take a trip down memory lane", note:"The friends are going to enjoy remembering the past together while they look at the photos.",
+    wrong:[["come flooding back","<em>Come flooding back</em> needs memories as its subject. People cannot come flooding back."],
+           ["ring a bell","<em>Ring a bell</em> needs the familiar thing as its subject, such as a name or a face. People cannot ring a bell in this sense."]]},
+   {ans:"slip my mind", note:"Marta is worried that she will forget, so she asks Jo for a reminder.",
+    wrong:[["stick in my mind","<em>Stick in your mind</em> means that you remember something for a long time, so Marta would not need a reminder."],
+           ["bring back memories","<em>Bring back memories</em> means making someone remember their past. It does not describe forgetting a plan."]]}
+  ]},
+ {kind:"Looking at old photos with Grandad", type:"dlg", emoji:"📷", tint:"#fff3c4",
+  blocks:[
+   {who:"Lucy", t:"Who’s the little boy sitting on the steps?"},
+   {who:"Grandad", t:"That’s me, outside the house where I grew up. My mother would bake bread every Saturday, and my brothers and I used to fight over the first slice."},
+   {who:"Lucy", t:"These photos really {0} for you, don’t they?"},
+   {who:"Grandad", t:"They do. Every time I walk past a bakery, it all {1}."},
+   {who:"Lucy", t:"And what is the one thing from those years that has always {2}?"},
+   {who:"Grandad", t:"The sound of my mother singing in the kitchen. I can still hear it."}
+  ],
+  gaps:[
+   {ans:"bring back memories", note:"The photos make Grandad remember his childhood.",
+    wrong:[["slip your mind","<em>Slip your mind</em> means to be forgotten, but the photos are making him remember."],
+           ["take a trip down memory lane","People take a trip down memory lane. Photos cannot do it, so this phrase does not fit the subject of the sentence."]]},
+   {ans:"comes flooding back", note:"A smell can make memories return suddenly and strongly.",
+    wrong:[["slips my mind","<em>Slip your mind</em> means to be forgotten, which is the opposite of what the smell of bread does."],
+           ["sticks in my mind","<em>Stick in your mind</em> describes something you always remember. It does not describe memories that a smell brings back suddenly."]]},
+   {ans:"stuck in your mind", note:"Lucy asks about a memory that Grandad has kept clearly for many years.",
+    wrong:[["slipped your mind","<em>Slip your mind</em> means to be forgotten, but Lucy is asking about something that he remembers."],
+           ["rung a bell","<em>Ring a bell</em> describes something that only seems familiar. It is too weak for a memory that he has always had."]]}
+  ]},
+ {kind:"A radio interview with a novelist", type:"dlg", emoji:"🎙️", tint:"#efe7ff",
+  blocks:[
+   {who:"Presenter", t:"When you {0} your twenties, how do you feel?"},
+   {who:"Novelist", t:"Mostly grateful. I was a terrible student. I used to skip lectures, and I would spend whole afternoons in the library reading novels that weren’t on the course."},
+   {who:"Presenter", t:"Is there one moment from those years that you remember especially well?"},
+   {who:"Novelist", t:"Yes. A lecturer once stopped me in the corridor and asked why she never saw me in class. I told her that I was busy reading. When I {1} that conversation, I still go red."}
+  ],
+  gaps:[
+   {ans:"look back on", note:"The presenter asks how the novelist feels now about that period of her life.",
+    wrong:[["look after","<em>Look after</em> means taking care of someone or something, such as a child or a pet."],
+           ["look up to","<em>Look up to</em> means admiring and respecting a person. You cannot look up to a period of your life."]]},
+   {ans:"think back to", note:"The novelist is remembering one particular conversation.",
+    wrong:[["think up","<em>Think up</em> means inventing an idea or a plan, but the conversation really happened."],
+           ["make up","<em>Make up</em> means inventing a story or an excuse, which is not what she is describing."]]}
+  ]}
+],[
+ {kind:"An email to a colleague", type:"email", emoji:"📧", tint:"#ffe9dc",
+  head:{from:"Laura Pérez", to:"Sam Hughes", subject:"The sales figures"},
+  blocks:[
+   {t:"Hi Sam,"},
+   {t:"I’m really sorry that I didn’t send you the sales figures on Friday. I {0} your message from last month while I was clearing out my inbox this morning, and I realised that you had already asked me twice. The figures are attached now."},
+   {t:"I suspect we’ll {1} working on the report together next week anyway, so let me know if anything doesn’t make sense."},
+   {t:"Best wishes,<br>Laura"}
+  ],
+  gaps:[
+   {ans:"came across", note:"Laura found the message by chance while she was doing something else.",
+    wrong:[["ran into","<em>Run into</em> is used for meeting people by chance, not for finding a message."],
+           ["lost touch with","<em>Lose touch with</em> means that you stop being in contact with a person, and it does not describe finding a message."]]},
+   {ans:"end up", note:"Laura expects that they will work together in the end, although nobody has planned it.",
+    wrong:[["lose touch","<em>Lose touch</em> means that people stop being in contact, which is the opposite of working together."],
+           ["run into","<em>Run into</em> describes a short, unexpected meeting, not a situation that people reach in the end."]]}
+  ]},
+ {kind:"A post in a neighbourhood group", type:"post", emoji:"🏘️", tint:"#e4f4ff",
+  head:{author:"Núria Vidal", group:"Old Town Neighbours"},
+  blocks:[
+   {t:"I {0} in this neighbourhood. I lived in the flat above the old bakery from the day I was born until I was eighteen. The bakery used to open at six, and my grandmother would buy our bread there every morning."},
+   {t:"Yesterday I {1} my childhood best friend, Laia, outside the market. We {2} when her family moved to Lleida in 1998, so it was a lovely surprise."},
+   {t:"Does anyone else remember the bakery? 🥖"}
+  ],
+  gaps:[
+   {ans:"was brought up", note:"Núria is describing the place where she lived and was looked after as a child.",
+    wrong:[["ended up","<em>End up</em> describes where you are at the end of a process. Núria lived there from the day she was born, so it was the start of her story, not the end."],
+           ["lost touch","<em>Lose touch</em> means that people stop being in contact. It does not describe living in a place."]]},
+   {ans:"ran into", note:"Núria met Laia by chance, which is what <em>run into</em> means.",
+    wrong:[["lost touch with","<em>Lose touch with</em> means that you stop being in contact with someone, which does not describe a meeting outside the market."],
+           ["was brought up by","<em>Be brought up by</em> describes the people who looked after you as a child, not a friend you met yesterday."]]},
+   {ans:"lost touch", note:"When Laia’s family moved away, the two friends stopped being in contact.",
+    wrong:[["ended up","<em>End up</em> describes the final result of a process, but the sentence is about what happened between the two friends when the family moved."],
+           ["were brought up","<em>Be brought up</em> describes a whole childhood, not something that happened at the moment the family moved."]]}
+  ]},
+ {kind:"A local history leaflet", type:"leaflet", emoji:"🏛️", tint:"#ffe4f0", title:"The Old Market Hall",
+  blocks:[
+   {t:"The Old Market Hall {0} the fourteenth century. For hundreds of years, farmers would bring their produce here every Thursday, and the square used to be full of carts from early in the morning."},
+   {t:"{1}, demolishing the east wing in 1962 was a serious mistake, although at the time it seemed a sensible way to widen the road."},
+   {t:"At our open day next month, former stallholders and their families are invited to share their memories with us. There will be photographs, recordings and tea in the main hall."}
+  ],
+  gaps:[
+   {ans:"dates back to", note:"The sentence says how long the building has existed.",
+    wrong:[["looks back on","<em>Look back on</em> describes a person thinking about their past. A building cannot do this."],
+           ["thinks back to","<em>Think back to</em> describes a person trying to remember something, so it cannot have a building as its subject."]]},
+   {ans:"In hindsight", note:"The writer is judging a past decision with knowledge that people did not have in 1962.",
+    wrong:[["In those days","<em>In those days</em> describes what was normal at that time in the past. This sentence is a judgement made now, and <em>at the time</em> later in the sentence already refers to 1962."],
+           ["Back in the day","<em>Back in the day</em> also refers to that time in the past, and it is too informal for a leaflet."]]}
+  ]}
+]];
+
+/* =========================================================
+   Quick review of Session 1 (start of Session 2)
+   ========================================================= */
+const REVIEW = [
+ {type:"gap", text:"I’m sure I’ve met him before. His face definitely {0}.",
+  opts:["rings a bell","slips my mind","takes a trip down memory lane"], ans:0,
+  why:"His face seems familiar, which is what <em>ring a bell</em> means. <em>Slip your mind</em> means to be forgotten, and only people can take a trip down memory lane."},
+ {type:"sentence", opts:["Sorry, the meeting completely slipped my mind.","Sorry, I completely slipped my mind the meeting.","Sorry, I completely slipped the meeting."], ans:0,
+  why:"The thing you forgot is the subject of <em>slip your mind</em>, so the meeting slipped my mind."},
+ {type:"meaning", text:"to stay in your memory for a long time, usually because it was unusual or important",
+  opts:["stick in your mind","slip your mind","take a trip down memory lane","look back on"], ans:0,
+  why:"Something that sticks in your mind stays there for a long time. The past forms are <em>stuck, stuck</em>."},
+ {type:"gap", text:"Whenever I smell sun cream, all those childhood summers {0}.",
+  opts:["come flooding back","slip my mind","take a trip down memory lane"], ans:0,
+  why:"A smell can make memories return suddenly and strongly. Summers cannot take a trip down memory lane, because only people can do that, and <em>slip my mind</em> means the opposite."},
+ {type:"sentence", opts:["On Sunday we took a trip down memory lane with our old school reports.","On Sunday we made a trip down memory lane with our old school reports.","On Sunday we took a trip down the memory lane with our old school reports."], ans:0,
+  why:"The verb is <em>take</em> or <em>go on</em>, and there is no article before <em>memory lane</em>."},
+ {type:"gap", text:"When I {0} my years at university, I mostly feel grateful.",
+  opts:["look back on","look forward to","look after"], ans:0,
+  why:"<em>Look back on</em> is about how you feel now about a period of your past. <em>Look forward to</em> is about the future, and <em>look after</em> means taking care of someone."},
+ {type:"meaning", text:"to try hard to remember one particular moment or event",
+  opts:["think back to","bring back memories","ring a bell","stick in your mind"], ans:0,
+  why:"<em>Think back to</em> is often used as an instruction: <em>Think back to your first day at school.</em>"},
+ {type:"sentence", opts:["Does this photo bring back any memories for you?","Does this photo bring you back any memories?","Do you bring back any memories with this photo?"], ans:0,
+  why:"The photo is the subject of <em>bring back memories</em>. You can add <em>for you</em> at the end, but <em>you</em> cannot go after <em>bring</em>."}
+];
+
+/* =========================================================
+   Spot the mistake (all fifteen phrases)
+   ========================================================= */
+const SPOT = [
+ {s:"That name rings me a bell, but I can’t remember why.", ok:false, fix:"That name rings a bell, but I can’t remember why.", why:"No person follows <em>ring a bell</em>. The thing that seems familiar is the subject."},
+ {s:"Sorry, your email completely slipped my mind.", ok:true, why:"The thing that was forgotten is the subject of <em>slip your mind</em>."},
+ {s:"I slipped my mind to call you back.", ok:false, fix:"It slipped my mind to call you back.", why:"The person who forgets cannot be the subject of <em>slip your mind</em>. Here the subject is <em>it</em>, which refers to calling you back."},
+ {s:"What has always stuck in my mind is how kind she was.", ok:true, why:"The memory is the subject, and <em>stuck</em> is the correct past participle of <em>stick</em>."},
+ {s:"When I opened the box, all the memories came back flooding.", ok:false, fix:"When I opened the box, all the memories came flooding back.", why:"The word order is fixed: <em>come flooding back</em>."},
+ {s:"That song brings back memories of our trip to Lisbon.", ok:true, why:"The song is the subject, and the preposition after <em>memories</em> is <em>of</em>."},
+ {s:"Last weekend we made a trip down memory lane with some old friends.", ok:false, fix:"Last weekend we took a trip down memory lane with some old friends.", why:"The verb is <em>take</em> or <em>go on</em>, not <em>make</em>."},
+ {s:"I look back on those years with a lot of affection.", ok:true, why:"<em>Look back on</em> is followed by the period of your life, and <em>with</em> introduces the feeling."},
+ {s:"Think back of the first time you travelled alone.", ok:false, fix:"Think back to the first time you travelled alone.", why:"The particle is <em>to</em>: <em>think back to</em>."},
+ {s:"I was grown up by my aunt in a small town near the coast.", ok:false, fix:"I was brought up by my aunt in a small town near the coast.", why:"<em>Grow up</em> has no passive. Other people bring you up, so the passive is <em>was brought up</em>."},
+ {s:"I came across some old photos while I was cleaning the garage.", ok:true, why:"The object goes after <em>across</em>, and the past continuous describes the background activity."},
+ {s:"I was running into my old teacher at the supermarket yesterday.", ok:false, fix:"I ran into my old teacher at the supermarket yesterday.", why:"Meeting someone by chance is a short, complete event, so it is in the past simple."},
+ {s:"We lost the touch after she moved abroad.", ok:false, fix:"We lost touch after she moved abroad.", why:"There is no article in <em>lose touch</em>."},
+ {s:"We missed the last bus and ended up walking home.", ok:true, why:"<em>End up</em> is followed by an <em>-ing</em> form."},
+ {s:"The church is dating back to the eleventh century.", ok:false, fix:"The church dates back to the eleventh century.", why:"<em>Date back to</em> describes a state, so it is not used in the continuous."},
+ {s:"In my hindsight, I should have studied harder.", ok:false, fix:"In hindsight, I should have studied harder.", why:"<em>Hindsight</em> does not take a possessive."},
+ {s:"When I was a child, I would have a dog called Rex.", ok:false, fix:"When I was a child, I used to have a dog called Rex.", why:"<em>Would</em> is only used for repeated past actions. For states, such as having a pet, use <em>used to</em> or the past simple."},
+ {s:"Every summer, my grandfather would take us fishing.", ok:true, why:"This is a repeated past action, so <em>would</em> is possible, as well as <em>used to</em>."}
+];
+
+/* =========================================================
+   Speaking questions ([[id|text]] links to the word bank)
+   ========================================================= */
+const SPEAK = [[
+ {q:"What is one thing from your primary school years that has always [[stick|stuck in your mind]]?"},
+ {q:"Is there a song, a smell or a place that [[memories|brings back memories]] of a particular time in your life? What memories does it bring back?"},
+ {q:"Has anything important ever completely [[slip|slipped your mind]]? What happened as a result?"},
+ {q:"When you [[lookback|look back on]] your school years, what are you most grateful for?"},
+ {q:"[[thinkback|Think back to]] your first day at a new school or a new job. How did you feel, and what do you remember about the people you met?"},
+ {q:"Has someone ever greeted you as an old friend when you had no idea who they were? How did you handle it?", might:"ring a bell, slip your mind"},
+ {q:"Have you ever gone back to a place from your childhood after many years? What was it like?", might:"come flooding back, take a trip down memory lane, used to"}
+],[
+ {q:"Where were you [[brought|brought up]], and how has the place changed since you were a child?"},
+ {q:"Have you ever [[runinto|run into]] someone from your past in an unexpected place? What happened?"},
+ {q:"Is there anyone you have [[touch|lost touch with]] and would like to see again? How did you lose touch?"},
+ {q:"Have you ever [[across|come across]] something old, such as a letter, a photo or a diary, while you were tidying? What was it, and how did you feel?"},
+ {q:"What is the oldest building or tradition in your town, and what does it [[date|date back to]]?"},
+ {q:"Have you ever planned to do one thing and done something completely different? What happened?", might:"end up, in hindsight"},
+ {q:"What did you and your family [[g:habits|use to]] do at weekends when you were a child?", might:"would, look back on"}
+]];
+
+/* ---------- Stickers: one per phrase ---------- */
+const STK = {
+  bell:["🔔","sun"], memories:["🎵","lilac"], flooding:["🌊","sky"], stick:["📌","coral"], slip:["💨","pink"],
+  lane:["🛤️","tang"], lookback:["👀","sky"], thinkback:["💭","lilac"], hindsight:["🔍","sun"], date:["🏰","coral"],
+  brought:["🏡","tang"], across:["📜","sun"], runinto:["🤝","pink"], touch:["📵","sky"], endup:["🧭","lilac"]
+};
+const TILT = [-8,5,-3,7,-6,4,-5,8,-2,6,-7,3,-4,6,-5];
+
+/* ---------- Word bank: grammar frames ---------- */
+const GRAMMAR = [
+ {id:"subj", bar:"var(--sun)", title:"The memory is the subject",
+  text:"With <em>ring a bell</em>, <em>slip your mind</em>, <em>stick in your mind</em>, <em>come flooding back</em> and <em>bring back memories</em>, the thing that is remembered or forgotten is the subject of the verb. The person appears as <em>my mind</em>, or does not appear at all.",
+  ex:[["y","Her name rings a bell."],["n","I ring a bell with her name."],["n","Her name rings me a bell."],["y","Sorry, it completely slipped my mind."],["n","Sorry, I completely slipped my mind."],["y","When I saw the photo, it all came flooding back."]]},
+ {id:"obj", bar:"var(--sky)", title:"Where the object goes",
+  text:"With <em>come across</em>, <em>run into</em>, <em>look back on</em>, <em>think back to</em> and <em>lose touch with</em>, the object always goes after the last word, never in the middle.",
+  ex:[["y","I came across an old diary."],["n","I came an old diary across."],["y","I ran into her at the station."],["n","I ran her into at the station."],["y","We lost touch with him after school."]]},
+ {id:"endup", bar:"var(--lilac)", title:"End up + -ing",
+  text:"After <em>end up</em>, use an <em>-ing</em> form, <em>in</em> or <em>at</em> + a place, or <em>with</em> + a noun.",
+  ex:[["y","We ended up sleeping in the car."],["n","We ended up to sleep in the car."],["y","He ended up in Australia."]]},
+ {id:"brought", bar:"var(--tang)", title:"Grow up and be brought up",
+  text:"You grow up, but other people bring you up. <em>Grow up</em> has no passive.",
+  ex:[["y","I grew up in a small village."],["y","I was brought up by my grandparents."],["n","I was grown up by my grandparents."]]},
+ {id:"habits", bar:"var(--coral)", title:"Past habits: used to and would",
+  text:"Use <em>used to</em> + infinitive for past habits and for past states that are no longer true. Use <em>would</em> + infinitive only for repeated past actions, usually when it is already clear which time in the past you are talking about. <em>Would</em> is not used for states, with verbs such as <em>be</em>, <em>have</em>, <em>live</em> or <em>like</em>. In questions and negatives, the spelling is <em>use to</em>, without a <em>d</em>.",
+  ex:[["y","I used to live near the sea."],["n","I would live near the sea."],["y","Every Saturday, my mother would bake bread."],["y","Did you use to walk to school?"],["y","I didn’t use to like vegetables."]]},
+ {id:"hind", bar:"var(--pink)", title:"In hindsight + should have",
+  text:"<em>In hindsight</em> introduces a judgement about the past, so it often goes with <em>should have</em>, <em>shouldn’t have</em> or <em>could have</em> + past participle.",
+  ex:[["y","In hindsight, I should have accepted the job."],["y","In hindsight, we shouldn’t have left so late."],["n","In my hindsight, I should have accepted the job."]]}
+];
+
+/* ---------- Word bank: phrases for speaking ---------- */
+const TALK = [
+ ["As far as I remember, …","Use this when you are fairly sure, but not completely."],
+ ["If I remember rightly, …","This has the same use. <em>If I remember correctly</em> is also common, especially in American English."],
+ ["I can vaguely remember …","Use this when a memory is not very clear."],
+ ["It’s all a bit hazy.","Use this when you cannot remember the details."],
+ ["It doesn’t ring a bell.","Use this when a name, place or event does not seem familiar."],
+ ["Now that you mention it, …","Use this when the other person’s words help you to remember something."],
+ ["Looking back, …","Use this to introduce how you see a past event now."],
+ ["What was it like?","Ask this to get your partner to describe a place, a time or an experience."],
+ ["Do you still …?","Ask this to compare your partner’s past with the present."]
+];
+
+/* ---------- Word bank: UK and US ---------- */
+const UKUS = [
+ ["be brought up","be raised","<em>Be raised</em> is also used in British English."],
+ ["bump into, run into","run into","Both mean meeting someone by chance. <em>Bump into</em> is especially common in British English."],
+ ["in hindsight, with hindsight","in hindsight","American English also has the saying <em>Hindsight is 20/20</em> (twenty-twenty)."],
+ ["<span class=\"ipa\">/əˈkrɒs/</span> across","<span class=\"ipa\">/əˈkrɔːs/</span> across","The vowel in the stressed syllable is different."],
+ ["If I remember rightly","If I remember correctly","<em>If I remember correctly</em> is common in British English too."],
+ ["primary school","elementary school",""],
+ ["maths","math",""],
+ ["holiday","vacation","Americans use <em>holiday</em> for a special day such as Thanksgiving."],
+ ["university, lecture, lecturer","college, class, professor","In American English, <em>college</em> is the everyday word, even for a university."]
+];
+
+/* =========================================================
+   Helpers
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const byId = id => P.find(p => p.id === id);
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function shuffle(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function sticker(id, shiny, extra){
+  const [e,c] = STK[id], i = P.findIndex(p => p.id === id);
+  return '<span class="stk c-'+c+(shiny?' shiny':'')+(extra?' '+extra:'')+'" style="--r:'+TILT[i]+'deg" aria-hidden="true">'+e+'</span>';
+}
+function stars(n){ let h=''; for(let i=0;i<3;i++) h += i<n ? '<span class="on">★</span>' : '<span class="off">★</span>'; return h; }
+function excluded(a, b){ return EXCL.some(p => (p[0]===a && p[1]===b) || (p[0]===b && p[1]===a)); }
+function escAttr(s){ return s.replace(/"/g, '&quot;'); }
+const wide = () => window.matchMedia('(min-width:900px)').matches;
+
+/* =========================================================
+   Saved progress (stickers, points, finished activities)
+   ========================================================= */
+const KEY = 'lookingBack.v2';
+let SAVE = {v:2, stickers:{}, score:0, done:{}};
+try{
+  const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+  if(d && d.v === 2) SAVE = Object.assign(SAVE, d);
+}catch(e){}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(SAVE)); }catch(e){} }
+function giveSticker(id, shiny){
+  if(SAVE.stickers[id] === 'shiny') return;
+  SAVE.stickers[id] = shiny ? 'shiny' : 'normal'; save();
+}
+function markDone(k){ SAVE.done[k] = true; save(); }
+
+/* =========================================================
+   Points, streak, progress bar, confetti
+   ========================================================= */
+const G = {view:'home', sess:0, streak:0, busy:false, homeTab:0};
+const ST = {};   /* activities in progress during this visit, so students can leave and come back */
+function showScore(){ $('#scoreN').textContent = SAVE.score; $('#score').setAttribute('aria-label', SAVE.score + ' points'); }
+function addPoints(first){
+  SAVE.score += first ? 10 : 4; save();
+  G.streak = first ? G.streak + 1 : 0;
+  showScore();
+  const el = $('#score'); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+}
+function missed(){ G.streak = 0; document.querySelectorAll('#ans .streak').forEach(e => e.remove()); }
+function streakHTML(){ return G.streak >= 3 ? '<span class="streak">🔥 '+G.streak+' in a row</span>' : ''; }
+function setProgress(f){ $('#prog').style.width = Math.round(f*100) + '%'; }
+function confetti(small){
+  if(reduce) return;
+  const box = document.createElement('div'); box.className = 'confetti';
+  const cols = small ? ['#f2b705','#ffd166','#ffffff','#ffb26b'] : ['#ffd166','#ff8a7a','#7cc4ff','#b9a4ff','#ff9ecd','#ffb26b'];
+  const n = small ? 18 : 46;
+  for(let i=0;i<n;i++){
+    const c = document.createElement('i');
+    c.style.left = (small ? 35 + Math.random()*30 : Math.random()*100) + 'vw';
+    c.style.background = cols[i % cols.length];
+    c.style.setProperty('--dx', (Math.random()*180-90) + 'px');
+    c.style.setProperty('--rot', (Math.random()*720-360) + 'deg');
+    c.style.animationDelay = (Math.random()*0.3) + 's';
+    box.appendChild(c);
+  }
+  document.body.appendChild(box);
+  setTimeout(() => box.remove(), 2300);
+}
+
+/* =========================================================
+   Answer panel: sits directly under the question (phones)
+   or beside it (wide screens)
+   ========================================================= */
+function stage(qHTML){ return '<div class="stage"><div class="q-col">'+qHTML+'</div><div class="a-col"><div class="ans" id="ans"></div></div></div>'; }
+function ansSet(html){ $('#ans').innerHTML = '<div class="fade">'+html+'</div>'; }
+function head(left){ return '<div class="th"><span>'+left+'</span>'+streakHTML()+'</div>'; }
+function nextBtn(label){ return '<div class="next-row"><button class="btn wide" id="go">'+label+'</button></div>'; }
+function wireNext(fn){
+  const b = $('#go'); if(!b) return;
+  b.onclick = fn;
+  requestAnimationFrame(() => {
+    b.focus({preventScroll:true});
+    const r = b.getBoundingClientRect();
+    if(r.bottom > window.innerHeight - 8) b.scrollIntoView({block:'end', behavior: reduce ? 'auto' : 'smooth'});
+  });
+}
+function markWrong(btn){
+  btn.classList.add('wrong','shake'); btn.disabled = true;
+  btn.addEventListener('animationend', () => btn.classList.remove('shake'), {once:true});
+}
+function more(summary, inner){ return '<details class="more-d"><summary>'+summary+'</summary><div class="md">'+inner+'</div></details>'; }
+
+/* Keep the current gap visible inside the scrolling text box */
+function keepGap(){
+  const box = document.querySelector('.sit-scroll'), el = document.querySelector('[data-keep]');
+  if(!box || !el) return;
+  const br = box.getBoundingClientRect(), r = el.getBoundingClientRect();
+  if(r.top >= br.top + 4 && r.bottom <= br.bottom - 4) return;
+  box.scrollTo({top: box.scrollTop + (r.top - br.top) - br.height * 0.3, behavior: reduce ? 'auto' : 'smooth'});
+}
+
+/* Fade the bottom edge of the text box while there is more text below */
+function scrollCue(){
+  const box = document.querySelector('.sit-scroll'); if(!box) return;
+  const upd = () => box.classList.toggle('more-below', box.scrollTop + box.clientHeight < box.scrollHeight - 4);
+  box.onscroll = upd; upd();
+}
+
+/* Two-tap button */
+function twoTap(btn, label, confirmLabel, fn){
+  let armed = false, t;
+  btn.onclick = e => {
+    e.stopPropagation();
+    if(armed){ clearTimeout(t); fn(); return; }
+    armed = true; btn.classList.add('armed'); btn.textContent = confirmLabel;
+    t = setTimeout(() => { armed = false; btn.classList.remove('armed'); btn.textContent = label; }, 3500);
+  };
+}
+
+/* Results screen actions: the main next step and Play again */
+function resultActions(mainLabel, mainFn){
+  return '<div class="result-actions"><button class="btn" id="go">'+mainLabel+'</button><button class="btn quiet" id="again">Play this activity again</button></div>';
+}
+function wireResults(mainFn, againFn){
+  $('#go').onclick = mainFn; $('#again').onclick = againFn;
+  requestAnimationFrame(() => $('#go').focus({preventScroll:true}));
+}
+
+/* =========================================================
+   Navigation
+   ========================================================= */
+const TITLES = {home:'Home', match:'Matching', ctx:'In context', speak:'Speaking', review:'Review', spot:'Mistakes'};
+const MAKERS = {match:makeMatch, ctx:makeCtx, review:makeReview, spot:makeSpot};
+const RENDER = {match:renderMatch, ctx:renderCtx, review:renderReview, spot:renderSpot};
+function stKey(view, sess){ return (view === 'match' || view === 'ctx') ? view + sess : view; }
+function go(view, sess, fresh){
+  if(sess !== undefined) G.sess = sess;
+  G.view = view; G.busy = false;
+  $('#barTitle').textContent = TITLES[view];
+  const scr = $('#screen');
+  scr.classList.remove('enter'); void scr.offsetWidth; scr.classList.add('enter');
+  if(view === 'home') renderHome();
+  else if(view === 'speak') renderSpeak();
+  else {
+    const k = stKey(view, G.sess);
+    if(fresh || !ST[k] || ST[k].done) ST[k] = MAKERS[view]();
+    RENDER[view]();
+  }
+  clearTimeout(G.enterT); G.enterT = setTimeout(() => scr.classList.remove('enter'), 900);
+  window.scrollTo(0, 0);
+  requestAnimationFrame(keepGap);
+}
+function credit(show){ $('#credit').hidden = !show; }
+$('#homeBtn').onclick = () => go('home');
+
+/* =========================================================
+   Home
+   ========================================================= */
+function albumHTML(){
+  return SESS.map((s, si) => {
+    const got = s.ids.filter(id => SAVE.stickers[id]).length;
+    return '<div class="album-group"><p class="ag-name">Session '+(si+1)+': '+s.name+' <small>'+got+' of '+s.ids.length+'</small></p><div class="grid4">'+
+      s.ids.map(id => SAVE.stickers[id] ? sticker(id, SAVE.stickers[id]==='shiny') : '<span class="slot">?</span>').join('')+'</div></div>';
+  }).join('');
+}
+function inProgress(k){ const s = ST[k]; return s && !s.done && s.started; }
+function actBtn(view, sess, em, bar, tint, title, text, status){
+  const k = stKey(view, sess), prog = view !== 'speak' && inProgress(k);
+  const st = prog ? 'In progress: tap to continue' : status;
+  return '<div class="tile-wrap"><button class="act" data-view="'+view+'" data-sess="'+sess+'" style="--bar:'+bar+';--tint:'+tint+'"><span class="em" aria-hidden="true">'+em+'</span><span><h3>'+title+'</h3><p>'+text+'</p>'+(st?'<span class="st">'+st+'</span>':'')+'</span></button>'+
+    (prog ? '<button class="btn quiet again-btn" data-view="'+view+'" data-sess="'+sess+'">Start again</button>' : '')+'</div>';
+}
+function renderHome(){
+  setProgress(0); credit(true);
+  const t = G.homeTab;
+  const got = SESS[t].ids.filter(id => SAVE.stickers[id]).length, n = SESS[t].ids.length;
+  const k = 's'+(t+1);
+  let acts = '', num = 1;
+  if(t === 1) acts += actBtn('review', 1, '🔁', 'var(--coral)', '#ffe6e1', (num++)+' Quick review', 'Eight quick questions on the phrases from Session 1. Start here.', SAVE.done.s2review ? 'Done' : '8 questions');
+  acts += actBtn('match', t, '🧩', 'var(--sun)', '#fff3c4', (num++)+' Match and collect', 'Match each phrase to its meaning, then choose the sentence that uses it correctly. Each phrase earns a sticker.', got+' of '+n+' stickers');
+  acts += actBtn('ctx', t, '💬', 'var(--sky)', '#e3f1ff', (num++)+' In context', 'Choose the right phrase for each gap in three everyday situations.', SAVE.done[k+'ctx'] ? 'Done' : '3 situations');
+  acts += actBtn('speak', t, '🗣️', 'var(--pink)', '#ffe4f0', (num++)+' Speaking', 'Questions to ask a partner, using the phrases from this session.', SPEAK[t].length+' questions');
+  $('#screen').innerHTML = '<div class="home-wrap">'+
+    '<div class="hero"><span class="deco" aria-hidden="true">📸</span><h1>Looking<br><span>back</span></h1>'+
+    '<p class="lead">Fifteen phrases and phrasal verbs for remembering, forgetting and talking about your past, in two short sessions.</p></div>'+
+    '<div class="panel album-page"><h2>Your sticker album</h2><p class="count">Stickers collected: '+Object.keys(SAVE.stickers).length+' of 15</p>'+albumHTML()+'</div>'+
+    '<div class="seg" role="tablist" aria-label="Sessions">'+
+      SESS.map((s,i) => '<button role="tab" class="seg-b" data-t="'+i+'" aria-selected="'+(i===t)+'"><b>Session '+(i+1)+'</b><span>'+s.name+'</span></button>').join('')+
+    '</div>'+
+    '<div class="acts">'+acts+'</div>'+
+    '<h2 class="sec-h">For both sessions</h2>'+
+    '<div class="acts">'+actBtn('spot', 0, '🔎', 'var(--lilac)', '#efe7ff', 'Spot the mistake', 'Decide whether eighteen sentences with all fifteen phrases are correct. You can do this at any time.', SAVE.done.spot ? 'Done' : '18 sentences')+'</div>'+
+    '<div class="fresh-box"><p>Your stickers and points are saved on this device.</p><button class="btn quiet" id="fresh">Start fresh</button></div></div>';
+  document.querySelectorAll('.act').forEach(b => b.onclick = () => go(b.dataset.view, +b.dataset.sess));
+  document.querySelectorAll('.again-btn').forEach(b => twoTap(b, 'Start again', 'Tap again to start again', () => go(b.dataset.view, +b.dataset.sess, true)));
+  document.querySelectorAll('.seg-b').forEach(b => b.onclick = () => { G.homeTab = +b.dataset.t; renderHome(); });
+  twoTap($('#fresh'), 'Start fresh', 'Tap again to delete your stickers and points', () => {
+    SAVE = {v:2, stickers:{}, score:0, done:{}}; save(); showScore();
+    Object.keys(ST).forEach(k => delete ST[k]);
+    renderHome();
+  });
+}
+
+/* =========================================================
+   Match and collect
+   ========================================================= */
+let M;
+function makeMatch(){
+  const ids = SESS[G.sess].ids;
+  const m = {ids, queue:shuffle(ids), idx:0, mistTotal:0, shiny:0, done:false, started:false};
+  matchPhrase(m); return m;
+}
+function matchPhrase(m){
+  const cur = m.queue[m.idx];
+  const pool = shuffle(m.ids.filter(id => id !== cur && !excluded(cur, id))).slice(0, 3);
+  m.step = 'meaning'; m.mist = 0; m.usageMist = 0;
+  m.opts = shuffle([cur, ...pool]);
+  m.usageOrder = shuffle([0,1,2]);
+}
+function mCur(){ return M.queue[M.idx]; }
+function matchStrip(popId){
+  const got = M.ids.filter(id => SAVE.stickers[id]).length;
+  return '<div class="album-strip" id="strip"><div class="lbl"><span>Session '+(G.sess+1)+' album</span><small>'+got+' of '+M.ids.length+' stickers</small></div><div class="slots" style="--n:'+M.ids.length+'">'+
+    M.ids.map(id => SAVE.stickers[id] ? sticker(id, SAVE.stickers[id]==='shiny', id===popId?'pop':'') : '<span class="slot'+(id===mCur() && !M.done?' next':'')+'">?</span>').join('')+'</div></div>';
+}
+function matchCard(fresh){
+  const p = byId(mCur()), col = G.sess === 0 ? ['sun','sky'] : ['lilac','tang'];
+  const s1 = M.step === 'meaning' ? 'on' : 'done', s2 = M.step === 'usage' ? 'on' : M.step === 'done' ? 'done' : '';
+  return '<div class="phrase-card'+(fresh?' fresh':'')+'" id="pcard" style="--accent:var(--'+col[0]+');--accent2:var(--'+col[1]+')">'+
+    '<div class="steps"><span class="chip '+s1+'">1 Meaning</span><span class="chip '+s2+'">2 Usage</span><span class="chip count">'+(M.idx+1)+' of '+M.ids.length+'</span></div>'+
+    '<p class="phrase-big">'+p.phrase+'</p>'+
+    (M.step!=='meaning' ? '<p class="phrase-mean shown">'+cap(p.meaning)+'.</p>' : '')+'</div>';
+}
+function matchProgress(){ setProgress((M.idx + (M.step==='done'?1:0)) / M.ids.length); }
+function renderMatch(fresh){
+  M = ST[stKey('match', G.sess)];
+  matchProgress();
+  if(M.done){
+    credit(true);
+    const st = M.mistTotal === 0 ? 3 : M.mistTotal <= 3 ? 2 : 1;
+    $('#screen').innerHTML = '<div class="home-wrap"><div class="panel result"><h2>Session '+(G.sess+1)+' page complete</h2>'+
+      '<div class="stars" aria-label="'+st+' of 3 stars">'+stars(st)+'</div>'+
+      '<div class="big8">'+M.ids.map(id => sticker(id, SAVE.stickers[id]==='shiny')).join('')+'</div>'+
+      '<p>Stickers with a gold edge in this round: '+M.shiny+' of '+M.ids.length+'. A sticker has a gold edge when both steps were right at the first attempt. A gold edge stays in your album even if you play again.</p>'+
+      resultActions('Go to In context')+'</div></div>';
+    wireResults(() => go('ctx'), () => go('match', G.sess, true));
+    if(st === 3) confetti();
+    return;
+  }
+  credit(false);
+  $('#screen').innerHTML = stage(matchStrip() + '<div style="height:var(--s3)"></div>' + matchCard(fresh));
+  if(M.step === 'done') matchDoneAns(false); else matchAns();
+}
+function matchAns(){
+  const p = byId(mCur()), h = streakHTML() ? '<div class="th"><span></span>'+streakHTML()+'</div>' : '';
+  if(M.step === 'meaning'){
+    ansSet(h + '<p class="tq">Which meaning matches <em>'+p.phrase+'</em>?</p><div class="opts">'+
+      M.opts.map(id => '<button class="opt" data-id="'+id+'">'+cap(byId(id).meaning)+'.</button>').join('')+
+      '</div><p class="tmsg" aria-live="polite"></p>');
+    document.querySelectorAll('#ans .opt').forEach(b => b.onclick = () => matchMeaning(b));
+  } else {
+    ansSet(h + '<p class="tq">Which sentence uses <em>'+p.phrase+'</em> correctly?</p><div class="opts">'+
+      M.usageOrder.map(i => '<button class="opt" data-i="'+i+'">'+p.opts[i]+'</button>').join('')+
+      '</div><p class="tmsg" aria-live="polite"></p>');
+    document.querySelectorAll('#ans .opt').forEach(b => b.onclick = () => matchUsage(b));
+  }
+}
+function matchMeaning(btn){
+  if(G.busy || btn.disabled) return;
+  M.started = true;
+  if(btn.dataset.id === mCur()){
+    G.busy = true;
+    addPoints(M.mist === 0);
+    btn.classList.add('right');
+    document.querySelectorAll('#ans .opt').forEach(b => b.disabled = true);
+    $('#ans .tmsg').textContent = '';
+    setTimeout(() => { M.step = 'usage'; $('#pcard').outerHTML = matchCard(); matchAns(); G.busy = false; }, 650);
+  } else {
+    M.mist++; M.mistTotal++; missed(); markWrong(btn);
+    $('#ans .tmsg').textContent = 'Not correct here. Try another meaning.';
+  }
+}
+function matchUsage(btn){
+  if(G.busy || btn.disabled) return;
+  const p = byId(mCur());
+  if(btn.dataset.i !== '0'){
+    M.usageMist++; M.mist++; M.mistTotal++; missed(); markWrong(btn);
+    $('#ans .tmsg').textContent = 'Not correct here. Read the sentences again and try another one.';
+    return;
+  }
+  addPoints(M.usageMist === 0);
+  const shiny = M.mist === 0;
+  if(shiny) M.shiny++;
+  giveSticker(p.id, shiny);
+  M.step = 'done'; M.lastShiny = shiny;
+  matchProgress();
+  $('#strip').outerHTML = matchStrip(p.id);
+  $('#pcard').outerHTML = matchCard();
+  matchDoneAns(true);
+  if(shiny) setTimeout(() => confetti(true), 150);
+}
+function matchDoneAns(pop){
+  const p = byId(mCur()), shiny = M.lastShiny;
+  let extra = '<div class="more"><div><b>How it is used</b>'+p.pattern+'</div>';
+  if(p.say) extra += '<div><b>Pronunciation</b>'+p.say+'</div>';
+  if(p.us) extra += '<div><b>UK and US</b>'+p.us+'</div>';
+  extra += '</div>';
+  const last = M.idx === M.ids.length - 1;
+  ansSet('<div class="opt right static">'+p.opts[0]+'</div>'+
+    '<div class="fb" aria-live="polite"><span class="label">Correct</span><p>'+p.why+'</p>'+
+    '<div class="stk-note">'+sticker(p.id, shiny, pop?'pop':'')+'<span>'+(shiny ? 'Both steps were right at the first attempt, so this sticker has a gold edge.' : 'This sticker is now in your album.')+'</span></div></div>'+
+    nextBtn(last ? 'Finish the page' : 'Next phrase')+
+    more('More about this phrase', extra));
+  wireNext(() => {
+    if(!last){ M.idx++; matchPhrase(M); renderMatch(true); window.scrollTo({top:0}); }
+    else { M.done = true; markDone('s'+(G.sess+1)+'match'); renderMatch(); window.scrollTo(0,0); }
+  });
+}
+
+/* =========================================================
+   In context
+   ========================================================= */
+let C;
+function makeCtx(){
+  const sits = SIT[G.sess];
+  const c = {sits, s:0, g:0, mist:sits.map(() => 0), first:0, total:sits.reduce((n,s) => n + s.gaps.length, 0), doneGaps:0, done:false, started:false};
+  ctxGap(c); return c;
+}
+function ctxGap(c){
+  const gap = c.sits[c.s].gaps[c.g];
+  c.opts = shuffle([gap.ans, gap.wrong[0][0], gap.wrong[1][0]]);
+  c.solved = false; c.miss = false;
+}
+function gapText(t, sit){
+  return t.replace(/\{(\d)\}/g, (m, n) => {
+    n = +n;
+    const keep = n === C.g ? ' data-keep="1"' : '';
+    if(n < C.g || (n === C.g && C.solved)) return '<span class="gap filled" data-g="'+n+'"'+keep+'>'+sit.gaps[n].ans+'</span>';
+    return '<span class="gap'+(n===C.g?' now':'')+'" data-g="'+n+'"'+keep+'>'+(n+1)+'</span>';
+  });
+}
+function sitHTML(fresh){
+  const sit = C.sits[C.s];
+  let body = '';
+  if(sit.type === 'chat'){
+    body = '<div class="chat">'+sit.blocks.map(b => '<div class="bubble '+b.side+'"><span class="who">'+b.who+'</span><p>'+gapText(b.t, sit)+'</p></div>').join('')+'</div>';
+  } else if(sit.type === 'email'){
+    body = '<div class="email"><div class="ehead"><div><span>From</span>'+sit.head.from+'</div><div><span>To</span>'+sit.head.to+'</div><div><span>Subject</span>'+sit.head.subject+'</div></div><div class="ebody">'+
+      sit.blocks.map(b => '<p>'+gapText(b.t, sit)+'</p>').join('')+'</div></div>';
+  } else if(sit.type === 'post'){
+    body = '<div class="post"><div class="post-head"><span class="avatar" aria-hidden="true">'+sit.head.author.charAt(0)+'</span><div><b>'+sit.head.author+'</b><small>posted in '+sit.head.group+'</small></div></div>'+
+      sit.blocks.map(b => '<p>'+gapText(b.t, sit)+'</p>').join('')+'<div class="post-foot" aria-hidden="true">❤️ 24 &nbsp; 💬 9 comments</div></div>';
+  } else if(sit.type === 'leaflet'){
+    body = '<div class="leaflet"><h3>'+sit.title+'</h3>'+sit.blocks.map(b => '<p>'+gapText(b.t, sit)+'</p>').join('')+'</div>';
+  } else {
+    const who = [...new Set(sit.blocks.map(b => b.who))], tints = ['#fff1c2','#e3f1ff'];
+    body = '<div class="dlg">'+sit.blocks.map(b => '<p><span class="who-tag" style="--tint:'+tints[who.indexOf(b.who)]+'">'+b.who+'</span>'+gapText(b.t, sit)+'</p>').join('')+'</div>';
+  }
+  return '<div class="panel'+(fresh?' fresh':'')+'" id="sit"><div class="sit-head"><span class="em" style="--tint:'+sit.tint+'" aria-hidden="true">'+sit.emoji+'</span><div><small>Situation '+(C.s+1)+' of '+C.sits.length+'</small><h2>'+sit.kind+'</h2></div></div><div class="sit-scroll">'+body+'</div></div>';
+}
+function ctxProgress(){ setProgress(C.done ? 1 : (C.doneGaps + (C.solved?1:0)) / C.total); }
+function starsCtx(m){ return m === 0 ? 3 : m === 1 ? 2 : 1; }
+function renderCtx(fresh){
+  C = ST[stKey('ctx', G.sess)];
+  ctxProgress();
+  if(C.done){
+    credit(true);
+    $('#screen').innerHTML = '<div class="home-wrap"><div class="panel result"><h2>All three situations complete</h2>'+
+      '<div class="rows">'+C.sits.map((s,i) => '<div><span>'+s.emoji+' '+s.kind+'</span><span class="s" aria-label="'+starsCtx(C.mist[i])+' of 3 stars">'+stars(starsCtx(C.mist[i]))+'</span></div>').join('')+'</div>'+
+      '<p>Gaps right at the first attempt: '+C.first+' of '+C.total+'.</p>'+resultActions('Go to Speaking')+'</div></div>';
+    wireResults(() => go('speak'), () => go('ctx', G.sess, true));
+    confetti();
+    return;
+  }
+  credit(false);
+  $('#screen').innerHTML = stage(sitHTML(fresh));
+  if(C.solved) ctxSolvedAns(); else ctxAns();
+  requestAnimationFrame(() => { keepGap(); scrollCue(); });
+}
+function ctxAns(){
+  const n = C.sits[C.s].gaps.length;
+  ansSet(head('Gap '+(C.g+1)+' of '+n)+'<p class="tq">Which phrase fits gap '+(C.g+1)+'?</p><div class="opts">'+
+    C.opts.map(o => '<button class="opt" data-o="'+escAttr(o)+'">'+o+'</button>').join('')+
+    '</div><div class="tmsg-wrap" aria-live="polite"></div>');
+  document.querySelectorAll('#ans .opt').forEach(b => b.onclick = () => ctxPick(b));
+}
+function ctxSolvedAns(){
+  const gap = C.sits[C.s].gaps[C.g], n = C.sits[C.s].gaps.length;
+  const lastGap = C.g === n - 1, lastSit = C.s === C.sits.length - 1;
+  ansSet(head('Gap '+(C.g+1)+' of '+n)+
+    '<div class="opt right static">'+gap.ans+'</div>'+
+    '<div class="fb" aria-live="polite"><span class="label">Correct</span><p>'+gap.note+'</p></div>'+
+    nextBtn(!lastGap ? 'Next gap' : (!lastSit ? 'Next situation' : 'See your results'))+
+    more('Why not the other options?', '<ul class="why">'+gap.wrong.map(w => '<li>'+w[1]+'</li>').join('')+'</ul>'));
+  wireNext(ctxNext);
+}
+function ctxPick(btn){
+  if(G.busy || btn.disabled || C.solved) return;
+  C.started = true;
+  const gap = C.sits[C.s].gaps[C.g], o = btn.dataset.o;
+  if(o === gap.ans){
+    C.solved = true;
+    addPoints(!C.miss);
+    if(!C.miss) C.first++;
+    ctxProgress();
+    const el = document.querySelector('#sit .gap[data-g="'+C.g+'"]');
+    el.className = 'gap filled flash'; el.textContent = gap.ans;
+    ctxSolvedAns();
+    requestAnimationFrame(keepGap);
+  } else {
+    C.miss = true; C.mist[C.s]++; missed(); markWrong(btn);
+    const w = gap.wrong.find(x => x[0] === o);
+    $('#ans .tmsg-wrap').innerHTML = '<div class="fb no"><span class="label">Not correct here</span><p>'+w[1]+'</p></div>';
+  }
+}
+function ctxNext(){
+  const n = C.sits[C.s].gaps.length;
+  C.doneGaps++;
+  if(C.g < n - 1){
+    const old = document.querySelector('#sit [data-keep]'); if(old) old.removeAttribute('data-keep');
+    C.g++; ctxGap(C);
+    const el = document.querySelector('#sit .gap[data-g="'+C.g+'"]');
+    el.className = 'gap now'; el.setAttribute('data-keep', '1');
+    ctxProgress(); ctxAns();
+    if(!wide()) $('#sit').scrollIntoView({block:'start', behavior: reduce ? 'auto' : 'smooth'});
+    requestAnimationFrame(keepGap);
+  } else if(C.s < C.sits.length - 1){
+    C.s++; C.g = 0; ctxGap(C); renderCtx(true); window.scrollTo(0, 0);
+  } else {
+    C.done = true; markDone('s'+(G.sess+1)+'ctx'); renderCtx(); window.scrollTo(0, 0);
+  }
+}
+
+/* =========================================================
+   Quick review (Session 1 phrases, start of Session 2)
+   ========================================================= */
+let R;
+function makeReview(){ const r = {items:shuffle(REVIEW), i:0, first:0, done:false, started:false}; reviewItem(r); return r; }
+function reviewItem(r){ const it = r.items[r.i]; r.order = shuffle(it.opts.map((_,k) => k)); r.solved = false; r.miss = false; }
+function renderReview(fresh){
+  R = ST.review;
+  if(R.solved && !R.done){ R.i++; if(R.i >= R.items.length){ R.done = true; markDone('s2review'); } else reviewItem(R); }
+  setProgress(R.done ? 1 : R.i / R.items.length);
+  if(R.done){
+    credit(true);
+    const ids = SESS[0].ids;
+    $('#screen').innerHTML = '<div class="home-wrap"><div class="panel result"><h2>Review complete</h2>'+
+      '<p class="rv-score">Right at the first attempt: '+R.first+' of '+R.items.length+'</p>'+
+      '<div class="big8">'+ids.map(id => SAVE.stickers[id] ? sticker(id, SAVE.stickers[id]==='shiny') : '<span class="slot">?</span>').join('')+'</div>'+
+      '<p>These are the phrases from Session 1. Now you are ready for the new ones.</p>'+resultActions('Go to Match and collect')+'</div></div>';
+    wireResults(() => go('match', 1), () => go('review', 1, true));
+    if(R.first === R.items.length) confetti();
+    return;
+  }
+  credit(false);
+  const it = R.items[R.i];
+  let prompt = '';
+  if(it.type === 'gap') prompt = '<p class="rv-label">Complete the sentence.</p><p class="rv-text">'+it.text.replace('{0}', '<span class="gap now">…</span>')+'</p>';
+  if(it.type === 'meaning') prompt = '<p class="rv-label">Which phrase has this meaning?</p><p class="rv-text">'+cap(it.text)+'.</p>';
+  if(it.type === 'sentence') prompt = '<p class="rv-label">Which sentence is correct?</p><p class="rv-text rv-small">Read all three sentences carefully before you choose.</p>';
+  $('#screen').innerHTML = stage('<div class="panel review-card'+(fresh?' fresh':'')+'" id="rcard"><div class="rv-top"><span class="rv-badge">🔁 Session 1 review</span><span class="rv-count">Question '+(R.i+1)+' of '+R.items.length+'</span></div>'+prompt+'</div>');
+  ansSet(head('Question '+(R.i+1)+' of '+R.items.length)+'<p class="tq">Choose the answer.</p><div class="opts">'+
+    R.order.map(k => '<button class="opt" data-k="'+k+'">'+it.opts[k]+'</button>').join('')+'</div><p class="tmsg" aria-live="polite"></p>');
+  document.querySelectorAll('#ans .opt').forEach(b => b.onclick = () => reviewPick(b));
+}
+function reviewPick(btn){
+  if(btn.disabled || R.solved) return;
+  R.started = true;
+  const it = R.items[R.i];
+  if(+btn.dataset.k === it.ans){
+    R.solved = true; addPoints(!R.miss); if(!R.miss) R.first++;
+    const g = document.querySelector('#rcard .gap');
+    if(g){ g.className = 'gap filled flash'; g.textContent = it.opts[it.ans]; }
+    const last = R.i === R.items.length - 1;
+    ansSet(head('Question '+(R.i+1)+' of '+R.items.length)+
+      '<div class="opt right static">'+it.opts[it.ans]+'</div>'+
+      '<div class="fb" aria-live="polite"><span class="label">Correct</span><p>'+it.why+'</p></div>'+nextBtn(last ? 'See your results' : 'Next question'));
+    wireNext(() => {
+      if(!last){ renderReview(true); window.scrollTo(0,0); }
+      else { R.done = true; markDone('s2review'); renderReview(); window.scrollTo(0,0); }
+    });
+  } else {
+    R.miss = true; missed(); markWrong(btn);
+    $('#ans .tmsg').textContent = 'Not correct here. Try another answer.';
+  }
+}
+
+/* =========================================================
+   Spot the mistake (all fifteen phrases)
+   ========================================================= */
+let S;
+function makeSpot(){ return {items:shuffle(SPOT), i:0, right:0, missed:[], answered:false, done:false, started:false}; }
+function renderSpot(fresh){
+  S = ST.spot;
+  if(S.answered && !S.done){ S.i++; S.answered = false; if(S.i >= S.items.length){ S.done = true; markDone('spot'); } }
+  setProgress(S.done ? 1 : S.i / S.items.length);
+  if(S.done){
+    credit(true);
+    $('#screen').innerHTML = '<div class="home-wrap"><div class="panel result"><h2>All eighteen sentences checked</h2>'+
+      '<p class="rv-score">Right decisions: '+S.right+' of '+S.items.length+'</p>'+
+      (S.missed.length ? '<h3 class="sec-h3">Sentences to look at again</h3><ul class="again">'+S.missed.map(it =>
+        '<li><span class="'+(it.ok?'y':'n')+'">'+it.s+'</span>'+(it.ok ? '<small>This sentence is correct.</small>' : '<small>Correct version: <b>'+it.fix+'</b></small>')+'</li>').join('')+'</ul>'
+        : '<p>You made the right decision about every sentence.</p>')+resultActions('Back to the start screen')+'</div></div>';
+    wireResults(() => go('home'), () => go('spot', 0, true));
+    if(!S.missed.length) confetti();
+    return;
+  }
+  credit(false);
+  const it = S.items[S.i];
+  $('#screen').innerHTML = stage('<div class="panel spot-card'+(fresh?' fresh':'')+'" id="scard"><div class="rv-top"><span class="rv-badge spot">🔎 Spot the mistake</span><span class="rv-count">Sentence '+(S.i+1)+' of '+S.items.length+'</span></div>'+
+    '<p class="spot-s" id="spotS">'+it.s+'</p></div>');
+  S.answered = false;
+  ansSet(head('Sentence '+(S.i+1)+' of '+S.items.length)+'<p class="tq">Is this sentence correct?</p><div class="opts">'+
+    '<button class="opt big" data-a="1">The sentence is correct</button><button class="opt big" data-a="0">The sentence has a mistake</button></div>');
+  document.querySelectorAll('#ans .opt').forEach(b => b.onclick = () => spotPick(b));
+}
+function spotPick(btn){
+  if(S.answered) return;
+  S.answered = true; S.started = true;
+  const it = S.items[S.i], said = btn.dataset.a === '1', good = said === it.ok;
+  if(good){ S.right++; addPoints(true); } else { S.missed.push(it); missed(); }
+  if(!it.ok) $('#spotS').innerHTML = '<span class="was">'+it.s+'</span><span class="fixed">'+it.fix+'</span>';
+  else $('#spotS').classList.add('ok');
+  const last = S.i === S.items.length - 1;
+  ansSet(head('Sentence '+(S.i+1)+' of '+S.items.length)+
+    '<div class="opt static '+(good?'right':'wrong')+'">'+btn.textContent+'</div>'+
+    '<div class="fb'+(good?'':' no')+'" aria-live="polite"><span class="label">'+(good?'Your answer is correct':'Your answer is not correct')+'</span>'+
+    '<p>'+(it.ok ? 'This sentence is correct. ' : 'This sentence has a mistake. ')+it.why+'</p></div>'+nextBtn(last ? 'See your results' : 'Next sentence'));
+  wireNext(() => {
+    if(!last){ renderSpot(true); window.scrollTo(0,0); }
+    else { S.done = true; markDone('spot'); renderSpot(); window.scrollTo(0,0); }
+  });
+}
+
+/* =========================================================
+   Speaking
+   ========================================================= */
+const SP_COL = ['var(--sun)','var(--sky)','var(--pink)','var(--lilac)','var(--tang)','var(--coral)'];
+function linkify(t){
+  return t.replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, (m, id, txt) =>
+    id.startsWith('g:') ? '<button class="hl" data-g="'+id.slice(2)+'">'+txt+'</button>' : '<button class="hl" data-ph="'+id+'">'+txt+'</button>');
+}
+function renderSpeak(){
+  setProgress(0); credit(true);
+  const list = SPEAK[G.sess];
+  $('#screen').innerHTML =
+    '<div><p class="rv-badge" style="display:inline-block;margin:0 0 var(--s2)">Session '+(G.sess+1)+': '+SESS[G.sess].name+'</p><h2 style="font-size:clamp(1.7rem,7vw,2.3rem)">Talk about your past</h2>'+
+    '<p class="lead">Work in pairs or small groups and choose questions to ask each other. Try to use the phrases from this session in your answers, as well as <em>used to</em> and <em>would</em> for past habits. Tap an underlined phrase to see it in the word bank.</p></div>'+
+    '<ol class="sp-grid" style="margin-top:var(--s4)">'+list.map((s,i) =>
+      '<li class="sp-card" style="--bar:'+SP_COL[i % SP_COL.length]+'"><span class="n">'+(i+1)+'</span><p>'+linkify(s.q)+'</p>'+
+      (s.might ? '<p class="might"><b>You might use:</b> <em>'+s.might+'</em></p>' : '')+'</li>').join('')+'</ol>'+
+    '<div class="result-actions"><button class="btn" id="spHome">Back to the start screen</button></div>';
+  document.querySelectorAll('.hl').forEach(b => b.onclick = () => b.dataset.ph ? openBank('phrases', b.dataset.ph) : openBank('grammar', null, b.dataset.g));
+  $('#spHome').onclick = () => go('home');
+}
+
+/* =========================================================
+   Word bank
+   ========================================================= */
+const bank = $('#bank'), bankBody = $('#bankBody');
+let bankTab = 'phrases', bankReturn = null;
+const BANK_CREDIT = '<p class="bank-credit">Class of Coffee – with AI assistance</p>';
+function bankHTML(tab){
+  if(tab === 'phrases'){
+    return '<p>All fifteen phrases from both sessions. Tap a phrase to see how it is used.</p>' + SESS.map((s, si) =>
+      '<h3>Session '+(si+1)+': '+s.name+'</h3>' + s.ids.map(id => {
+        const p = byId(id);
+        let body = '<div><b>How it is used</b>'+p.pattern+'</div><div><b>Example</b><em>'+p.opts[0]+'</em></div>';
+        if(p.say) body += '<div><b>Pronunciation</b>'+p.say+'</div>';
+        if(p.us) body += '<div><b>UK and US</b>'+p.us+'</div>';
+        return '<details class="wb" id="wb-'+p.id+'"><summary>'+sticker(p.id, false)+'<span class="t"><b>'+p.phrase+'</b><span>'+cap(p.meaning)+'.</span></span></summary><div class="wb-body">'+body+'</div></details>';
+      }).join('')).join('') + BANK_CREDIT;
+  }
+  if(tab === 'grammar'){
+    return '<p>The patterns that cause most mistakes with these phrases.</p>' + GRAMMAR.map(g =>
+      '<div class="frame" id="gr-'+g.id+'" style="--bar:'+g.bar+'"><h3>'+g.title+'</h3><p>'+g.text+'</p><ul class="ex">'+
+      g.ex.map(e => '<li class="'+e[0]+'">'+e[1]+'</li>').join('')+'</ul></div>').join('') + BANK_CREDIT;
+  }
+  if(tab === 'talk'){
+    return '<p>Phrases that help you to talk about memories and keep a conversation going.</p><ul class="say-list">'+
+      TALK.map(t => '<li><b>'+t[0]+'</b><span>'+t[1]+'</span></li>').join('')+'</ul>' + BANK_CREDIT;
+  }
+  return '<p>Your coursebook uses British English. These are the differences you will meet in these sessions.</p><div class="ukus">'+
+    UKUS.map(r => '<div class="row"><div class="pair"><div><small>British English</small><b>'+r[0]+'</b></div><div><small>American English</small><b>'+r[1]+'</b></div></div>'+(r[2]?'<div class="note">'+r[2]+'</div>':'')+'</div>').join('')+'</div>' + BANK_CREDIT;
+}
+function setTab(tab){
+  bankTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', t.dataset.tab === tab ? 'true' : 'false'));
+  bankBody.innerHTML = bankHTML(tab);
+  bankBody.scrollTop = 0;
+}
+function openBank(tab, phraseId, gramId){
+  bankReturn = document.activeElement;
+  bank.hidden = false;
+  document.body.style.overflow = 'hidden';
+  setTab(tab || bankTab);
+  const target = phraseId ? $('#wb-'+phraseId) : gramId ? $('#gr-'+gramId) : null;
+  if(target){
+    if(phraseId){ target.open = true; target.classList.add('hi'); }
+    requestAnimationFrame(() => target.scrollIntoView({block:'start'}));
+  }
+  $('#bankClose').focus({preventScroll:true});
+}
+function closeBank(){
+  bank.hidden = true;
+  document.body.style.overflow = '';
+  if(bankReturn && document.contains(bankReturn)) bankReturn.focus({preventScroll:true});
+}
+$('#bankBtn').onclick = () => openBank();
+$('#bankClose').onclick = closeBank;
+bank.addEventListener('click', e => { if(e.target === bank) closeBank(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && !bank.hidden) closeBank(); });
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => setTab(t.dataset.tab));
+
+/* =========================================================
+   Start
+   ========================================================= */
+showScore();
+if(SESS[0].ids.every(id => SAVE.stickers[id])) G.homeTab = 1;
+go('home');
+</script>
+</body>
+</html>
