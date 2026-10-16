@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF6EE">
+<title>Health Talk · B2.1 speaking board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF6EE; --paper:#FFFDF8; --ink:#231E3D; --ink-soft:#5B5675; --line:#E9DFD0;
+  --coral:#F26B5B; --mint:#3FBFA0; --indigo:#4B4BA8; --mustard:#F2B33D;
+  --grass:#2F7D5B; --grass-2:#358A65;
+  --display:'Bricolage Grotesque', 'Avenir Next', 'Trebuchet MS', sans-serif;
+  --body:'Atkinson Hyperlegible', 'Verdana', sans-serif;
+  --mono:'Space Mono', 'Courier New', monospace;
+  --r-s:10px; --r-m:18px; --r-l:28px;
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+  --shadow:0 1px 0 rgba(35,30,61,.08), 0 8px 24px -10px rgba(35,30,61,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:var(--body);overscroll-behavior:none}
+body{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(242,107,91,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,107,91,.07) 1px, transparent 1px),
+    linear-gradient(rgba(242,107,91,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,107,91,.035) 1px, transparent 1px);
+  background-size:40px 40px,40px 40px,8px 8px,8px 8px;
+}
+body.track{
+  background-image:
+    repeating-linear-gradient(90deg, rgba(47,125,91,.05) 0 28px, transparent 28px 56px);
+  background-size:auto;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#app{height:100%;max-width:520px;margin:0 auto;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.screen.active{display:flex}
+
+/* ---------- setup ---------- */
+#setup>*,#end>*{flex:none}
+#setup{overflow-y:auto;padding:calc(env(safe-area-inset-top) + 20px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.hero-title{font-family:var(--display);font-weight:800;font-size:clamp(44px,13vw,64px);line-height:.9;letter-spacing:-.03em;margin:var(--sp-2) 0 var(--sp-3)}
+.hero-title em{font-style:normal;color:var(--coral)}
+body.track .hero-title em{color:var(--grass)}
+.hero-sub{font-size:16px;line-height:1.45;color:var(--ink-soft);margin:0 0 var(--sp-4)}
+.hero-art{width:100%;height:64px;display:block;margin:0 0 var(--sp-4)}
+.panel{background:var(--paper);border-radius:var(--r-m);padding:var(--sp-4);box-shadow:var(--shadow);margin-bottom:var(--sp-4)}
+.panel h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0 0 var(--sp-3);letter-spacing:-.01em}
+.stepper{display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-3)}
+.stepper button{width:44px;height:44px;border-radius:50%;background:var(--bg);font-family:var(--display);font-size:24px;font-weight:700;box-shadow:inset 0 0 0 2px var(--line)}
+.stepper button:active{transform:scale(.92)}
+.stepper output{font-family:var(--display);font-weight:800;font-size:32px;min-width:28px;text-align:center}
+.stepper span{color:var(--ink-soft);font-size:15px}
+.names{display:grid;gap:var(--sp-2)}
+.name-row{display:flex;align-items:center;gap:var(--sp-2)}
+.name-row i{width:28px;height:28px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 3px rgba(255,255,255,.55)}
+.name-row input{flex:1;font:inherit;font-size:16px;padding:10px 12px;border-radius:var(--r-s);border:2px solid var(--line);background:var(--bg);color:var(--ink);min-width:0}
+.name-row input:focus{outline:none;border-color:var(--ink)}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.seg button{padding:12px 4px;border-radius:var(--r-s);background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);font-family:var(--mono);font-size:13px;font-weight:700}
+.seg button.on{background:var(--ink);color:var(--paper);box-shadow:none}
+.howto{margin:0;padding-left:20px;font-size:15px;line-height:1.5}
+.howto li{margin-bottom:6px}
+.big-btn{display:block;width:100%;padding:18px;border-radius:var(--r-m);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.01em;box-shadow:0 6px 0 #0d0a1f;transition:transform .08s}
+.big-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #0d0a1f}
+.credit{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-align:center;margin-top:var(--sp-5)}
+
+/* ---------- game ---------- */
+.top{display:flex;align-items:center;gap:var(--sp-2);padding:10px 12px 6px}
+.top .t{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.02em;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{font-family:var(--mono);font-weight:700;font-size:14px;padding:6px 10px;border-radius:999px;background:var(--paper);box-shadow:var(--shadow);display:flex;align-items:center;gap:6px}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--mint)}
+.pill.low .dot{background:var(--coral);animation:beat 1s infinite}
+.pill.low{color:#B8382A}
+.icon-btn{width:38px;height:38px;border-radius:50%;background:var(--paper);box-shadow:var(--shadow);font-size:18px;font-weight:700;display:grid;place-items:center}
+.board-wrap{flex:1;min-height:0;position:relative;padding:0 6px}
+#board{width:100%;height:100%;display:block}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 10px;padding:2px 10px 4px;font-family:var(--mono);font-size:10px;color:var(--ink-soft)}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.players{display:flex;gap:6px;overflow-x:auto;padding:4px 12px 6px;scrollbar-width:none}
+.players::-webkit-scrollbar{display:none}
+.chip{flex:none;display:flex;align-items:center;gap:6px;padding:6px 10px 6px 6px;border-radius:999px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--line);font-size:14px;transition:transform .2s, box-shadow .2s}
+.chip i{width:20px;height:20px;border-radius:50%;flex:none}
+.chip b{font-family:var(--mono);font-size:11px;color:var(--ink-soft);font-weight:400}
+.chip.on{box-shadow:inset 0 0 0 2px var(--ink);transform:translateY(-2px)}
+.chip.skip{opacity:.55}
+.actionbar{display:flex;align-items:center;gap:var(--sp-3);padding:10px 14px calc(14px + env(safe-area-inset-bottom));background:var(--paper);border-radius:var(--r-l) var(--r-l) 0 0;box-shadow:0 -10px 30px -16px rgba(35,30,61,.4)}
+.turn{flex:1;min-width:0}
+.turn small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
+.turn strong{display:block;font-family:var(--display);font-weight:800;font-size:26px;line-height:1.05;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.turn .hint{font-size:13px;color:var(--ink-soft)}
+.die{width:72px;height:72px;border-radius:18px;background:#fff;box-shadow:0 6px 0 #D8CCB8, 0 10px 20px -6px rgba(35,30,61,.4), inset 0 0 0 3px var(--who,#231E3D);position:relative;flex:none;transition:transform .1s}
+.die:active{transform:translateY(3px)}
+.die[disabled]{opacity:.45}
+.die .pip{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--ink);transform:translate(-50%,-50%)}
+.die.rolling{animation:tumble .6s cubic-bezier(.3,.7,.4,1)}
+.die.ready{animation:nudge 2.4s ease-in-out infinite}
+@keyframes tumble{0%{transform:rotate(0) scale(1)}35%{transform:rotate(200deg) scale(1.15) translateY(-10px)}70%{transform:rotate(330deg) scale(.95)}100%{transform:rotate(360deg) scale(1)}}
+@keyframes nudge{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-8deg)}90%{transform:rotate(7deg)}95%{transform:rotate(-3deg)}}
+@keyframes beat{0%,100%{transform:scale(1)}20%{transform:scale(1.6)}40%{transform:scale(1)}}
+
+/* svg bits */
+.node-ring{transform-box:fill-box;transform-origin:center}
+.node.hit .node-ring{animation:ripple .9s ease-out}
+@keyframes ripple{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(2.2)}}
+.token{transition:transform .26s cubic-bezier(.3,1.5,.5,1)}
+.token.active circle.body{stroke:#fff;stroke-width:2.5}
+.token.active .halo{animation:halo 1.4s ease-in-out infinite}
+@keyframes halo{0%,100%{opacity:.15;transform:scale(1)}50%{opacity:.45;transform:scale(1.35)}}
+.halo{transform-box:fill-box;transform-origin:center}
+.trace{fill:none;stroke:var(--coral);stroke-width:4;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(242,107,91,.9))}
+
+/* ---------- sheet ---------- */
+.scrim{position:absolute;inset:0;background:rgba(35,30,61,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:20}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:92%;display:flex;flex-direction:column;background:var(--paper);border-radius:var(--r-l) var(--r-l) 0 0;transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.9,.25,1.05);z-index:21;overflow:hidden}
+.sheet.on{transform:translateY(0)}
+.sheet-head{padding:22px 20px 18px;position:relative;overflow:hidden;color:var(--head-ink,#fff);background:var(--head,#231E3D)}
+.sheet-head::after{content:"";position:absolute;right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;border:18px solid rgba(255,255,255,.16)}
+.sheet-head .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.sheet-head h3{font-family:var(--display);font-weight:800;font-size:32px;line-height:1;letter-spacing:-.025em;margin:8px 0 0;position:relative;z-index:1}
+.sheet-head .glyph{position:absolute;right:18px;bottom:10px;font-family:var(--mono);font-weight:700;font-size:44px;opacity:.22}
+.sheet-body{padding:20px;overflow-y:auto;flex:1}
+.q{font-size:22px;line-height:1.35;margin:0 0 14px;font-weight:700}
+.fu{font-size:18px;line-height:1.4;margin:0 0 16px;padding-left:12px;border-left:4px solid var(--head,#231E3D)}
+.fu small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:2px}
+.tip{font-size:14px;color:var(--ink-soft);line-height:1.45;margin:0 0 14px}
+.lang{margin:4px 0 8px}
+.lang summary{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;list-style:none;padding:6px 0;color:var(--ink-soft)}
+.lang summary::before{content:"+ "}
+.lang[open] summary::before{content:"– "}
+.lang .chips{display:flex;flex-wrap:wrap;gap:6px}
+.lang .chips span{padding:5px 10px;border-radius:999px;background:var(--bg);font-size:14px;box-shadow:inset 0 0 0 1.5px var(--line)}
+.sheet-foot{display:flex;gap:10px;align-items:center;padding:12px 20px calc(16px + env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.ghost{padding:12px 14px;border-radius:var(--r-s);font-size:14px;color:var(--ink-soft);box-shadow:inset 0 0 0 2px var(--line);background:var(--paper)}
+.go{flex:1;padding:15px;border-radius:var(--r-m);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:800;font-size:19px;box-shadow:0 5px 0 #0d0a1f}
+.go:active{transform:translateY(3px);box-shadow:0 2px 0 #0d0a1f}
+.ring-btn{display:flex;align-items:center;gap:10px;padding:8px 12px 8px 8px;border-radius:999px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);font-size:14px;margin-bottom:6px}
+.ring-btn svg{width:34px;height:34px;transform:rotate(-90deg)}
+.ring-btn .num{font-family:var(--mono);font-weight:700;font-size:15px;min-width:42px}
+.ring-btn.done{background:var(--mustard)}
+.reveal{display:block;width:100%;padding:16px;border-radius:var(--r-m);background:var(--bg);box-shadow:inset 0 0 0 2px var(--ink);font-family:var(--display);font-weight:700;font-size:18px;margin:6px 0 14px}
+.big-word{font-family:var(--display);font-weight:800;font-size:clamp(34px,11vw,48px);letter-spacing:-.02em;text-align:center;padding:22px 10px;border-radius:var(--r-m);background:var(--bg);margin:6px 0 14px;animation:pop .4s cubic-bezier(.3,1.6,.5,1)}
+.stamp{display:inline-block;font-family:var(--mono);font-weight:700;font-size:26px;letter-spacing:.1em;padding:6px 14px;border:4px solid currentColor;border-radius:8px;transform:rotate(-6deg);margin:4px 0 12px;animation:stamp .35s cubic-bezier(.3,1.6,.5,1)}
+.stamp.myth{color:#C2412F}.stamp.fact{color:#1E8A6C}.stamp.partly{color:#B07A0E}
+@keyframes stamp{0%{transform:rotate(-6deg) scale(2.2);opacity:0}100%{transform:rotate(-6deg) scale(1);opacity:1}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+.why{font-size:17px;line-height:1.45;margin:0 0 12px}
+.idiom-mean{font-size:19px;line-height:1.4;margin:0 0 12px}
+.effect{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;font-size:15px;padding:8px 12px;border-radius:var(--r-s);background:var(--bg);box-shadow:inset 0 0 0 2px var(--ink);margin-bottom:14px}
+
+/* ---------- end ---------- */
+#end{padding:calc(env(safe-area-inset-top) + 28px) 16px calc(env(safe-area-inset-bottom) + 24px);overflow-y:auto}
+.podium{list-style:none;padding:0;margin:0 0 20px;display:grid;gap:8px}
+.podium li{display:flex;align-items:center;gap:12px;background:var(--paper);border-radius:var(--r-m);padding:12px 14px;box-shadow:var(--shadow);opacity:0;animation:rise .5s forwards}
+.podium li .rank{font-family:var(--display);font-weight:800;font-size:28px;width:34px}
+.podium li i{width:26px;height:26px;border-radius:50%}
+.podium li .nm{flex:1;font-size:18px;font-weight:700}
+.podium li .ps{font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+.podium li:first-child{background:var(--ink);color:var(--paper)}
+.podium li:first-child .ps{color:#cfc9e6}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.photo{position:relative;height:96px;border-radius:var(--r-m);overflow:hidden;margin:0 0 18px;background:repeating-linear-gradient(90deg,#efe9df 0 3px,#e2dacd 3px 6px);filter:grayscale(1) contrast(1.1)}
+.photo .scan{position:absolute;top:0;bottom:0;width:3px;background:#C2412F;left:0;animation:scan 1.6s cubic-bezier(.6,0,.3,1) forwards}
+.photo .runner{position:absolute;bottom:14px;width:30px;height:30px;border-radius:50%;border:3px solid #fff}
+@keyframes scan{to{left:72%}}
+#confetti{position:absolute;inset:0;pointer-events:none;z-index:30}
+.toast{position:absolute;left:50%;top:64px;transform:translate(-50%,-20px);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-size:14px;opacity:0;transition:.3s;z-index:40;white-space:nowrap;max-width:92%;overflow:hidden;text-overflow:ellipsis}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.undo-bar{position:absolute;left:12px;right:12px;bottom:calc(112px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:10px 10px 12px 16px;border-radius:16px;box-shadow:0 12px 30px -10px rgba(35,30,61,.6);transform:translateY(16px);opacity:0;pointer-events:none;transition:.25s;z-index:15;overflow:hidden}
+.undo-bar.on{transform:none;opacity:1;pointer-events:auto}
+.undo-bar span{flex:1;font-size:15px;line-height:1.3}
+.undo-bar button{background:var(--mustard);color:var(--ink);font-family:var(--display);font-weight:800;padding:10px 18px;border-radius:12px;font-size:17px}
+.undo-bar i{position:absolute;left:0;bottom:0;height:3px;width:100%;background:var(--mustard);transform-origin:left}
+.undo-bar.on i{animation:shrink 6s linear forwards}
+@keyframes shrink{to{transform:scaleX(0)}}
+.last-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;width:58px;height:58px;border-radius:16px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);font-size:20px;line-height:1;flex:none}
+.last-btn small{font-family:var(--mono);font-size:9px;letter-spacing:.04em;text-transform:uppercase}
+.last-btn[disabled]{opacity:.35}
+.head-undo{position:absolute;top:14px;right:14px;z-index:2;font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.88);color:#231E3D}
+.ghost.armed{background:#C2412F;color:#fff;box-shadow:none}
+.resume{box-shadow:inset 0 0 0 3px var(--ink), var(--shadow)}
+.resume p{margin:0 0 12px;font-size:15px;line-height:1.45}
+.resume .who{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+.resume .who span{display:flex;align-items:center;gap:5px;font-size:14px;padding:4px 10px 4px 5px;border-radius:999px;background:var(--bg)}
+.resume .who i{width:16px;height:16px;border-radius:50%}
+.resume small{display:block;margin-top:10px;color:var(--ink-soft);font-size:13px}
+.big-btn.alt{background:var(--coral);color:var(--ink);box-shadow:0 6px 0 #B8483A}
+body.track .big-btn.alt{background:var(--grass);color:#fff;box-shadow:0 6px 0 #1C5A3F}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body class="ecg">
+<div id="app">
+
+  <section id="setup" class="screen active">
+    <div class="eyebrow">B2.1 · Speaking board</div>
+    <h1 class="hero-title">Health <em>Talk</em></h1>
+    <svg class="hero-art" id="heroArt" viewBox="0 0 360 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <p class="hero-sub">A speaking game about health and medicine for groups of two to five. Follow the heartbeat to the finish.</p>
+    <div class="panel resume" id="resume" hidden></div>
+
+    <div class="panel">
+      <h2>Who is playing?</h2>
+      <div class="stepper">
+        <button id="minus" aria-label="Fewer players">–</button>
+        <output id="count">3</output>
+        <button id="plus" aria-label="More players">+</button>
+        <span>players (2–5)</span>
+      </div>
+      <div class="names" id="names"></div>
+    </div>
+
+    <div class="panel">
+      <h2>How long?</h2>
+      <div class="seg" id="len">
+        <button data-m="15">15 min</button><button data-m="20" class="on">20 min</button><button data-m="30">30 min</button><button data-m="0">No limit</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>How to play</h2>
+      <ol class="howto">
+        <li>Use one phone per group and pass it to the next player after each turn.</li>
+        <li>On your turn, tap the die and move.</li>
+        <li>On a coloured square, answer the question. Speak for about a minute, and then the person on your left asks you a follow-up question.</li>
+        <li>On a dark square, follow the instructions on the card.</li>
+        <li>On a dashed square, learn the expression, use it in a sentence, and move as it says.</li>
+        <li>The game ends when someone reaches the finish or when the time is up. The player who is furthest along wins.</li>
+        <li>If someone taps Done by mistake, tap Undo straight away, or tap Last card to see the previous card again.</li>
+      </ol>
+    </div>
+
+    <button class="big-btn" id="start">Start the game</button>
+    <div class="credit">Class of Coffee – with AI assistance</div>
+  </section>
+
+  <section id="game" class="screen">
+    <header class="top">
+      <div class="t">Health Talk</div>
+      <div class="pill" id="clock"><span class="dot"></span><span id="clockTxt">--:--</span></div>
+      <button class="icon-btn" id="menuBtn" aria-label="Menu">⋯</button>
+    </header>
+    <div class="board-wrap"><svg id="board" preserveAspectRatio="xMidYMid meet" aria-label="Game board"></svg></div>
+    <div class="legend" id="legend"></div>
+    <div class="players" id="players"></div>
+    <div class="actionbar">
+      <div class="turn"><small>Your turn</small><strong id="turnName">—</strong><span class="hint" id="turnHint">Tap the die to roll</span></div>
+      <button class="last-btn" id="lastBtn" disabled aria-label="See the last card again">↺<small>Last card</small></button>
+      <button class="die ready" id="die" aria-label="Roll the die"></button>
+    </div>
+    <div class="undo-bar" id="undoBar"><span id="undoTxt">Card closed</span><button id="undoBtn">Undo</button><i></i></div>
+  </section>
+
+  <section id="end" class="screen">
+    <div class="eyebrow" id="endEyebrow">Game over</div>
+    <h1 class="hero-title" id="endTitle">Clean bill of health!</h1>
+    <div id="endArt"></div>
+    <ol class="podium" id="podium"></ol>
+    <button class="ghost" id="undoEnd" style="width:100%;margin-bottom:12px" hidden>↶ That was a mistake – go back</button>
+    <button class="big-btn" id="again">Play again</button>
+    <button class="ghost" id="newGame" style="width:100%;margin-top:12px">Change players</button>
+    <div class="credit">Class of Coffee – with AI assistance</div>
+  </section>
+
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+  <div class="toast" id="toast"></div>
+  <canvas id="confetti"></canvas>
+</div>
+
+<script>
+const C = {"kind": "ecg", "startLabel": "START", "finishLabel": "FINISH", "skipWord": "under the weather", "categories": [{"id": "everyday", "name": "Everyday health", "short": "Everyday", "color": "#F26B5B", "ink": "#231E3D", "questions": [{"t": "Staying healthy", "q": "What do you do to look after your health?", "f": "Is there anything you would like to do better?"}, {"t": "Home remedies", "q": "What does your family do when someone has a cold or a sore throat?", "f": "Do you think these remedies really work?"}, {"t": "The last time you were ill", "q": "Tell us about the last time you were ill or injured. What happened?", "f": "How long did it take you to get over it?"}, {"t": "Sleep", "q": "How much sleep do you usually get?", "f": "How does it affect you when you don't get enough?"}, {"t": "Bad habits", "q": "Which unhealthy habit would be the hardest for you to give up?", "f": "Why would it be so difficult?"}, {"t": "Going in ill", "q": "Do you go to work or class when you feel unwell?", "f": "When do you think it is better to stay at home?"}]}, {"id": "body", "name": "Body and mind", "short": "Body & mind", "color": "#3FBFA0", "ink": "#231E3D", "questions": [{"t": "Stress", "q": "What are the most common causes of stress for people your age?", "f": "How do people you know deal with it?"}, {"t": "Talking about it", "q": "Is it easier to talk about mental health now than it was twenty years ago?", "f": "Why do you think that is?"}, {"t": "Screens", "q": "How does the time we spend on our phones affect our health?", "f": "Have you ever tried to use your phone less?"}, {"t": "Food", "q": "Has the way you eat changed in the last few years?", "f": "What made it change?"}, {"t": "Feeling good", "q": "Apart from diet and exercise, what else helps people stay healthy and happy?", "f": "Which of these things is most important for you?"}, {"t": "Getting older", "q": "What do you think is the secret to staying healthy as you get older?", "f": "Do you know an older person who is a good example?"}]}, {"id": "doctors", "name": "Doctors and medicine", "short": "Doctors", "color": "#4B4BA8", "ink": "#FFFFFF", "questions": [{"t": "A good doctor", "q": "What makes a good doctor?", "f": "Have you ever had a doctor who was particularly good or bad?"}, {"t": "Dr Google", "q": "Do you look up your symptoms online?", "f": "Has it ever made you more worried than before?"}, {"t": "The medicine cabinet", "q": "What medicines do you usually keep at home?", "f": "Do you think people take medicine too easily?"}, {"t": "Alternative medicine", "q": "Why do some people choose treatments such as acupuncture or herbal remedies?", "f": "Would you try them? Why or why not?"}, {"t": "Doctor's advice", "q": "Do you always follow your doctor's instructions exactly?", "f": "Why do some people stop taking their medicine early?"}, {"t": "The health system", "q": "How well does the public health system work where you live?", "f": "What would you improve first?"}]}, {"id": "society", "name": "Society and the future", "short": "Society", "color": "#F2B33D", "ink": "#231E3D", "questions": [{"t": "A sugar tax", "q": "Should unhealthy food and sugary drinks cost more to encourage healthier choices?", "f": "Would a higher price change what you buy?"}, {"t": "Living to 100", "q": "Would you like to live to 100?", "f": "What would need to be true for that to be a good thing?"}, {"t": "AI doctors", "q": "Would you trust an AI to diagnose you?", "f": "Would it depend on the situation?"}, {"t": "Health at school", "q": "What should children learn about health at school?", "f": "What do you wish you had learnt when you were younger?"}, {"t": "One change", "q": "If you could change one thing to make people in your town healthier, what would it be?", "f": "Who should be responsible for making that change?"}, {"t": "Healthy places", "q": "What makes a town or city a healthy place to live?", "f": "How healthy is the place where you live?"}]}], "decks": {"first": {"type": "roleplay", "name": "Doctor's orders", "kicker": "Role-play card", "glyph": "Rx", "intro": "The person on your left is the patient and reads the problem aloud. You are the doctor: ask one or two questions and then give advice for about a minute.", "phrases": ["You should…", "If I were you, I'd…", "Why don't you…?", "It might be a good idea to…", "Try not to…"], "cards": ["I can't sleep the night before an exam.", "I get a headache every afternoon at work.", "I want to get fit, but I hate going to the gym.", "I spend hours on my phone in bed every night.", "I catch every cold that goes around in winter.", "I have a job interview tomorrow and I'm really nervous.", "I eat fast food almost every day because I don't have time to cook.", "My back hurts after sitting at my desk all day."]}, "describe": {"type": "describe", "name": "Describe it", "kicker": "Vocabulary card", "glyph": "≈", "intro": "Describe the word or phrase without saying it. The others try to guess it before the time runs out.", "cards": ["a prescription", "a painkiller", "a sprained ankle", "a waiting room", "side effects", "hay fever", "a check-up", "stitches", "a sore throat", "to sneeze", "a pharmacy", "an ambulance", "a plaster", "a vaccine"]}, "myth": {"type": "myth", "name": "Myth or fact?", "kicker": "Discussion card", "glyph": "?!", "intro": "Read the statement aloud. Everyone says whether they think it is a myth or a fact, and why. Then reveal the answer.", "cards": [{"s": "You lose most of your body heat through your head.", "a": "Myth", "w": "You lose heat from any part of your body that is uncovered. The head is not special; it only feels that way because it is often the only part we leave uncovered."}, {"s": "Going outside with wet hair gives you a cold.", "a": "Myth", "w": "Colds are caused by viruses. Feeling cold does not give you a cold, although being run-down can make it easier to catch one."}, {"s": "Antibiotics help you get over a cold faster.", "a": "Myth", "w": "Antibiotics only work against bacteria, and colds are caused by viruses. Taking antibiotics when you don't need them also helps bacteria become resistant."}, {"s": "Eating lots of carrots helps you see in the dark.", "a": "Partly true", "w": "Carrots contain vitamin A, which healthy eyes need. However, eating extra carrots will not give you better night vision. The story was spread by the British during the Second World War."}, {"s": "Cracking your knuckles causes arthritis.", "a": "Myth", "w": "Studies have found no link between cracking your knuckles and arthritis. The sound comes from gas bubbles in the fluid around the joint."}, {"s": "Everyone needs to drink exactly eight glasses of water a day.", "a": "Myth", "w": "How much water you need depends on your size, the weather and how active you are. A lot of the water we need also comes from food."}, {"s": "We only use ten per cent of our brains.", "a": "Myth", "w": "Brain scans show that we use almost all of our brain, although not every part is active at the same time."}, {"s": "Regularly sleeping less than six hours a night can make you more likely to catch a cold.", "a": "Fact", "w": "Research has found that people who sleep very little are more likely to get ill when they are exposed to a cold virus."}, {"s": "Sugar makes children hyperactive.", "a": "Myth", "w": "Controlled studies have found no real effect. Parents who believe their child has eaten sugar tend to see their behaviour as more hyperactive."}, {"s": "Laughing can help you feel less stressed.", "a": "Fact", "w": "Laughing can relax your muscles and reduce stress for a short time. It is not a cure, but it does help."}]}, "wyr": {"type": "wyr", "name": "Would you rather…?", "kicker": "Dilemma card", "glyph": "A/B", "intro": "Choose one option and explain your choice. The others say whether they agree.", "phrases": ["I'd rather… than…", "I'd prefer to…", "If I had to choose, I'd…", "That's a tough one, but…"], "cards": ["give up coffee or give up chocolate for a year?", "go to bed at 9 pm every night or get up at 6 am every morning?", "have a doctor who is kind but always late, or one who is punctual but cold?", "never catch a cold again or never have a headache again?", "live in a busy city with excellent hospitals or a quiet village with very clean air?", "have perfect sleep every night or a perfect memory?", "eat the same healthy meal every day or eat whatever you like but walk for two hours a day?", "go to the dentist every month or never be able to eat sweets again?"]}}, "idioms": [{"name": "Fit as a fiddle", "mean": "very healthy and full of energy", "ex": "My grandmother is 85, but she's as fit as a fiddle.", "move": 2}, {"name": "Under the weather", "mean": "feeling slightly ill", "ex": "I'm a bit under the weather today, so I'm staying in.", "move": 0}, {"name": "Run-down", "mean": "tired and not very healthy, often after working too hard", "ex": "After the exams I was so run-down that I caught everything.", "move": -2}], "language": ["come down with", "get over", "catch a cold", "feel under the weather", "side effects", "prescribe", "make an appointment", "take painkillers", "a check-up", "a sore throat", "I'd say that…", "It depends on…"], "layout": [{"t": "q", "c": "everyday"}, {"t": "q", "c": "body"}, {"t": "deck", "d": "describe"}, {"t": "q", "c": "doctors"}, {"t": "q", "c": "society"}, {"t": "idiom", "i": 0}, {"t": "q", "c": "everyday"}, {"t": "deck", "d": "first"}, {"t": "q", "c": "body"}, {"t": "q", "c": "doctors"}, {"t": "idiom", "i": 1}, {"t": "q", "c": "society"}, {"t": "deck", "d": "myth"}, {"t": "q", "c": "everyday"}, {"t": "q", "c": "body"}, {"t": "idiom", "i": 2}, {"t": "q", "c": "doctors"}, {"t": "deck", "d": "wyr"}, {"t": "q", "c": "society"}]};
+
+/* ================= helpers ================= */
+const $ = s => document.querySelector(s);
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const buzz = p => { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} };
+const FINISH = 20;
+const PCOL = ['#231E3D', '#D6336C', '#2F80ED', '#8B5CF6', '#0F8A5F'];
+const CAT = Object.fromEntries(C.categories.map(c => [c.id, c]));
+const SPECIAL = { head: '#231E3D', ink: '#FFFFFF' };
+
+function square(i) {
+  if (i === 0) return { t: 'start' };
+  if (i >= FINISH) return { t: 'finish' };
+  return C.layout[i - 1];
+}
+function squareFill(sq) {
+  if (sq.t === 'q') return CAT[sq.c].color;
+  if (sq.t === 'deck') return SPECIAL.head;
+  if (sq.t === 'idiom') return '#FFFDF8';
+  return '#231E3D';
+}
+function squareGlyph(sq, i) {
+  if (sq.t === 'q') return String(i);
+  if (sq.t === 'deck') return C.decks[sq.d].label || C.decks[sq.d].glyph;
+  if (sq.t === 'idiom') return '★';
+  if (sq.t === 'start') return C.startLabel;
+  return C.finishLabel;
+}
+function squareInk(sq) {
+  if (sq.t === 'q') return CAT[sq.c].ink;
+  if (sq.t === 'idiom') return '#231E3D';
+  return '#FFFFFF';
+}
+
+/* ================= state ================= */
+let S = null;
+let setupCount = 3, setupMinutes = 20;
+const names = ['', '', '', '', ''];
+
+function newState(players) {
+  const pools = {};
+  C.categories.forEach(c => pools[c.id] = shuffle(c.questions));
+  const decks = {};
+  Object.keys(C.decks).forEach(k => decks[k] = shuffle(C.decks[k].cards));
+  return { players: players.map((n, i) => ({ name: n, color: PCOL[i], pos: 0, skip: 0, finished: false })),
+    turn: 0, pools, decks, busy: false, last: null, open: null, U: null, endAt: setupMinutes ? Date.now() + setupMinutes * 60000 : 0, timeUp: false, over: false };
+}
+function draw(kind, key) {
+  const store = kind === 'q' ? S.pools : S.decks;
+  const src = kind === 'q' ? CAT[key].questions : C.decks[key].cards;
+  if (!store[key].length) store[key] = shuffle(src);
+  return store[key].pop();
+}
+
+/* ================= setup ================= */
+function renderNames() {
+  $('#count').textContent = setupCount;
+  const box = $('#names'); box.innerHTML = '';
+  for (let i = 0; i < setupCount; i++) {
+    const row = document.createElement('div'); row.className = 'name-row';
+    row.innerHTML = `<i style="background:${PCOL[i]}"></i><input maxlength="14" placeholder="Player ${i + 1}" value="${esc(names[i])}" aria-label="Name of player ${i + 1}">`;
+    row.querySelector('input').addEventListener('input', e => names[i] = e.target.value);
+    box.appendChild(row);
+  }
+}
+$('#minus').onclick = () => { setupCount = Math.max(2, setupCount - 1); renderNames(); };
+$('#plus').onclick = () => { setupCount = Math.min(5, setupCount + 1); renderNames(); };
+$('#len').onclick = e => { const b = e.target.closest('button'); if (!b) return; [...$('#len').children].forEach(x => x.classList.toggle('on', x === b)); setupMinutes = +b.dataset.m; };
+$('#start').onclick = () => startGame();
+$('#again').onclick = () => startGame();
+$('#newGame').onclick = () => show('setup');
+
+function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id)); }
+
+let wakeLock = null;
+async function keepAwake() { try { if ('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {} }
+
+function startGame() {
+  const list = [];
+  for (let i = 0; i < setupCount; i++) list.push((names[i] || '').trim() || `Player ${i + 1}`);
+  S = newState(list);
+  $('#resume').hidden = true;
+  show('game');
+  buildBoard();
+  renderTokens(true);
+  renderPlayers();
+  updateTurn();
+  keepAwake();
+}
+
+/* ================= board geometry ================= */
+let G = null;
+
+function ecgGeometry() {
+  const xs = [52, 136, 224, 308], top = 74, gap = 96;
+  const nodes = [];
+  for (let i = 0; i <= FINISH; i++) {
+    const r = Math.floor(i / 4); let c = i % 4; if (r % 2) c = 3 - c;
+    nodes.push({ x: xs[c], y: top + r * gap });
+  }
+  return { vb: [0, 0, 360, top + 5 * gap + 36], nodes };
+}
+
+function trackGeometry() {
+  const cx = 180, cy = 280, L = 196, R = 112, W = 40, P = 2 * L + 2 * Math.PI * R, seg = P / FINISH;
+  const pt = (s, off) => {
+    s = ((s % P) + P) % P;
+    if (s < L) return { x: cx + R + off, y: cy + L / 2 - s };
+    if (s < L + Math.PI * R) { const t = (s - L) / R; return { x: cx + (R + off) * Math.cos(t), y: cy - L / 2 - (R + off) * Math.sin(t) }; }
+    if (s < 2 * L + Math.PI * R) { const t = s - L - Math.PI * R; return { x: cx - R - off, y: cy - L / 2 + t }; }
+    const t = Math.PI + (s - 2 * L - Math.PI * R) / R; return { x: cx + (R + off) * Math.cos(t), y: cy + L / 2 - (R + off) * Math.sin(t) };
+  };
+  const nodes = [];
+  for (let i = 0; i <= FINISH; i++) nodes.push(pt(i === FINISH ? 0 : (i + .5) * seg, 0));
+  return { vb: [0, 0, 360, 560], nodes, pt, P, seg, W, cx, cy, L, R };
+}
+
+function buildBoard() {
+  const svg = $('#board'); svg.innerHTML = '';
+  G = C.kind === 'track' ? trackGeometry() : ecgGeometry();
+  svg.setAttribute('viewBox', G.vb.join(' '));
+  const defs = el('defs', {}, svg);
+  const hatch = el('pattern', { id: 'hatch', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+  el('rect', { width: 6, height: 6, fill: '#FFFDF8' }, hatch);
+  el('line', { x1: 0, y1: 0, x2: 0, y2: 6, stroke: '#E6D9C3', 'stroke-width': 3 }, hatch);
+  const chk = el('pattern', { id: 'chk', width: 10, height: 10, patternUnits: 'userSpaceOnUse' }, defs);
+  el('rect', { width: 10, height: 10, fill: '#fff' }, chk);
+  el('rect', { width: 5, height: 5, fill: '#231E3D' }, chk);
+  el('rect', { x: 5, y: 5, width: 5, height: 5, fill: '#231E3D' }, chk);
+  G.nodeEls = [];
+  if (C.kind === 'track') buildTrack(svg); else buildEcg(svg);
+  G.tokenLayer = el('g', {}, svg);
+  G.tokens = S.players.map((p, i) => {
+    const g = el('g', { class: 'token' }, G.tokenLayer);
+    const r = C.kind === 'track' ? 7 : 9.5;
+    el('circle', { r: r * 1.45, fill: p.color, opacity: .2, class: 'halo' }, g);
+    el('circle', { r, fill: p.color, class: 'body', stroke: '#fff', 'stroke-width': 1.5 }, g);
+    const t = el('text', { 'text-anchor': 'middle', dy: '.35em', 'font-family': 'Space Mono, monospace', 'font-size': r * 1.1, 'font-weight': 700, fill: '#fff' }, g);
+    const m = p.name.match(/^Player (\d)$/); t.textContent = m ? m[1] : p.name.trim()[0].toUpperCase();
+    return g;
+  });
+  // legend
+  const lg = $('#legend');
+  lg.style.display = C.kind === 'track' ? 'none' : 'flex';
+  lg.innerHTML = C.categories.map(c => `<span><i style="background:${c.color}"></i>${esc(c.short)}</span>`).join('') +
+    `<span><i style="background:#231E3D"></i>Card</span><span><i style="background:#fff;outline:1.5px dashed #231E3D"></i>Expression</span>`;
+}
+
+function buildEcg(svg) {
+  const n = G.nodes; let d = `M${n[0].x},${n[0].y}`;
+  for (let i = 0; i < FINISH; i++) {
+    const a = n[i], b = n[i + 1];
+    if (a.y === b.y) {
+      const s = Math.sign(b.x - a.x), m = (a.x + b.x) / 2, y = a.y;
+      d += ` L${m - 16 * s},${y} L${m - 10 * s},${y - 5} L${m - 6 * s},${y} L${m - 3 * s},${y + 7} L${m + 1 * s},${y - 30} L${m + 6 * s},${y + 14} L${m + 10 * s},${y} L${b.x},${y}`;
+    } else {
+      const o = a.x > 180 ? 46 : -46;
+      d += ` C${a.x + o},${a.y} ${b.x + o},${b.y} ${b.x},${b.y}`;
+    }
+  }
+  el('path', { d, fill: 'none', stroke: '#231E3D', 'stroke-width': 3, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', opacity: .85 }, svg);
+  const trace = el('path', { d, class: 'trace' }, svg);
+  const len = trace.getTotalLength();
+  trace.style.strokeDasharray = `46 ${len}`;
+  trace.animate([{ strokeDashoffset: 46 }, { strokeDashoffset: -len }], { duration: 9000, iterations: Infinity });
+  n.forEach((p, i) => {
+    const sq = square(i), big = i === 0 || i === FINISH, r = big ? 30 : 25;
+    const g = el('g', { class: 'node', transform: `translate(${p.x},${p.y})` }, svg);
+    el('circle', { r, fill: 'none', stroke: squareFill(sq) === '#FFFDF8' ? '#231E3D' : squareFill(sq), 'stroke-width': 3, class: 'node-ring', opacity: 0 }, g);
+    el('circle', { r, fill: sq.t === 'idiom' ? 'url(#hatch)' : squareFill(sq), stroke: sq.t === 'idiom' ? '#231E3D' : '#FFFDF8', 'stroke-width': sq.t === 'idiom' ? 2.5 : 3, 'stroke-dasharray': sq.t === 'idiom' ? '5 4' : 'none' }, g);
+    const t = el('text', { 'text-anchor': 'middle', dy: '.36em', fill: squareInk(sq), 'font-family': sq.t === 'q' ? 'Bricolage Grotesque, sans-serif' : 'Space Mono, monospace', 'font-weight': 800, 'font-size': big ? 12 : (sq.t === 'q' ? 19 : 14) }, g);
+    t.textContent = squareGlyph(sq, i);
+    G.nodeEls[i] = g;
+  });
+}
+
+function buildTrack(svg) {
+  const { pt, P, seg, W } = G;
+  const loop = (off, steps = 160) => { let d = ''; for (let k = 0; k <= steps; k++) { const p = pt(P * k / steps, off); d += (k ? 'L' : 'M') + p.x.toFixed(1) + ',' + p.y.toFixed(1); } return d + 'Z'; };
+  // infield
+  el('path', { d: loop(-W - 2), fill: C.infield || '#2F7D5B' }, svg);
+  const clipId = 'infieldClip'; const cp = el('clipPath', { id: clipId }, svg.querySelector('defs')); el('path', { d: loop(-W - 2) }, cp);
+  const stripes = el('g', { 'clip-path': `url(#${clipId})` }, svg);
+  for (let y = 0; y < 560; y += 36) el('rect', { x: 0, y, width: 360, height: 18, fill: '#fff', opacity: .06 }, stripes);
+  // track base
+  el('path', { d: loop(W + 3) + loop(-W - 3), fill: '#C8553D', 'fill-rule': 'evenodd' }, svg);
+  for (let i = 0; i < FINISH; i++) {
+    const sq = square(i); let d = '';
+    const k = 10;
+    for (let j = 0; j <= k; j++) { const p = pt(i * seg + seg * j / k, W); d += (j ? 'L' : 'M') + p.x.toFixed(1) + ',' + p.y.toFixed(1); }
+    for (let j = k; j >= 0; j--) { const p = pt(i * seg + seg * j / k, -W); d += 'L' + p.x.toFixed(1) + ',' + p.y.toFixed(1); }
+    const fill = i === 0 ? 'url(#chk)' : (sq.t === 'idiom' ? 'url(#hatch)' : squareFill(sq));
+    const g = el('g', { class: 'node' }, svg);
+    el('path', { d: d + 'Z', fill, stroke: '#FFFDF8', 'stroke-width': 2.5, opacity: i === 0 ? .9 : 1 }, g);
+    const ring = el('path', { d: d + 'Z', fill: 'none', stroke: '#fff', 'stroke-width': 4, class: 'node-ring', opacity: 0 }, g);
+    G.nodeEls[i] = g;
+  }
+  for (let l = 1; l < 5; l++) el('path', { d: loop(-W + l * (2 * W / 5)), fill: 'none', stroke: '#fff', 'stroke-width': .8, opacity: .55, 'stroke-dasharray': '2 3' }, svg);
+  // finish line
+  const a = pt(0, -W - 3), b = pt(0, W + 3);
+  el('line', { x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: '#fff', 'stroke-width': 4 }, svg);
+  // labels outside
+  for (let i = 0; i < FINISH; i++) {
+    const sq = square(i), p = pt((i + .5) * seg, W + 15);
+    const g = el('g', { transform: `translate(${p.x.toFixed(1)},${p.y.toFixed(1)})` }, svg);
+    const isQ = sq.t === 'q';
+    el('circle', { r: 11, fill: i === 0 ? '#231E3D' : (sq.t === 'idiom' ? '#FFFDF8' : squareFill(sq)), stroke: sq.t === 'idiom' ? '#231E3D' : '#FFFDF8', 'stroke-width': 2, 'stroke-dasharray': sq.t === 'idiom' ? '3 2' : 'none' }, g);
+    const t = el('text', { 'text-anchor': 'middle', dy: '.36em', fill: i === 0 ? '#fff' : squareInk(sq), 'font-family': isQ ? 'Bricolage Grotesque, sans-serif' : 'Space Mono, monospace', 'font-weight': 800, 'font-size': isQ ? 11 : (i === 0 ? 7 : 8) }, g);
+    t.textContent = i === 0 ? 'GO' : squareGlyph(sq, i);
+  }
+  // infield legend
+  const lg = el('g', { transform: `translate(${G.cx},${G.cy - 92})` }, svg);
+  const title = el('text', { 'text-anchor': 'middle', fill: '#fff', 'font-family': 'Bricolage Grotesque, sans-serif', 'font-weight': 800, 'font-size': 26, 'letter-spacing': '-.5' }, lg);
+  title.textContent = C.infieldTitle;
+  const sub = el('text', { 'text-anchor': 'middle', y: 16, fill: '#fff', opacity: .75, 'font-family': 'Space Mono, monospace', 'font-size': 8, 'letter-spacing': '1.5' }, lg);
+  sub.textContent = C.infieldSub;
+  const rows = C.categories.map(c => [c.color, c.short]).concat([['#231E3D', 'Card'], ['hatch', 'Expression']]);
+  rows.forEach((r, k) => {
+    const y = 48 + k * 22, gx = el('g', { transform: `translate(-62,${y})` }, lg);
+    el('rect', { x: 0, y: -7, width: 14, height: 14, rx: 3, fill: r[0] === 'hatch' ? 'url(#hatch)' : r[0], stroke: '#fff', 'stroke-width': 1.5 }, gx);
+    const tx = el('text', { x: 20, dy: '.35em', fill: '#fff', 'font-family': 'Space Mono, monospace', 'font-size': 9.5 }, gx); tx.textContent = r[1];
+  });
+}
+
+function tokenXY(pi) {
+  const p = S.players[pi], n = S.players.length;
+  if (C.kind === 'track') {
+    const lane = -G.W + (2 * G.W / 5) * (pi + .5) + (5 - n) * (G.W / 5);
+    const s = p.pos >= FINISH ? 2 : (p.pos + .5) * G.seg;
+    return G.pt(s, Math.max(-G.W + 8, Math.min(G.W - 8, lane)));
+  }
+  const node = G.nodes[Math.min(p.pos, FINISH)];
+  const here = S.players.map((q, i) => i).filter(i => Math.min(S.players[i].pos, FINISH) === Math.min(p.pos, FINISH));
+  const k = here.indexOf(pi), m = here.length;
+  return { x: node.x + (k - (m - 1) / 2) * 17, y: node.y - 38 };
+}
+function renderTokens(instant) {
+  S.players.forEach((p, i) => {
+    const g = G.tokens[i], xy = tokenXY(i);
+    if (instant) { g.style.transition = 'none'; requestAnimationFrame(() => g.style.transition = ''); }
+    g.style.transform = `translate(${xy.x}px, ${xy.y}px)`;
+    g.classList.toggle('active', i === S.turn);
+  });
+  // bring active token to front
+  G.tokenLayer.appendChild(G.tokens[S.turn]);
+}
+function hitNode(i) { const g = G.nodeEls[(C.kind === 'track' && i >= FINISH) ? 0 : i]; if (!g) return; g.classList.remove('hit'); void g.getBBox(); g.classList.add('hit'); }
+
+/* ================= players / turn ================= */
+function renderPlayers() {
+  $('#players').innerHTML = S.players.map((p, i) =>
+    `<div class="chip ${i === S.turn ? 'on' : ''} ${p.skip ? 'skip' : ''}"><i style="background:${p.color}"></i>${esc(p.name)} <b>${p.pos >= FINISH ? 'FIN' : p.pos}</b></div>`).join('');
+  const on = $('#players .chip.on'); if (on) on.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+}
+function updateTurn() {
+  const p = S.players[S.turn];
+  $('#turnName').textContent = p.name;
+  $('#turnHint').textContent = S.timeUp ? 'Time is up – this is the last turn' : 'Tap the die to roll';
+  const die = $('#die'); die.style.setProperty('--who', p.color); die.disabled = false; die.classList.add('ready');
+  $('#lastBtn').disabled = !S.last;
+  renderTokens(); renderPlayers(); save();
+}
+async function nextTurn() {
+  if (S.timeUp) return endGame();
+  const n = S.players.length;
+  for (let guard = 0; guard < n * 3; guard++) {
+    S.turn = (S.turn + 1) % n;
+    const p = S.players[S.turn];
+    if (p.skip > 0) { p.skip--; toast(`${p.name} is ${C.skipWord} – turn skipped`); renderPlayers(); await sleep(900); continue; }
+    break;
+  }
+  updateTurn();
+}
+
+/* ================= saving + undo ================= */
+const KEY = 'classofcoffee-speaking-board-' + C.kind;
+const clone = o => JSON.parse(JSON.stringify(o));
+function snap() { return clone({ players: S.players, turn: S.turn, pools: S.pools, decks: S.decks, timeUp: S.timeUp, last: S.last }); }
+function save() {
+  try {
+    if (!S || S.over) { localStorage.removeItem(KEY); return; }
+    localStorage.setItem(KEY, JSON.stringify({ ...snap(), endAt: S.endAt, open: S.open || null, U: S.U || null, savedAt: Date.now() }));
+  } catch (e) {}
+}
+function loadSaved() {
+  try { const v = JSON.parse(localStorage.getItem(KEY) || 'null'); return v && Array.isArray(v.players) && v.players.length ? v : null; } catch (e) { return null; }
+}
+let undoT = null;
+function showUndoBar(msg) {
+  $('#undoTxt').textContent = msg; const bar = $('#undoBar');
+  bar.classList.remove('on'); void bar.offsetWidth; bar.classList.add('on');
+  clearTimeout(undoT); undoT = setTimeout(hideUndoBar, 6000);
+}
+function hideUndoBar() { clearTimeout(undoT); $('#undoBar').classList.remove('on'); }
+async function undo() {
+  const u = S && S.U; if (!u) return;
+  hideUndoBar(); stopRing();
+  const wasOver = S.over;
+  Object.assign(S, clone(u.snap)); S.over = false; S.busy = false; S.open = null;
+  S.U = u.type === 'done' ? u.prev : null;
+  if (wasOver) { show('game'); keepAwake(); }
+  updateTurn();
+  if (u.type === 'done') { renderCard(clone(u.open)); toast(`Back to ${S.players[S.turn].name}'s card`); }
+  else { closeSheet(); toast('Roll undone – roll again'); }
+  save();
+}
+$('#undoBtn').onclick = undo;
+$('#undoEnd').onclick = () => {
+  if (S.endedBy === 'menu') { S.over = false; show('game'); keepAwake(); updateTurn(); toast('Back to the game'); return; }
+  undo();
+};
+window.addEventListener('beforeunload', e => { if (S && !S.over) { save(); e.preventDefault(); e.returnValue = ''; } });
+document.addEventListener('visibilitychange', () => { if (!S || S.over) return; if (document.hidden) save(); else keepAwake(); });
+
+/* ================= die ================= */
+const PIPS = { 1: [[50, 50]], 2: [[28, 28], [72, 72]], 3: [[26, 26], [50, 50], [74, 74]], 4: [[28, 28], [72, 28], [28, 72], [72, 72]], 5: [[26, 26], [74, 26], [50, 50], [26, 74], [74, 74]], 6: [[28, 24], [72, 24], [28, 50], [72, 50], [28, 76], [72, 76]] };
+function face(v) { $('#die').innerHTML = PIPS[v].map(([x, y]) => `<span class="pip" style="left:${x}%;top:${y}%"></span>`).join(''); }
+face(5);
+$('#die').onclick = async () => {
+  if (!S || S.busy || S.over || sheet.classList.contains('on')) return;
+  S.busy = true; hideUndoBar();
+  S.U = { type: 'roll', snap: snap() };
+  const die = $('#die'); die.disabled = true; die.classList.remove('ready'); die.classList.remove('rolling'); void die.offsetWidth; die.classList.add('rolling');
+  buzz(20);
+  for (let k = 0; k < 7; k++) { face(1 + Math.floor(Math.random() * 6)); await sleep(80); }
+  const v = 1 + Math.floor(Math.random() * 6); face(v); buzz([10, 40, 10]);
+  $('#turnHint').textContent = `You rolled ${v}`;
+  await sleep(350);
+  await move(v);
+  S.busy = false;
+};
+async function move(steps) {
+  const p = S.players[S.turn], dir = Math.sign(steps);
+  for (let k = 0; k < Math.abs(steps); k++) {
+    p.pos = Math.max(0, Math.min(FINISH, p.pos + dir));
+    renderTokens(); buzz(6);
+    await sleep(270);
+    if (p.pos === FINISH) break;
+  }
+  hitNode(p.pos); renderPlayers();
+  await sleep(250);
+  if (p.pos >= FINISH) { p.finished = true; return endGame(); }
+  land(p.pos);
+}
+
+/* ================= cards ================= */
+const sheet = $('#sheet'), scrim = $('#scrim');
+function openSheet(html, head, headInk, mode) {
+  sheet.dataset.mode = mode;
+  sheet.style.setProperty('--head', head); sheet.style.setProperty('--head-ink', headInk);
+  sheet.innerHTML = html; sheet.querySelector('.sheet-body').scrollTop = 0;
+  scrim.classList.add('on'); sheet.classList.add('on');
+}
+function closeSheet() { scrim.classList.remove('on'); sheet.classList.remove('on'); stopRing(); }
+function langBlock() { return `<details class="lang"><summary>Useful language</summary><div class="chips">${C.language.map(x => `<span>${esc(x)}</span>`).join('')}</div></details>`; }
+function phraseBlock(d) { return `<div class="lang" style="margin-bottom:12px"><div class="chips">${d.phrases.map(x => `<span>${esc(x)}</span>`).join('')}</div></div>`; }
+function ringBlock(sec, label) {
+  return `<button class="ring-btn" data-ring="${sec}"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#E9DFD0" stroke-width="4"/><circle class="arc" cx="18" cy="18" r="15" fill="none" stroke="var(--head)" stroke-width="4" stroke-linecap="round" stroke-dasharray="94.25" stroke-dashoffset="0"/></svg><span class="num">${sec}s</span><span>${label}</span></button>`;
+}
+let ringT = null;
+function stopRing() { if (ringT) { clearInterval(ringT); ringT = null; } }
+function startRing(btn) {
+  stopRing(); const total = +btn.dataset.ring, t0 = Date.now(); btn.classList.remove('done');
+  const arc = btn.querySelector('.arc'), num = btn.querySelector('.num');
+  ringT = setInterval(() => {
+    const left = Math.max(0, total - (Date.now() - t0) / 1000);
+    arc.setAttribute('stroke-dashoffset', (94.25 * (1 - left / total)).toFixed(2));
+    num.textContent = Math.ceil(left) + 's';
+    if (left <= 0) { stopRing(); num.textContent = 'Time!'; btn.classList.add('done'); buzz([80, 60, 80]); }
+  }, 100);
+}
+function head(kicker, title, glyph, extra = '') {
+  return `<div class="sheet-head">${extra}<div class="kicker">${esc(kicker)}</div><h3>${esc(title)}</h3>${glyph ? `<div class="glyph">${esc(glyph)}</div>` : ''}</div>`;
+}
+function foot(extra = '', label = 'Done · next player', act = 'done') {
+  return `<div class="sheet-foot">${extra}<button class="go" data-act="${act}">${label}</button></div>`;
+}
+const CLOSE_FOOT = `<div class="sheet-foot"><button class="go" data-act="close">Close</button></div>`;
+
+let shown = null; // the card currently on screen (live or review)
+function land(i) {
+  const sq = square(i);
+  if (sq.t === 'q') return renderCard({ sq, card: draw('q', sq.c) });
+  if (sq.t === 'deck') return renderCard({ sq, card: draw('d', sq.d) });
+  if (sq.t === 'idiom') return renderCard({ sq, card: null });
+  nextTurn();
+}
+function renderCard(c, review = false, who = '') {
+  shown = c;
+  if (!review) S.open = clone(c);
+  const { sq, card } = c;
+  const pre = review ? `Last card · ${who} · ` : '';
+  const undoBtn = !review && S.U && S.U.type === 'roll' ? `<button class="head-undo" data-act="undoroll">↶ Undo roll</button>` : '';
+  const mode = review ? 'review' : 'card';
+  if (sq.t === 'q') {
+    const cat = CAT[sq.c];
+    openSheet(head(pre + cat.name, card.t, '', undoBtn) +
+      `<div class="sheet-body"><p class="q">${esc(card.q)}</p><p class="fu"><small>Then</small>${esc(card.f)}</p>
+       <p class="tip">Speak for about a minute. Then the person on your left asks you a follow-up question.</p>
+       ${ringBlock(60, 'Start a 1-minute timer')}${langBlock()}</div>` +
+      (review ? CLOSE_FOOT : foot(`<button class="ghost" data-act="another">Another question</button>`)), cat.color, cat.ink, mode);
+  } else if (sq.t === 'deck') {
+    const d = C.decks[sq.d]; let body = '';
+    if (d.type === 'roleplay') body = `<p class="tip">${esc(d.intro)}</p><p class="q">“${esc(card)}”</p>${phraseBlock(d)}${ringBlock(60, 'Start a 1-minute timer')}`;
+    else if (d.type === 'describe') body = `<p class="tip">${esc(d.intro)}</p><div id="wordBox"><button class="reveal" data-act="showword">${review ? 'Tap to show the word' : `Only ${esc(S.players[S.turn].name)} looks · tap to show`}</button></div>`;
+    else if (d.type === 'myth') body = `<p class="tip">${esc(d.intro)}</p><p class="q">“${esc(card.s)}”</p><div id="mythBox"><button class="reveal" data-act="reveal">Reveal the answer</button></div>`;
+    else if (d.type === 'wyr') body = `<p class="tip">${esc(d.intro)}</p><p class="q">Would you rather ${esc(card)}</p>${phraseBlock(d)}`;
+    else if (d.type === 'commentate') body = `<p class="tip">${esc(d.intro)}</p><p class="q">${esc(card)}</p>${phraseBlock(d)}${ringBlock(30, 'Start a 30-second timer')}`;
+    openSheet(head(pre + d.kicker, d.name, d.glyph, undoBtn) + `<div class="sheet-body">${body}</div>` + (review ? CLOSE_FOOT : foot()), SPECIAL.head, SPECIAL.ink, mode);
+  } else if (sq.t === 'idiom') {
+    const it = C.idioms[sq.i];
+    const eff = it.move > 0 ? `→ Move forward ${it.move}` : it.move < 0 ? `← Go back ${-it.move}` : '⏸ Miss your next turn';
+    openSheet(head(pre + 'Expression', it.name, '★', undoBtn) +
+      `<div class="sheet-body"><p class="idiom-mean"><b>Meaning:</b> ${esc(it.mean)}</p>
+       <p class="tip">Example: <i>${esc(it.ex)}</i></p>
+       <div class="effect">${eff}</div>
+       <p class="tip">Before you move, use the expression in a sentence about yourself or someone you know.</p></div>` +
+      (review ? CLOSE_FOOT : foot('', 'OK', 'idiom')), '#FFFDF8', '#231E3D', mode);
+    sheet.querySelector('.sheet-head').style.background = 'repeating-linear-gradient(45deg,#FFFDF8 0 8px,#F4EBDC 8px 16px)';
+    sheet.querySelector('.sheet-head').style.borderBottom = '2px dashed #231E3D';
+  }
+  if (!review) save();
+}
+function showWord() {
+  const live = sheet.dataset.mode === 'card';
+  $('#wordBox').innerHTML = `<div class="big-word">${esc(shown.card)}</div>${ringBlock(45, 'Start a 45-second timer')}` +
+    (live ? `<button class="ghost" data-act="newword" style="width:100%;margin-top:6px">Someone else saw it? Get a different word</button>` : '');
+}
+
+sheet.addEventListener('click', async e => {
+  const ring = e.target.closest('[data-ring]'); if (ring) return startRing(ring);
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const act = b.dataset.act;
+  if (act === 'another') { stopRing(); S.open.card = draw('q', S.open.sq.c); return renderCard(S.open); }
+  if (act === 'showword') return showWord();
+  if (act === 'newword') { stopRing(); S.open.card = draw('d', S.open.sq.d); shown = clone(S.open); save(); showWord(); return; }
+  if (act === 'reveal') {
+    const c = shown.card, cls = c.a === 'Myth' ? 'myth' : c.a === 'Fact' ? 'fact' : 'partly';
+    $('#mythBox').innerHTML = `<div class="stamp ${cls}">${esc(c.a.toUpperCase())}</div><p class="why">${esc(c.w)}</p>`;
+    buzz(30); return;
+  }
+  if (act === 'close') return closeSheet();
+  if (act === 'undoroll') return undo();
+  if (act === 'done') {
+    const c = clone(S.open), name = S.players[S.turn].name;
+    const prev = S.U && S.U.type === 'roll' ? S.U : null;
+    S.U = { type: 'done', snap: snap(), open: c, prev };
+    S.last = { ...c, name };
+    S.open = null; closeSheet(); await sleep(250);
+    await nextTurn();
+    if (!S.over) showUndoBar(`${name}'s card is closed.`);
+    return;
+  }
+  if (act === 'idiom') {
+    const c = clone(S.open), name = S.players[S.turn].name;
+    S.last = { ...c, name };
+    S.open = null; closeSheet(); await sleep(300);
+    const it = C.idioms[c.sq.i], p = S.players[S.turn];
+    if (it.move === 0) { p.skip = 1; renderPlayers(); return nextTurn(); }
+    S.busy = true;
+    const dir = Math.sign(it.move);
+    for (let k = 0; k < Math.abs(it.move); k++) { p.pos = Math.max(0, Math.min(FINISH, p.pos + dir)); renderTokens(); await sleep(270); }
+    hitNode(p.pos); renderPlayers(); await sleep(300); S.busy = false;
+    if (p.pos >= FINISH) { p.finished = true; return endGame(); }
+    const nsq = square(p.pos);
+    if (nsq.t === 'q' || nsq.t === 'deck') return land(p.pos);
+    return nextTurn();
+  }
+  if (act === 'resume') return closeSheet();
+  if (act === 'endnow') {
+    if (b.dataset.armed) { closeSheet(); await sleep(250); return endGame('menu'); }
+    b.dataset.armed = '1'; b.textContent = 'Tap again to end'; b.classList.add('armed'); buzz(15);
+    setTimeout(() => { if (b.isConnected) { delete b.dataset.armed; b.textContent = 'End the game'; b.classList.remove('armed'); } }, 3000);
+    return;
+  }
+});
+scrim.addEventListener('click', () => { if (sheet.dataset.mode === 'menu' || sheet.dataset.mode === 'review') closeSheet(); });
+
+$('#lastBtn').onclick = () => {
+  if (!S || !S.last || S.busy || sheet.classList.contains('on')) return;
+  hideUndoBar();
+  renderCard(clone(S.last), true, S.last.name);
+};
+
+$('#menuBtn').onclick = () => {
+  if (S && S.open && sheet.classList.contains('on')) return;
+  openSheet(head('Menu', 'Paused', '') +
+    `<div class="sheet-body"><ol class="howto">${[...document.querySelectorAll('#setup .howto li')].map(li => `<li>${li.innerHTML}</li>`).join('')}</ol>${langBlock()}</div>` +
+    `<div class="sheet-foot"><button class="ghost" data-act="endnow">End the game</button><button class="go" data-act="resume">Back to the game</button></div>`, '#231E3D', '#fff', 'menu');
+};
+
+/* ================= clock ================= */
+setInterval(() => {
+  if (!S || S.over) return;
+  const pill = $('#clock');
+  if (!S.endAt) { $('#clockTxt').textContent = 'No limit'; pill.classList.remove('low'); return; }
+  const left = Math.max(0, S.endAt - Date.now());
+  const m = Math.floor(left / 60000), s = Math.floor(left / 1000) % 60;
+  $('#clockTxt').textContent = left ? `${m}:${String(s).padStart(2, '0')}` : "Time's up";
+  pill.classList.toggle('low', left < 120000);
+  if (!left && !S.timeUp) { S.timeUp = true; buzz([100, 80, 100]); toast('Time is up! Finish this turn.'); $('#turnHint').textContent = 'Time is up – this is the last turn'; }
+}, 500);
+
+let toastT;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400); }
+
+/* ================= end ================= */
+function endGame(from = 'play') {
+  if (S.over) return; S.over = true; closeSheet(); hideUndoBar(); save();
+  S.endedBy = from;
+  $('#undoEnd').hidden = from !== 'menu' && !S.U;
+  $('#undoEnd').textContent = from === 'menu' ? '↶ Ended by mistake? Back to the game' : '↶ That was a mistake – go back';
+  const ranked = S.players.map((p, i) => ({ ...p, i })).sort((a, b) => b.pos - a.pos);
+  let rank = 0, last = null;
+  $('#podium').innerHTML = ranked.map((p, k) => {
+    if (p.pos !== last) { rank = k + 1; last = p.pos; }
+    return `<li style="animation-delay:${.25 + k * .12}s"><span class="rank">${rank}</span><i style="background:${p.color}"></i><span class="nm">${esc(p.name)}</span><span class="ps">${p.pos >= FINISH ? 'Finished' : 'Square ' + p.pos}</span></li>`;
+  }).join('');
+  const winner = ranked[0];
+  $('#endEyebrow').textContent = winner.pos >= FINISH ? `${winner.name} reached the finish` : "Time's up";
+  if (C.kind === 'track') {
+    $('#endArt').innerHTML = `<div class="photo">${ranked.slice(0, 5).map((p, k) => `<span class="runner" style="background:${p.color};left:${70 - k * 13}%;bottom:${10 + (k % 2) * 34}px"></span>`).join('')}<span class="scan"></span></div>`;
+  } else {
+    $('#endArt').innerHTML = `<svg viewBox="0 0 360 70" style="width:100%;height:70px;margin-bottom:14px"><path id="endEcg" d="M0,40 L90,40 L100,30 L108,40 L118,52 L128,8 L140,58 L150,40 L230,40 L240,30 L248,40 L258,52 L268,8 L280,58 L290,40 L360,40" fill="none" stroke="#F26B5B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+    const p = $('#endEcg'), L = p.getTotalLength(); p.style.strokeDasharray = L; p.animate([{ strokeDashoffset: L }, { strokeDashoffset: 0 }], { duration: 1600, easing: 'ease-out', fill: 'forwards' });
+  }
+  show('end'); confetti();
+  try { wakeLock && wakeLock.release(); } catch (e) {}
+}
+function confetti() {
+  const cv = $('#confetti'), ctx = cv.getContext('2d'), dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight; cv.width = w * dpr; cv.height = h * dpr; ctx.scale(dpr, dpr);
+  const cols = C.categories.map(c => c.color).concat(['#231E3D']);
+  const parts = Array.from({ length: 120 }, () => ({ x: w / 2 + (Math.random() - .5) * 60, y: h * .35, vx: (Math.random() - .5) * 9, vy: -Math.random() * 11 - 3, r: Math.random() * 6 + 4, c: cols[Math.floor(Math.random() * cols.length)], a: Math.random() * 6, va: (Math.random() - .5) * .3 }));
+  const t0 = performance.now();
+  (function frame(t) {
+    ctx.clearRect(0, 0, w, h);
+    parts.forEach(p => { p.vy += .32; p.x += p.vx; p.y += p.vy; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore(); });
+    if (t - t0 < 3200) requestAnimationFrame(frame); else ctx.clearRect(0, 0, w, h);
+  })(t0);
+}
+
+/* ================= hero art ================= */
+(function hero() {
+  const svg = $('#heroArt');
+  if (C.kind === 'track') {
+    for (let l = 0; l < 4; l++) el('line', { x1: 0, y1: 10 + l * 14, x2: 360, y2: 10 + l * 14, stroke: '#C8553D', 'stroke-width': l === 0 || l === 3 ? 3 : 1.5, opacity: l === 0 || l === 3 ? 1 : .5, 'stroke-dasharray': l === 0 || l === 3 ? '' : '4 4' }, svg);
+    C.categories.slice(0, 3).forEach((c, k) => { const g = el('circle', { cx: 20, cy: 17 + k * 14, r: 5, fill: c.color }, svg); g.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${300 - k * 30}px)` }], { duration: 2600 + k * 500, iterations: Infinity, easing: 'cubic-bezier(.5,0,.3,1)', direction: 'alternate' }); });
+  } else {
+    const d = 'M0,36 L60,36 L68,30 L74,36 L80,44 L88,6 L97,56 L104,36 L190,36 L198,30 L204,36 L210,44 L218,6 L227,56 L234,36 L360,36';
+    el('path', { d, fill: 'none', stroke: '#231E3D', 'stroke-width': 2.5, opacity: .25 }, svg);
+    const p = el('path', { d, class: 'trace' }, svg); const L = p.getTotalLength(); p.style.strokeDasharray = `60 ${L}`;
+    p.animate([{ strokeDashoffset: 60 }, { strokeDashoffset: -L }], { duration: 2800, iterations: Infinity });
+  }
+})();
+/* ================= resume a saved game ================= */
+(function offerResume() {
+  const v = loadSaved(); if (!v) return;
+  setupCount = v.players.length; v.players.forEach((p, i) => names[i] = /^Player \d$/.test(p.name) ? '' : p.name);
+  const left = v.endAt ? Math.max(0, v.endAt - Date.now()) : null;
+  const timeTxt = left === null ? 'There is no time limit.' : left ? `About ${Math.ceil(left / 60000)} min left on the clock.` : 'The time is already up, so the next turn will be the last.';
+  const box = $('#resume'); box.hidden = false;
+  box.innerHTML = `<h2>Continue your game?</h2><p>A game was in progress on this phone. ${timeTxt}</p>
+    <div class="who">${v.players.map(p => `<span><i style="background:${p.color}"></i>${esc(p.name)} · ${p.pos >= FINISH ? 'FIN' : p.pos}</span>`).join('')}</div>
+    <button class="big-btn alt" id="continueBtn">Continue the game</button>
+    <small>If you start a new game instead, this one will be replaced.</small>`;
+  $('#continueBtn').onclick = () => {
+    S = { players: v.players, turn: v.turn, pools: v.pools, decks: v.decks, timeUp: v.timeUp || false, last: v.last || null,
+          endAt: v.endAt || 0, open: null, U: v.U || null, busy: false, over: false };
+    box.hidden = true;
+    show('game'); buildBoard(); renderTokens(true); updateTurn(); keepAwake();
+    if (v.open) renderCard(v.open);
+  };
+})();
+renderNames();
+</script>
+</body>
+</html>
