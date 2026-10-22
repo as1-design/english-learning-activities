@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2A1338">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Don’t You Worry Child – B2.2 listening</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBEFF2; --surface:#FFFFFF; --surface-2:#F6E3EA; --ink:#2A1338; --muted:#6B4C73;
+  --magenta:#C92A63; --amber:#E89400; --teal:#0F766E; --line:#E7CFD9; --plum:#2A1338;
+  --ok-bg:#0F766E; --ok-ink:#FFFFFF; --no-bg:#FFE14D; --no-ink:#2A1338; --no-edge:#2A1338;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", sans-serif;
+  --body:"Atkinson Hyperlegible", "Verdana", "Segoe UI", sans-serif;
+  --s1:4px; --s2:8px; --s3:16px; --s4:24px; --s5:40px; --s6:64px;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#1E0F29; --surface:#2C1A3A; --surface-2:#3A2449; --ink:#FBEFF2; --muted:#CDB3D4;
+    --magenta:#FF6A9C; --amber:#FFBA3D; --teal:#4FD1C9; --line:#4A3159;
+    --ok-bg:#4FD1C9; --ok-ink:#1E0F29; --no-bg:#FFE14D; --no-ink:#1E0F29; --no-edge:#FFFFFF;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1E0F29; --surface:#2C1A3A; --surface-2:#3A2449; --ink:#FBEFF2; --muted:#CDB3D4;
+  --magenta:#FF6A9C; --amber:#FFBA3D; --teal:#4FD1C9; --line:#4A3159;
+  --ok-bg:#4FD1C9; --ok-ink:#1E0F29; --no-bg:#FFE14D; --no-ink:#1E0F29; --no-edge:#FFFFFF;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.125rem;line-height:1.6}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0}
+button,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amber);outline-offset:3px;border-radius:6px}
+.wrap{max-width:860px;margin:0 auto;padding:0 var(--s3)}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;color:#FFF7EF;
+  background:linear-gradient(180deg,#2A1338 0%,#6A1E5C 42%,#C92A63 72%,#F2A20C 100%)}
+.hero .wrap{position:relative;z-index:2;padding-top:var(--s5);padding-bottom:var(--s5)}
+.sun{position:absolute;z-index:1;right:-60px;bottom:-140px;width:420px;height:420px;border-radius:50%;
+  background:repeating-linear-gradient(180deg,#FFD36B 0 26px,transparent 26px 34px),radial-gradient(circle,#FFE29A,#FF9F3A);
+  -webkit-mask:radial-gradient(circle,#000 69%,transparent 70%);mask:radial-gradient(circle,#000 69%,transparent 70%);
+  opacity:.9;animation:breathe 7s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04) translateY(-6px)}}
+.hero p.kicker{margin:0 0 var(--s2);font-size:1rem;opacity:.85}
+.hero h1{font-size:clamp(2.6rem,8vw,5.2rem);font-weight:800;letter-spacing:-.02em;max-width:11ch}
+.hero p.by{margin:var(--s3) 0 0;font-size:1.125rem;max-width:40ch}
+.toolbar{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s4)}
+.chip-btn{border:2px solid rgba(255,247,239,.7);background:rgba(42,19,56,.35);color:#FFF7EF;border-radius:999px;padding:6px 16px;cursor:pointer;transition:transform .15s}
+.chip-btn:hover{transform:translateY(-2px)}
+.chip-btn[aria-pressed="true"]{background:#FFF7EF;color:#2A1338}
+
+/* Stage track */
+.track{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:var(--s5) 0 var(--s4);padding:0;list-style:none}
+.track button{width:100%;border:0;background:none;padding:0;cursor:pointer;text-align:left}
+.bar{display:block;height:44px;border-radius:10px;background:var(--surface-2);position:relative;overflow:hidden;transition:transform .15s}
+.bar i{position:absolute;bottom:0;left:0;right:0;background:var(--line);transition:background .3s}
+.track button:hover .bar{transform:translateY(-3px)}
+.track button.done .bar i{background:var(--amber)}
+.track button[aria-current="step"] .bar i{background:var(--magenta)}
+.track .lbl{display:block;font-size:.85rem;margin-top:4px;color:var(--muted);line-height:1.25}
+.track button[aria-current="step"] .lbl{color:var(--ink);font-weight:700}
+
+/* Stage */
+.stage{display:none}
+.stage.on{display:block;animation:enter .45s cubic-bezier(.25,.46,.45,.94)}
+@keyframes enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.stage-head{display:flex;align-items:flex-end;gap:var(--s3);margin-bottom:var(--s4)}
+.stage-num{font-family:var(--display);font-weight:800;font-size:5.5rem;line-height:.8;color:var(--magenta)}
+.stage-head h2{font-size:clamp(1.8rem,4.5vw,2.6rem)}
+.stage-head p{margin:var(--s1) 0 0;color:var(--muted)}
+.block{background:var(--surface);border-radius:18px;padding:var(--s4);margin-bottom:var(--s4);border-left:6px solid var(--line)}
+.block.m{border-left-color:var(--magenta)} .block.a{border-left-color:var(--amber)} .block.t{border-left-color:var(--teal)}
+.block h3{font-size:1.35rem;margin-bottom:var(--s2)}
+.block p{max-width:70ch}
+ol.qs{padding-left:1.4em;margin:var(--s2) 0 0} .qs li{margin-bottom:var(--s2);max-width:68ch}
+
+/* Interactions */
+.row{display:grid;grid-template-columns:1fr auto;gap:var(--s3);align-items:center;padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.row:last-of-type{border-bottom:0}
+.row select{padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--bg);min-width:12rem}
+.opts{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.opt{border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:8px 14px;cursor:pointer;transition:transform .12s}
+.opt:hover{transform:translateY(-2px)}
+.opt:active{transform:scale(.96)}
+.opt[aria-pressed="true"]{border-color:var(--magenta);background:var(--magenta);color:#FFF}
+.mc .opt{display:block;width:100%;text-align:left;margin-bottom:var(--s2)}
+.tf{display:flex;gap:6px}
+.tf .opt{min-width:3.2rem;text-align:center;padding:8px 10px}
+
+/* Marking: correct = teal with a tick; mistake = bright yellow, heavy outline, cross */
+.opt.mark-ok,select.mark-ok{background:var(--ok-bg)!important;color:var(--ok-ink)!important;border-color:var(--ok-bg)!important}
+.opt.mark-no,select.mark-no{background:var(--no-bg)!important;color:var(--no-ink)!important;border:3px dashed var(--no-edge)!important;animation:shake .3s}
+.opt.mark-ok::after{content:" ✓";font-weight:700}
+.opt.mark-no::after{content:" ✗";font-weight:700}
+@keyframes shake{25%{transform:translateX(-3px)}50%{transform:translateX(3px)}75%{transform:translateX(-3px)}}
+
+.check{margin-top:var(--s3);border:0;border-radius:999px;background:var(--plum);color:#FFF7EF;padding:12px 24px;font-weight:700;cursor:pointer;transition:transform .12s}
+:root[data-theme="dark"] .check{background:var(--amber);color:#2A1338}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .check{background:var(--amber);color:#2A1338}}
+.check:hover{transform:translateY(-2px)} .check:active{transform:scale(.96)}
+.result{font-weight:700;margin-top:var(--s2);min-height:1.6em}
+
+/* Speaking board */
+main.wide{max-width:1280px}
+.board-intro{max-width:70ch;margin:0 0 var(--s3)}
+.board-controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2);padding:var(--s3) 0;background:var(--bg)}
+.board-controls button{border:2px solid var(--ink);background:none;border-radius:999px;padding:12px 24px;font-weight:700;font-size:1.1rem;cursor:pointer;transition:transform .12s}
+.board-controls button:hover{transform:translateY(-2px)}
+.board-controls button:active{transform:scale(.96)}
+.board-controls button.next{background:var(--magenta);border-color:var(--magenta);color:#FFF}
+.board-controls button:disabled{opacity:.4;cursor:default;transform:none}
+.board-count{margin-left:auto;color:var(--muted);font-weight:700}
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:var(--s4);margin-top:var(--s3)}
+.qcard{border-radius:24px;padding:var(--s4) var(--s4) var(--s4) var(--s4);color:#FFF7EF;position:relative;overflow:hidden;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 12px 28px rgba(42,19,56,.18);cursor:pointer;transition:opacity .3s,transform .15s}
+.qcard.in{animation:deal .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes deal{from{opacity:0;transform:translateY(24px) rotate(-2deg) scale(.95)}to{opacity:1;transform:none}}
+.qcard .num{font-family:var(--display);font-weight:800;font-size:3.2rem;line-height:1;opacity:.35}
+.qcard p{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,2.1vw,1.8rem);line-height:1.25;margin:var(--s2) 0 0}
+.qcard.done{opacity:.4;transform:scale(.97)}
+.qcard.done .num::after{content:" ✓";opacity:1}
+.board-hint{color:var(--muted);font-size:.95rem;margin:var(--s3) 0 0}
+/* Teacher mode */
+.teacher{display:none;margin-top:var(--s3);padding:var(--s3);border-radius:12px;border:2px dashed var(--teal);font-size:1rem}
+.teacher strong:first-child{color:var(--teal)}
+body.tmode .teacher{display:block}
+
+/* Nav */
+.nav{display:flex;justify-content:space-between;gap:var(--s3);margin:var(--s4) 0 var(--s6)}
+.nav button{border:2px solid var(--ink);background:none;border-radius:999px;padding:10px 22px;font-weight:700;cursor:pointer}
+.nav button.next{background:var(--magenta);border-color:var(--magenta);color:#FFF}
+.nav button:disabled{visibility:hidden}
+
+footer{border-top:1px solid var(--line);padding:var(--s4) 0 var(--s5);color:var(--muted);font-size:.95rem}
+footer p{margin:0 0 var(--s1)}
+
+/* The drop */
+.drop{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.drop span{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 1.8s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+.drop-msg{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) scale(.6);z-index:51;background:#2A1338;color:#FFD36B;font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.6rem);padding:var(--s4) var(--s5);border-radius:22px;opacity:0;pointer-events:none;transition:all .45s cubic-bezier(.34,1.56,.64,1);text-align:center}
+.drop-msg.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+@media (max-width:620px){
+  .row{grid-template-columns:1fr}
+  .stage-num{font-size:4rem}
+  .sun{width:300px;height:300px;right:-90px;bottom:-120px}
+  .qcard{padding:var(--s4)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="sun" aria-hidden="true"></div>
+  <div class="wrap">
+    <p class="kicker">B2.2 listening · English</p>
+    <h1>Don’t You Worry Child</h1>
+    <p class="by">Swedish House Mafia featuring John Martin (2012)</p>
+    <div class="toolbar">
+      <button class="chip-btn" id="teacherBtn" aria-pressed="false">Teacher mode</button>
+      <button class="chip-btn" id="themeBtn">Switch light/dark</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav aria-label="Activity stages"><ol class="track" id="track"></ol></nav>
+
+  <!-- STAGE 1 -->
+  <section class="stage" id="before" data-title="Before you listen">
+    <div class="stage-head"><span class="stage-num">1</span><div><h2>Before you listen</h2><p>Talk about memories and advice, and prepare the key vocabulary.</p></div></div>
+
+    <div class="block m">
+      <h3>Talk in pairs</h3>
+      <ol class="qs">
+        <li>What is one of your earliest happy memories? Where were you, and who was with you?</li>
+        <li>What advice or reassurance did adults give you when you were a child? Did it turn out to be true?</li>
+        <li>Is it ever right to tell a child that everything will be fine when you cannot be sure?</li>
+        <li>Why do you think so many songs and films look back on childhood?</li>
+      </ol>
+    </div>
+
+    <div class="block a">
+      <h3>Vocabulary</h3>
+      <p>Match each definition to the correct word or expression.</p>
+      <div id="vocab"></div>
+      <button class="check" data-check="vocab">Check answers</button>
+      <p class="result" id="vocabResult" role="status"></p>
+    </div>
+
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="stage" id="gist" data-title="Main idea">
+    <div class="stage-head"><span class="stage-num">2</span><div><h2>Main idea</h2><p>Focus on the general story and the feeling of the song.</p></div></div>
+    <div id="gistQs"></div>
+    <button class="check" data-check="gist">Check answers</button>
+    <p class="result" id="gistResult" role="status"></p>
+  </section>
+
+  <!-- STAGE 3 -->
+  <section class="stage" id="detail" data-title="Details">
+    <div class="stage-head"><span class="stage-num">3</span><div><h2>Details</h2><p>Decide whether each statement is true (T), false (F) or not mentioned (NM).</p></div></div>
+    <div class="block m">
+      <div id="tfList"></div>
+      <button class="check" data-check="tf">Check answers</button>
+      <p class="result" id="tfResult" role="status"></p>
+    </div>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section class="stage" id="speaking" data-title="Speaking">
+    <div class="stage-head"><span class="stage-num">4</span><div><h2>Speaking</h2><p>Discuss the questions in pairs or small groups.</p></div></div>
+    <p class="board-intro">Take turns to answer each question. Give reasons and examples, and ask at least one follow-up question before you move on.</p>
+    <div class="board-controls">
+      <button type="button" id="revealNext" class="next">Show next question</button>
+      <button type="button" id="revealAll">Show all</button>
+      <button type="button" id="shuffleCards">Shuffle</button>
+      <button type="button" id="resetCards">Start again</button>
+      <span class="board-count" id="boardCount" role="status"></span>
+    </div>
+    <div class="board" id="board"></div>
+    <p class="board-hint">Select a card to mark it as discussed. On a keyboard or clicker, the right arrow key shows the next question.</p>
+  </section>
+
+  <div class="nav">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn" class="next">Next</button>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Class of Coffee – with AI assistance</p>
+    <p>Song: “Don’t You Worry Child”, Swedish House Mafia featuring John Martin (2012). The lyrics are not reproduced in this activity.</p>
+  </div>
+</footer>
+
+<div class="drop" id="drop" aria-hidden="true"></div>
+<div class="drop-msg" id="dropMsg" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------- Data ---------- */
+const vocab = [
+  ["words or actions that make someone feel less worried","reassurance"],
+  ["a happy but slightly sad feeling when you think about the past","nostalgia"],
+  ["pleasant and painful at the same time","bittersweet"],
+  ["having no worries or responsibilities","carefree"],
+  ["great sadness, especially when a romantic relationship ends","heartbreak"],
+  ["lack of experience of the difficult or harmful side of life","innocence"],
+  ["to think about something that happened in the past","to look back on"],
+  ["a moment when a situation starts to change in an important way","a turning point"]
+];
+
+const gist = [
+  {q:"Which sentence best summarises the song?", o:[
+    "A young man thanks his father for supporting him after his first girlfriend left him.",
+    "A man looks back on moments from his childhood and youth, and holds on to words of comfort his father once gave him.",
+    "A father looks back on his son’s childhood and promises him that his future will be bright.",
+    "A man returns to the house where he grew up and finds that everything there has changed."], a:1},
+  {q:"Which description best matches the mood of the song?", o:[
+    "Sad and regretful throughout, as the speaker wishes he had made different choices.",
+    "Nostalgic at first, then increasingly bitter as the speaker realises his father was wrong.",
+    "Reflective and bittersweet, gradually building into a sense of hope.",
+    "Light-hearted and playful, celebrating carefree days spent with friends."], a:2},
+  {q:"Who speaks the words of the title, and to whom?", o:[
+    "The speaker, to his own child",
+    "The girl the speaker loved, when they separated",
+    "The speaker, to his younger self",
+    "The speaker’s father, to the speaker when he was young"], a:3},
+  {q:"What role does the girl play in the story?", o:[
+    "She belongs to a time of young love that the speaker still thinks about now and then.",
+    "She is the reason the speaker decided to leave his home town.",
+    "She is now the speaker’s partner and the mother of his child.",
+    "She is a childhood friend who helped him through his first heartbreak."], a:0}
+];
+
+const tf = [
+  ["The speaker remembers his childhood home as a happy place.","T"],
+  ["As a child, he felt important, almost like royalty.","T"],
+  ["He says that this period of his life is now over.","T"],
+  ["He describes his memories as something he can see displayed on a wall.","T"],
+  ["He still hears songs connected to the place where he was born.","T"],
+  ["He had his first heartbreak in the centre of a busy city.","F"],
+  ["After this experience, his father criticised him.","F"],
+  ["His father says that a higher power has a plan for him.","T"],
+  ["He met a girl who seemed different from anyone else he had known.","T"],
+  ["The girl moved abroad and they lost contact completely.","NM"],
+  ["He says he thinks about her every day.","F"],
+  ["He tells us the name of the town where he grew up.","NM"]
+];
+const tfNotes = {
+  5:"The heartbreak happens outdoors, on a hill near a lake.",
+  6:"The father reassures him rather than criticising him.",
+  10:"He thinks about her only from time to time."
+};
+
+const cards = [
+  "Which song or piece of music takes you straight back to a particular moment in your life? Why?",
+  "What is the best piece of advice an older person has ever given you? Did you follow it?",
+  "Do you think people remember their childhood accurately, or do we make it seem better than it was?",
+  "When things look bad, is it better to tell people the truth or to reassure them? Give an example.",
+  "Which place from your childhood would you most like to go back to, and what would you expect to find there?",
+  "How has the way you deal with worry changed since you were younger?",
+  "Some people say that you never forget your first love. Do you agree?",
+  "Why do you think upbeat songs about sad or serious topics are so popular?",
+  "What would you say to a teenager who was very worried about their future?",
+  "Do you keep photos, letters or objects from your past? What do they mean to you?",
+  "Has a song ever changed the way you felt about a difficult situation?",
+  "Are children today more or less carefree than children were twenty years ago?",
+  "How much should parents protect their children from bad news?",
+  "If you could hear one sentence from someone in your past again, whose voice would it be and what would they say?"
+];
+const cardColours = ["#6A1E5C","#C92A63","#0F766E","#B45309","#3B2A8C","#9D174D"];
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const store = {
+  get(k){try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+};
+const letters = "abcdefghij";
+
+function bindOpts(root){
+  root.addEventListener("click",e=>{
+    const b = e.target.closest(".opt"); if(!b) return;
+    b.parentElement.querySelectorAll(".opt").forEach(x=>{x.setAttribute("aria-pressed","false");x.classList.remove("mark-ok","mark-no")});
+    b.setAttribute("aria-pressed","true");
+  });
+}
+function mcBlock(id, items){
+  const el = $("#"+id);
+  el.innerHTML = items.map((it,i)=>`<div class="mc block a">
+    <p style="font-weight:700;margin:0 0 var(--s2)">${i+1}. ${esc(it.q)}</p>
+    <div class="opts" role="group" data-name="${id}${i}">
+    ${it.o.map((o,j)=>`<button type="button" class="opt" aria-pressed="false" data-v="${j}">${letters[j]}) ${esc(o)}</button>`).join("")}</div>
+    <div class="teacher"><strong>Answer:</strong> ${letters[it.a]}</div></div>`).join("");
+  bindOpts(el);
+}
+function scoreMC(id, items){
+  let n=0;
+  items.forEach((it,i)=>{
+    const sel = document.querySelector(`[data-name="${id}${i}"] [aria-pressed="true"]`);
+    if(!sel) return;
+    const ok = +sel.dataset.v===it.a; if(ok) n++;
+    sel.classList.add(ok?"mark-ok":"mark-no");
+  });
+  return n;
+}
+function scoreKeyed(prefix, list){
+  let n=0;
+  list.forEach((t,i)=>{
+    const sel=document.querySelector(`[data-name="${prefix}${i}"] [aria-pressed="true"]`);
+    if(!sel) return;
+    const ok = sel.dataset.v===t[1]; if(ok) n++;
+    sel.classList.add(ok?"mark-ok":"mark-no");
+  });
+  return n;
+}
+function feedback(n,total){
+  if(n===total) return `${n}/${total}. All correct.`;
+  if(n>=total-2) return `${n}/${total}. Nearly there. Look again at the answers marked with a cross.`;
+  return `${n}/${total}. Discuss the answers marked with a cross with a partner.`;
+}
+
+/* ---------- Build ---------- */
+const words = vocab.map(v=>v[1]).slice().sort();
+$("#vocab").innerHTML = vocab.map((v,i)=>`<div class="row"><label for="v${i}">${esc(v[0])}</label>
+  <select id="v${i}"><option value="">Choose…</option>${words.map(w=>`<option>${w}</option>`).join("")}</select></div>`).join("") +
+  `<div class="teacher"><strong>Answers:</strong> ${vocab.map((v,i)=>`${i+1} ${v[1]}`).join("; ")}</div>`;
+document.querySelectorAll("#vocab select").forEach(s=>s.addEventListener("change",()=>s.classList.remove("mark-ok","mark-no")));
+
+mcBlock("gistQs", gist);
+
+$("#tfList").innerHTML = tf.map((t,i)=>`<div class="row"><span>${i+1}. ${esc(t[0])}${tfNotes[i]?`<span class="teacher" style="margin-top:6px;padding:6px 10px"><strong>Note:</strong> ${esc(tfNotes[i])}</span>`:""}</span>
+  <div class="opts tf" role="group" aria-label="Statement ${i+1}" data-name="tf${i}">
+  ${["T","F","NM"].map(v=>`<button type="button" class="opt" aria-pressed="false" data-v="${v}">${v}</button>`).join("")}</div></div>`).join("") +
+  `<div class="teacher"><strong>Answers:</strong> ${tf.map((t,i)=>`${i+1} ${t[1]}`).join(", ")}</div>`;
+bindOpts($("#tfList"));
+
+/* ---------- Checking ---------- */
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-check]"); if(!b) return;
+  const k=b.dataset.check; let n, total;
+  if(k==="vocab"){
+    n=0; total=vocab.length;
+    vocab.forEach((v,i)=>{const s=$("#v"+i); s.classList.remove("mark-ok","mark-no");
+      if(!s.value) return; const ok=s.value===v[1]; if(ok) n++; s.classList.add(ok?"mark-ok":"mark-no");});
+  } else if(k==="gist"){ n=scoreMC("gistQs",gist); total=gist.length; }
+  else if(k==="tf"){ n=scoreKeyed("tf",tf); total=tf.length; if(n===total) theDrop(); }
+  $("#"+k+"Result").textContent = feedback(n,total);
+});
+
+/* ---------- The drop (all twelve correct) ---------- */
+function theDrop(){
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const d=$("#drop"), m=$("#dropMsg");
+  m.textContent="Twelve out of twelve. That was the drop.";
+  m.classList.add("show"); setTimeout(()=>m.classList.remove("show"),2400);
+  if(reduce) return;
+  const cols=["#FFD36B","#C92A63","#FF9F3A","#0F766E","#FFF7EF","#6A1E5C"];
+  for(let i=0;i<90;i++){
+    const s=document.createElement("span");
+    s.style.left=Math.random()*100+"vw";
+    s.style.background=cols[i%cols.length];
+    s.style.animationDelay=(Math.random()*.5)+"s";
+    d.appendChild(s);
+  }
+  setTimeout(()=>d.innerHTML="",2600);
+}
+
+/* ---------- Speaking board ---------- */
+let order = cards.map((_,i)=>i), shown = 0;
+const START = 4;
+function cardHTML(k, anim){
+  const i = order[k];
+  return `<div class="qcard${anim?" in":""}" style="background:${cardColours[i%cardColours.length]}" tabindex="0" role="button" aria-pressed="false" title="Select to mark as discussed">
+    <span class="num">${k+1}</span><p>${esc(cards[i])}</p></div>`;
+}
+function renderBoard(){
+  $("#board").innerHTML = order.slice(0,shown).map((_,k)=>cardHTML(k,false)).join("");
+  updateCount();
+}
+function updateCount(){
+  $("#boardCount").textContent = `${shown} of ${cards.length} questions shown`;
+  $("#revealNext").disabled = shown>=cards.length;
+  $("#revealAll").disabled = shown>=cards.length;
+}
+function revealNext(){
+  if(shown>=cards.length) return;
+  $("#board").insertAdjacentHTML("beforeend", cardHTML(shown,true));
+  shown++; updateCount();
+  const last=$("#board").lastElementChild;
+  last.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"center"});
+}
+$("#revealNext").onclick=revealNext;
+$("#revealAll").onclick=()=>{shown=cards.length;renderBoard();};
+$("#resetCards").onclick=()=>{shown=START;renderBoard();};
+$("#shuffleCards").onclick=()=>{
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  renderBoard();
+};
+function toggleDone(c){const on=c.classList.toggle("done");c.setAttribute("aria-pressed",on);}
+$("#board").addEventListener("click",e=>{const c=e.target.closest(".qcard"); if(c) toggleDone(c);});
+$("#board").addEventListener("keydown",e=>{
+  const c=e.target.closest(".qcard"); if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();toggleDone(c);}
+});
+document.addEventListener("keydown",e=>{
+  if(stages[current].id!=="speaking"||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();revealNext();}
+});
+shown=START; renderBoard();
+
+/* ---------- Stages ---------- */
+const stages=[...document.querySelectorAll(".stage")];
+const seen=new Set();
+let current=0;
+$("#track").innerHTML = stages.map((s,i)=>`<li><button type="button" data-go="${s.id}">
+  <span class="bar"><i style="height:${[42,66,88,58][i]}%"></i></span><span class="lbl">${s.dataset.title}</span></button></li>`).join("");
+function show(id){
+  let i=stages.findIndex(s=>s.id===id); if(i<0) i=0;
+  stages.forEach((s,j)=>s.classList.toggle("on",j===i));
+  seen.add(i);
+  document.querySelectorAll("#track button").forEach((b,j)=>{
+    b.removeAttribute("aria-current");
+    if(j===i) b.setAttribute("aria-current","step");
+    b.classList.toggle("done",seen.has(j)&&j!==i);
+  });
+  $("#prevBtn").disabled = i===0;
+  $("#nextBtn").disabled = i===stages.length-1;
+  current=i;
+  document.querySelector("main").classList.toggle("wide", stages[i].id==="speaking");
+  try{ if(location.hash.slice(1)!==stages[i].id) history.replaceState(null,"","#"+stages[i].id); }catch(e){}
+}
+function go(i){ show(stages[i].id); $("#track").scrollIntoView({behavior:"smooth",block:"start"}); }
+$("#track").addEventListener("click",e=>{const b=e.target.closest("[data-go]"); if(b) go(stages.findIndex(s=>s.id===b.dataset.go));});
+$("#prevBtn").onclick=()=>go(Math.max(0,current-1));
+$("#nextBtn").onclick=()=>go(Math.min(stages.length-1,current+1));
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
+show(location.hash.slice(1)||"before");
+
+/* ---------- Teacher mode and theme ---------- */
+$("#teacherBtn").onclick=e=>{
+  const on=document.body.classList.toggle("tmode");
+  e.currentTarget.setAttribute("aria-pressed",on);
+};
+$("#themeBtn").onclick=()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+  store.set("dywc-theme", r.dataset.theme);
+};
+const th=store.get("dywc-theme"); if(th) document.documentElement.dataset.theme=th;
+</script>
+</body>
+</html>
