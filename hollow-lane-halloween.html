@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The House on Hollow Lane · Halloween game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Alegreya:ital,wght@0,500;0,700;1,500&family=Alegreya+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1a1030; --night2:#2c1a4a; --ink:#0d0818;
+  --bone:#f3e9d2; --bone-dim:#c9bda3;
+  --pumpkin:#ff7b1c; --candle:#ffc857; --ghost:#8ff0d6; --blood:#e8455f;
+  --stone:#5d5470; --stone-dk:#3a3249;
+  --display:'Creepster','Chiller','Papyrus',fantasy;
+  --ui:'Alegreya Sans','Trebuchet MS','Segoe UI',sans-serif;
+  --serif:'Alegreya',Georgia,'Times New Roman',serif;
+  --spring:cubic-bezier(0.34,1.56,0.64,1);
+  --out:cubic-bezier(0.25,0.46,0.45,0.94);
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--ui); color:var(--bone); overflow:hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 82% 8%, rgba(255,240,190,.18), transparent 60%),
+    radial-gradient(ellipse 90% 60% at 50% 110%, rgba(255,123,28,.16), transparent 70%),
+    linear-gradient(180deg,#120a24 0%, var(--night) 45%, var(--night2) 100%);
+}
+button{font-family:inherit;cursor:pointer;border:none;color:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid var(--ghost);outline-offset:3px}
+
+/* ---------- atmosphere ---------- */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+.moon{position:absolute;transition:opacity .8s,transform .8s;top:4vh;right:7vw;width:clamp(70px,9vw,140px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 38% 35%, #fffbe2 0%, #f0e6b4 55%, #d6c98c 100%);
+  box-shadow:0 0 60px 20px rgba(255,245,200,.25),0 0 160px 60px rgba(255,245,200,.1);
+  animation:moonBreath 7s ease-in-out infinite}
+body:not(.open-sky) .moon{opacity:.22;transform:scale(.75) translate(20%,-20%)}
+.moon::after{content:"";position:absolute;width:18%;height:18%;border-radius:50%;background:rgba(180,165,110,.45);top:52%;left:58%;box-shadow:-30px -24px 0 -4px rgba(180,165,110,.35),-12px 14px 0 -6px rgba(180,165,110,.3)}
+@keyframes moonBreath{0%,100%{box-shadow:0 0 60px 20px rgba(255,245,200,.22),0 0 160px 60px rgba(255,245,200,.08)}50%{box-shadow:0 0 80px 28px rgba(255,245,200,.32),0 0 200px 80px rgba(255,245,200,.13)}}
+.fog{position:absolute;left:-50%;width:200%;height:40vh;bottom:-6vh;opacity:.55;
+  background:radial-gradient(ellipse 18% 40% at 15% 60%, rgba(200,190,230,.18), transparent 70%),
+  radial-gradient(ellipse 22% 45% at 45% 70%, rgba(200,190,230,.15), transparent 70%),
+  radial-gradient(ellipse 20% 40% at 75% 55%, rgba(200,190,230,.17), transparent 70%);
+  animation:drift 40s linear infinite}
+.fog.f2{bottom:-12vh;opacity:.4;animation-duration:65s;animation-direction:reverse}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(25%)}}
+.bat{position:fixed;z-index:1;font-size:clamp(28px,3vw,44px);pointer-events:none;filter:drop-shadow(0 0 6px rgba(0,0,0,.6))}
+
+/* ---------- layout ---------- */
+#app{position:relative;z-index:2;height:100vh;display:grid;grid-template-rows:auto 1fr auto}
+#topbar{display:flex;align-items:center;gap:var(--s2);padding:min(var(--s2),1.6vh) var(--s4)}
+#topbar .brand{font-family:var(--display);font-size:clamp(22px,2.2vw,32px);color:var(--pumpkin);letter-spacing:.02em;text-shadow:0 0 18px rgba(255,123,28,.5)}
+#topbar .where{font-size:clamp(16px,1.4vw,20px);color:var(--bone-dim);font-weight:700}
+#topbar .spacer{flex:1}
+.iconbtn{background:rgba(255,255,255,.06);border:1px solid rgba(243,233,210,.2);border-radius:999px;padding:8px 16px;font-size:clamp(15px,1.3vw,18px);font-weight:700;transition:transform .15s var(--spring),background .2s}
+.iconbtn:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+.iconbtn:active{transform:scale(.96)}
+#stage{position:relative;overflow:hidden;padding:0 var(--s4)}
+.screen{height:100%;display:flex;flex-direction:column;animation:enter .55s var(--out) both}
+@keyframes enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:min(14px,1.5vh) 28px;border-radius:14px;font-size:clamp(16px,min(1.6vw,3vh),24px);font-weight:800;
+  background:var(--pumpkin);color:#2a0f00;box-shadow:0 6px 0 #a5450a,0 10px 30px rgba(255,123,28,.35);
+  transition:transform .15s var(--spring),box-shadow .15s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 #a5450a,0 14px 36px rgba(255,123,28,.45)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 #a5450a,0 6px 16px rgba(255,123,28,.3)}
+.btn.ghost{background:transparent;color:var(--bone);border:2px solid rgba(243,233,210,.45);box-shadow:none}
+.btn.ghost:hover{background:rgba(243,233,210,.08);box-shadow:none}
+.btn.mint{background:var(--ghost);color:#062a22;box-shadow:0 6px 0 #3aa58c,0 10px 30px rgba(143,240,214,.3)}
+.btn.mint:hover{box-shadow:0 9px 0 #3aa58c,0 14px 36px rgba(143,240,214,.4)}
+.btn.blood{background:var(--blood);color:#2b0008;box-shadow:0 6px 0 #92213a}
+.btn.small{padding:10px 18px;font-size:clamp(15px,1.3vw,19px)}
+.btn[disabled]{opacity:.35;pointer-events:none}
+.controls{display:flex;gap:var(--s2);align-items:center;justify-content:center;flex-wrap:wrap;padding:min(var(--s2),1.4vh) 0 min(var(--s3),1.6vh)}
+
+/* ---------- intro ---------- */
+.intro{flex-direction:row;align-items:center;justify-content:center;gap:var(--s5)}
+.intro svg.door{height:min(62vh,520px);filter:drop-shadow(0 0 40px rgba(255,123,28,.25))}
+.intro svg.door.knocked{animation:doorShake .5s var(--out)}
+@keyframes doorShake{0%,100%{transform:none}20%{transform:translateX(-6px) rotate(-.6deg)}45%{transform:translateX(5px) rotate(.5deg)}70%{transform:translateX(-3px)}}
+.title{font-family:var(--display);font-weight:400;font-size:clamp(64px,8.5vw,140px);line-height:.92;color:var(--pumpkin);
+  text-shadow:0 0 24px rgba(255,123,28,.55),0 6px 0 #5a1f00;animation:flick 6s infinite}
+.title span{display:block;color:var(--bone);text-shadow:0 0 22px rgba(143,240,214,.35),0 6px 0 #2a1d40}
+@keyframes flick{0%,92%,100%{opacity:1}93%{opacity:.55}94%{opacity:1}96%{opacity:.7}97%{opacity:1}}
+.tagline{margin:var(--s3) 0 var(--s4);font-family:var(--serif);font-style:italic;font-size:clamp(20px,2vw,30px);color:var(--bone-dim);max-width:36ch;line-height:1.4}
+
+/* ---------- headings in rooms ---------- */
+.roomhead{display:flex;align-items:flex-end;gap:var(--s3);padding:var(--s1) 0 min(var(--s2),1.6vh)}
+.roomhead .glyph{font-size:clamp(36px,min(5vw,8vh),80px);line-height:1;filter:drop-shadow(0 0 16px rgba(255,200,87,.5));animation:bob 5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+.roomhead h2{font-family:var(--display);font-weight:400;font-size:clamp(30px,min(4.6vw,7.5vh),76px);line-height:.95;color:var(--candle);text-shadow:0 0 20px rgba(255,200,87,.4)}
+.roomhead p{font-size:clamp(15px,min(1.6vw,2.8vh),24px);color:var(--bone-dim);max-width:60ch;line-height:1.35;margin-top:6px}
+.roomhead .right{margin-left:auto;display:flex;align-items:center;gap:var(--s2)}
+
+.turnbanner{display:inline-flex;align-items:center;gap:12px;padding:min(10px,1.2vh) 22px;border-radius:999px;font-size:clamp(16px,min(1.9vw,3.4vh),28px);font-weight:800;
+  background:rgba(13,8,24,.75);border:3px solid var(--tc,var(--ghost));color:var(--tc,var(--ghost));box-shadow:0 0 28px color-mix(in srgb,var(--tc,#8ff0d6) 40%,transparent)}
+.turnbanner.pop{animation:popIn .5s var(--spring)}
+.turnbanner .steal{background:var(--blood);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8em}
+@keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:none;opacity:1}}
+.shake{animation:shake .38s var(--out)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+
+/* ---------- candle timer ---------- */
+.timer{display:flex;align-items:flex-end;gap:12px}
+.candle{position:relative;width:26px;height:70px;display:flex;align-items:flex-end}
+.wax{width:100%;background:linear-gradient(90deg,#e9dfc4,#fff8e4 45%,#d4c7a6);border-radius:6px 6px 3px 3px;transition:height 1s linear;position:relative}
+.wax::before{content:"";position:absolute;left:50%;top:-8px;width:2px;height:9px;background:#2a2020;transform:translateX(-50%)}
+.flame{position:absolute;left:50%;width:16px;height:26px;margin-left:-8px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  background:radial-gradient(ellipse at 50% 70%, #fff6c8 0%, var(--candle) 40%, var(--pumpkin) 75%, transparent 76%);
+  filter:drop-shadow(0 0 10px rgba(255,200,87,.9));animation:flame .25s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes flame{from{transform:scaleY(1) rotate(-2deg)}to{transform:scaleY(1.12) rotate(2deg)}}
+.tnum{font-family:var(--display);font-size:clamp(32px,min(3.6vw,6.5vh),60px);color:var(--candle);min-width:2.2ch;line-height:1}
+.timer.low .tnum{color:var(--blood);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.12)}}
+
+/* ---------- blackout ---------- */
+#blackout{position:fixed;inset:0;background:#000;z-index:50;pointer-events:none;opacity:0}
+#blackout.go{animation:blackout 1.8s steps(1,end) forwards}
+@keyframes blackout{0%{opacity:.85}8%{opacity:0}16%{opacity:.9}22%{opacity:.2}30%{opacity:1}80%{opacity:1}100%{opacity:0}}
+#lightning{position:fixed;inset:0;background:#e8f0ff;z-index:49;pointer-events:none;opacity:0}
+#lightning.go{animation:lightning .7s ease-out}
+@keyframes lightning{0%{opacity:0}10%{opacity:.55}20%{opacity:0}30%{opacity:.35}100%{opacity:0}}
+
+/* ---------- map ---------- */
+.mapwrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+.mapsvg{width:100%;height:100%;max-height:100%}
+.room{cursor:pointer}
+.room .panel{fill:#1d1332;stroke:#5a4386;stroke-width:3;transition:fill .4s}
+.room .label{font-family:var(--display);fill:#7d6aa3;font-size:30px;pointer-events:none}
+.room .num{font-family:var(--ui);font-weight:800;font-size:20px;fill:#0d0818;pointer-events:none}
+.room .numc{fill:#7d6aa3}
+.room.next .panel{fill:url(#litG);animation:roomFlicker 3s ease-in-out infinite}
+.room.next .label{fill:#3a1400}
+.room.next .numc{fill:#3a1400}.room.next .num{fill:var(--candle)}
+.room.done .panel{fill:url(#doneG)}
+.room.done .label{fill:var(--ghost)}
+.room.done .numc{fill:var(--ghost)}
+.room:hover .panel{stroke:var(--candle);stroke-width:5}
+.room .silh{fill:#0d0818;opacity:.55;pointer-events:none}
+.room.next .silh{opacity:.35}
+@keyframes roomFlicker{0%,100%{opacity:1}45%{opacity:.86}50%{opacity:1}53%{opacity:.8}56%{opacity:1}}
+.gravezone .panel{fill:transparent;stroke:#5a4386;stroke-dasharray:10 10}
+.gravezone.next .panel{fill:rgba(255,200,87,.12);stroke:var(--candle);animation:roomFlicker 3s infinite}
+.gravezone.done .panel{fill:rgba(143,240,214,.1);stroke:var(--ghost)}
+#doorG{cursor:pointer}
+#doorG.open .doorpanel{fill:url(#litG)}
+.maphint{text-align:center;font-size:clamp(18px,1.6vw,24px);color:var(--bone-dim);padding:6px 0 var(--s2)}
+
+/* ---------- scorebar ---------- */
+#scorebar{display:flex;gap:var(--s2);justify-content:center;padding:min(var(--s2),1.8vh) var(--s4) min(var(--s3),2.4vh);flex-wrap:wrap}
+.chip{position:relative;display:flex;align-items:center;gap:12px;padding:min(10px,1vh) 18px min(10px,1vh) 12px;border-radius:18px;min-width:180px;
+  background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:2px solid color-mix(in srgb,var(--tc) 45%,transparent);
+  transition:transform .3s var(--spring),box-shadow .3s}
+.chip .em{font-size:clamp(22px,min(2.6vw,4.4vh),40px)}
+.chip .nm{font-weight:800;font-size:clamp(16px,1.4vw,21px);color:var(--tc);line-height:1.1}
+.chip .k{font-family:var(--display);font-size:clamp(24px,min(2.8vw,4.8vh),44px);color:var(--candle);margin-left:auto;line-height:1}
+.chip .k small{font-family:var(--ui);font-size:.5em;margin-left:2px}
+.chip.active{transform:translateY(-8px);border-color:var(--tc);box-shadow:0 0 0 3px color-mix(in srgb,var(--tc) 35%,transparent),0 14px 34px color-mix(in srgb,var(--tc) 35%,transparent)}
+.chip.active::after{content:"your turn";position:absolute;top:-14px;left:14px;background:var(--tc);color:#120a20;font-weight:800;font-size:13px;padding:2px 10px;border-radius:999px}
+.chip.bump{animation:bump .5s var(--spring)}
+@keyframes bump{40%{transform:translateY(-12px) scale(1.08)}}
+.chip .adj{position:absolute;right:-8px;top:-10px;display:none;gap:4px}
+.chip:hover .adj{display:flex}
+.chip .adj button{width:26px;height:26px;border-radius:50%;background:#2c1a4a;border:1px solid rgba(243,233,210,.35);font-weight:800;font-size:16px;line-height:1}
+.flykey{position:fixed;z-index:60;font-size:54px;pointer-events:none;filter:drop-shadow(0 0 14px rgba(255,200,87,.9))}
+
+/* ---------- forms (setup) ---------- */
+.setup{align-items:center;justify-content:center;gap:var(--s3)}
+.setup h2,.brief h2{font-family:var(--display);font-weight:400;color:var(--candle);font-size:clamp(48px,5vw,84px);text-shadow:0 0 22px rgba(255,200,87,.4)}
+.stepper{display:flex;align-items:center;gap:var(--s2);font-size:clamp(20px,1.8vw,26px);font-weight:700}
+.stepper button{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(243,233,210,.35);font-size:26px;font-weight:800;transition:transform .15s var(--spring)}
+.stepper button:active{transform:scale(.9)}
+.stepper .n{font-family:var(--display);font-size:56px;color:var(--pumpkin);min-width:1.5ch;text-align:center}
+.teamgrid{display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:var(--s2)}
+.teamrow{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:rgba(13,8,24,.6);border:2px solid var(--tc);animation:enter .4s var(--spring) both}
+.teamrow .em{font-size:34px}
+.teamrow input{flex:1;min-width:0;background:transparent;border:none;border-bottom:2px dashed rgba(243,233,210,.3);color:var(--tc);font-family:var(--ui);font-weight:800;font-size:22px;padding:4px 2px}
+
+/* ---------- briefing ---------- */
+.brief{align-items:center;justify-content:center;gap:var(--s3)}
+.briefgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:var(--s4);max-width:1200px;width:100%}
+.practise{display:grid;gap:12px}
+.pr{display:flex;align-items:center;gap:var(--s2);padding:14px 18px;border-radius:16px;background:rgba(13,8,24,.55);border-left:6px solid var(--c);animation:enter .5s var(--out) both}
+.pr .e{font-size:40px}
+.pr b{display:block;font-size:clamp(19px,1.6vw,24px);color:var(--c)}
+.pr span{font-size:clamp(17px,1.4vw,21px);color:var(--bone-dim)}
+.rules{padding:var(--s3);border-radius:20px;background:rgba(255,123,28,.1);border:2px solid rgba(255,123,28,.5);font-size:clamp(18px,1.5vw,23px);line-height:1.5}
+.rules h3{font-family:var(--display);font-weight:400;font-size:40px;color:var(--pumpkin);margin-bottom:8px}
+.rules p+p{margin-top:10px}
+
+/* ---------- hall ---------- */
+.hallwrap{flex:1;display:grid;grid-template-columns:1fr minmax(140px,15%);gap:var(--s3);min-height:0;padding:min(8px,0.8vh) var(--s2)}
+.hallgrid{display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(2,1fr);gap:min(var(--s3),2.4vh) var(--s3);min-height:0}
+.frame{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:12px;font-family:inherit;color:var(--bone);cursor:default;
+  background:radial-gradient(ellipse at 50% 30%,#3b2757,#1b1030 75%);
+  border:6px double #b8893a;box-shadow:inset 0 0 30px rgba(0,0,0,.7),0 10px 24px rgba(0,0,0,.5),0 0 0 2px #5c3f12;
+  transform:rotate(var(--r));animation:hang .6s var(--spring) both;animation-delay:var(--d);min-height:0}
+@keyframes hang{from{opacity:0;transform:translateY(-30px) rotate(calc(var(--r) * 4))}to{opacity:1;transform:rotate(var(--r))}}
+.frame .e{font-size:clamp(28px,min(4.4vw,8vh),76px);line-height:1}
+.frame .w{font-family:var(--serif);font-weight:700;font-size:clamp(15px,min(1.9vw,3.6vh),32px);color:var(--bone);text-align:center;line-height:1.05;padding:0 4px}
+.hallgrid.guess .frame{cursor:pointer;transition:transform .2s var(--spring),border-color .2s}
+.hallgrid.guess .frame:hover{transform:rotate(var(--r)) translateY(-4px) scale(1.03);border-color:var(--ghost)}
+.frame.tried{opacity:.4}
+.frame.changed{border-color:var(--pumpkin);box-shadow:0 0 0 4px var(--pumpkin),0 0 44px rgba(255,123,28,.65);animation:revealPop .6s var(--spring)}
+.frame.changed::after{content:"changed!";position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--pumpkin);color:#2a0f00;font-family:var(--ui);font-weight:800;font-size:14px;padding:2px 10px;border-radius:999px}
+@keyframes revealPop{0%{transform:scale(.8) rotate(var(--r))}100%{transform:rotate(var(--r))}}
+.extra{display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:10px;text-align:center;min-height:0}
+.extra .cap{font-family:var(--serif);font-style:italic;font-size:clamp(15px,min(1.5vw,2.8vh),24px);color:var(--bone-dim)}
+.extra .slot{flex:0 1 46%;min-height:0;border-radius:12px;border:4px dashed rgba(143,240,214,.35);display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-size:clamp(40px,min(5vw,9vh),90px);color:rgba(143,240,214,.55);animation:ghostQ 3s ease-in-out infinite}
+@keyframes ghostQ{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(-8px);opacity:1}}
+.extra .frame{flex:0 1 46%;--r:0deg;border-color:var(--ghost);box-shadow:0 0 0 3px var(--ghost),0 0 40px rgba(143,240,214,.5);animation:ghostIn .8s var(--spring) both}
+@keyframes ghostIn{from{opacity:0;transform:translateY(40px) scale(.7);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.extra .cap b{color:var(--ghost);font-style:normal}
+
+/* ---------- library ---------- */
+.book{flex:1;display:grid;grid-template-columns:1fr 1fr;max-width:1600px;width:100%;margin:0 auto;min-height:0;
+  background:#3b1e12;padding:min(14px,1.4vh);border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.6);transform-origin:50% 50%}
+.page{background:linear-gradient(90deg,#efe2c2,#f8efd8 30%,#efe2c2);color:#2b1c10;padding:min(var(--s3),2.4vh) var(--s4);font-family:var(--serif);
+  font-size:20px;line-height:1.42;overflow:hidden;position:relative;min-height:0}
+.page.l{border-radius:8px 0 0 8px;box-shadow:inset -18px 0 24px -12px rgba(80,50,20,.45)}
+.page.r{border-radius:0 8px 8px 0;box-shadow:inset 18px 0 24px -12px rgba(80,50,20,.45)}
+.page h3{font-family:var(--display);font-weight:400;font-size:1.55em;color:#7a1d1d;margin-bottom:.45em;line-height:1}
+.page p+p{margin-top:.6em}
+.page p:first-of-type::first-letter{font-family:var(--display);font-size:3.2em;float:left;line-height:.85;margin:4px 8px 0 0;color:#7a1d1d}
+.book.closing{animation:closeBook 1s var(--out) forwards}
+@keyframes closeBook{0%{transform:none}60%{transform:scaleX(.08) rotateY(30deg);opacity:1}100%{transform:scaleX(0);opacity:0}}
+.statement{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:space-evenly;gap:min(var(--s3),2vh);min-height:0}
+.scard{max-width:1100px;width:100%;padding:min(var(--s4),3.4vh) var(--s5);border-radius:22px;text-align:center;
+  background:linear-gradient(160deg,#f6ecd3,#e6d6b0);color:#2b1c10;font-family:var(--serif);font-weight:700;font-size:clamp(20px,min(2.8vw,5.4vh),48px);line-height:1.25;
+  box-shadow:0 18px 40px rgba(0,0,0,.55),0 0 0 6px #3b1e12;animation:enterSpin .6s var(--spring) both}
+@keyframes enterSpin{from{opacity:0;transform:translateY(30px) rotate(-2deg) scale(.94)}to{opacity:1;transform:none}}
+.scard .qn{display:block;font-family:var(--ui);font-weight:800;font-size:.45em;color:#7a1d1d;margin-bottom:10px}
+.answers{display:flex;gap:var(--s3)}
+.ans{min-width:min(22vw,260px);padding:min(20px,1.8vh) 30px;border-radius:20px;font-family:var(--display);font-size:clamp(28px,min(4vw,7vh),64px);line-height:1;
+  transition:transform .15s var(--spring),opacity .3s;box-shadow:0 8px 0 rgba(0,0,0,.35)}
+.ans:hover{transform:translateY(-4px) rotate(-1deg)}
+.ans:active{transform:translateY(3px)}
+.ans.uk{background:#b78cff;color:#1d0b3a}
+.ans.us{background:var(--pumpkin);color:#2a0f00}
+.ans.both{background:var(--ghost);color:#062a22}
+.ans.wrong{opacity:.3;text-decoration:line-through;pointer-events:none}
+.ans.right{box-shadow:0 0 0 6px var(--candle),0 0 50px rgba(255,200,87,.7);transform:scale(1.06)}
+.why{max-width:1000px;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(16px,min(1.8vw,3.3vh),28px);color:var(--candle);animation:enter .5s var(--out)}
+
+/* ---------- graveyard ---------- */
+.graves{flex:1;display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(2,1fr);gap:var(--s3) var(--s2);padding:var(--s2) 0;min-height:0;perspective:1200px}
+.grave{position:relative;cursor:pointer;animation:rise .7s var(--spring) both;animation-delay:var(--d)}
+@keyframes rise{from{opacity:0;transform:translateY(60px)}to{opacity:1;transform:none}}
+.grave .in{position:absolute;inset:0;transition:transform .6s var(--out);transform-style:preserve-3d}
+.grave.up .in{transform:rotateY(180deg)}
+.grave .f,.grave .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:50% 50% 8px 8px/38% 38% 8px 8px;display:flex;align-items:center;justify-content:center;flex-direction:column;
+  border:3px solid #1d1828;box-shadow:inset 0 -14px 0 rgba(0,0,0,.25),0 10px 0 #120d1c}
+.grave .f{background:linear-gradient(170deg,#7a7090,var(--stone) 40%,var(--stone-dk));}
+.grave .f .rip{font-family:var(--display);font-size:clamp(16px,1.4vw,22px);color:rgba(20,14,30,.6);letter-spacing:.1em}
+.grave .f .n{font-family:var(--display);font-size:clamp(28px,min(3.8vw,7vh),64px);color:#231b33;text-shadow:0 1px 0 rgba(255,255,255,.25)}
+.grave .f::after{content:"";position:absolute;bottom:4px;left:8%;right:8%;height:16%;border-radius:40%;background:radial-gradient(ellipse at 50% 0%,#3d5a3a,#22341f);opacity:.9}
+.grave .b{transform:rotateY(180deg);background:linear-gradient(170deg,#3a2a55,#24173a);border-color:var(--ghost)}
+.grave .b .w{font-family:var(--serif);font-weight:700;font-size:clamp(15px,min(1.9vw,3.6vh),32px);color:var(--bone);text-align:center;padding:0 6px;line-height:1.05}
+.grave.matched .b{border-color:var(--tc);box-shadow:0 0 0 3px var(--tc),0 0 30px var(--tc),0 10px 0 #120d1c;background:linear-gradient(170deg,#3a2a55,#1b2d2a)}
+.grave.matched{cursor:default}
+.grave.nope .in{animation:shake .4s}
+.phrase{min-height:1.4em;text-align:center;font-family:var(--serif);font-style:italic;font-size:clamp(18px,min(2.4vw,4.2vh),38px);color:var(--candle)}
+.phrase.go{animation:popIn .5s var(--spring)}
+
+/* ---------- attic ---------- */
+.story{font-family:var(--serif);font-size:clamp(14px,min(1.6vw,2.7vh),27px);line-height:1.4;max-width:96ch;color:var(--bone)}
+.clues{flex:1;display:flex;flex-wrap:wrap;justify-content:center;gap:min(var(--s3),2.6vh) var(--s2);padding:min(var(--s2),1.6vh) 0;min-height:0;align-content:start}
+.clues .clue{flex:0 1 calc(33.333% - 16px)}
+.clue{display:flex;align-items:center;gap:var(--s2);padding:min(var(--s2),1.4vh) var(--s3);border-radius:16px;background:#f2e6c9;color:#2b1c10;font-family:var(--serif);font-weight:700;font-size:clamp(13px,min(1.5vw,2.6vh),26px);line-height:1.22;
+  box-shadow:0 10px 24px rgba(0,0,0,.5);transform:rotate(var(--r));animation:pin .55s var(--spring) both;position:relative}
+.clue::before{content:"";position:absolute;top:-8px;left:50%;width:16px;height:16px;border-radius:50%;background:var(--blood);box-shadow:0 3px 0 #7a1020}
+.clue .e{font-size:clamp(24px,min(3.2vw,5.5vh),54px)}
+@keyframes pin{from{opacity:0;transform:scale(1.4) rotate(0)}to{opacity:1;transform:rotate(var(--r))}}
+.modals{display:grid;gap:var(--s2);max-width:1100px;width:100%;margin:0 auto}
+.modal{display:grid;grid-template-columns:minmax(200px,26%) 1fr;align-items:center;gap:var(--s3);padding:min(var(--s2),1.4vh) var(--s3);border-radius:18px;background:rgba(13,8,24,.6);border-left:8px solid var(--c);animation:enter .5s var(--out) both}
+.modal b{font-family:var(--display);font-weight:400;font-size:clamp(26px,min(3vw,5.5vh),50px);color:var(--c);line-height:1}
+.modal span{font-size:clamp(18px,1.5vw,23px);color:var(--bone-dim)}
+.modal i{display:block;font-family:var(--serif);font-size:clamp(17px,min(1.9vw,3.4vh),30px);color:var(--bone);margin-top:4px}
+.rule{text-align:center;font-size:clamp(20px,1.8vw,27px);font-weight:800;color:var(--pumpkin);margin-top:var(--s2)}
+.votes{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:var(--s2);max-width:1200px;width:100%;margin:var(--s3) auto 0}
+.vrow{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:18px;background:rgba(13,8,24,.6);border:2px solid var(--tc)}
+.vrow .em{font-size:40px}.vrow .nm{font-weight:800;font-size:22px;color:var(--tc);flex:1}
+.vrow button{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(243,233,210,.35);font-size:24px;font-weight:800}
+.vrow .v{font-family:var(--display);font-size:48px;color:var(--candle);min-width:1.4ch;text-align:center}
+.vrow .award{white-space:nowrap;font-family:var(--display);font-size:34px;color:var(--ghost);animation:popIn .5s var(--spring)}
+.deck{flex:1;display:flex;gap:var(--s3);justify-content:center;align-items:center;flex-wrap:wrap;perspective:1200px;min-height:0}
+.card{width:clamp(150px,13vw,210px);aspect-ratio:.68;position:relative;cursor:pointer;animation:deal .6s var(--spring) both;animation-delay:var(--d)}
+@keyframes deal{from{opacity:0;transform:translateY(-80px) rotate(-20deg)}to{opacity:1;transform:none}}
+.card .in{position:absolute;inset:0;transition:transform .7s var(--out);transform-style:preserve-3d}
+.card:hover .in{transform:translateY(-8px) rotate(-2deg)}
+.card.flipped .in{transform:rotateY(180deg)}
+.card.used{pointer-events:none}
+.card .f,.card .b{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:14px;text-align:center}
+.card .f{background:repeating-linear-gradient(45deg,#2a1745 0 12px,#33205a 12px 24px);border:4px solid var(--candle);box-shadow:0 14px 30px rgba(0,0,0,.6)}
+.card .f .eye{font-size:64px;animation:bob 4s ease-in-out infinite}
+.card .b{transform:rotateY(180deg);background:linear-gradient(170deg,#f3e6c6,#dccaa0);color:#2b1c10;border:4px solid #7a1d1d;font-family:var(--serif);font-weight:700;font-size:clamp(17px,1.4vw,22px);line-height:1.2}
+.card .b .e{font-size:54px}
+.card .who{position:absolute;bottom:-34px;left:0;right:0;text-align:center;font-weight:800;font-size:18px;color:var(--tc)}
+.targets{display:flex;gap:var(--s2);justify-content:center;flex-wrap:wrap}
+
+.think{flex:1;display:grid;grid-template-columns:1.05fr 1fr;gap:var(--s3);min-height:0;align-items:center}
+.miniclues{display:grid;gap:min(10px,1.1vh)}
+.mc{display:flex;gap:12px;align-items:center;background:#f2e6c9;color:#2b1c10;font-family:var(--serif);font-weight:700;font-size:clamp(12px,min(1.35vw,2.5vh),26px);line-height:1.2;padding:min(10px,1vh) 14px;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,.4);animation:enter .4s var(--out) both}
+.mc span{font-size:1.7em}
+.think .modals{gap:min(var(--s2),1.4vh)}
+.think .modal{grid-template-columns:1fr;gap:2px}
+.cursemsg{min-height:1.4em;text-align:center;font-size:clamp(18px,min(2vw,3.6vh),30px);font-weight:800;color:var(--candle)}
+.bonus.closed{cursor:not-allowed}
+/* ---------- ending ---------- */
+.ending{align-items:center;justify-content:center;gap:var(--s3);text-align:center}
+.bigdoor{position:relative;height:min(36vh,330px);aspect-ratio:.62;margin-top:var(--s3);perspective:900px}
+.bigdoor .light{position:absolute;inset:0;border-radius:50% 50% 0 0/30% 30% 0 0;background:radial-gradient(ellipse at 50% 60%,#fff8dc,var(--candle) 45%,var(--pumpkin));box-shadow:0 0 120px 40px rgba(255,200,87,.5)}
+.bigdoor .leaf{position:absolute;top:0;bottom:0;width:50%;background:repeating-linear-gradient(90deg,#3b2214 0 18px,#2e1a0f 18px 22px);border:4px solid #1a0e07;transition:transform 2.2s var(--out)}
+.bigdoor .leaf.l{left:0;border-radius:100% 0 0 0/30% 0 0 0;transform-origin:0 50%}
+.bigdoor .leaf.r{right:0;border-radius:0 100% 0 0/0 30% 0 0;transform-origin:100% 50%}
+.bigdoor.open .leaf.l{transform:rotateY(-105deg)}
+.bigdoor.open .leaf.r{transform:rotateY(105deg)}
+.ending h2{font-family:var(--display);font-weight:400;font-size:clamp(48px,5.4vw,92px);color:var(--candle);line-height:.95;text-shadow:0 0 30px rgba(255,200,87,.5)}
+.ending .sub{font-family:var(--serif);font-style:italic;font-size:clamp(20px,1.9vw,30px);color:var(--bone-dim)}
+.podium{display:flex;gap:var(--s2);flex-wrap:wrap;justify-content:center}
+.pod{padding:12px 20px;border-radius:16px;background:rgba(13,8,24,.6);border:2px solid var(--tc);font-weight:800;font-size:22px;color:var(--tc);animation:enter .5s var(--out) both;animation-delay:var(--d)}
+.pod.win{background:var(--tc);color:#120a20;transform:scale(1.12)}
+
+.credit{position:fixed;left:var(--s4);bottom:6px;font-size:12px;color:rgba(243,233,210,.45);z-index:3}
+
+
+/* ---------- map bonus spots ---------- */
+.bonus{cursor:pointer}
+.bonus .bpanel{fill:rgba(143,240,214,.12);stroke:var(--ghost);stroke-width:3;stroke-dasharray:8 6;animation:roomFlicker 4s ease-in-out infinite}
+.bonus .blabel{font-family:var(--display);fill:var(--ghost);font-size:26px;pointer-events:none}
+.bonus .btag{font-family:var(--ui);font-weight:800;font-size:15px;fill:#062a22;pointer-events:none}
+.bonus .btagbg{fill:var(--ghost)}
+.bonus.done .bpanel{fill:rgba(143,240,214,.03);stroke:#4a3570;animation:none}
+.bonus.done .blabel{fill:#7d6aa3}.bonus.done .btagbg{fill:#7d6aa3}
+.bonus:hover .bpanel{stroke:var(--candle)}
+#skipBtn.armed{background:var(--blood);color:#fff;border-color:var(--blood)}
+
+/* ---------- mini-games ---------- */
+.lobby{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:min(var(--s3),2.4vh);min-height:0}
+.minitable{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--s2);width:100%;max-width:1100px}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:min(14px,1.4vh) 20px;border-radius:16px;background:rgba(13,8,24,.6);border:2px solid color-mix(in srgb,var(--tc) 50%,transparent);font-weight:800;font-size:clamp(17px,min(1.6vw,3vh),24px);color:var(--tc)}
+.mrow b{font-family:var(--display);font-weight:400;font-size:1.7em;color:var(--candle)}
+.mrow.now{border-color:var(--tc);box-shadow:0 0 24px color-mix(in srgb,var(--tc) 40%,transparent)}
+.mrow.win{background:var(--tc);color:#120a20}.mrow.win b{color:#120a20}
+.arena{position:relative;flex:1;min-height:0;margin:min(var(--s2),1.4vh) 0;border-radius:24px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;
+  border:3px solid rgba(243,233,210,.25);box-shadow:inset 0 0 80px rgba(0,0,0,.6)}
+.arena.garden{background:
+  radial-gradient(ellipse 30% 40% at 85% 10%,rgba(255,245,200,.2),transparent 70%),
+  linear-gradient(180deg,#1b1235 0%,#2a1b48 55%,#1d3a24 56%,#122616 100%)}
+.arena.garden::before{content:"";position:absolute;left:0;right:0;top:54%;height:22px;background:repeating-linear-gradient(90deg,#0b0614 0 10px,transparent 10px 38px);opacity:.9}
+.arena.bell{background:
+  radial-gradient(circle at 50% 38%,rgba(255,200,87,.16),transparent 45%),
+  linear-gradient(180deg,#140c24,#25163d 60%,#1a1030)}
+.arena.bell::before{content:"🔔";position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:min(36vh,300px);opacity:.14;filter:grayscale(.3)}
+.arena.bell::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(90deg,#0b0614 0 6%,transparent 6% 94%,#0b0614 94%),
+  repeating-linear-gradient(0deg,transparent 0 60px,rgba(0,0,0,.18) 60px 64px);pointer-events:none}
+.hud{position:absolute;top:12px;left:0;right:0;display:flex;justify-content:center;gap:var(--s4);z-index:5;font-weight:800;font-size:clamp(18px,min(2vw,3.6vh),30px);pointer-events:none}
+.hud span{background:rgba(13,8,24,.7);padding:6px 18px;border-radius:999px;border:2px solid rgba(243,233,210,.25)}
+.count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:min(30vh,260px);color:var(--candle);text-shadow:0 0 40px rgba(255,200,87,.7);z-index:6;animation:popIn .5s var(--spring)}
+.ent{position:absolute;left:0;top:0;line-height:1;cursor:crosshair;will-change:transform;padding:10px}
+.zombie{font-size:clamp(44px,min(6vw,11vh),96px)}
+.zombie .bob{display:inline-block;animation:shamble .7s ease-in-out infinite alternate}
+@keyframes shamble{from{transform:rotate(-7deg) translateY(0)}to{transform:rotate(6deg) translateY(-6px)}}
+.zombie.down .bob{animation:fall .5s ease-in forwards}
+@keyframes fall{to{transform:rotate(-90deg) translateY(20px);opacity:0}}
+.zombie.breach .bob{animation:fall .5s ease-in forwards;filter:hue-rotate(90deg)}
+.base{position:absolute;left:0;top:0;bottom:0;width:11%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--tc) 30%,#0d0818),transparent);border-right:4px solid var(--tc);z-index:2;pointer-events:none}
+.base .doorE{font-size:clamp(40px,min(5vw,9vh),80px)}
+.base .thrower{font-size:clamp(34px,min(4vw,7vh),64px);animation:bob 2.5s ease-in-out infinite}
+.proj{position:absolute;left:0;top:0;font-size:clamp(30px,min(3.6vw,6.5vh),56px);margin:-.5em 0 0 -.5em;pointer-events:none;z-index:4}
+.splat{position:absolute;left:0;top:0;font-size:clamp(50px,min(6vw,11vh),100px);margin:-.5em 0 0 -.5em;pointer-events:none;z-index:4}
+.batE{font-size:clamp(40px,min(5vw,9vh),84px)}
+.batE .flap{display:inline-block;animation:flap .22s ease-in-out infinite alternate}
+@keyframes flap{from{transform:scaleY(1) rotate(-6deg)}to{transform:scaleY(.7) rotate(6deg)}}
+.batE.gold .flap{filter:sepia(1) saturate(6) hue-rotate(-12deg) brightness(1.25) drop-shadow(0 0 12px #ffc857)}
+.batE.caught .flap{animation:none;transition:transform .35s ease-in,opacity .35s;transform:scale(.2) rotate(180deg);opacity:0}
+.plus{position:absolute;left:0;top:0;font-family:var(--display);font-size:clamp(30px,min(3.4vw,6vh),54px);color:var(--candle);pointer-events:none;z-index:5;text-shadow:0 0 14px rgba(255,200,87,.8)}
+.timeup{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(13,8,24,.72);z-index:8;animation:enter .4s var(--out)}
+.timeup b{font-family:var(--display);font-weight:400;font-size:clamp(50px,min(7vw,13vh),120px);color:var(--candle);line-height:1}
+.timeup span{font-size:clamp(22px,min(2.4vw,4.4vh),36px);font-weight:800}
+.arena.shake{animation:shake .38s var(--out)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media (max-width:900px){
+  .intro{flex-direction:column;gap:var(--s3)} .intro svg.door{height:34vh}
+  .briefgrid{grid-template-columns:1fr} .teamgrid{grid-template-columns:1fr 1fr}
+  .hallgrid{grid-template-columns:repeat(3,1fr);grid-template-rows:none} .graves{grid-template-columns:repeat(4,1fr);grid-template-rows:none}
+  .book{grid-template-columns:1fr} .clues{grid-template-columns:1fr 1fr} .modal{grid-template-columns:1fr}
+  #stage{overflow:auto}
+}
+</style>
+</head>
+<body>
+<div id="sky"><div class="moon"></div><div class="fog"></div><div class="fog f2"></div></div>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">Hollow Lane</div>
+    <div class="where" id="where"></div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="skipBtn" hidden>⏭ Skip</button>
+    <button class="iconbtn" id="mapBtn" hidden>🏚️ House map</button>
+    <button class="iconbtn" id="soundBtn">🔊 Sound on</button>
+  </header>
+  <main id="stage"></main>
+  <footer id="scorebar"></footer>
+</div>
+<div id="lightning"></div>
+<div id="blackout"></div>
+<div class="credit">Class of Coffee – with AI assistance</div>
+
+<script>
+/* =========================================================
+   CONTENT
+   ========================================================= */
+const TEAM_PRESETS = [
+  {name:'The Ghouls',    emoji:'👻', color:'#8ff0d6'},
+  {name:'The Pumpkins',  emoji:'🎃', color:'#ff7b1c'},
+  {name:'The Bats',      emoji:'🦇', color:'#b78cff'},
+  {name:'The Spiders',   emoji:'🕷️', color:'#ff6f91'},
+  {name:'The Skeletons', emoji:'💀', color:'#f3e9d2'},
+  {name:'The Witches',   emoji:'🧹', color:'#ffc857'},
+];
+
+const HALL_POOL = [
+  {w:'whisper',e:'🤫'},{w:'scream',e:'😱'},{w:'knock',e:'🚪'},{w:'shiver',e:'🥶'},{w:'footsteps',e:'👣'},
+  {w:'disappear',e:'💨'},{w:'shadow',e:'👤'},{w:"spider's web",e:'🕸️'},{w:'candle',e:'🕯️'},{w:'haunted',e:'👻'},
+  {w:'skeleton',e:'💀'},{w:'coffin',e:'⚰️'},{w:'crawl',e:'🕷️'},{w:'hide',e:'🙈'},{w:'chains',e:'⛓️'},
+  {w:'scratch',e:'🐾'},{w:'full moon',e:'🌕'},{w:'gravestone',e:'🪦'},{w:'rusty key',e:'🗝️'},{w:'freeze',e:'🧊'},
+  {w:'bat',e:'🦇'},{w:'owl',e:'🦉'},{w:'broomstick',e:'🧹'},{w:'mask',e:'🎭'},{w:'pumpkin',e:'🎃'},
+  {w:'wolf',e:'🐺'},{w:'potion',e:'🧪'},{w:'bones',e:'🦴'},{w:'vampire',e:'🧛'},{w:'zombie',e:'🧟'},
+  {w:'witch',e:'🧙'},{w:'fog',e:'🌫️'},{w:'thunder',e:'🌩️'},{w:'lantern',e:'🏮'},{w:'ladder',e:'🪜'},
+  {w:'blood',e:'🩸'},{w:'trap',e:'🪤'},{w:'poison',e:'☠️'},{w:'dagger',e:'🗡️'},{w:'crystal ball',e:'🔮'},
+];
+const HALL_ROUNDS = 6;
+
+const LIB_PAGES = [
+  { title:'The Restless History of Halloween', paras:[
+    'Halloween began more than two thousand years ago as Samhain, a Celtic festival that marked the end of the harvest and the start of winter. People believed that on this night the boundary between the living and the dead became thin, so they lit bonfires and wore disguises to confuse wandering spirits. Centuries later, the Church made 1 November All Saints’ Day, also called All Hallows, and the evening before it became known as All Hallows’ Eve, a name that was eventually shortened to Halloween.',
+    'In Scotland, children later went “guising”: they dressed up and knocked on doors, but they had to perform a song, a joke or a poem before anyone gave them food. They lit their way with lanterns carved from turnips.'
+  ]},
+  { title:'Across the Atlantic', paras:[
+    'When Irish and Scottish immigrants arrived in North America in the nineteenth century, they took these customs with them, and they soon discovered that pumpkins were far easier to carve. By the 1950s, trick-or-treating had become a national ritual in the United States, where Halloween is now one of the most commercially important holidays of the year.',
+    'In England, by contrast, Halloween was long overshadowed by Bonfire Night on 5 November, which remembers the failed attempt by Guy Fawkes and his fellow conspirators to blow up Parliament in 1605. Trick-or-treating only became widespread there from the 1980s, largely through American influence. Even the vocabulary differs: a British child might talk about sweets and fancy dress, where an American child would say candy and costume.'
+  ]}
+];
+
+const LIB_Q = [
+  {s:'The festival takes its name from a religious day that comes after it.', a:'both',
+   why:'“Halloween” is a shortened form of All Hallows’ Eve, the evening before All Saints’ Day on 1 November.'},
+  {s:'Children were expected to do something entertaining before anyone gave them food.', a:'uk',
+   why:'In Scotland, children went “guising” and had to perform a song, a joke or a poem first.'},
+  {s:'A more practical vegetable replaced the one people had traditionally used.', a:'us',
+   why:'Irish and Scottish immigrants found that pumpkins were far easier to carve than turnips.'},
+  {s:'The celebration that used to receive more attention remembers a plan that went wrong.', a:'uk',
+   why:'Bonfire Night remembers the failed attempt to blow up Parliament in 1605.'},
+  {s:'By the middle of the twentieth century, collecting treats had become a tradition across the whole country.', a:'us',
+   why:'By the 1950s, trick-or-treating had become a national ritual in the United States.'},
+  {s:'Going from door to door for treats only became common there in the late twentieth century.', a:'uk',
+   why:'Trick-or-treating became widespread in England from the 1980s, largely through American influence.'},
+  {s:'A child might collect candy while wearing a costume.', a:'us',
+   why:'American English says candy and costume; British English says sweets and fancy dress.'},
+];
+
+const GRAVE_PAIRS = [
+  ['scary','terrifying','an absolutely terrifying scream'],
+  ['cold','freezing','an absolutely freezing cellar'],
+  ['dirty','filthy','absolutely filthy windows'],
+  ['old','ancient','an absolutely ancient gravestone'],
+  ['big','enormous','an absolutely enormous spider'],
+  ['tired','exhausted','an absolutely exhausted vampire'],
+  ['hungry','starving','an absolutely starving zombie'],
+  ['bad','awful','an absolutely awful smell'],
+];
+
+const ATTIC_STORY = 'Every Halloween, old Edgar Hollow climbed to the attic of his house to light a candle for his little sister, Agnes, who disappeared there exactly fifty years ago. Last Halloween, he went up at midnight as usual. In the morning, his housekeeper found the attic door locked, so she broke it down. Edgar had vanished. These are the clues she found.';
+const ATTIC_CLUES = [
+  {e:'🔑', t:'The key was still in the lock, on the inside of the door.'},
+  {e:'🪟', t:'The window was shut, and the thick dust on the windowsill had not been touched.'},
+  {e:'🕯️', t:'The candle had burnt down completely, and its wax had dripped onto an old photograph of a little girl.'},
+  {e:'👣', t:'There were two sets of footprints in the dust: a man’s boots and a child’s bare feet. Both lead to the back wall and stop there.'},
+  {e:'🎶', t:'An old music box was open and still playing when she came in, although it only plays for a minute after someone winds it up.'},
+];
+const MODALS = [
+  {m:'must have', c:'var(--pumpkin)', use:'You are almost sure it happened.', ex:'The housekeeper must have been terrified.'},
+  {m:'might have / could have', c:'var(--ghost)', use:'It is possible that it happened.', ex:'Edgar might have heard a noise.'},
+  {m:"can't have", c:'#b78cff', use:'You are almost sure it did not happen.', ex:"Agnes can't have been very old."},
+];
+const CURSES = {
+  plus:   {e:'👻', t:'A friendly ghost slips you a key.', fx:'+1 key'},
+  steal:  {e:'🖐️', t:'Your hand passes through the wall…', fx:'Steal a key from any team'},
+  lose:   {e:'🐀', t:'A rat runs off with one of your keys.', fx:'−1 key'},
+  swap:   {e:'🪞', t:'The haunted mirror swaps your fortune.', fx:'Swap totals with the next team below you'},
+  nothing:{e:'🌫️', t:'The curse drifts past you.', fx:'Nothing happens… this time'},
+};
+
+/* =========================================================
+   STATE
+   ========================================================= */
+const KEY = 'hollowlane-v1';
+const DONE0 = ()=>({hall:false,library:false,graveyard:false,attic:false,garden:false,bell:false});
+function fresh(){ return {teams:[], turn:0, done:DONE0(), prog:{}, sound:true}; }
+let S = (()=>{ try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s && s.teams){ s.done=Object.assign(DONE0(), s.done||{}); s.prog=s.prog||{}; return s; } return fresh(); }catch(e){ return fresh(); } })();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+const $ = s => document.querySelector(s);
+const stage = $('#stage');
+let cleanups = [];
+function clearRoom(){ cleanups.forEach(f=>{try{f()}catch(e){}}); cleanups=[]; }
+function later(fn, ms){ const id=setTimeout(fn,ms); cleanups.push(()=>clearTimeout(id)); return id; }
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const esc = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const team = i => S.teams[i];
+
+/* =========================================================
+   SOUND (generated in the browser, no files)
+   ========================================================= */
+const Sound = {
+  ctx:null,
+  init(){ if(!this.ctx){ try{ this.ctx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+          if(this.ctx && this.ctx.state==='suspended') this.ctx.resume(); },
+  ok(){ return S.sound && this.ctx; },
+  noise(dur){ const c=this.ctx, b=c.createBuffer(1, Math.floor(c.sampleRate*dur), c.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=Math.random()*2-1; const s=c.createBufferSource(); s.buffer=b; return s; },
+  env(g,t,a,peak,dur){ g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(peak,t+a); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); },
+  tone(f,dur,type='sine',vol=.15,when=0,to){ if(!this.ok())return; const c=this.ctx,t=c.currentTime+when,o=c.createOscillator(),g=c.createGain();
+    o.type=type; o.frequency.setValueAtTime(f,t); if(to) o.frequency.exponentialRampToValueAtTime(to,t+dur);
+    this.env(g,t,.02,vol,dur); o.connect(g).connect(c.destination); o.start(t); o.stop(t+dur+.05); },
+  thunder(){ if(!this.ok())return; const c=this.ctx,t=c.currentTime,n=this.noise(3),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='lowpass'; f.frequency.setValueAtTime(900,t); f.frequency.exponentialRampToValueAtTime(120,t+2.8);
+    this.env(g,t,.04,.7,2.9); n.connect(f).connect(g).connect(c.destination); n.start(t); },
+  knock(){ if(!this.ok())return; [0,.28,.56].forEach(w=>{ this.tone(95,.16,'triangle',.5,w,60);
+    const c=this.ctx,t=c.currentTime+w,n=this.noise(.08),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='lowpass'; f.frequency.value=700; this.env(g,t,.003,.5,.08); n.connect(f).connect(g).connect(c.destination); n.start(t); }); },
+  creak(){ if(!this.ok())return; const c=this.ctx,t=c.currentTime,o=c.createOscillator(),l=c.createOscillator(),lg=c.createGain(),f=c.createBiquadFilter(),g=c.createGain();
+    o.type='sawtooth'; o.frequency.setValueAtTime(170,t); o.frequency.linearRampToValueAtTime(115,t+1.1);
+    l.frequency.value=22; lg.gain.value=28; l.connect(lg).connect(o.frequency);
+    f.type='bandpass'; f.frequency.value=950; f.Q.value=7; this.env(g,t,.15,.12,1.2);
+    o.connect(f).connect(g).connect(c.destination); o.start(t); l.start(t); o.stop(t+1.3); l.stop(t+1.3); },
+  whoosh(){ if(!this.ok())return; const c=this.ctx,t=c.currentTime,n=this.noise(.9),f=c.createBiquadFilter(),g=c.createGain();
+    f.type='bandpass'; f.Q.value=1.5; f.frequency.setValueAtTime(300,t); f.frequency.exponentialRampToValueAtTime(2400,t+.8);
+    this.env(g,t,.2,.25,.9); n.connect(f).connect(g).connect(c.destination); n.start(t); },
+  chime(){ [880,1175,1568].forEach((f,i)=>this.tone(f,.7,'triangle',.12,i*.08)); },
+  wrong(){ this.tone(150,.45,'sawtooth',.09,0,80); },
+  tick(){ this.tone(1200,.05,'square',.04); },
+  win(){ [523,659,784,1047,1319].forEach((f,i)=>this.tone(f,.6,'triangle',.12,i*.11)); },
+  ghost(){ this.tone(520,1.4,'sine',.08,0,300); this.tone(780,1.4,'sine',.05,.1,450); },
+};
+function syncSoundBtn(){ $('#soundBtn').textContent = S.sound ? '🔊 Sound on' : '🔇 Sound off'; }
+$('#soundBtn').onclick = ()=>{ Sound.init(); S.sound=!S.sound; save(); syncSoundBtn(); };
+syncSoundBtn();
+
+/* =========================================================
+   ATMOSPHERE
+   ========================================================= */
+(function stars(){ const sky=$('#sky'); for(let i=0;i<70;i++){ const s=document.createElement('div'); s.className='star';
+  s.style.left=Math.random()*100+'vw'; s.style.top=Math.random()*55+'vh'; s.style.animationDelay=(Math.random()*4)+'s';
+  if(Math.random()<.2){s.style.width=s.style.height='3px'} sky.appendChild(s);} })();
+function flyBat(){
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const b=document.createElement('div'); b.className='bat'; b.textContent='🦇'; document.body.appendChild(b);
+  const y=5+Math.random()*35, ltr=Math.random()<.5, dur=6000+Math.random()*3000;
+  b.animate([
+    {transform:`translate(${ltr?-10:110}vw, ${y}vh) scale(${ltr?1:-1},1)`},
+    {transform:`translate(50vw, ${y-6+Math.random()*12}vh) scale(${ltr?1:-1},1)`, offset:.5},
+    {transform:`translate(${ltr?110:-10}vw, ${y+Math.random()*8}vh) scale(${ltr?1:-1},1)`}
+  ],{duration:dur,easing:'ease-in-out'}).onfinish=()=>b.remove();
+}
+setInterval(()=>{ if(Math.random()<.55) flyBat(); }, 9000);
+function batBurst(n=14){ for(let i=0;i<n;i++) setTimeout(()=>{
+  const b=document.createElement('div'); b.className='bat'; b.textContent=['🦇','🦇','🍬','🎃','🍭'][i%5]; document.body.appendChild(b);
+  const x=window.innerWidth/2, y=window.innerHeight/2, a=Math.random()*Math.PI*2, d=300+Math.random()*500;
+  b.animate([{transform:`translate(${x}px,${y}px) scale(.4)`,opacity:1},{transform:`translate(${x+Math.cos(a)*d}px,${y+Math.sin(a)*d}px) scale(1.3) rotate(${Math.random()*360}deg)`,opacity:0}],
+    {duration:1800+Math.random()*800,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>b.remove(); }, i*45); }
+
+function lightning(){ const l=$('#lightning'); l.classList.remove('go'); void l.offsetWidth; l.classList.add('go'); }
+function blackout(onDark){
+  const b=$('#blackout'); b.classList.remove('go'); void b.offsetWidth; b.classList.add('go');
+  Sound.thunder(); later(onDark, 700);
+}
+
+/* =========================================================
+   SCOREBOARD
+   ========================================================= */
+function renderScore(){
+  const bar=$('#scorebar');
+  if(!S.teams.length || !inGame){ bar.innerHTML=''; return; }
+  bar.innerHTML = S.teams.map((t,i)=>`
+    <div class="chip ${showTurn&&i===activeTeam()?'active':''}" data-i="${i}" style="--tc:${t.color}">
+      <span class="em">${t.emoji}</span><span class="nm">${esc(t.name)}</span>
+      <span class="k">${t.keys}<small>🗝️</small></span>
+      <span class="adj"><button data-a="-1" title="Remove a key">−</button><button data-a="1" title="Add a key">+</button></span>
+    </div>`).join('');
+  bar.querySelectorAll('.adj button').forEach(b=>b.onclick=e=>{
+    const i=+b.closest('.chip').dataset.i; award(i,+b.dataset.a,true); });
+}
+let inGame=false, showTurn=true;
+let turnOverride=null; // used for steals
+function activeTeam(){ return turnOverride!=null ? turnOverride : S.turn; }
+function nextTurn(){ turnOverride=null; S.turn=(S.turn+1)%S.teams.length; save(); renderScore(); }
+function bumpChip(i){ const c=document.querySelector(`.chip[data-i="${i}"]`); if(c){c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump');} }
+function flyKey(i, from){
+  const c=document.querySelector(`.chip[data-i="${i}"]`); if(!c) return;
+  const r=c.getBoundingClientRect(), k=document.createElement('div'); k.className='flykey'; k.textContent='🗝️'; document.body.appendChild(k);
+  const sx=from?from.x:window.innerWidth/2, sy=from?from.y:window.innerHeight/2;
+  k.animate([{transform:`translate(${sx-27}px,${sy-27}px) scale(.6) rotate(0)`,opacity:0},
+             {transform:`translate(${sx-27}px,${sy-90}px) scale(1.4) rotate(-20deg)`,opacity:1,offset:.3},
+             {transform:`translate(${r.left+r.width-50}px,${r.top}px) scale(.5) rotate(200deg)`,opacity:.9}],
+            {duration:950,easing:'cubic-bezier(.5,0,.3,1)'}).onfinish=()=>{k.remove(); bumpChip(i);};
+}
+function award(i,n=1,manual=false,from){
+  const t=team(i); const before=t.keys; t.keys=Math.max(0,t.keys+n); save();
+  if(n>0){ Sound.chime(); for(let k=0;k<n;k++) setTimeout(()=>flyKey(i,from), k*220); setTimeout(renderScore, 950+(n-1)*220); }
+  else { if(t.keys!==before) Sound.wrong(); renderScore(); bumpChip(i); }
+}
+
+function turnBanner(extra=''){
+  const i=activeTeam(), t=team(i), steal = turnOverride!=null;
+  return `<div class="turnbanner pop" style="--tc:${t.color}">${t.emoji} ${esc(t.name)}, your turn ${steal?'<span class="steal">steal!</span>':''}${extra}</div>`;
+}
+
+/* =========================================================
+   TIMER (a burning candle)
+   ========================================================= */
+function candleTimer(el, secs, onEnd){
+  let left=secs, total=secs, done=false;
+  el.innerHTML=`<div class="timer"><div class="candle"><div class="wax"></div><div class="flame"></div></div><div class="tnum"></div></div>`;
+  const wax=el.querySelector('.wax'), flame=el.querySelector('.flame'), num=el.querySelector('.tnum'), box=el.querySelector('.timer');
+  function draw(){ const h=8+62*(left/total); wax.style.height=h+'px'; flame.style.bottom=(h+4)+'px'; num.textContent=left; box.classList.toggle('low', left<=5); }
+  draw();
+  const iv=setInterval(()=>{ left=Math.max(0,left-1); draw(); if(left>0&&left<=5) Sound.tick(); if(left<=0) finish(); },1000);
+  function stop(){ clearInterval(iv); }
+  function finish(){ if(done) return; done=true; stop(); onEnd&&onEnd(); }
+  cleanups.push(stop);
+  return { add(s){ left+=s; total=Math.max(total,left); draw(); }, finish, stop };
+}
+
+/* =========================================================
+   SCREENS
+   ========================================================= */
+function setWhere(t){ $('#where').textContent=t||''; }
+function show(html, cls=''){ clearRoom(); document.body.classList.toggle('open-sky', ['intro','setup','brief','ending','map'].includes(cls)); turnOverride=null; stage.innerHTML=`<section class="screen ${cls}">${html}</section>`; return stage.firstElementChild; }
+
+/* ---------- intro ---------- */
+function renderIntro(){
+  inGame=false; renderScore(); $('#mapBtn').hidden=true; $('#skipBtn').hidden=true; setWhere('');
+  const hasGame = S.teams.length>0;
+  const sc = show(`
+    <svg class="door" viewBox="0 0 220 340" aria-hidden="true">
+      <defs><radialGradient id="dg" cx="50%" cy="35%" r="70%"><stop offset="0" stop-color="#ffc857"/><stop offset=".6" stop-color="#ff7b1c"/><stop offset="1" stop-color="#5a1f00"/></radialGradient></defs>
+      <path d="M10 340 V110 A100 100 0 0 1 210 110 V340 Z" fill="#1a0e07" stroke="#5a4386" stroke-width="6"/>
+      <path d="M26 340 V114 A84 84 0 0 1 194 114 V340 Z" fill="#3b2214"/>
+      ${[0,1,2,3,4,5].map(i=>`<rect x="${32+i*27}" y="40" width="4" height="300" fill="#2a170c"/>`).join('')}
+      <path d="M70 70 A40 40 0 0 1 150 70 Z" fill="url(#dg)" opacity=".9"/>
+      <circle cx="110" cy="190" r="22" fill="none" stroke="#c9a23a" stroke-width="7"/>
+      <circle cx="110" cy="168" r="9" fill="#c9a23a"/>
+      <circle cx="165" cy="230" r="8" fill="#c9a23a"/>
+      <text x="110" y="300" text-anchor="middle" font-size="40">🎃</text>
+    </svg>
+    <div>
+      <h1 class="title">The House<span>on Hollow Lane</span></h1>
+      <p class="tagline">Four rooms. One way out. Collect the keys before the house collects you.</p>
+      <div class="controls" style="justify-content:flex-start">
+        <button class="btn" id="knock">✊ Knock to enter</button>
+        ${hasGame?'<button class="btn ghost" id="cont">Continue the game</button>':''}
+      </div>
+    </div>`, 'intro');
+  sc.querySelector('#knock').onclick=()=>{ Sound.init(); Sound.knock(); const d=sc.querySelector('.door'); d.classList.add('knocked'); later(()=>{ Sound.creak(); renderSetup(); }, 1000); };
+  if(hasGame) sc.querySelector('#cont').onclick=()=>{ Sound.init(); Sound.creak(); renderMap(); };
+}
+
+/* ---------- setup ---------- */
+let draftCount=4, draftNames=TEAM_PRESETS.map(t=>t.name);
+function renderSetup(){
+  setWhere('Who dares to enter?');
+  const sc=show(`
+    <h2>Who dares to enter?</h2>
+    <div class="stepper"><span>Teams</span><button id="minus" aria-label="Fewer teams">−</button><span class="n" id="n">${draftCount}</span><button id="plus" aria-label="More teams">+</button></div>
+    <div class="teamgrid" id="tg"></div>
+    <div class="controls"><button class="btn" id="go">Continue</button></div>`, 'setup');
+  const draw=()=>{ sc.querySelector('#n').textContent=draftCount;
+    sc.querySelector('#tg').innerHTML=TEAM_PRESETS.slice(0,draftCount).map((t,i)=>`
+      <label class="teamrow" style="--tc:${t.color};animation-delay:${i*80}ms"><span class="em">${t.emoji}</span>
+      <input value="${esc(draftNames[i])}" data-i="${i}" maxlength="18" aria-label="Team ${i+1} name"></label>`).join('');
+    sc.querySelectorAll('input').forEach(inp=>inp.oninput=()=>draftNames[+inp.dataset.i]=inp.value); };
+  draw();
+  sc.querySelector('#minus').onclick=()=>{ if(draftCount>2){draftCount--; draw();} };
+  sc.querySelector('#plus').onclick=()=>{ if(draftCount<6){draftCount++; draw();} };
+  sc.querySelector('#go').onclick=()=>{
+    const snd=S.sound; S=fresh(); S.sound=snd;
+    S.teams=TEAM_PRESETS.slice(0,draftCount).map((t,i)=>({...t, name:(draftNames[i]||t.name).trim()||t.name, keys:0}));
+    save(); renderBriefing(); };
+}
+
+/* ---------- briefing ---------- */
+function renderBriefing(){
+  setWhere('Before you go in');
+  const items=[
+    ['🕯️','The Hall','Halloween vocabulary and visual memory','var(--candle)'],
+    ['📚','The Library','Understanding paraphrase in a reading text','#b78cff'],
+    ['🪦','The Graveyard','Base and extreme adjectives: cold → freezing','var(--ghost)'],
+    ['🕸️','The Attic','Deduction with must have, might have and can’t have','var(--pumpkin)'],
+  ];
+  const sc=show(`
+    <h2>Before you go in</h2>
+    <div class="briefgrid">
+      <div class="practise">${items.map((it,i)=>`<div class="pr" style="--c:${it[3]};animation-delay:${i*120}ms"><span class="e">${it[0]}</span><div><b>${it[1]}</b><span>${it[2]}</span></div></div>`).join('')}</div>
+      <div class="rules"><h3>How to escape</h3>
+        <p>Teams take turns. A correct answer earns a key 🗝️.</p>
+        <p>If a team gets it wrong, the next team can steal.</p>
+        <p>Two bonus games, in the Garden and the Bell Tower, give an extra key to the best team.</p>
+        <p>At the end, the team with the most keys opens the front door and escapes. Everyone else stays in the house… forever.</p>
+      </div>
+    </div>
+    <div class="controls"><button class="btn" id="go">🏚️ Enter the house</button></div>`, 'brief');
+  sc.querySelector('#go').onclick=()=>{ Sound.creak(); renderMap(); };
+}
+
+/* ---------- map ---------- */
+const ORDER=['hall','library','graveyard','attic'];
+const ROOM_NAMES={hall:'The Hall',library:'The Library',graveyard:'The Graveyard',attic:'The Attic'};
+let current=null;
+function nextRoom(){ return ORDER.find(r=>!S.done[r]) || null; }
+function renderMap(){
+  inGame=true; showTurn=true; current=null; $('#mapBtn').hidden=true; $('#skipBtn').hidden=true; setWhere('The house map');
+  const nx=nextRoom(), st=r=>S.done[r]?'done':(r===nx?'next':'locked'), allDone=!nx, bs=k=>S.done[k]?'done':(S.done.attic?'done closed':'open');
+  const sc=show(`
+    <div class="mapwrap">
+    <svg class="mapsvg" viewBox="-50 -10 1050 550" role="img" aria-label="Map of the haunted house">
+      <defs>
+        <linearGradient id="litG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset=".55" stop-color="#ffb347"/><stop offset="1" stop-color="#ff7b1c"/></linearGradient>
+        <linearGradient id="doneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1f4a4a"/><stop offset="1" stop-color="#12263a"/></linearGradient>
+      </defs>
+      <path d="M-50 492 Q250 470 520 494 T1000 480 L1000 540 L-50 540 Z" fill="#0b0614"/>
+      <path d="M940 492 C930 420 945 380 925 330 M932 380 C900 360 885 340 870 300 M930 352 C960 330 975 300 990 280 M927 330 C915 300 920 270 905 245" stroke="#0b0614" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <polygon points="118,198 370,30 622,198" fill="#0f0920" stroke="#4a3570" stroke-width="5"/>
+      <rect x="148" y="196" width="444" height="300" fill="#140c24" stroke="#4a3570" stroke-width="5"/>
+      ${room('attic',st('attic'),`<polygon class="panel" points="225,184 370,90 515,184"/>`,
+        `<path class="silh" d="M250 184 L300 150 M300 150 L300 184 M330 130 q40 -14 80 0" stroke="#0d0818" stroke-width="5" fill="none"/>`, 370,168,'4')}
+      ${room('library',st('library'),`<rect class="panel" x="172" y="212" width="396" height="122" rx="4"/>`,
+        `<g class="silh">${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${190+i*22}" y="${232+(i%3)*4}" width="16" height="${60-(i%3)*4}"/>`).join('')}<rect x="185" y="294" width="185" height="6"/>${[0,1,2,3,4,5].map(i=>`<rect x="${420+i*22}" y="${236+(i%2)*6}" width="16" height="${56-(i%2)*6}"/>`).join('')}<rect x="415" y="294" width="140" height="6"/></g>`, 370,322,'2')}
+      ${room('hall',st('hall'),`<rect class="panel" x="172" y="350" width="262" height="132" rx="4"/>`,
+        `<g class="silh"><path d="M190 482 h30 v-16 h30 v-16 h30 v-16 h30 v-16 h30" fill="none" stroke="#0d0818" stroke-width="8"/><path d="M340 352 v18 M320 372 h40 l-8 14 h-24 z"/></g>`, 303,470,'1')}
+      <!-- bell tower (bonus) -->
+      <g class="bonus ${bs('bell')}" data-bonus="bell" tabindex="0" role="button" aria-label="The Bell Tower, bonus game">
+        <rect x="466" y="0" width="186" height="148" fill="transparent"/>
+        <rect x="466" y="46" width="68" height="120" fill="#140c24" stroke="#4a3570" stroke-width="4"/>
+        <polygon points="456,50 500,2 544,50" fill="#0f0920" stroke="#4a3570" stroke-width="4"/>
+        <rect class="bpanel" x="478" y="62" width="44" height="64" rx="20"/>
+        <text x="500" y="108" text-anchor="middle" font-size="30">🔔</text>
+        <text class="blabel" x="556" y="44">Bell Tower</text>
+        ${btag(556,54,'bell')}
+      </g>
+      <!-- garden (bonus) -->
+      <g class="bonus ${bs('garden')}" data-bonus="garden" tabindex="0" role="button" aria-label="The Garden, bonus game">
+        <rect x="-44" y="318" width="156" height="174" fill="transparent"/>
+        <rect class="bpanel" x="-40" y="356" width="148" height="132" rx="16"/>
+        <text x="-20" y="474" font-size="30">🎃</text><text x="30" y="482" font-size="22">🎃</text><text x="56" y="440" font-size="34">🧟</text><text x="-28" y="420" font-size="24">🪦</text>
+        <text class="blabel" x="34" y="340" text-anchor="middle">Garden</text>
+        ${btag(4,384,'garden')}
+      </g>
+      <g id="doorG" class="${allDone?'open':''}" tabindex="0" role="button" aria-label="Front door">
+        <path class="doorpanel" d="M455 494 V412 A47 47 0 0 1 549 412 V494 Z" fill="#2a170c" stroke="#5a4386" stroke-width="4"/>
+        <circle cx="530" cy="452" r="5" fill="#c9a23a"/>
+        <text x="502" y="440" text-anchor="middle" font-size="30">${allDone?'✨':'🔒'}</text>
+      </g>
+      ${room('graveyard',st('graveyard'),`<rect class="panel" x="645" y="330" width="250" height="160" rx="18"/>`,
+        `<g fill="#3a3249" stroke="#120d1c" stroke-width="3"><path d="M680 470 v-50 a22 22 0 0 1 44 0 v50 z"/><path d="M745 474 v-66 a26 26 0 0 1 52 0 v66 z"/><path d="M820 470 v-44 a20 20 0 0 1 40 0 v44 z"/><rect x="866" y="425" width="8" height="45"/><rect x="852" y="438" width="36" height="8"/></g>`, 770,366,'3', true)}
+      <g stroke="#0b0614" stroke-width="6">${Array.from({length:14},(_,i)=>`<line x1="${640+i*20}" y1="492" x2="${640+i*20}" y2="462"/>`).join('')}<line x1="636" y1="474" x2="906" y2="474"/></g>
+    </svg></div>
+    <p class="maphint">${allDone?'You have explored every room. Click the front door to see who escapes.':`Next: ${ROOM_NAMES[nx]}. Click it to go in.`} ${S.done.attic?'':'The Garden and the Bell Tower are bonus games that you can play at any time before the cursed cards.'}</p>`, 'map');
+  sc.querySelectorAll('.room').forEach(g=>{ g.onclick=()=>{ Sound.creak(); enterRoom(g.dataset.room); }; });
+  sc.querySelectorAll('.bonus').forEach(g=>{ g.onclick=()=>{ const k=g.dataset.bonus;
+    if(S.done[k] || S.done.attic){ Sound.knock(); sc.querySelector('.maphint').textContent = S.done[k] ? 'This bonus game has already been played.' : 'The bonus games closed when the cursed cards were drawn.'; return; }
+    Sound.creak(); enterRoom(k); }; });
+  sc.querySelectorAll('[role=button]').forEach(g=>g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); g.dispatchEvent(new MouseEvent('click',{bubbles:true})); } }));
+  const door=sc.querySelector('#doorG');
+  door.onclick=()=>{ if(allDone){ Sound.creak(); renderEnding(); } else { Sound.knock(); door.classList.add('shake'); later(()=>door.classList.remove('shake'),400);
+    sc.querySelector('.maphint').textContent='The door is locked. Explore every room first.'; } };
+  renderScore();
+}
+function btag(x,y,k){ const t=S.done[k]?'✓ played':(S.done.attic?'closed':'bonus'), w=t.length*8.4+18;
+  return `<rect class="btagbg" x="${x}" y="${y}" width="${w}" height="22" rx="11"/><text class="btag" x="${x+w/2}" y="${y+16}" text-anchor="middle">${t}</text>`; }
+function room(id,state,panel,silh,lx,ly,num,isGrave){
+  return `<g class="room ${state} ${isGrave?'gravezone':''}" data-room="${id}" tabindex="0" role="button" aria-label="${ROOM_NAMES[id]}">
+    ${panel}${silh}
+    <circle class="numc" cx="${lx-ROOM_NAMES[id].length*7.2-22}" cy="${ly-10}" r="15"/><text class="num" x="${lx-ROOM_NAMES[id].length*7.2-22}" y="${ly-3}" text-anchor="middle">${state==='done'?'✓':num}</text>
+    <text class="label" x="${lx}" y="${ly}" text-anchor="middle">${ROOM_NAMES[id]}</text></g>`;
+}
+function enterRoom(r){
+  current=r; $('#mapBtn').hidden=false; $('#skipBtn').hidden=false; disarmSkip();
+  showTurn = !(r==='attic' || r==='garden' || r==='bell');
+  ({hall:renderHall,library:renderLibrary,graveyard:renderGraveyard,attic:renderAttic,garden:()=>renderMini('garden'),bell:()=>renderMini('bell')})[r](); renderScore();
+}
+$('#mapBtn').onclick=()=>{ Sound.creak(); renderMap(); };
+let skipArmed=null;
+function disarmSkip(){ clearTimeout(skipArmed); skipArmed=null; const b=$('#skipBtn'); b.classList.remove('armed'); b.textContent='⏭ Skip'; }
+$('#skipBtn').onclick=()=>{
+  const b=$('#skipBtn');
+  if(!skipArmed){ b.classList.add('armed'); b.textContent='Skip this activity? Click again'; skipArmed=setTimeout(disarmSkip,3000); return; }
+  disarmSkip(); if(current){ S.done[current]=true; save(); } Sound.whoosh(); renderMap();
+};
+function finishRoom(r){ S.done[r]=true; save(); Sound.win(); batBurst(10); later(renderMap, 900); }
+
+/* ---------- 1. Hall (Kim's Game: which picture has changed?) ---------- */
+function frameHTML(it,i){ return `<button class="frame" data-i="${i}" style="--r:${(Math.random()*6-3).toFixed(1)}deg;--d:${i*60}ms"><span class="e">${it.e}</span><span class="w">${esc(it.w)}</span></button>`; }
+function renderHall(){ hallRound(Math.min(S.prog.hall||0, HALL_ROUNDS-1)); }
+function hallRound(r){
+  setWhere(`Room 1 · The Hall · Round ${r+1} of ${HALL_ROUNDS}`);
+  const pool=shuffle(HALL_POOL), board=pool.slice(0,10), replacement=pool[10];
+  const starter=S.turn; let swapIdx=-1, attempts=0, resolved=false;
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🕯️</span><div><h2>The Hall</h2><p id="hint">Round ${r+1} of ${HALL_ROUNDS}. Study the pictures on the wall. When the lights come back, one of them will be different.</p></div>
+      <div class="right" id="hr"><div id="tm"></div></div></div>
+    <div class="hallwrap">
+      <div class="hallgrid" id="grid">${board.map(frameHTML).join('')}</div>
+      <aside class="extra" id="extra"><span class="cap">The picture that was here before</span><div class="slot">?</div></aside>
+    </div>
+    <div class="controls" id="ctl"><button class="btn blood" id="out">💡 Lights out</button></div>`);
+  const grid=sc.querySelector('#grid');
+  const timer=candleTimer(sc.querySelector('#tm'), 20, lightsOut);
+  sc.querySelector('#out').onclick=()=>timer.finish();
+  function lightsOut(){
+    sc.querySelector('#ctl').innerHTML='';
+    blackout(()=>{
+      swapIdx=Math.floor(Math.random()*board.length);
+      const f=grid.querySelector(`.frame[data-i="${swapIdx}"]`);
+      f.querySelector('.e').textContent=replacement.e; f.querySelector('.w').textContent=replacement.w;
+      grid.classList.add('guess');
+      sc.querySelector('#hint').textContent='One picture has changed. On your turn, say which one, then click it.';
+      sc.querySelector('#hr').innerHTML=turnBanner();
+      sc.querySelector('#ctl').innerHTML='<button class="btn ghost small" id="rev">Show the answer</button>';
+      sc.querySelector('#rev').onclick=()=>reveal();
+    });
+  }
+  grid.querySelectorAll('.frame').forEach(f=>f.onclick=()=>{
+    if(swapIdx<0 || resolved || f.classList.contains('tried')) return;
+    const i=+f.dataset.i;
+    if(i===swapIdx){ const rc=f.getBoundingClientRect(); award(activeTeam(),1,false,{x:rc.left+rc.width/2,y:rc.top+rc.height/2}); reveal(); }
+    else { Sound.wrong(); f.classList.add('tried','shake'); attempts++;
+      if(attempts>=2 || S.teams.length<2){ reveal(); return; }
+      turnOverride=(starter+attempts)%S.teams.length; renderScore(); sc.querySelector('#hr').innerHTML=turnBanner(); }
+  });
+  function reveal(){
+    if(resolved) return; resolved=true; grid.classList.remove('guess');
+    const f=grid.querySelector(`.frame[data-i="${swapIdx}"]`); f.classList.add('changed');
+    const orig=board[swapIdx];
+    sc.querySelector('#extra').innerHTML=`<span class="cap">It was</span>${frameHTML(orig,99).replace('class="frame"','class="frame orig"')}<span class="cap"><b>${esc(orig.w)}</b> became <b>${esc(replacement.w)}</b></span>`;
+    Sound.ghost();
+    turnOverride=null; S.turn=(starter+1)%S.teams.length; S.prog.hall=r+1; save(); renderScore();
+    sc.querySelector('#hr').innerHTML='';
+    sc.querySelector('#hint').textContent='The ghost of the old picture has returned.';
+    const last=r>=HALL_ROUNDS-1;
+    sc.querySelector('#ctl').innerHTML= last ? '<button class="btn mint" id="nx">🗝️ Leave the hall</button>' : `<button class="btn" id="nx">Next round (${r+2} of ${HALL_ROUNDS})</button>`;
+    sc.querySelector('#nx').onclick=()=> last ? finishRoom('hall') : hallRound(r+1);
+  }
+}
+
+/* ---------- 2. Library ---------- */
+function fitPages(root){
+  const pages=[...root.querySelectorAll('.page')];
+  const run=()=>{ let size=40; const fits=()=>pages.every(p=>p.scrollHeight<=p.clientHeight+1);
+    pages.forEach(p=>p.style.fontSize=size+'px');
+    while(!fits() && size>11){ size-=1; pages.forEach(p=>p.style.fontSize=size+'px'); } };
+  requestAnimationFrame(run);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  window.addEventListener('resize',run); cleanups.push(()=>window.removeEventListener('resize',run));
+}
+function renderLibrary(){
+  setWhere('Room 2 · The Library');
+  if(S.prog.library>0 && S.prog.library<LIB_Q.length){ quiz(S.prog.library); return; }
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">📚</span><div><h2>The Library</h2><p>Read carefully. When the book closes, the questions will use different words.</p></div>
+      <div class="right"><div id="tm"></div></div></div>
+    <div class="book" id="book">${LIB_PAGES.map((p,i)=>`<div class="page ${i?'r':'l'}"><h3>${p.title}</h3>${p.paras.map(x=>`<p>${x}</p>`).join('')}</div>`).join('')}</div>
+    <div class="controls"><button class="btn ghost small" id="more">⏳ +15 seconds</button><button class="btn blood" id="close">📕 Close the book</button></div>`);
+  fitPages(sc);
+  const timer=candleTimer(sc.querySelector('#tm'), 120, closeBook);
+  sc.querySelector('#more').onclick=()=>timer.add(15);
+  sc.querySelector('#close').onclick=()=>timer.finish();
+  function closeBook(){ Sound.whoosh(); lightning(); sc.querySelector('#book').classList.add('closing'); later(()=>quiz(0),1000); }
+}
+function quiz(q){
+  const item=LIB_Q[q], starter=S.turn; let attempts=0;
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">📚</span><div><h2>The Library</h2><p>Does the sentence describe Halloween in the UK, in the USA, or in both?</p></div>
+      <div class="right" id="hr">${turnBanner()}</div></div>
+    <div class="statement">
+      <div class="scard"><span class="qn">Statement ${q+1} of ${LIB_Q.length}</span>${esc(item.s)}</div>
+      <div class="answers">
+        <button class="ans uk" data-a="uk">UK</button><button class="ans us" data-a="us">USA</button><button class="ans both" data-a="both">Both</button>
+      </div>
+      <div id="why"></div>
+    </div>
+    <div class="controls" id="ctl"></div>`);
+  const resolve=(gotIt)=>{
+    sc.querySelectorAll('.ans').forEach(b=>{ b.onclick=null; if(b.dataset.a===item.a) b.classList.add('right'); else b.classList.add('wrong'); });
+    sc.querySelector('#why').innerHTML=`<p class="why">📜 ${esc(item.why)}</p>`;
+    turnOverride=null; S.turn=(starter+1)%S.teams.length; S.prog.library=q+1; save(); renderScore();
+    sc.querySelector('#hr').innerHTML='';
+    const last=q===LIB_Q.length-1;
+    sc.querySelector('#ctl').innerHTML= last? `<button class="btn mint" id="nx">🗝️ Leave the library</button>` : `<button class="btn" id="nx">Next statement</button>`;
+    sc.querySelector('#nx').onclick=()=> last? finishRoom('library') : quiz(q+1);
+  };
+  sc.querySelectorAll('.ans').forEach(b=>b.onclick=()=>{
+    if(b.dataset.a===item.a){ const r=b.getBoundingClientRect(); award(activeTeam(),1,false,{x:r.left+r.width/2,y:r.top}); resolve(true); }
+    else { Sound.wrong(); b.classList.add('wrong'); attempts++;
+      if(attempts>=2 || S.teams.length<2){ resolve(false); return; }
+      turnOverride=(starter+attempts)%S.teams.length; renderScore(); sc.querySelector('#hr').innerHTML=turnBanner(); }
+  });
+}
+
+/* ---------- 3. Graveyard ---------- */
+function renderGraveyard(){
+  setWhere('Room 3 · The Graveyard');
+  const cards=shuffle(GRAVE_PAIRS.flatMap((p,i)=>[{pair:i,w:p[0]},{pair:i,w:p[1]}]));
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🪦</span><div><h2>The Graveyard</h2><p id="hint">The graves are open for a few seconds. Each ordinary adjective has a stronger partner, like cold and freezing. Remember where they are.</p></div>
+      <div class="right" id="hr"><div id="tm"></div></div></div>
+    <div class="graves" id="gv">${cards.map((c,i)=>`<div class="grave up" data-i="${i}" style="--d:${i*50}ms"><div class="in">
+      <div class="f"><span class="rip">R.I.P.</span><span class="n">${i+1}</span></div><div class="b"><span class="w">${esc(c.w)}</span></div></div></div>`).join('')}</div>
+    <p class="phrase" id="ph"></p>
+    <div class="controls" id="ctl"><button class="btn blood" id="shut">⚰️ Close the graves</button></div>`);
+  const graves=[...sc.querySelectorAll('.grave')];
+  const timer=candleTimer(sc.querySelector('#tm'), 12, start);
+  sc.querySelector('#shut').onclick=()=>timer.finish();
+  let open=[], lock=true, matched=0;
+  function start(){
+    graves.forEach(g=>g.classList.remove('up')); Sound.creak();
+    sc.querySelector('#ctl').innerHTML='';
+    sc.querySelector('#hint').textContent='On your turn, call out two numbers. Find a word and its stronger partner to win a key.';
+    sc.querySelector('#hr').innerHTML=turnBanner(); lock=false;
+  }
+  graves.forEach(g=>g.onclick=()=>{
+    if(lock || g.classList.contains('up')) return;
+    g.classList.add('up'); open.push(g); Sound.tick();
+    if(open.length<2) return;
+    lock=true; const [a,b]=open; open=[];
+    const ca=cards[+a.dataset.i], cb=cards[+b.dataset.i];
+    if(ca.pair===cb.pair){
+      const t=team(activeTeam()); [a,b].forEach(x=>{x.classList.add('matched'); x.style.setProperty('--tc',t.color);});
+      const r=b.getBoundingClientRect(); award(activeTeam(),1,false,{x:r.left+r.width/2,y:r.top});
+      const ph=sc.querySelector('#ph'); ph.classList.remove('go'); void ph.offsetWidth; ph.classList.add('go'); ph.textContent=`“${GRAVE_PAIRS[ca.pair][2]}”`;
+      matched++; nextTurn();
+      if(matched===GRAVE_PAIRS.length){ sc.querySelector('#hr').innerHTML=''; sc.querySelector('#hint').textContent='Every grave has found its partner. Rest in peace.';
+        sc.querySelector('#ctl').innerHTML='<button class="btn mint" id="fin">🗝️ Leave the graveyard</button>'; sc.querySelector('#fin').onclick=()=>finishRoom('graveyard'); }
+      else { sc.querySelector('#hr').innerHTML=turnBanner(); lock=false; }
+    } else {
+      later(()=>{ Sound.wrong(); [a,b].forEach(x=>x.classList.add('nope')); },700);
+      later(()=>{ [a,b].forEach(x=>x.classList.remove('up','nope')); nextTurn(); sc.querySelector('#hr').innerHTML=turnBanner(); lock=false; },1700);
+    }
+  });
+}
+
+/* ---------- 4. Attic ---------- */
+function renderAttic(){
+  setWhere('Room 4 · The Attic');
+  if(S.prog.attic==='curse'){ atticCurse(); return; }
+  let shown=0;
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🕸️</span><div><h2>The Attic</h2><p class="story">${ATTIC_STORY}</p></div></div>
+    <div class="clues" id="cl"></div>
+    <div class="controls" id="ctl"><button class="btn" id="nx">🔦 Show the next clue</button></div>`);
+  const nx=sc.querySelector('#nx');
+  nx.onclick=()=>{
+    const c=ATTIC_CLUES[shown++]; Sound.creak(); if(shown===ATTIC_CLUES.length) lightning();
+    sc.querySelector('#cl').insertAdjacentHTML('beforeend',`<div class="clue" style="--r:${(Math.random()*4-2).toFixed(1)}deg"><span class="e">${c.e}</span><span>${esc(c.t)}</span></div>`);
+    if(shown===ATTIC_CLUES.length){ nx.outerHTML='<button class="btn mint" id="th">🧠 Build your theories</button>'; sc.querySelector('#th').onclick=atticThink; }
+  };
+}
+function atticThink(){
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🕸️</span><div><h2>What happened to Edgar?</h2><p>Agree on a theory with your team. Use the clues, and use at least two of these structures.</p></div><div class="right"><div id="tm"></div></div></div>
+    <div class="think">
+      <div class="miniclues">${ATTIC_CLUES.map((c,i)=>`<div class="mc" style="animation-delay:${i*80}ms"><span>${c.e}</span><p>${esc(c.t)}</p></div>`).join('')}</div>
+      <div class="modals">${MODALS.map((m,i)=>`<div class="modal" style="--c:${m.c};animation-delay:${i*120}ms"><b>${m.m}</b><div><span>${m.use}</span><i>${esc(m.ex)}</i></div></div>`).join('')}</div>
+    </div>
+    <div class="controls"><button class="btn ghost small" id="more">⏳ +30 seconds</button><button class="btn" id="up">⏰ Time’s up</button></div>`);
+  const timer=candleTimer(sc.querySelector('#tm'), 120, atticVote);
+  sc.querySelector('#more').onclick=()=>timer.add(30);
+  sc.querySelector('#up').onclick=()=>timer.finish();
+}
+function atticVote(){
+  Sound.ghost();
+  const votes=S.teams.map(()=>0);
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🗳️</span><div><h2>The séance votes</h2><p>Each team reads its theory aloud. Then every team gives one vote to the best theory, but not to its own.</p></div></div>
+    <div class="votes" id="vt">${S.teams.map((t,i)=>`<div class="vrow" style="--tc:${t.color}" data-i="${i}"><span class="em">${t.emoji}</span><span class="nm">${esc(t.name)}</span>
+      <button data-d="-1" aria-label="Remove vote">−</button><span class="v">0</span><button data-d="1" aria-label="Add vote">+</button></div>`).join('')}</div>
+    <div class="controls" id="ctl"><button class="btn" id="count" disabled>🕯️ Count the votes</button></div>`);
+  const total=()=>votes.reduce((a,b)=>a+b,0);
+  sc.querySelectorAll('.vrow button').forEach(b=>b.onclick=()=>{
+    const row=b.closest('.vrow'), i=+row.dataset.i; votes[i]=Math.max(0,votes[i]+(+b.dataset.d));
+    row.querySelector('.v').textContent=votes[i]; sc.querySelector('#count').disabled=total()===0; Sound.tick(); });
+  sc.querySelector('#count').onclick=()=>{
+    const levels=[...new Set(votes)].sort((a,b)=>b-a);
+    const prize=i=> votes[i]===levels[0]?3 : (levels.length>1 && votes[i]===levels[1])?2 : 1;
+    sc.querySelectorAll('.vrow').forEach(r=>r.querySelectorAll('button').forEach(b=>b.remove()));
+    S.teams.forEach((t,i)=>later(()=>{
+      const row=sc.querySelector(`.vrow[data-i="${i}"]`); row.insertAdjacentHTML('beforeend',`<span class="award">+${prize(i)}🗝️</span>`);
+      const r=row.getBoundingClientRect(); award(i,prize(i),false,{x:r.right-60,y:r.top+r.height/2}); }, 400+i*900));
+    sc.querySelector('#ctl').innerHTML='';
+    S.prog.attic='curse'; save();
+    const left=['garden','bell'].filter(k=>!S.done[k]).map(k=>k==='garden'?'the Garden':'the Bell Tower');
+    later(()=>{ sc.querySelector('#ctl').innerHTML=(left.length?`<p class="rule" style="width:100%;margin:0 0 8px">Still to play before the cursed cards: ${left.join(' and ')}. Use the house map to go there; the cards will wait for you here.</p>`:'')+'<button class="btn blood" id="cur">🃏 Draw the cursed cards</button>'; sc.querySelector('#cur').onclick=atticCurse; }, 600+S.teams.length*900+700);
+  };
+}
+function atticCurse(){
+  const pool=shuffle(['plus','plus','steal','lose','swap','nothing','nothing','steal','plus','nothing']);
+  const deck=pool.slice(0,S.teams.length);
+  if(!deck.some(d=>d!=='nothing')) deck[0]='plus';
+  let who=0;
+  const sc=show(`
+    <div class="roomhead"><span class="glyph">🃏</span><div><h2>The cursed cards</h2><p>The spirits have the last word. Each team chooses one card.</p></div><div class="right" id="hr"></div></div>
+    <div class="deck" id="dk">${deck.map((d,i)=>`<div class="card" data-i="${i}" style="--d:${i*120}ms"><div class="in">
+      <div class="f"><span class="eye">👁️</span></div>
+      <div class="b"><span class="e">${CURSES[d].e}</span><span>${CURSES[d].t}</span><b>${CURSES[d].fx}</b></div></div></div>`).join('')}</div>
+    <p class="cursemsg" id="msg"></p>
+    <div class="targets" id="tg"></div>
+    <div class="controls" id="ctl"></div>`);
+  const drawBanner=()=>{ const t=team(who); sc.querySelector('#hr').innerHTML=`<div class="turnbanner pop" style="--tc:${t.color}">${t.emoji} ${esc(t.name)}, choose a card</div>`; };
+  drawBanner();
+  let busy=false;
+  sc.querySelectorAll('.card').forEach(c=>c.onclick=()=>{
+    if(busy || c.classList.contains('used')) return; busy=true;
+    const t=team(who); c.classList.add('flipped','used'); c.style.setProperty('--tc',t.color);
+    c.insertAdjacentHTML('beforeend',`<div class="who">${t.emoji} ${esc(t.name)}</div>`);
+    Sound.whoosh(); const kind=deck[+c.dataset.i], me=who;
+    later(()=>applyCurse(kind, me, c, advance), 800);
+  });
+  function advance(){
+    sc.querySelector('#tg').innerHTML=''; sc.querySelector('#msg').innerHTML=''; who++; busy=false;
+    if(who>=S.teams.length){ sc.querySelector('#hr').innerHTML='';
+      sc.querySelector('#ctl').innerHTML='<button class="btn mint" id="fin">🚪 Go to the front door</button>';
+      sc.querySelector('#fin').onclick=()=>{ S.done.attic=true; save(); Sound.creak(); renderEnding(); }; }
+    else drawBanner();
+  }
+  function applyCurse(kind, me, card, next){
+    const r=card.getBoundingClientRect(), pt={x:r.left+r.width/2,y:r.top+r.height/2};
+    const nm=i=>`${team(i).emoji} ${esc(team(i).name)}`, say=h=>{ sc.querySelector('#msg').innerHTML=h; };
+    if(kind==='plus'){ award(me,1,false,pt); say(`${nm(me)} gain a key.`); later(next,1800); }
+    else if(kind==='lose'){ if(team(me).keys>0){ award(me,-1); say(`${nm(me)} lose a key.`); } else { Sound.ghost(); say(`${nm(me)} have no keys to lose. Lucky!`); } later(next,1800); }
+    else if(kind==='nothing'){ Sound.ghost(); say(`Nothing happens to ${nm(me)}.`); later(next,1800); }
+    else if(kind==='steal'){
+      const targets=S.teams.map((t,i)=>i).filter(i=>i!==me && team(i).keys>0);
+      if(!targets.length){ Sound.ghost(); say('Nobody else has a key to steal, so the curse fades.'); later(next,1800); return; }
+      say(`${nm(me)}, choose a team to steal from.`);
+      sc.querySelector('#tg').innerHTML=targets.map(i=>`<button class="btn small" data-i="${i}" style="background:${team(i).color};color:#120a20;box-shadow:none">${team(i).emoji} ${esc(team(i).name)}</button>`).join('');
+      sc.querySelectorAll('#tg button').forEach(b=>b.onclick=()=>{ const v=+b.dataset.i; award(v,-1); award(me,1,false,pt); sc.querySelector('#tg').innerHTML=''; say(`${nm(me)} steal a key from ${nm(v)}.`); later(next,1800); });
+    }
+    else if(kind==='swap'){
+      const order=S.teams.map((t,i)=>i).sort((a,b)=>team(b).keys-team(a).keys);
+      const below=order.slice(order.indexOf(me)+1).find(i=>team(i).keys<team(me).keys);
+      if(below==null){ Sound.ghost(); say(`No team has fewer keys than ${nm(me)}, so the curse fades.`); later(next,2000); return; }
+      const a=team(me).keys; team(me).keys=team(below).keys; team(below).keys=a; save(); lightning(); Sound.thunder(); renderScore(); bumpChip(me); bumpChip(below);
+      say(`${nm(me)} and ${nm(below)} swap totals.`); later(next,2000);
+    }
+  }
+}
+
+/* ---------- bonus mini-games ---------- */
+const MINI = {
+  garden:{title:'Zombie Siege', glyph:'🧟', where:'Bonus · The Garden', unit:'zombies stopped',
+    how:'Zombies are coming for your door. One player taps the zombies to throw pumpkins at them. If three zombies reach the door, the turn ends.'},
+  bell:{title:'Bat Catcher', glyph:'🦇', where:'Bonus · The Bell Tower', unit:'points',
+    how:'Bats are loose in the bell tower. One player taps the bats to catch them. A golden bat is worth three points.'},
+};
+const MINI_SECS = 30;
+function renderMini(kind){
+  const M=MINI[kind], scores=S.teams.map(()=>null); let idx=0;
+  setWhere(M.where);
+  function table(win){ return `<div class="minitable">${S.teams.map((t,i)=>`<div class="mrow ${win&&win.includes(i)?'win':(!win&&i===idx?'now':'')}" style="--tc:${t.color}"><span>${t.emoji} ${esc(t.name)}</span><b>${scores[i]==null?'–':scores[i]}</b></div>`).join('')}</div>`; }
+  function lobby(){
+    const t=team(idx);
+    const sc=show(`<div class="roomhead"><span class="glyph">${M.glyph}</span><div><h2>${M.title}</h2><p>${M.how}</p></div></div>
+      <div class="lobby"><div class="turnbanner pop" style="--tc:${t.color}">${t.emoji} ${esc(t.name)}, send one player to the board</div>${table()}</div>
+      <div class="controls"><button class="btn" id="go">▶ Start ${MINI_SECS} seconds</button></div>`);
+    sc.querySelector('#go').onclick=countdown;
+  }
+  function countdown(){
+    const t=team(idx);
+    const sc=show(`<div class="arena ${kind}" id="ar"><div class="hud"><span>${t.emoji} ${esc(t.name)}</span><span id="hs"></span><span id="hl"></span><span id="ht">⏳ ${MINI_SECS}</span></div><div class="count" id="cd">3</div></div>`);
+    const ar=sc.querySelector('#ar'), cd=sc.querySelector('#cd'); let n=3; Sound.tick();
+    const tick=()=>{ n--; if(n>0){ cd.textContent=n; cd.style.animation='none'; void cd.offsetWidth; cd.style.animation=''; Sound.tick(); later(tick,700); }
+      else { cd.textContent='Go!'; Sound.chime(); later(()=>{ cd.remove(); (kind==='garden'?playZombies:playBats)(ar,t,score=>{ scores[idx]=score; later(()=>{ idx++; idx<S.teams.length?lobby():results(); },2200); }); },450); } };
+    later(tick,700);
+  }
+  function results(){
+    const best=Math.max(...scores), win=best>0?scores.map((v,i)=>v===best?i:-1).filter(i=>i>=0):[];
+    const names=win.map(i=>`${team(i).emoji} ${esc(team(i).name)}`).join(' and ');
+    const sc=show(`<div class="roomhead"><span class="glyph">${M.glyph}</span><div><h2>${M.title}</h2><p>${win.length?`${names} ${win.length>1?'share':'win'} the key.`:'Nobody scored, so no key this time.'}</p></div></div>
+      <div class="lobby">${table(win)}</div>
+      <div class="controls"><button class="btn mint" id="fin">🏚️ Back to the house</button></div>`);
+    win.forEach((i,k)=>later(()=>{ const r=sc.querySelectorAll('.mrow')[i].getBoundingClientRect(); award(i,1,false,{x:r.left+r.width/2,y:r.top+r.height/2}); },400+k*400));
+    if(win.length){ Sound.win(); batBurst(12); }
+    S.done[kind]=true; save();
+    sc.querySelector('#fin').onclick=()=>{ Sound.creak(); renderMap(); };
+  }
+  lobby();
+}
+function miniLoop(ar, onFrame, onEnd){
+  let over=false, raf, t0=performance.now(), last=t0;
+  const ht=ar.querySelector('#ht');
+  function frame(now){ if(over) return; const dt=Math.min(.05,(now-last)/1000); last=now; const el=(now-t0)/1000, left=Math.max(0,MINI_SECS-el);
+    ht.textContent=`⏳ ${Math.ceil(left)}`; if(left<=5 && Math.ceil(left)!==frame.lastT){ frame.lastT=Math.ceil(left); if(left>0) Sound.tick(); }
+    onFrame(dt,el); if(left<=0){ stop('Time!'); return; } raf=requestAnimationFrame(frame); }
+  function stop(msg){ if(over) return; over=true; cancelAnimationFrame(raf); onEnd(msg); }
+  raf=requestAnimationFrame(frame);
+  cleanups.push(()=>{ over=true; cancelAnimationFrame(raf); });
+  return { stop, get over(){ return over; } };
+}
+function timeUp(ar,msg,line){ ar.insertAdjacentHTML('beforeend',`<div class="timeup"><b>${msg}</b><span>${line}</span></div>`); }
+function floatText(ar,x,y,txt){ const d=document.createElement('div'); d.className='plus'; d.textContent=txt; ar.appendChild(d);
+  d.animate([{transform:`translate(${x}px,${y}px)`,opacity:1},{transform:`translate(${x}px,${y-80}px)`,opacity:0}],{duration:800,easing:'ease-out'}).onfinish=()=>d.remove(); }
+function arenaPoint(ar,e){ const r=ar.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
+
+function playZombies(ar, t, end){
+  ar.insertAdjacentHTML('beforeend',`<div class="base" style="--tc:${t.color}"><span class="doorE">🚪</span><span class="thrower">${t.emoji}</span></div>`);
+  const hs=ar.querySelector('#hs'), hl=ar.querySelector('#hl');
+  let score=0, lives=3, zs=[], spawnAt=0;
+  const W=()=>ar.clientWidth, H=()=>ar.clientHeight;
+  const hud=()=>{ hs.textContent=`🧟 ${score} stopped`; hl.textContent='🚪'+' ❤️'.repeat(lives)+' 🖤'.repeat(3-lives); };
+  hud();
+  function spawn(el){
+    const z=document.createElement('div'); z.className='ent zombie'; z.innerHTML='<span class="bob">🧟</span>'; ar.appendChild(z);
+    const y=H()*(0.14+Math.random()*0.66);
+    zs.push({el:z, x:W()-20, y, sp:W()*(0.065+0.0055*el)*(0.85+Math.random()*0.35), hit:false});
+    z.style.top=(y-z.offsetHeight/2)+'px';
+  }
+  const loop=miniLoop(ar,(dt,el)=>{
+    if(el>=spawnAt){ spawn(el); spawnAt=el+Math.max(0.5,1.25-el*0.026); }
+    for(const z of zs){ if(z.hit) continue; z.x-=z.sp*dt; z.el.style.transform=`translateX(${z.x}px)`;
+      if(z.x < W()*0.1){ z.hit=true; lives--; Sound.knock(); z.el.classList.add('breach'); setTimeout(()=>z.el.remove(),500);
+        ar.classList.remove('shake'); void ar.offsetWidth; ar.classList.add('shake'); hud(); if(lives<=0){ loop.stop('The zombies got in!'); return; } } }
+    zs=zs.filter(z=>!z.gone);
+  }, msg=>{ Sound.thunder(); timeUp(ar,msg,`${score} zombies stopped`); end(score); });
+  ar.addEventListener('pointerdown',e=>{
+    if(loop.over) return; e.preventDefault();
+    const pt=arenaPoint(ar,e), tgt=e.target.closest('.zombie'), z=tgt && zs.find(q=>q.el===tgt && !q.hit);
+    let tx=pt.x, ty=pt.y;
+    if(z){ z.hit=true; const r=z.el.getBoundingClientRect(), a=ar.getBoundingClientRect(); tx=r.left-a.left+r.width/2; ty=r.top-a.top+r.height/2; }
+    const p=document.createElement('div'); p.className='proj'; p.textContent='🎃'; ar.appendChild(p);
+    const sx=W()*0.075, sy=H()*0.56; Sound.tone(500,.15,'triangle',.07,0,900);
+    p.animate([{transform:`translate(${sx}px,${sy}px) rotate(0) scale(.6)`},{transform:`translate(${(sx+tx)/2}px,${Math.min(sy,ty)-H()*0.18}px) rotate(300deg) scale(1.05)`},{transform:`translate(${tx}px,${ty}px) rotate(620deg) scale(.9)`}],{duration:280,easing:'linear'})
+      .onfinish=()=>{ p.remove();
+        const sp=document.createElement('div'); sp.className='splat'; sp.textContent=z?'💥':'🎃'; ar.appendChild(sp);
+        sp.animate([{transform:`translate(${tx}px,${ty}px) scale(.4)`,opacity:1},{transform:`translate(${tx}px,${ty}px) scale(1.3)`,opacity:0}],{duration:450}).onfinish=()=>sp.remove();
+        if(z && !loop.over){ score++; hud(); Sound.tone(110,.18,'square',.1,0,60); floatText(ar,tx-20,ty-40,'+1'); z.el.classList.add('down'); z.gone=true; setTimeout(()=>z.el.remove(),500); } };
+  });
+}
+
+function playBats(ar, t, end){
+  const hs=ar.querySelector('#hs'), hl=ar.querySelector('#hl'); hl.remove();
+  let score=0, bats=[], spawnAt=0, golds=0;
+  const W=()=>ar.clientWidth, H=()=>ar.clientHeight;
+  const hud=()=>{ hs.textContent=`🦇 ${score} points`; }; hud();
+  function spawn(el){
+    if(bats.filter(b=>!b.done).length>=9) return;
+    const gold = Math.random()<0.12;
+    const b=document.createElement('div'); b.className='ent batE'+(gold?' gold':''); b.innerHTML='<span class="flap">🦇</span>'; ar.appendChild(b);
+    const ltr=Math.random()<.5, sp=W()*(0.11+0.004*el)*(0.8+Math.random()*0.5)*(gold?1.35:1);
+    bats.push({el:b, x0:ltr?-80:W()+10, vx:ltr?sp:-sp, y0:H()*(0.18+Math.random()*0.6), amp:H()*(0.04+Math.random()*0.12), fr:2+Math.random()*3, ph:Math.random()*6, age:0, gold, done:false});
+  }
+  const loop=miniLoop(ar,(dt,el)=>{
+    if(el>=spawnAt){ spawn(el); spawnAt=el+Math.max(0.32,0.8-el*0.014); }
+    for(const b of bats){ if(b.done) continue; b.age+=dt; b.x=b.x0+b.vx*b.age; b.y=b.y0+b.amp*Math.sin(b.fr*b.age+b.ph);
+      b.el.style.transform=`translate(${b.x}px,${b.y}px)`;
+      if(b.x<-120 || b.x>W()+120){ b.done=true; b.el.remove(); } }
+    bats=bats.filter(b=>!b.done || b.keep);
+  }, msg=>{ Sound.thunder(); timeUp(ar,msg,`${score} points`); end(score); });
+  ar.addEventListener('pointerdown',e=>{
+    if(loop.over) return; e.preventDefault();
+    const tgt=e.target.closest('.batE'), b=tgt && bats.find(q=>q.el===tgt && !q.done);
+    const pt=arenaPoint(ar,e);
+    if(!b){ Sound.tone(300,.08,'sine',.04); return; }
+    b.done=true; const pts=b.gold?3:1; score+=pts; hud();
+    b.el.classList.add('caught'); setTimeout(()=>b.el.remove(),380);
+    floatText(ar,pt.x-20,pt.y-40,`+${pts}`);
+    if(b.gold){ Sound.chime(); } else { Sound.tone(880,.12,'triangle',.08,0,1320); }
+  });
+}
+
+/* ---------- ending ---------- */
+function renderEnding(){
+  setWhere('The front door'); $('#mapBtn').hidden=true; $('#skipBtn').hidden=true; current=null;
+  const max=Math.max(...S.teams.map(t=>t.keys));
+  const winners=S.teams.filter(t=>t.keys===max);
+  const ranked=S.teams.map((t,i)=>({...t,i})).sort((a,b)=>b.keys-a.keys);
+  const names=winners.map(w=>`${w.emoji} ${esc(w.name)}`).join(' and ');
+  const sc=show(`
+    <div class="bigdoor" id="bd"><div class="light"></div><div class="leaf l"></div><div class="leaf r"></div></div>
+    <h2>${names} ${winners.length>1?'escape together!':'escape!'}</h2>
+    <p class="sub">${winners.length===S.teams.length?'Nobody is left behind tonight. How unusual.':'Everyone else will haunt the house on Hollow Lane forever.'}</p>
+    <div class="podium">${ranked.map((t,k)=>`<div class="pod ${t.keys===max?'win':''}" style="--tc:${t.color};--d:${1400+k*150}ms">${t.emoji} ${esc(t.name)} · ${t.keys} 🗝️</div>`).join('')}</div>
+    <div class="controls"><button class="btn ghost" id="again">🔁 Play again with the same teams</button><button class="btn ghost" id="new">New teams</button></div>`, 'ending');
+  later(()=>{ sc.querySelector('#bd').classList.add('open'); Sound.creak(); },400);
+  later(()=>{ Sound.win(); batBurst(24); },1600);
+  sc.querySelector('#again').onclick=()=>{ S.teams.forEach(t=>t.keys=0); S.turn=0; S.done=DONE0(); S.prog={}; save(); renderMap(); };
+  sc.querySelector('#new').onclick=()=>{ try{localStorage.removeItem(KEY)}catch(e){} S=fresh(); renderIntro(); };
+  inGame=false; renderScore();
+}
+
+renderIntro();
+</script>
+</body>
+</html>
