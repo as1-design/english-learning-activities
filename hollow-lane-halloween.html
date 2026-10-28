@@ -734,7 +734,7 @@ let current=null;
 function nextRoom(){ return ORDER.find(r=>!S.done[r]) || null; }
 function renderMap(){
   inGame=true; showTurn=true; current=null; $('#mapBtn').hidden=true; $('#skipBtn').hidden=true; setWhere('The house map');
-  const nx=nextRoom(), st=r=>S.done[r]?'done':(r===nx?'next':'locked'), allDone=!nx, bs=k=>S.done[k]?'done':(S.done.attic?'done closed':'open');
+  const nx=nextRoom(), st=r=>S.done[r]?'done':(r===nx?'next':'locked'), allDone=!nx, bs=k=>S.done[k]?'done':'open';
   const sc=show(`
     <div class="mapwrap">
     <svg class="mapsvg" viewBox="-50 -10 1050 550" role="img" aria-label="Map of the haunted house">
@@ -779,18 +779,27 @@ function renderMap(){
         `<g fill="#3a3249" stroke="#120d1c" stroke-width="3"><path d="M680 470 v-50 a22 22 0 0 1 44 0 v50 z"/><path d="M745 474 v-66 a26 26 0 0 1 52 0 v66 z"/><path d="M820 470 v-44 a20 20 0 0 1 40 0 v44 z"/><rect x="866" y="425" width="8" height="45"/><rect x="852" y="438" width="36" height="8"/></g>`, 770,366,'3', true)}
       <g stroke="#0b0614" stroke-width="6">${Array.from({length:14},(_,i)=>`<line x1="${640+i*20}" y1="492" x2="${640+i*20}" y2="462"/>`).join('')}<line x1="636" y1="474" x2="906" y2="474"/></g>
     </svg></div>
-    <p class="maphint">${allDone?'You have explored every room. Click the front door to see who escapes.':`Next: ${ROOM_NAMES[nx]}. Click it to go in.`} ${S.done.attic?'':'The Garden and the Bell Tower are bonus games that you can play at any time before the cursed cards.'}</p>`, 'map');
-  sc.querySelectorAll('.room').forEach(g=>{ g.onclick=()=>{ Sound.creak(); enterRoom(g.dataset.room); }; });
+    <p class="maphint">${allDone?'You have explored every room. Click the front door to see who escapes.':`Next: ${ROOM_NAMES[nx]}. Click it to go in.`} ${(S.done.garden&&S.done.bell)?'':'The Garden and the Bell Tower are bonus games that you can play at any time before you open the front door.'}</p>`, 'map');
+  let roomArmed=null;
+  sc.querySelectorAll('.room').forEach(g=>{ g.onclick=()=>{ const r=g.dataset.room;
+    if(S.done[r] && roomArmed!==r){ roomArmed=r; Sound.knock();
+      sc.querySelector('.maphint').textContent=`${ROOM_NAMES[r]} has already been explored. Click it again to play it again from the start.`;
+      later(()=>{ if(roomArmed===r) roomArmed=null; },5000); return; }
+    if(S.done[r]){ S.done[r]=false; delete S.prog[r]; save(); }
+    Sound.creak(); enterRoom(r); }; });
+  let replayArmed=null;
   sc.querySelectorAll('.bonus').forEach(g=>{ g.onclick=()=>{ const k=g.dataset.bonus;
-    if(S.done[k] || S.done.attic){ Sound.knock(); sc.querySelector('.maphint').textContent = S.done[k] ? 'This bonus game has already been played.' : 'The bonus games closed when the cursed cards were drawn.'; return; }
-    Sound.creak(); enterRoom(k); }; });
+    if(S.done[k] && replayArmed!==k){ replayArmed=k; Sound.knock();
+      sc.querySelector('.maphint').textContent=`${k==='garden'?'Zombie Siege':'Bat Catcher'} has already been played. Click it again to play it again (the best team will win another key).`;
+      later(()=>{ if(replayArmed===k) replayArmed=null; },5000); return; }
+    S.done[k]=false; save(); Sound.creak(); enterRoom(k); }; });
   sc.querySelectorAll('[role=button]').forEach(g=>g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); g.dispatchEvent(new MouseEvent('click',{bubbles:true})); } }));
   const door=sc.querySelector('#doorG');
   door.onclick=()=>{ if(allDone){ Sound.creak(); renderEnding(); } else { Sound.knock(); door.classList.add('shake'); later(()=>door.classList.remove('shake'),400);
     sc.querySelector('.maphint').textContent='The door is locked. Explore every room first.'; } };
   renderScore();
 }
-function btag(x,y,k){ const t=S.done[k]?'✓ played':(S.done.attic?'closed':'bonus'), w=t.length*8.4+18;
+function btag(x,y,k){ const t=S.done[k]?'✓ played':'bonus', w=t.length*8.4+18;
   return `<rect class="btagbg" x="${x}" y="${y}" width="${w}" height="22" rx="11"/><text class="btag" x="${x+w/2}" y="${y+16}" text-anchor="middle">${t}</text>`; }
 function room(id,state,panel,silh,lx,ly,num,isGrave){
   return `<g class="room ${state} ${isGrave?'gravezone':''}" data-room="${id}" tabindex="0" role="button" aria-label="${ROOM_NAMES[id]}">
@@ -809,7 +818,7 @@ function disarmSkip(){ clearTimeout(skipArmed); skipArmed=null; const b=$('#skip
 $('#skipBtn').onclick=()=>{
   const b=$('#skipBtn');
   if(!skipArmed){ b.classList.add('armed'); b.textContent='Skip this activity? Click again'; skipArmed=setTimeout(disarmSkip,3000); return; }
-  disarmSkip(); if(current){ S.done[current]=true; save(); } Sound.whoosh(); renderMap();
+  disarmSkip(); if(current && current!=='garden' && current!=='bell'){ S.done[current]=true; save(); } Sound.whoosh(); renderMap();
 };
 function finishRoom(r){ S.done[r]=true; save(); Sound.win(); batBurst(10); later(renderMap, 900); }
 
@@ -1013,7 +1022,7 @@ function atticVote(){
     sc.querySelector('#ctl').innerHTML='';
     S.prog.attic='curse'; save();
     const left=['garden','bell'].filter(k=>!S.done[k]).map(k=>k==='garden'?'the Garden':'the Bell Tower');
-    later(()=>{ sc.querySelector('#ctl').innerHTML=(left.length?`<p class="rule" style="width:100%;margin:0 0 8px">Still to play before the cursed cards: ${left.join(' and ')}. Use the house map to go there; the cards will wait for you here.</p>`:'')+'<button class="btn blood" id="cur">🃏 Draw the cursed cards</button>'; sc.querySelector('#cur').onclick=atticCurse; }, 600+S.teams.length*900+700);
+    later(()=>{ sc.querySelector('#ctl').innerHTML=(left.length?`<p class="rule" style="width:100%;margin:0 0 8px">Bonus games still to play: ${left.join(' and ')}. You can play them now from the house map, or after the cursed cards.</p>`:'')+'<button class="btn blood" id="cur">🃏 Draw the cursed cards</button>'; sc.querySelector('#cur').onclick=atticCurse; }, 600+S.teams.length*900+700);
   };
 }
 function atticCurse(){
@@ -1042,8 +1051,10 @@ function atticCurse(){
   function advance(){
     sc.querySelector('#tg').innerHTML=''; sc.querySelector('#msg').innerHTML=''; who++; busy=false;
     if(who>=S.teams.length){ sc.querySelector('#hr').innerHTML='';
-      sc.querySelector('#ctl').innerHTML='<button class="btn mint" id="fin">🚪 Go to the front door</button>';
-      sc.querySelector('#fin').onclick=()=>{ S.done.attic=true; save(); Sound.creak(); renderEnding(); }; }
+      const left=['garden','bell'].filter(k=>!S.done[k]);
+      sc.querySelector('#ctl').innerHTML=(left.length?'<button class="btn ghost" id="bon">🏚️ Play the bonus games first</button>':'')+'<button class="btn mint" id="fin">🚪 Go to the front door</button>';
+      sc.querySelector('#fin').onclick=()=>{ S.done.attic=true; save(); Sound.creak(); renderEnding(); };
+      if(left.length) sc.querySelector('#bon').onclick=()=>{ S.done.attic=true; save(); Sound.creak(); renderMap(); }; }
     else drawBanner();
   }
   function applyCurse(kind, me, card, next){
