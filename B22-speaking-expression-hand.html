@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF6EE">
+<title>Expression Hand · B2.2 speaking game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBF6EE; --paper:#FFFDF8; --ink:#231E3D; --ink-soft:#5B5675; --line:#E9DFD0;
+  --coral:#F26B5B; --mint:#3FBFA0; --indigo:#4B4BA8; --mustard:#F2B33D; --plum:#A0457E;
+  --display:'Bricolage Grotesque','Avenir Next','Trebuchet MS',sans-serif;
+  --body:'Atkinson Hyperlegible','Verdana',sans-serif;
+  --mono:'Space Mono','Courier New',monospace;
+  --r-s:10px; --r-m:18px; --r-l:28px;
+  --shadow:0 1px 0 rgba(35,30,61,.08), 0 8px 24px -10px rgba(35,30,61,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--body)}
+body{
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(160,69,126,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(160,69,126,.06) 1px,transparent 1px);
+  background-size:40px 40px,40px 40px;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+[hidden]{display:none!important}
+.screen{display:none;min-height:100vh;min-height:100dvh}
+.screen.active{display:flex;flex-direction:column}
+
+/* ---------- shared bits ---------- */
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.panel{background:var(--paper);border-radius:var(--r-m);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel h2{font-family:var(--display);font-weight:700;font-size:20px;margin:0 0 12px;letter-spacing:-.01em}
+.howto{margin:0;padding-left:20px;font-size:15px;line-height:1.5}
+.howto li{margin-bottom:6px}
+.big-btn{display:block;width:100%;padding:16px;border-radius:var(--r-m);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em;box-shadow:0 6px 0 #0d0a1f;transition:transform .08s}
+.big-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #0d0a1f}
+.big-btn:disabled{opacity:.45;cursor:not-allowed}
+.ghost-btn{padding:12px 14px;border-radius:var(--r-s);background:var(--paper);box-shadow:inset 0 0 0 2px var(--line);font-weight:700;font-size:15px}
+.ghost-btn:disabled{opacity:.4;cursor:not-allowed}
+.credit{font-family:var(--mono);font-size:11px;color:var(--ink-soft);text-align:center;margin:20px 0 4px}
+.top{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 10px) 12px 8px}
+.top .t{font-family:var(--display);font-weight:800;font-size:18px;letter-spacing:-.02em;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#board .top{width:100%;max-width:1760px;margin:0 auto;padding-left:16px;padding-right:16px}
+#hand .top{width:100%;max-width:640px;margin:0 auto}
+.icon-btn{width:40px;height:40px;flex:none;border-radius:50%;background:var(--paper);box-shadow:var(--shadow);font-size:17px;font-weight:700;display:grid;place-items:center}
+.pill{font-family:var(--mono);font-weight:700;font-size:13px;padding:6px 10px;border-radius:999px;background:var(--paper);box-shadow:var(--shadow);white-space:nowrap}
+
+/* ---------- start ---------- */
+#start .wrap{width:100%;max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 24px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+.hero-title{font-family:var(--display);font-weight:800;font-size:clamp(44px,13vw,68px);line-height:.92;letter-spacing:-.03em;margin:8px 0 12px}
+.hero-title em{font-style:normal;color:var(--plum)}
+.hero-sub{font-size:16px;line-height:1.45;color:var(--ink-soft);margin:0 0 20px}
+.fan{display:flex;justify-content:center;height:96px;margin:0 0 20px}
+.fan i{width:60px;height:86px;border-radius:10px;margin:0 -8px;box-shadow:var(--shadow);border:3px solid var(--paper)}
+.fan i:nth-child(1){background:var(--coral);transform:rotate(-16deg) translateY(10px)}
+.fan i:nth-child(2){background:var(--mustard);transform:rotate(-6deg) translateY(2px)}
+.fan i:nth-child(3){background:var(--indigo);transform:rotate(5deg) translateY(2px)}
+.fan i:nth-child(4){background:var(--mint);transform:rotate(15deg) translateY(10px)}
+.choices{display:grid;gap:12px;margin-bottom:20px}
+.choice{display:flex;align-items:center;gap:14px;text-align:left;padding:16px;border-radius:var(--r-m);background:var(--paper);box-shadow:var(--shadow);border:2px solid transparent}
+.choice:hover{border-color:var(--ink)}
+.choice .ic{width:52px;height:52px;flex:none;border-radius:14px;display:grid;place-items:center;font-size:26px}
+.choice b{color:var(--ink);display:block;font-family:var(--display);font-size:21px;font-weight:800;letter-spacing:-.01em}
+.choice span{display:block;font-size:14px;color:var(--ink-soft);line-height:1.35;margin-top:2px}
+
+/* ---------- board ---------- */
+#board .main{flex:1;width:100%;max-width:1760px;margin:0 auto;padding:4px 16px calc(env(safe-area-inset-bottom) + 16px);display:grid;gap:16px;grid-template-columns:1fr;align-content:start}
+.themes{display:flex;flex-wrap:wrap;gap:6px}
+.tchip{display:flex;align-items:center;gap:6px;padding:7px 11px 7px 7px;border-radius:999px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--line);font-size:13px;font-weight:700}
+.tchip i{width:16px;height:16px;border-radius:50%;flex:none}
+.tchip.on{box-shadow:inset 0 0 0 2px var(--ink);background:var(--ink);color:var(--paper)}
+.topic{position:relative;border-radius:var(--r-l);background:var(--paper);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;min-height:300px}
+.topic .band{background:var(--c);color:var(--ci);padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topic .band .th{font-family:var(--display);font-weight:800;font-size:clamp(18px,2.2vw,30px);letter-spacing:-.01em}
+.topic .band .tap{font-family:var(--mono);font-size:clamp(11px,1vw,15px);letter-spacing:.06em;text-transform:uppercase;margin-left:auto;opacity:.9}
+.topic .body{padding:clamp(18px,3vw,44px);flex:1;display:flex;flex-direction:column;justify-content:center}
+.topic .tt{font-family:var(--mono);font-size:clamp(12px,1.1vw,17px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px}
+.topic .q{font-family:var(--display);font-weight:800;font-size:clamp(26px,4vw,64px);line-height:1.08;letter-spacing:-.02em;margin:0 0 clamp(14px,2vw,28px)}
+.topic ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.topic li{font-size:clamp(16px,1.6vw,26px);line-height:1.35;color:var(--ink-soft);padding-left:28px;position:relative}
+.topic li::before{content:"";position:absolute;left:4px;top:.5em;width:12px;height:12px;border-radius:50%;background:var(--c)}
+.topic.empty .body{align-items:center;text-align:center}
+.side{display:grid;gap:12px;align-content:start}
+.timer{display:flex;flex-direction:column;align-items:center;gap:10px}
+.clock{font-family:var(--mono);font-weight:700;font-size:clamp(44px,5vw,76px);letter-spacing:-.02em;line-height:1}
+.clock.low{color:#B8382A}
+.clock.up{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%}
+.seg button{padding:11px 2px;border-radius:var(--r-s);background:var(--bg);box-shadow:inset 0 0 0 2px var(--line);font-family:var(--mono);font-size:12px;letter-spacing:-.02em;font-weight:700}
+.seg button.on{background:var(--ink);color:var(--paper);box-shadow:none}
+.row{display:flex;gap:8px;width:100%}
+.row>*{flex:1}
+.round-note{font-size:14px;line-height:1.45;color:var(--ink-soft);margin:0}
+.timesup{font-family:var(--display);font-weight:800;font-size:18px;color:#B8382A;text-align:center;margin:0}
+@media (min-width:900px){
+  #board .main{grid-template-columns:minmax(0,1fr) 320px;align-items:start}
+  #board .themes{grid-column:1 / -1}
+  .topic{min-height:min(calc(100vh - 150px),760px)}
+}
+@media (min-width:1400px){
+  #board .main{grid-template-columns:minmax(0,1fr) 360px}
+  .tchip{font-size:15px;padding:9px 14px 9px 9px}
+}
+
+/* ---------- hand ---------- */
+#hand .wrap{flex:1;width:100%;max-width:640px;margin:0 auto;padding:0 12px;display:flex;flex-direction:column}
+.picker h2{font-family:var(--display);font-weight:800;font-size:clamp(26px,7vw,34px);letter-spacing:-.02em;line-height:1.05;margin:8px 0 6px}
+.picker p{color:var(--ink-soft);font-size:15px;line-height:1.45;margin:0 0 16px}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tbtn{min-height:84px;padding:12px;border-radius:var(--r-m);background:var(--c);color:var(--ci);font-family:var(--display);font-weight:800;font-size:17px;line-height:1.1;text-align:left;display:flex;align-items:flex-end;box-shadow:0 5px 0 rgba(35,30,61,.25)}
+.tbtn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(35,30,61,.25)}
+.tbtn.any{grid-column:1 / -1;min-height:56px;background:var(--paper);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line);align-items:center;justify-content:center;text-align:center}
+.status{display:flex;align-items:center;gap:8px;margin:2px 0 10px;flex-wrap:wrap}
+.status .tag{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:5px 10px 5px 6px;border-radius:999px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--line)}
+.status .tag i{width:14px;height:14px;border-radius:50%}
+.status .count{margin-left:auto;font-family:var(--mono);font-size:13px;font-weight:700}
+.cards{display:grid;gap:12px;padding-bottom:12px;align-items:start}
+.card{border-radius:var(--r-m);background:var(--paper);box-shadow:var(--shadow);overflow:hidden;border:2px solid transparent;animation:deal .35s ease-out both}
+.card:nth-child(2){animation-delay:.07s}.card:nth-child(3){animation-delay:.14s}.card:nth-child(4){animation-delay:.21s}.card:nth-child(5){animation-delay:.28s}
+@keyframes deal{from{opacity:0;transform:translateY(16px) rotate(-1.5deg)}to{opacity:1;transform:none}}
+.card .cb{background:var(--c);color:var(--ci);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;display:flex;gap:8px}
+.card .cb span:last-child{margin-left:auto;opacity:.85}
+.card .face{display:block;width:100%;text-align:left;padding:14px 14px 8px}
+.card .ex{font-family:var(--display);font-weight:800;font-size:clamp(23px,6.4vw,30px);line-height:1.05;letter-spacing:-.02em;display:block}
+.card .hint{display:block;font-size:13px;color:var(--ink-soft);margin-top:6px}
+.card .more{padding:0 14px 6px;font-size:15px;line-height:1.45}
+.card .more p{margin:0 0 6px}
+.card .more .eg{color:var(--ink-soft);font-style:italic}
+.card .acts{display:flex;gap:8px;padding:6px 14px 14px}
+.use{flex:1;padding:12px;border-radius:var(--r-s);background:var(--ink);color:var(--paper);font-family:var(--display);font-weight:800;font-size:17px}
+.use.swap{background:var(--mustard);color:var(--ink)}
+.card.swapping{border-color:var(--mustard)}
+.card.out{animation:play .35s ease-in forwards}
+@keyframes play{to{opacity:0;transform:translateY(-24px) scale(.94)}}
+.played{margin:4px 0 12px}
+.played h3{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px;font-weight:700}
+.played div{display:flex;flex-wrap:wrap;gap:6px}
+.played span{font-size:13px;padding:5px 9px;border-radius:999px;background:var(--paper);box-shadow:inset 0 0 0 2px var(--line);text-decoration:line-through;text-decoration-color:rgba(35,30,61,.35);color:var(--ink-soft)}
+.bar{position:sticky;bottom:0;background:linear-gradient(rgba(251,246,238,0),var(--bg) 18%);padding:14px 0 calc(env(safe-area-inset-bottom) + 12px);display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
+.bar .wide{grid-column:1 / -1}
+.bar .ghost-btn{font-size:14px;padding:12px 8px;line-height:1.2}
+.swapnote{grid-column:1 / -1;margin:0;font-size:14px;text-align:center;color:var(--ink);font-weight:700}
+
+/* ---------- overlays ---------- */
+.overlay{position:fixed;inset:0;background:rgba(35,30,61,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.sheet{background:var(--paper);border-radius:var(--r-l);max-width:560px;width:100%;max-height:calc(100dvh - 32px);overflow-y:auto;padding:20px;box-shadow:var(--shadow)}
+.sheet h2{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin:0 0 12px}
+.sheet .howto{margin-bottom:16px}
+.win{text-align:center}
+.win .big{font-size:56px;line-height:1;margin:4px 0 8px}
+.win p{color:var(--ink-soft);font-size:16px;line-height:1.45;margin:0 0 18px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 120px);transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:700;z-index:30;max-width:calc(100% - 32px);text-align:center;animation:toast 2.4s ease forwards;pointer-events:none}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,8px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:25;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+
+/* landscape phones: two cards per row */
+@media (orientation:landscape) and (max-height:500px){
+  .cards{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+  .card .ex{font-size:22px}
+  .bar{grid-template-columns:repeat(4,1fr)}
+  .bar .wide{grid-column:auto}
+  .tgrid{grid-template-columns:repeat(3,1fr)}
+  .tbtn{min-height:64px}
+  #start .wrap{max-width:760px}
+}
+@media (min-width:700px) and (min-height:501px){
+  .cards{grid-template-columns:1fr 1fr}
+  .tgrid{grid-template-columns:repeat(3,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ===================== START ===================== -->
+<section id="start" class="screen active">
+  <div class="wrap">
+    <div class="eyebrow">B2.2 · Speaking game · Files 1 and 2</div>
+    <h1 class="hero-title">Expression <em>Hand</em></h1>
+    <p class="hero-sub">Talk about the topic on the board and use the phrasal verbs and idioms in your hand. The first player to play all their cards wins the round.</p>
+    <div class="fan" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="choices">
+      <button class="choice" data-go="board">
+        <span class="ic" style="background:var(--indigo);color:#fff">▣</span>
+        <span><b>Board</b><span>Show the topic and the timer on the whiteboard.</span></span>
+      </button>
+      <button class="choice" data-go="hand">
+        <span class="ic" style="background:var(--mustard)">🂠</span>
+        <span><b>My hand</b><span>Open your cards on your phone. Each player needs their own phone.</span></span>
+      </button>
+    </div>
+    <div class="panel">
+      <h2>How to play</h2>
+      <ol class="howto" id="howtoStart"></ol>
+    </div>
+    <p class="credit">Class of Coffee – with AI assistance</p>
+  </div>
+</section>
+
+<!-- ===================== BOARD ===================== -->
+<section id="board" class="screen">
+  <div class="top">
+    <button class="icon-btn" data-home aria-label="Back to the start">←</button>
+    <div class="t">Expression Hand</div>
+    <span class="pill" id="roundPill">Round 1</span>
+    <button class="icon-btn" data-rules aria-label="How to play">?</button>
+  </div>
+  <div class="main">
+    <div class="themes" id="boardThemes" role="group" aria-label="Choose a theme"></div>
+    <article class="topic empty" id="topic" aria-live="polite"></article>
+    <aside class="side">
+      <div class="panel timer">
+        <div class="eyebrow">Round timer</div>
+        <div class="clock" id="clock">08:00</div>
+        <p class="timesup" id="timesup" hidden>Time is up. Count the cards that are left.</p>
+        <div class="seg" id="lenSeg">
+          <button data-len="300">5 min</button><button data-len="480" class="on">8 min</button><button data-len="600">10 min</button><button data-len="0">No limit</button>
+        </div>
+        <div class="row">
+          <button class="ghost-btn" id="startBtn">Start</button>
+          <button class="ghost-btn" id="resetBtn">Reset</button>
+        </div>
+      </div>
+      <button class="big-btn" id="nextTopic">New topic</button>
+      <p class="round-note">With each new topic, students tap the same colour on their phones to get a new hand. If the theme is “Any”, they tap “Any theme”.</p>
+      <p class="credit">Class of Coffee – with AI assistance</p>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================== HAND ===================== -->
+<section id="hand" class="screen">
+  <div class="top">
+    <button class="icon-btn" data-home aria-label="Back to the start">←</button>
+    <div class="t">My hand</div>
+    <button class="icon-btn" data-rules aria-label="How to play">?</button>
+  </div>
+  <div class="wrap">
+    <div class="picker" id="picker">
+      <h2>Which colour is on the board?</h2>
+      <p>Tap the theme of the topic. You will get two expressions that suit the topic and one wild card.</p>
+      <div class="tgrid" id="handThemes"></div>
+      <p class="credit">Class of Coffee – with AI assistance</p>
+    </div>
+    <div id="game" hidden>
+      <div class="status">
+        <span class="tag" id="themeTag"></span>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="cards" id="cards"></div>
+      <div class="played" id="played" hidden><h3>Played</h3><div></div></div>
+      <div class="bar" id="bar">
+        <p class="swapnote" id="swapNote" hidden>Tap “Swap this card” on the card you want to change.</p>
+        <button class="ghost-btn" id="swapBtn">Swap a card</button>
+        <button class="ghost-btn" id="challengeBtn">Challenge lost</button>
+        <button class="ghost-btn" id="undoBtn">Undo</button>
+        <button class="ghost-btn" id="newRoundBtn">New round</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== OVERLAYS ===================== -->
+<div class="overlay" id="rules" hidden role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+  <div class="sheet">
+    <h2 id="rulesTitle">How to play</h2>
+    <ol class="howto" id="howtoModal"></ol>
+    <button class="big-btn" data-close>Got it</button>
+  </div>
+</div>
+<div class="overlay" id="winBox" hidden role="dialog" aria-modal="true" aria-labelledby="winTitle">
+  <div class="sheet win">
+    <div class="big" aria-hidden="true">🎉</div>
+    <h2 id="winTitle">Your hand is empty!</h2>
+    <p>You have used all your expressions, so you win this round. Tell your group, and wait for the next topic.</p>
+    <button class="big-btn" id="winNext">Next round</button>
+    <button class="ghost-btn" id="winUndo" style="margin-top:14px;width:100%">That was a mistake – undo</button>
+  </div>
+</div>
+
+<script>
+/* ===================== Themes ===================== */
+const THEMES = [
+  {id:"people",   name:"People and personality",  short:"People",   color:"#F26B5B", ink:"#231E3D"},
+  {id:"work",     name:"Work and careers",         short:"Work",     color:"#4B4BA8", ink:"#FFFFFF"},
+  {id:"memories", name:"Memories and the past",    short:"Memories", color:"#F2B33D", ink:"#231E3D"},
+  {id:"family",   name:"Family and growing up",    short:"Family",   color:"#3FBFA0", ink:"#231E3D"},
+  {id:"done",     name:"Getting things done",      short:"Getting things done", color:"#2F7D5B", ink:"#FFFFFF"},
+  {id:"feelings", name:"Feelings and relationships", short:"Feelings", color:"#A0457E", ink:"#FFFFFF"}
+];
+
+/* ===================== Expressions (Files 1 and 2) ===================== */
+const EXPR = [
+  /* File 1 – personality */
+  {x:"a heart of gold", f:1, m:"a very kind and generous nature", e:"My neighbour has a heart of gold. She does the shopping for half the street.", th:["people","family","feelings"]},
+  {x:"a cold fish", f:1, m:"a person who seems unfriendly and shows very little emotion", e:"Our new manager seemed a bit of a cold fish at first, but she is actually very kind.", th:["people","work"]},
+  {x:"a quick temper", f:1, m:"a tendency to get angry very easily", e:"My grandfather had a quick temper, but he calmed down just as quickly.", th:["people","family","feelings"]},
+  {x:"a pain in the neck", f:1, m:"a person or thing that is very annoying", e:"Filling in all these forms is a real pain in the neck.", th:["people","done","work"]},
+  {x:"a soft touch", f:1, m:"a person who is easy to persuade, especially to give money or help", e:"My mum was always a soft touch when we asked for an extra biscuit.", th:["family","people"]},
+  {x:"the life and soul of the party", f:1, m:"the liveliest and most entertaining person at a social event", e:"My cousin is quiet at work, but she is the life and soul of the party at weekends.", th:["people","feelings"]},
+  {x:"wouldn't hurt a fly", f:1, m:"is very gentle and would never hurt anyone", e:"Their dog looks scary, but it wouldn't hurt a fly.", th:["people"]},
+  {x:"full of yourself", f:1, m:"thinking that you are very important or clever", e:"Since he got promoted, he has been a bit full of himself.", th:["people","work"]},
+  {x:"down to earth", f:1, m:"practical, sensible and easy to talk to", e:"Even though she is famous, she is very down to earth.", th:["people"]},
+  {x:"not lift a finger", f:1, m:"do nothing to help", e:"When we were teenagers, my brother never lifted a finger at home.", th:["family","done"]},
+  {x:"deep down", f:1, m:"in your real feelings, although you may not show them", e:"Deep down, I knew that I had made the right decision.", th:["feelings","people"]},
+  {x:"on the surface", f:1, m:"when you first look, although the reality may be different", e:"On the surface, the job looked perfect, but the hours were terrible.", th:["people","work"]},
+  {x:"come across as", f:1, m:"seem to have a particular quality or character", e:"She comes across as shy, but she is very funny with her friends.", th:["people"]},
+  {x:"take advantage of", f:1, m:"use a person or a situation unfairly to get what you want", e:"Some companies take advantage of young people who need work experience.", th:["work","feelings"]},
+  /* File 1 – work */
+  {x:"be laid off", f:1, m:"lose your job because the company does not have enough work or money", e:"Half of the staff were laid off when the factory closed.", th:["work"]},
+  {x:"be out of work", f:1, m:"not have a job", e:"He was out of work for a year after he finished university.", th:["work"]},
+  {x:"be off work", f:1, m:"not be at work, for example because you are ill or on holiday", e:"I was off work for a week last month, so my inbox is full.", th:["work"]},
+  {x:"move up the career ladder", f:1, m:"get better and more senior jobs over time", e:"She moved up the career ladder very quickly in her twenties.", th:["work"]},
+  {x:"a dead-end job", f:1, m:"a job with no chance of promotion or progress", e:"I spent two years in a dead-end job before I went back to studying.", th:["work"]},
+  {x:"work overtime", f:1, m:"work more hours than you normally do", e:"We had to work overtime every evening before the deadline.", th:["work","done"]},
+  /* File 1 – questionnaire and have */
+  {x:"put things off", f:1, m:"delay doing something until a later time", e:"I always put off going to the dentist.", th:["done"]},
+  {x:"follow something to the letter", f:1, m:"do exactly what the instructions say, paying attention to every detail", e:"I followed the recipe to the letter, but the cake was still a disaster.", th:["done","work"]},
+  {x:"get stuck", f:1, m:"be unable to continue with something because it is too difficult", e:"I got stuck on the last question, so I asked a classmate for help.", th:["done"]},
+  {x:"put something together", f:1, m:"make or prepare something by joining parts or collecting information", e:"It took us three hours to put the wardrobe together.", th:["done","work"]},
+  {x:"catch your eye", f:1, m:"attract your attention", e:"A small blue house in the old photo caught my eye.", th:["people","memories"]},
+  {x:"head-on", f:1, m:"directly, without trying to avoid a problem", e:"I prefer to deal with problems head-on instead of waiting.", th:["done","feelings"]},
+  {x:"a gut feeling", f:1, m:"a strong feeling about something that you cannot explain logically", e:"I had a gut feeling that something was wrong, so I called her.", th:["feelings","done"]},
+  {x:"a white lie", f:1, m:"a small lie that you tell so that you do not hurt someone", e:"I told a white lie and said I loved the jumper she gave me.", th:["feelings","family"]},
+  {x:"carry on", f:1, m:"continue doing something", e:"It started to rain, but we carried on walking.", th:["done"]},
+  {x:"have it out with someone", f:1, m:"talk to someone angrily about a problem in order to settle it", e:"In the end, I had it out with my flatmate about the washing-up.", th:["feelings","family","work"]},
+  {x:"have someone on", f:1, m:"try to make someone believe something that is not true, as a joke", e:"You've won the lottery? You're having me on!", th:["feelings","people"]},
+  /* File 2 – lexical areas */
+  {x:"come up with", f:2, m:"think of an idea, a plan or a solution", e:"We came up with a much cheaper way to organise the trip.", th:["done","work"]},
+  {x:"carry out", f:2, m:"do a task, a plan or an instruction", e:"The company carried out a survey of all its employees.", th:["work","done"]},
+  {x:"make up", f:2, m:"invent a story or an excuse that is not true", e:"As a child, I used to make up stories about our neighbours.", th:["family","memories"]},
+  {x:"pick up", f:2, m:"learn something without really studying it", e:"I picked up a bit of Italian when I lived in Rome.", th:["done","family"]},
+  {x:"turn out", f:2, m:"happen or develop in a particular way, often unexpectedly", e:"The weekend turned out to be much more fun than we expected.", th:["memories","done"]},
+  {x:"dress up", f:2, m:"put on special clothes or a costume", e:"We used to dress up in my grandmother's old clothes.", th:["family","memories"]},
+  {x:"hurt someone's feelings", f:2, m:"upset someone by what you say or do", e:"I didn't mean to hurt your feelings. I'm sorry.", th:["feelings","family"]},
+  {x:"on the tip of your tongue", f:2, m:"almost able to remember a word or a name", e:"Her name is on the tip of my tongue, but I can't remember it.", th:["memories"]},
+  {x:"under pressure", f:2, m:"feeling stressed because you have too much to do or people expect a lot", e:"I work better when I'm under a bit of pressure.", th:["work","done"]},
+  {x:"not lay a finger on", f:2, m:"never touch or harm someone or something", e:"He shouts a lot, but he would never lay a finger on anyone.", th:["people"]},
+  /* File 2 – memory */
+  {x:"ring a bell", f:2, m:"seem familiar, although you cannot remember exactly why", e:"The name rings a bell, but I don't think we've met.", th:["memories"]},
+  {x:"slip your mind", f:2, m:"be forgotten, usually something that you intended to do", e:"Sorry, your birthday completely slipped my mind.", th:["memories","done"]},
+  {x:"stick in your mind", f:2, m:"be remembered for a long time", e:"One thing my first teacher said has always stuck in my mind.", th:["memories"]},
+  {x:"come flooding back", f:2, m:"(memories) return suddenly and strongly", e:"When I walked into my old school, everything came flooding back.", th:["memories","feelings"]},
+  {x:"bring back memories", f:2, m:"make you remember something from the past", e:"This song brings back memories of our summers in the village.", th:["memories","family"]},
+  {x:"take a trip down memory lane", f:2, m:"spend time remembering pleasant things from the past", e:"We looked at old photos and took a trip down memory lane.", th:["memories","family"]},
+  {x:"look back on", f:2, m:"think about something that happened in your past", e:"I look back on my university years with a lot of affection.", th:["memories","work"]},
+  {x:"think back to", f:2, m:"try to remember a particular time in the past", e:"If I think back to my first job, I was so nervous.", th:["memories"]},
+  {x:"be brought up", f:2, m:"be raised by someone, in a particular place or way", e:"I was brought up by my grandparents in a small town.", th:["family"]},
+  {x:"come across", f:2, m:"find something or meet someone by chance", e:"I came across some old letters while I was tidying the attic.", th:["memories","done"]},
+  {x:"run into", f:2, m:"meet someone you know by chance", e:"I ran into an old classmate at the station yesterday.", th:["memories","people","feelings"]},
+  {x:"lose touch with", f:2, m:"stop being in contact with someone", e:"I lost touch with most of my school friends when I moved.", th:["feelings","family","memories"]},
+  {x:"end up", f:2, m:"finally be in a situation or place that you did not plan", e:"I studied law, but I ended up working in tourism.", th:["memories","work"]},
+  {x:"date back to", f:2, m:"have existed since a particular time in the past", e:"Our family's olive farm dates back to the 1890s.", th:["memories","family"]},
+  {x:"in hindsight", f:2, m:"thinking about it now, with what you know now", e:"In hindsight, I should have asked for help much sooner.", th:["memories","work","done"]}
+];
+
+/* ===================== Topic cards ===================== */
+const TOPICS = [
+  {th:"people", t:"First impressions", q:"Talk about someone who turned out to be very different from how they seemed at first.", n:["What did you think of them when you first met?","What made you change your mind?"]},
+  {th:"people", t:"The people around you", q:"Describe the different personalities in your group of friends or your family.", n:["Who is the most sociable, and who is the most practical?","Who are you most similar to?"]},
+  {th:"people", t:"Personality at work", q:"Which personality types suit which jobs? Think of people you know.", n:["Is there a job that would not suit you at all?","Can you learn to be more confident or patient?"]},
+  {th:"people", t:"Can people change?", q:"Do people really change their personality as they get older?", n:["How have you changed since you were a teenager?","Has anyone you know changed a lot?"]},
+  {th:"work", t:"Your working life", q:"Talk about the jobs you have done, or the job you would like to do in the future.", n:["Which job taught you the most?","What was the worst job you have ever had?"]},
+  {th:"work", t:"A job worth doing", q:"What makes a job worth doing for you: the salary, the people, the hours or something else?", n:["Would you accept a lower salary for a more interesting job?","What would make you leave a job?"]},
+  {th:"work", t:"Work today", q:"Is working life harder for young people today than it was for their parents?", n:["Think about contracts, salaries and housing.","What has improved?"]},
+  {th:"work", t:"Bosses and colleagues", q:"What makes someone a good boss or a good colleague?", n:["Describe the best or the worst person you have worked with.","How do you deal with a difficult colleague?"]},
+  {th:"memories", t:"A place from your past", q:"Talk about a place that was important to you when you were younger.", n:["Have you been back there recently?","What has changed?"]},
+  {th:"memories", t:"Songs, smells and objects", q:"Which songs, smells or objects take you back to the past?", n:["What do they make you remember?","Do you keep any objects for sentimental reasons?"]},
+  {th:"memories", t:"Old friends", q:"Talk about people you used to be close to. What happened to those friendships?", n:["Would you like to get back in contact with anyone?","Have you ever met an old friend by chance?"]},
+  {th:"memories", t:"Turning points", q:"Talk about a moment or a decision that changed the direction of your life.", n:["Did it seem important at the time?","Would you make the same decision today?"]},
+  {th:"family", t:"Growing up", q:"Where and how did you grow up? How was your childhood different from childhood today?", n:["What did you do in your free time?","What rules did your parents have?"]},
+  {th:"family", t:"Family stories", q:"Tell a story that your family loves to tell again and again.", n:["Who usually tells it?","Does everyone remember it in the same way?"]},
+  {th:"family", t:"Who does what?", q:"Who does what in your home or your family? Has it always been like this?", n:["Who does the most housework?","Who organises family events?"]},
+  {th:"family", t:"Learning from family", q:"What did you learn from your parents or grandparents without them really teaching you?", n:["Think about habits, skills, food and values.","What would you like to pass on to the next generation?"]},
+  {th:"done", t:"Tasks you avoid", q:"How do you deal with tasks that you don't want to do?", n:["What are you avoiding at the moment?","Do you have any tricks to get started?"]},
+  {th:"done", t:"Solving problems", q:"Talk about a problem that you had to solve recently. How did you deal with it?", n:["Did you ask anyone for help?","What would you do differently now?"]},
+  {th:"done", t:"Instructions", q:"When you assemble furniture, use a new app or cook a new recipe, do you read the instructions first?", n:["Describe a time when something went wrong.","Are you a planner or do you improvise?"]},
+  {th:"done", t:"Deadlines and stress", q:"How do you cope when you have a lot to do and very little time?", n:["Do you work better with a deadline?","What helps you to relax afterwards?"]},
+  {th:"feelings", t:"Honesty", q:"Is it ever right to lie to someone you care about?", n:["Give an example from your own life.","How would you feel if you discovered a friend had lied to you?"]},
+  {th:"feelings", t:"Disagreements", q:"How do you deal with disagreements with friends, family or flatmates?", n:["Do you talk about the problem or wait for it to go away?","Describe an argument that ended well."]},
+  {th:"feelings", t:"Trusting your instincts", q:"Do you trust your instincts when you make important decisions?", n:["Talk about a time your instincts were right, or wrong.","Do you ask other people for advice?"]},
+  {th:"feelings", t:"Staying close", q:"How do you stay close to people who live far away or who you rarely see?", n:["Who would you like to see more often?","Is it easy to make new friends as an adult?"]}
+];
+
+</script>
+<script>
+(function(){
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const TH = Object.fromEntries(THEMES.map(t=>[t.id,t]));
+EXPR.forEach((e,i)=>e.id=i);
+
+/* ---------- rules ---------- */
+const RULES = [
+  "Play in groups of three or four. The teacher shows a topic on the board, and every player opens <b>My hand</b> on their own phone.",
+  "Tap the colour of the topic. You get three expressions: two that suit the topic and one wild card.",
+  "Talk about the topic as a group. Answer, ask questions and react to what other people say.",
+  "When you use one of your expressions naturally and correctly, tap <b>I used it</b>. Tap an expression if you need to check its meaning.",
+  "If the group thinks an expression was forced in or used wrongly, they can say “Challenge!”. The group decides, and the teacher has the final word. If you lose the challenge, tap <b>Challenge lost</b>: the card comes back and you get one extra card.",
+  "Once per round, you can swap a card that does not fit the conversation.",
+  "The first player to empty their hand wins the round. If the time runs out, the player with the fewest cards wins."
+];
+const rulesHTML = RULES.map(r=>"<li>"+r+"</li>").join("");
+$("#howtoStart").innerHTML = rulesHTML;
+$("#howtoModal").innerHTML = rulesHTML;
+
+/* ---------- navigation ---------- */
+function show(id){
+  $$(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
+  window.scrollTo(0,0);
+  try{ history.replaceState(null,"",id==="start"?location.pathname+location.search:"#"+id); }catch(e){}
+}
+$$("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
+$$("[data-home]").forEach(b=>b.addEventListener("click",()=>show("start")));
+$$("[data-rules]").forEach(b=>b.addEventListener("click",()=>{$("#rules").hidden=false; $("#rules [data-close]").focus();}));
+$("#rules [data-close]").addEventListener("click",()=>$("#rules").hidden=true);
+$("#rules").addEventListener("click",e=>{ if(e.target.id==="rules") $("#rules").hidden=true; });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ $("#rules").hidden=true; } });
+
+let toastT;
+function toast(msg){
+  const old=$(".toast"); if(old) old.remove();
+  const d=document.createElement("div"); d.className="toast"; d.textContent=msg; document.body.appendChild(d);
+  clearTimeout(toastT); toastT=setTimeout(()=>d.remove(),2500);
+}
+
+/* =====================================================
+   BOARD
+   ===================================================== */
+let boardTheme="any", round=0, topicDecks={};
+function renderBoardThemes(){
+  const opts=[{id:"any",short:"Any theme",color:"conic-gradient("+THEMES.map((t,i)=>t.color+" "+(i*60)+"deg "+((i+1)*60)+"deg").join(",")+")"}].concat(THEMES);
+  $("#boardThemes").innerHTML = opts.map(t=>
+    '<button class="tchip'+(t.id===boardTheme?" on":"")+'" data-th="'+t.id+'" aria-pressed="'+(t.id===boardTheme)+'"><i style="background:'+t.color+'"></i>'+esc(t.id==="any"?t.short:t.name)+'</button>').join("");
+  $$("#boardThemes .tchip").forEach(b=>b.addEventListener("click",()=>{boardTheme=b.dataset.th; renderBoardThemes(); nextTopic();}));
+}
+function drawTopic(){
+  const key=boardTheme;
+  if(!topicDecks[key] || !topicDecks[key].length){
+    topicDecks[key]=shuffle(TOPICS.filter(t=>key==="any"||t.th===key));
+  }
+  return topicDecks[key].pop();
+}
+function renderTopic(tp){
+  const el=$("#topic");
+  if(!tp){
+    el.className="topic empty"; el.style.cssText="--c:var(--ink);--ci:var(--paper)";
+    el.innerHTML='<div class="band"><span class="th">Ready when you are</span></div><div class="body"><p class="tt">Expression Hand</p><p class="q">Choose a theme, or tap <span style="white-space:nowrap">“New topic”</span> to begin.</p></div>';
+    return;
+  }
+  const t=TH[tp.th];
+  el.className="topic"; el.style.cssText="--c:"+t.color+";--ci:"+t.ink;
+  el.innerHTML='<div class="band"><span class="th">'+esc(t.name)+'</span><span class="tap">Tap this colour on your phone</span></div>'+
+    '<div class="body"><p class="tt">'+esc(tp.t)+'</p><p class="q">'+esc(tp.q)+'</p><ul>'+tp.n.map(n=>'<li>'+esc(n)+'</li>').join("")+'</ul></div>';
+}
+function nextTopic(){
+  round++; $("#roundPill").textContent="Round "+round;
+  renderTopic(drawTopic());
+  resetTimer();
+}
+$("#nextTopic").addEventListener("click",nextTopic);
+
+/* timer */
+let len=480, left=480, running=false, tick=null;
+function fmt(s){ if(len===0) return "--:--"; const m=Math.floor(s/60), r=s%60; return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0"); }
+function drawClock(){
+  const c=$("#clock"); c.textContent=fmt(left);
+  c.classList.toggle("low",len>0 && left<=60);
+  c.classList.toggle("up",len>0 && left===0);
+  $("#timesup").hidden=!(len>0 && left===0);
+  $("#startBtn").textContent=running?"Pause":"Start";
+  $("#startBtn").disabled=(len===0);
+}
+function resetTimer(){ clearInterval(tick); running=false; left=len; drawClock(); }
+$$("#lenSeg button").forEach(b=>b.addEventListener("click",()=>{
+  $$("#lenSeg button").forEach(x=>x.classList.toggle("on",x===b));
+  len=+b.dataset.len; resetTimer();
+}));
+$("#startBtn").addEventListener("click",()=>{
+  if(len===0) return;
+  if(running){ clearInterval(tick); running=false; drawClock(); return; }
+  if(left===0) left=len;
+  running=true; drawClock();
+  tick=setInterval(()=>{ left=Math.max(0,left-1); if(left===0){clearInterval(tick); running=false;} drawClock(); },1000);
+});
+$("#resetBtn").addEventListener("click",resetTimer);
+renderBoardThemes(); renderTopic(null); drawClock();
+
+/* =====================================================
+   HAND
+   ===================================================== */
+let theme=null, hand=[], played=[], swapsLeft=1, swapping=false, seen=new Set(), history_=[];
+const HAND_SIZE=3;
+
+function renderHandThemes(){
+  $("#handThemes").innerHTML = THEMES.map(t=>
+    '<button class="tbtn" data-th="'+t.id+'" style="--c:'+t.color+';--ci:'+t.ink+'">'+esc(t.name)+'</button>').join("")+
+    '<button class="tbtn any" data-th="any">Any theme</button>';
+  $$("#handThemes .tbtn").forEach(b=>b.addEventListener("click",()=>deal(b.dataset.th)));
+}
+function fits(e){ return theme==="any" || e.th.includes(theme); }
+function pick(pool){
+  const inHand=new Set(hand.map(c=>c.e.id).concat(played.map(c=>c.e.id)));
+  let cand=pool.filter(e=>!inHand.has(e.id) && !seen.has(e.id));
+  if(!cand.length){ cand=pool.filter(e=>!inHand.has(e.id)); }
+  if(!cand.length) return null;
+  const e=cand[Math.floor(Math.random()*cand.length)];
+  seen.add(e.id);
+  if(seen.size>EXPR.length-8) seen=new Set([e.id]);
+  return e;
+}
+function draw(kind){
+  // kind: "fit" | "wild" | "any"
+  let pool = kind==="fit" ? EXPR.filter(fits) : kind==="wild" ? EXPR.filter(e=>!fits(e)) : EXPR;
+  let e=pick(pool); if(!e) e=pick(EXPR);
+  return e ? {e, wild:kind==="wild" || (kind==="any" && theme!=="any" && !fits(e)), open:false} : null;
+}
+function deal(th){
+  theme=th; hand=[]; played=[]; swapsLeft=1; swapping=false; history_=[];
+  if(th==="any"){ for(let i=0;i<HAND_SIZE;i++){ const c=draw("any"); if(c) hand.push(c);} }
+  else { hand.push(draw("fit")); hand.push(draw("fit")); hand.push(draw("wild")); hand=shuffle(hand.filter(Boolean)); }
+  $("#picker").hidden=true; $("#game").hidden=false;
+  renderHand(true);
+}
+function renderHand(animate){
+  const t = theme==="any" ? null : TH[theme];
+  $("#themeTag").innerHTML = t ? '<i style="background:'+t.color+'"></i>'+esc(t.name) : '<i style="background:var(--ink)"></i>Any theme';
+  $("#count").textContent = hand.length===1 ? "1 card left" : hand.length+" cards left";
+  const box=$("#cards");
+  box.innerHTML = hand.map((c,i)=>{
+    const ct = c.wild || theme==="any" ? TH[c.e.th[0]] : TH[theme];
+    const label = c.wild ? "Wild card" : ct.short;
+    return '<article class="card'+(swapping?" swapping":"")+'" style="--c:'+ct.color+';--ci:'+ct.ink+(animate?"":";animation:none")+'" data-i="'+i+'">'+
+      '<div class="cb"><span>'+esc(label)+'</span><span>File '+c.e.f+'</span></div>'+
+      '<button class="face" aria-expanded="'+c.open+'"><span class="ex">'+esc(c.e.x)+'</span><span class="hint">'+(c.open?"Tap to hide the meaning":"Tap to see the meaning")+'</span></button>'+
+      '<div class="more"'+(c.open?"":" hidden")+'><p><b>Meaning:</b> '+esc(c.e.m)+'</p><p class="eg">'+esc(c.e.e)+'</p></div>'+
+      '<div class="acts">'+(swapping
+        ? '<button class="use swap" data-act="swap">Swap this card</button>'
+        : '<button class="use" data-act="use">I used it</button>')+'</div>'+
+    '</article>';
+  }).join("");
+  $$("#cards .card").forEach(card=>{
+    const i=+card.dataset.i;
+    card.querySelector(".face").addEventListener("click",()=>{ hand[i].open=!hand[i].open; renderHand(false); });
+    const a=card.querySelector("[data-act]");
+    a.addEventListener("click",()=> a.dataset.act==="use" ? usedIt(i,card) : swapCard(i));
+  });
+  const pl=$("#played");
+  pl.hidden=!played.length;
+  pl.querySelector("div").innerHTML=played.map(c=>'<span>'+esc(c.e.x)+'</span>').join("");
+  $("#swapBtn").textContent = swapping ? "Cancel swap" : (swapsLeft ? "Swap a card (1 left)" : "No swaps left");
+  $("#swapBtn").disabled = !swapping && (!swapsLeft || !hand.length);
+  $("#swapNote").hidden=!swapping;
+  $("#challengeBtn").disabled = !played.length || swapping;
+  $("#undoBtn").disabled = !history_.length || swapping;
+}
+function usedIt(i,card){
+  card.classList.add("out");
+  setTimeout(()=>{
+    const c=hand.splice(i,1)[0]; c.open=false;
+    played.push(c); history_.push({type:"use",c,i});
+    renderHand(false);
+    if(!hand.length) win();
+  },300);
+}
+function swapCard(i){
+  const old=hand[i];
+  const n = theme==="any" ? draw("any") : (old.wild ? draw("wild") : draw("fit"));
+  if(!n){ toast("There are no more cards to swap."); return; }
+  hand[i]=n; swapsLeft--; swapping=false;
+  history_.push({type:"swap",i,old,n});
+  renderHand(false);
+  toast("Card swapped: “"+n.e.x+"”");
+}
+$("#swapBtn").addEventListener("click",()=>{
+  if(swapping){ swapping=false; renderHand(false); return; }
+  if(!swapsLeft) return;
+  swapping=true; renderHand(false);
+});
+$("#challengeBtn").addEventListener("click",()=>{
+  if(!played.length) return;
+  const c=played.pop(); hand.push(c);
+  const extra=draw(theme==="any"?"any":"fit"); if(extra) hand.push(extra);
+  history_.push({type:"challenge",c,extra});
+  renderHand(false);
+  toast(extra ? "Challenge lost: the card is back, plus one extra card." : "Challenge lost: the card is back.");
+});
+$("#undoBtn").addEventListener("click",()=>{
+  const h=history_.pop(); if(!h) return;
+  if(h.type==="use"){ const k=played.lastIndexOf(h.c); if(k>-1) played.splice(k,1); hand.splice(Math.min(h.i,hand.length),0,h.c); toast("Undone: the card is back in your hand."); }
+  else if(h.type==="swap"){ hand[h.i]=h.old; swapsLeft++; toast("Undone: the swap was cancelled."); }
+  else if(h.type==="challenge"){
+    if(h.extra){ const k=hand.indexOf(h.extra); if(k>-1) hand.splice(k,1); }
+    const k=hand.indexOf(h.c); if(k>-1) hand.splice(k,1);
+    played.push(h.c); toast("Undone: the challenge was cancelled.");
+  }
+  $("#winBox").hidden=true;
+  renderHand(false);
+});
+function backToPicker(){ $("#winBox").hidden=true; $("#game").hidden=true; $("#picker").hidden=false; window.scrollTo(0,0); }
+$("#newRoundBtn").addEventListener("click",backToPicker);
+$("#winNext").addEventListener("click",backToPicker);
+$("#winUndo").addEventListener("click",()=>$("#undoBtn").click());
+function win(){
+  $("#winBox").hidden=false;
+  const cf=document.createElement("div"); cf.className="confetti";
+  const cols=THEMES.map(t=>t.color);
+  for(let k=0;k<40;k++){ const i=document.createElement("i"); i.style.left=Math.random()*100+"%"; i.style.background=cols[k%cols.length]; i.style.animationDelay=(Math.random()*.6)+"s"; cf.appendChild(i); }
+  document.body.appendChild(cf); setTimeout(()=>cf.remove(),2800);
+}
+renderHandThemes();
+
+/* open a screen directly with #board or #hand */
+const h=location.hash.replace("#","");
+if(h==="board"||h==="hand") show(h);
+})();
+</script>
+</body>
+</html>
