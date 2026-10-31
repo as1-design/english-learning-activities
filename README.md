@@ -15,6 +15,11 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Speaking Reference Card | B2.1 | Mobile-friendly reference card with key speaking phrases and structures for the B2.1 oral exam. | [Open](https://as1-design.github.io/english-learning-activities/speaking_reference_b21_mobile.html) |
 | Speaking Reference Card | B2.2 | Mobile-friendly reference card with key speaking phrases and structures for the B2.2 oral exam. | [Open](https://as1-design.github.io/english-learning-activities/speaking_reference_b22_mobile.html) |
 | Business Speaking Board | B2.1 | Flip-card speaking board with prompts focused on business vocabulary in context — mergers, growth, chains, and related concepts. Includes timer and random question picker. | [Open](https://as1-design.github.io/english-learning-activities/business-speaking-board.html) |
+| Health Talk — Speaking Board Game | B2.1 | Pass-the-phone board game for groups of two to five. Players follow the heartbeat track and answer questions about health and medicine, with role-play, describe-it, myth-or-fact and would-you-rather cards. Saves the game so the group can resume. | [Open](https://as1-design.github.io/english-learning-activities/health-speaking-board-b21.html) |
+| Talk Track — Speaking Board Game | B2.1 | Pass-the-phone board game about sport for groups of two to five, laid out as a running track. Same format as Health Talk, with a choice of game length. | [Open](https://as1-design.github.io/english-learning-activities/sport-speaking-board-b21.html) |
+| Present Perfect Board Game | B2.1 | Pass-the-phone board game for two to six players. Each square asks a question to answer with the present perfect simple or continuous. Scores are kept and a saved game can be resumed. | [Open](https://as1-design.github.io/english-learning-activities/B21-present-perfect-board-game.html) |
+| Crystal Ball | B2.2 | Speaking game in which a crystal ball reveals a question and the student speaks for as long as the vision lasts. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-crystal-ball.html) |
+| Expression Hand | B2.2 | Card game linked to Files 1 and 2: students talk about the topic on the board and try to use all the phrasal verbs and idioms in their hand. One view for the whiteboard and one for each phone. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-expression-hand.html) |
 
 ## Vocabulary
 
@@ -25,6 +30,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Taboo — Sports Vocabulary Explorer | B2.2 | A companion tool for classroom Taboo card sets. Select a sport to browse its key vocabulary, supporting preparation and consolidation alongside the physical card game. | [Open](https://as1-design.github.io/english-learning-activities/Taboo-sports-vocabulary-explorer.html) |
 | Taboo — Sports Vocabulary Cards | B2.2 | Printable Taboo card set for 24 sports, with 10 forbidden words per sport. Four pages, ready to print and cut. | [Open](https://as1-design.github.io/english-learning-activities/sports_taboo_vocab_cards%20b2.pdf) |
 | News & Media Vocabulary Bank | B2.1 | Contextual practice activities using vocabulary from the textbook's news and media vocabulary bank. | [Open](https://as1-design.github.io/english-learning-activities/news_media_vocab%20bank%20b2.1.html) |
+| Looking Back — Phrases for Talking about the Past | B2.2 | Two-session vocabulary lesson with a word bank, situations to complete and a sticker album to fill. Includes notes on UK and US usage and saves progress. | [Open](https://as1-design.github.io/english-learning-activities/looking-back-phrases-about-the-past.html) |
 
 ## Grammar & Language
 
@@ -41,6 +47,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Complaint Letter Detective Academy | B2 | Five-tab interactive activity guiding students through the conventions of formal complaint letters, including a fully guided phrase-picker letter builder. | [Open](https://as1-design.github.io/english-learning-activities/complaint-letter-activities_1.html) |
 | Formal Writing | B2.2–C1 | Interactive reference page covering formal writing conventions, register, and key phrases for B2.2 and C1 level tasks. | [Open](https://as1-design.github.io/english-learning-activities/formal%20writing%20b2.2%20-%20c1.html) |
 | Describing Places | B2.1 | A simple fill-in-the-blanks activity practising descriptive language for places. | [Open](https://as1-design.github.io/english-learning-activities/describing_places_activity.html) |
+| Exquisite Corpse — Narrative Tenses & Linkers | B2.2 | Group story game: each student writes one hidden sentence using the tense and linker drawn for the group, then folds the paper and passes it on. Includes a printable worksheet. | [Open](https://as1-design.github.io/english-learning-activities/exquisite-corpse-narrative-b22.html) |
 
 ## Error Correction
 
@@ -75,3 +82,29 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Rosco — Science & Technology | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets science and technology vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-science.html) |
 | Easter Quiz | B2.1 | Seasonal quiz activity for B2.1 students covering Easter traditions, vocabulary, and general knowledge. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b1b2.html) |
 | Easter Quiz | B2.2 | Seasonal quiz activity for B2.2 students with more challenging language and content than the B2.1 version. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b22_1.html) |
+| Auxiliary Verbs — Team Quiz | B2.2 | Tile-board quiz for two teams on auxiliary verbs (English File B2.2). Some tiles hide surprise cards that change the score. Full-screen mode for the whiteboard. | [Open](https://as1-design.github.io/english-learning-activities/auxiliary-verbs-team-quiz.html) |
+| Linker Border Control | B2.2 | Game in which students act as border officers and only let through sentences whose linkers have the right meaning, form and register. Career mode with stars, plus a timed rush-hour mode. | [Open](https://as1-design.github.io/english-learning-activities/linker-border-control.html) |
+| Loop the Loop | B2.1 | Card-chain activity: the number beside each answer points to the next card, and six right answers bring the player back to the start. | [Open](https://as1-design.github.io/english-learning-activities/loop-the-loop1.html) |
+| Tug of War — UK & US Culture | B2 | Two-team quiz on British and American culture. Each right answer pulls the rope, and two in a row pull twice as hard. | [Open](https://as1-design.github.io/english-learning-activities/tug-of-war-uk-us-culture.html) |
+| Word Break | B2 | Five short word games for brain breaks: Connections, Missing Vowels, Word Ladder, Odd One Out and Kim’s Game. Can be played on the whiteboard, in teams or on phones. | [Open](https://as1-design.github.io/english-learning-activities/word-break.html) |
+| Escape from Wraithmoor Manor | B2.1 | Team escape game set in a haunted manor, practising storytelling language such as adverbs and linkers. Includes a 50-minute countdown and a teacher answer key. | [Open](https://as1-design.github.io/english-learning-activities/B21-storytelling-wraithmoor-manor-escape.html) |
+| The House on Hollow Lane | B2.2 | Halloween team game: players move through the rooms of a haunted house by completing language challenges. | [Open](https://as1-design.github.io/english-learning-activities/hollow-lane-halloween.html) |
+
+## Listening
+
+| Activity | Level | Summary | Link |
+|---|---|---|---|
+| Don’t You Worry Child — Song Lesson | B2.2 | Short listening lesson built around the song by Swedish House Mafia, with discussion, vocabulary, gist and detail tasks and a speaking follow-up. Includes a teacher mode. | [Open](https://as1-design.github.io/english-learning-activities/b22-dont-you-worry-child.html) |
+
+## Pronunciation
+
+| Activity | Level | Summary | Link |
+|---|---|---|---|
+| The Rhythm of English | B2 | Fourteen-slide guide to stress and rhythm in English, written for Catalan and Spanish speakers. | [Open](https://as1-design.github.io/english-learning-activities/english-rhythm.html) |
+
+## Classroom Tools
+
+| Activity | Level | Summary | Link |
+|---|---|---|---|
+| Mood Check-in | B2 | Warm-up that deals “How are you today?” phrases for each class. Cards flip to show the meaning, and the teacher can edit the phrase banks and the timetable. | [Open](https://as1-design.github.io/english-learning-activities/mood-check-in.html) |
+| Table Talk — Team Generator | All levels | Shuffles the class into pairs, threes or fours and can avoid repeat partners. Includes a timer, seasonal themes, printable cards and full-screen mode. | [Open](https://as1-design.github.io/english-learning-activities/table-talk%E2%80%93team-generator.html) |
