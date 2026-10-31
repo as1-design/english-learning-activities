@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Describing Places – Interactive Activity (B2)</title>
 <style>
     body {
@@ -76,6 +77,11 @@
         border-radius: 10px;
         display: none;
     }
+
+    /* Fix, 31 Oct 2026: gap boxes big enough to tap on a phone. 16px text also
+       stops iPhones zooming in when a box is selected. */
+    input { box-sizing: border-box; min-height: 40px; padding: 6px 8px; font-size: 16px; margin: 4px 3px; }
+    button { min-height: 44px; }
 </style>
 </head>
 

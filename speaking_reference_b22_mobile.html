@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Speaking Reference</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+html{touch-action:manipulation}
   :root {
     --bg: #f7f4ef;
     --surface: #ffffff;
@@ -420,6 +421,21 @@
   .tab-badge.visible { display: block; }
 
   .panel > .accordion:last-child { margin-bottom: 10px; }
+
+  /* ── Fixes, 31 Oct 2026: legend wraps instead of hiding off-screen,
+     tap targets at least 40px, small labels at least 12px ── */
+  .legend { flex-wrap: wrap; overflow: visible; row-gap: 8px; align-items: center; }
+  .legend-item { font-size: 0.78rem; }
+  .clear-all { min-height: 40px; padding: 8px 14px; font-size: 0.8rem; }
+  .stat-pill { min-height: 40px; padding: 6px 12px; border: 0; color: inherit; font-family: inherit; }
+  .stat-pill:focus-visible, .clear-all:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+  .clear-all:focus-visible { outline-color: var(--accent); }
+  .top-bar-sub { font-size: 0.75rem; }
+  .card-label { font-size: 0.75rem; }
+  .register-notice { font-size: 0.78rem; }
+  /* Tabs are real buttons now (keyboard and screen readers); labels at least 12px */
+  .tab { background: none; border-left: 0; border-right: 0; border-bottom: 0; font-family: inherit; font-size: 0.75rem; cursor: pointer; }
+  .tab:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
 </style>
 </head>
 <body>
@@ -427,8 +443,8 @@
 <div class="top-bar">
   <h1>Speaking Reference</h1>
   <div class="top-stats">
-    <div class="stat-pill used-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">✓ <span id="count-used">0</span></div>
-    <div class="stat-pill want-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">★ <span id="count-want">0</span></div>
+    <button type="button" class="stat-pill used-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">✓ <span id="count-used">0</span></button>
+    <button type="button" class="stat-pill want-pill" onclick="showTab('myphrases', document.querySelector('.tab:last-child'))">★ <span id="count-want">0</span></button>
   </div>
 </div>
 
@@ -776,23 +792,23 @@
 
 <!-- BOTTOM TAB BAR -->
 <nav class="tab-bar">
-  <div class="tab active" onclick="showTab('opinions', this)">
+  <button type="button" class="tab active" onclick="showTab('opinions', this)">
     <span class="tab-icon">💬</span>
     <span>Opinions</span>
-  </div>
-  <div class="tab" onclick="showTab('suggestions', this)">
+  </button>
+  <button type="button" class="tab" onclick="showTab('suggestions', this)">
     <span class="tab-icon">💡</span>
     <span>Suggestions</span>
-  </div>
-  <div class="tab" onclick="showTab('interruptions', this)">
+  </button>
+  <button type="button" class="tab" onclick="showTab('interruptions', this)">
     <span class="tab-icon">✋</span>
     <span>Interruptions</span>
-  </div>
-  <div class="tab" id="tab-myphrases" onclick="showTab('myphrases', this)">
+  </button>
+  <button type="button" class="tab" id="tab-myphrases" onclick="showTab('myphrases', this)">
     <span class="tab-icon">📌</span>
     <span>My Phrases</span>
     <span class="tab-badge" id="tab-badge">0</span>
-  </div>
+  </button>
 </nav>
 
 <script>
