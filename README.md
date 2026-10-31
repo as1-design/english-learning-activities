@@ -31,6 +31,10 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Taboo — Sports Vocabulary Cards | B2.2 | Printable Taboo card set for 24 sports, with 10 forbidden words per sport. Four pages, ready to print and cut. | [Open](https://as1-design.github.io/english-learning-activities/sports_taboo_vocab_cards%20b2.pdf) |
 | News & Media Vocabulary Bank | B2.1 | Contextual practice activities using vocabulary from the textbook's news and media vocabulary bank. | [Open](https://as1-design.github.io/english-learning-activities/news_media_vocab%20bank%20b2.1.html) |
 | Looking Back — Phrases for Talking about the Past | B2.2 | Two-session vocabulary lesson with a word bank, situations to complete and a sticker album to fill. Includes notes on UK and US usage and saves progress. | [Open](https://as1-design.github.io/english-learning-activities/looking-back-phrases-about-the-past.html) |
+| Rosco — Action Verbs & Expression Nouns | B2.2 | Alphabet-wheel game based on the Spanish TV format. Each letter has a definition clue; students must answer with the correct word beginning with that letter. Covers action verbs, expression nouns, and adjectives. | [Open](https://as1-design.github.io/english-learning-activities/rosco-action_b22.html) |
+| Rosco — Personality & Character | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets personality and character vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-personality_b22.html) |
+| Rosco — Work & Professional Contexts | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets work and professional context vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-work_b22.html) |
+| Rosco — Science & Technology | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets science and technology vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-science.html) |
 
 ## Grammar & Language
 
@@ -39,6 +43,9 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Future Forms | B2.2 | Four-activity sequence practising future forms in context, styled as a magazine interview. Includes drag-and-drop, multiple choice, error correction, and a phrase-picker. | [Open](https://as1-design.github.io/english-learning-activities/future_forms_activity_4.html) |
 | Complex Verb Patterns | B2.2 | A simple, contextual activity practising complex verb patterns at B2.2 level. | [Open](https://as1-design.github.io/english-learning-activities/b2.2-complex%20verb%20patterns.html) |
 | Similes — Bridge or Surprise? | B2.2 | Cross-linguistic activity comparing English similes with Spanish and Catalan equivalents. Students categorise, match meanings, and complete sentences, using their L1 as a learning bridge. | [Open](https://as1-design.github.io/english-learning-activities/similes_bridge_activity_b22.html) |
+| Auxiliary Verbs — Team Quiz | B2.2 | Tile-board quiz for two teams on auxiliary verbs (English File B2.2). Some tiles hide surprise cards that change the score. Full-screen mode for the whiteboard. | [Open](https://as1-design.github.io/english-learning-activities/auxiliary-verbs-team-quiz.html) |
+| Linker Border Control | B2.2 | Game in which students act as border officers and only let through sentences whose linkers have the right meaning, form and register. Career mode with stars, plus a timed rush-hour mode. | [Open](https://as1-design.github.io/english-learning-activities/linker-border-control.html) |
+| Loop the Loop | B2.1 | Card-chain activity: the number beside each answer points to the next card, and six right answers bring the player back to the start. | [Open](https://as1-design.github.io/english-learning-activities/loop-the-loop1.html) |
 
 ## Writing
 
@@ -76,15 +83,8 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 
 | Activity | Level | Summary | Link |
 |---|---|---|---|
-| Rosco — Action Verbs & Expression Nouns | B2.2 | Alphabet-wheel game based on the Spanish TV format. Each letter has a definition clue; students must answer with the correct word beginning with that letter. Covers action verbs, expression nouns, and adjectives. | [Open](https://as1-design.github.io/english-learning-activities/rosco-action_b22.html) |
-| Rosco — Personality & Character | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets personality and character vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-personality_b22.html) |
-| Rosco — Work & Professional Contexts | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets work and professional context vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-work_b22.html) |
-| Rosco — Science & Technology | B2.2 | Alphabet-wheel game using the Rosco format. Each letter clue targets science and technology vocabulary. | [Open](https://as1-design.github.io/english-learning-activities/rosco-science.html) |
 | Easter Quiz | B2.1 | Seasonal quiz activity for B2.1 students covering Easter traditions, vocabulary, and general knowledge. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b1b2.html) |
 | Easter Quiz | B2.2 | Seasonal quiz activity for B2.2 students with more challenging language and content than the B2.1 version. | [Open](https://as1-design.github.io/english-learning-activities/easter-egg-quiz-b22_1.html) |
-| Auxiliary Verbs — Team Quiz | B2.2 | Tile-board quiz for two teams on auxiliary verbs (English File B2.2). Some tiles hide surprise cards that change the score. Full-screen mode for the whiteboard. | [Open](https://as1-design.github.io/english-learning-activities/auxiliary-verbs-team-quiz.html) |
-| Linker Border Control | B2.2 | Game in which students act as border officers and only let through sentences whose linkers have the right meaning, form and register. Career mode with stars, plus a timed rush-hour mode. | [Open](https://as1-design.github.io/english-learning-activities/linker-border-control.html) |
-| Loop the Loop | B2.1 | Card-chain activity: the number beside each answer points to the next card, and six right answers bring the player back to the start. | [Open](https://as1-design.github.io/english-learning-activities/loop-the-loop1.html) |
 | Tug of War — UK & US Culture | B2 | Two-team quiz on British and American culture. Each right answer pulls the rope, and two in a row pull twice as hard. | [Open](https://as1-design.github.io/english-learning-activities/tug-of-war-uk-us-culture.html) |
 | Word Break | B2 | Five short word games for brain breaks: Connections, Missing Vowels, Word Ladder, Odd One Out and Kim’s Game. Can be played on the whiteboard, in teams or on phones. | [Open](https://as1-design.github.io/english-learning-activities/word-break.html) |
 | Escape from Wraithmoor Manor | B2.1 | Team escape game set in a haunted manor, practising storytelling language such as adverbs and linkers. Includes a 50-minute countdown and a teacher answer key. | [Open](https://as1-design.github.io/english-learning-activities/B21-storytelling-wraithmoor-manor-escape.html) |
