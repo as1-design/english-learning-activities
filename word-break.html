@@ -1,4 +1,14 @@
 <!doctype html>
+<!--
+  Name:     Word Break · classroom brain breaks
+  Purpose:  Five short word games (Connections, Missing Vowels, Word Ladder,
+            Odd One Out, Kim's Game) for the whole class, teams or phones.
+  Version:  2.1 · 2026-11-02 (QR address fixed; generic default classes;
+            signature footer; larger toolbar buttons on phones and whiteboard)
+  Edit:     Game content comes from the Word Break Google Sheet, with a built-in
+            copy (SNAPSHOT) for offline use. Settings defaults are in S.saved.settings.
+  Credit:   Class of Coffee – with AI assistance
+-->
 <html lang="en-GB" data-mode="projector">
 <head>
 <meta charset="utf-8">
@@ -8,7 +18,7 @@
 <meta name="theme-color" content="#FBF3E6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800&family=Nunito:wght@600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#FBF3E6; --paper:#FFFDF8; --espresso:#3B2418; --roast:#6B4226; --caramel:#D99A5B; --foam:#F1E3CC;
@@ -48,7 +58,17 @@ button{cursor:pointer}
 /* ---------- layout ---------- */
 #app{position:relative;z-index:1;min-height:100vh;padding:0 16px calc(5.5rem + env(safe-area-inset-bottom));}
 .wrap{max-width:1180px;margin:0 auto}
-footer.credit{position:fixed;left:0;right:0;bottom:0;z-index:5;text-align:center;font-size:.72rem;padding:.4rem 1rem calc(.4rem + env(safe-area-inset-bottom));color:var(--ink-soft);background:linear-gradient(transparent, var(--cream) 45%)}
+/* ---------- Class of Coffee signature footer (full on the home screen, compact elsewhere) ---------- */
+.coc-footer{position:fixed;left:0;right:0;bottom:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.25rem 1rem;
+  padding:.4rem 1.25rem calc(.4rem + env(safe-area-inset-bottom));background:#E6C496;color:#5A2D0C;font-family:'Nunito','Segoe UI',Verdana,sans-serif;font-size:.82rem;line-height:1.35}
+.coc-footer__brand{display:flex;align-items:center;gap:.6rem;font-weight:600}
+.coc-footer__mark{width:1.9rem;height:1.9rem;flex:none}
+.coc-footer__mark.sm{display:none}
+.coc-footer a{color:inherit;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:44px;padding:0 .25rem}
+.coc-footer a:focus-visible{outline:2px solid #5A2D0C;outline-offset:3px;border-radius:4px}
+.coc-footer.compact{justify-content:center;background:linear-gradient(transparent, var(--cream) 45%);padding-top:.3rem;padding-bottom:calc(.3rem + env(safe-area-inset-bottom));font-size:.74rem}
+.coc-footer.compact a,.coc-footer.compact .coc-footer__mark.lg{display:none}
+.coc-footer.compact .coc-footer__mark.sm{display:block;width:1.1rem;height:1.1rem}
 
 /* ---------- glazed ceramic buttons & tiles ---------- */
 .btn{
@@ -64,7 +84,7 @@ footer.credit{position:fixed;left:0;right:0;bottom:0;z-index:5;text-align:center
 .btn.primary{--bg:var(--espresso);--edge:#1E120B;color:var(--paper)}
 .btn.accent{--bg:var(--accent);--edge:color-mix(in srgb, var(--accent) 70%, #3B2418)}
 .btn.ghosty{--bg:transparent;--edge:transparent;box-shadow:none;border:2px solid var(--line)}
-.btn.small{font-size:.8rem;padding:.4em .8em;min-height:36px}
+.btn.small{font-size:.8rem;padding:.4em .8em;min-height:44px;min-width:44px;justify-content:center}
 .btn.icon{padding:.5em;width:44px;justify-content:center}
 
 .seg{display:inline-flex;background:var(--foam);border-radius:999px;padding:4px;gap:2px}
@@ -285,6 +305,7 @@ dialog::backdrop{background:rgba(59,36,24,.45);backdrop-filter:blur(3px)}
 html[data-mode="projector"]{font-size:clamp(15px, min(1.15vw, 1.95vh), 24px)}
 html[data-mode="projector"] body{overflow:hidden}
 html[data-mode="projector"] #app{height:100vh;height:100dvh;padding:0 20px 1.7rem;display:flex;flex-direction:column}
+html[data-mode="projector"] body:has(.coc-footer:not(.compact)) #app{padding-bottom:calc(44px + 1.4rem)}
 html[data-mode="projector"] #app>.wrap{flex:1;min-height:0;display:flex;flex-direction:column;width:100%;max-width:1500px}
 html[data-mode="projector"] .topbar{position:static;flex:none;flex-wrap:nowrap;padding:.6rem 0 .3rem;background:none}
 html[data-mode="projector"] .stage{flex:1;min-height:0;padding-top:.2rem;overflow:hidden;position:relative;animation:none}
@@ -323,7 +344,7 @@ html[data-mode="projector"] .table{margin-top:.8rem}
 /* ================= v3: settings, modes, topics, team play ================= */
 kbd{display:inline-block;font-family:var(--mono);font-size:.68em;font-weight:700;line-height:1;padding:.28em .45em;border-radius:6px;background:rgba(255,255,255,.6);color:var(--espresso);box-shadow:inset 0 -2px 0 rgba(59,36,24,.18);margin-left:.45em;vertical-align:.1em}
 .btn.primary kbd,.sbtn.go kbd{background:rgba(255,255,255,.18);color:var(--paper);box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
-.chip{display:inline-flex;align-items:center;gap:.4em;border:2px solid var(--line);background:var(--paper);border-radius:999px;padding:.4em .95em;font-weight:800;font-size:.85rem;min-height:40px;white-space:nowrap;cursor:pointer;transition:transform .15s var(--spring)}
+.chip{display:inline-flex;align-items:center;gap:.4em;border:2px solid var(--line);background:var(--paper);border-radius:999px;padding:.4em .95em;font-weight:800;font-size:.85rem;min-height:44px;white-space:nowrap;cursor:pointer;transition:transform .15s var(--spring)}
 .chip:hover{transform:translateY(-2px)}
 .controls.left{justify-content:flex-start}
 
@@ -496,6 +517,8 @@ dialog.sheet{margin:0 0 0 auto;height:100vh;max-height:100vh;width:min(600px,100
 }
 @media (max-width:520px){.cards{grid-template-columns:1fr}.gcard,.gcard:nth-child(1){grid-column:span 1;min-height:10rem}}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+/* whiteboard: larger toolbar text */
+@media (min-width:1600px){ .btn.small{font-size:20px} .chip{font-size:20px} .mode small{font-size:20px} .coc-footer{font-size:19px} }
 </style>
 </head>
 <body>
@@ -505,7 +528,10 @@ dialog.sheet{margin:0 0 0 auto;height:100vh;max-height:100vh;width:min(600px,100
 </div>
 <div class="ghost" id="ghost" aria-hidden="true"></div>
 <main id="app"></main>
-<footer class="credit">Class of Coffee – with AI assistance</footer>
+<footer class="coc-footer">
+  <span class="coc-footer__brand"><svg class="coc-footer__mark lg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg><svg class="coc-footer__mark sm" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="2.6" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823"/><path d="M33.4 21.6A8.2 8.2 0 1 0 33.4 34.4L33.2 32.4A6.0 6.0 0 1 1 33.2 23.6Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="1" stroke-linejoin="round"/></svg><span>Class of Coffee – with AI assistance</span></span>
+  <a href="https://classofcoffee.com" target="_blank" rel="noopener">classofcoffee.com</a>
+</footer>
 <canvas id="burst"></canvas>
 <dialog id="dlg"></dialog>
 
@@ -742,13 +768,16 @@ const S = {
 S.saved.settings = Object.assign({
   play:'class', scoring:'turns', minutes:5, sound:true, teamCount:4, showKeys:true,
   teams:TEAM_PALETTE.map((c, i) => ({ name:`Team ${i + 1}`, colour:c })),
-  groups:[{ id:'g1', name:'B2.1-16 A' }, { id:'g2', name:'B2.2-16 B' }, { id:'g3', name:'B2.2-18:30 B (BL)' }, { id:'g4', name:'B2.1-18:30 A (BL)' }],
+  groups:[{ id:'g1', name:'Class 1' }, { id:'g2', name:'Class 2' }],
   group:'g1',
-  qrBase:'https://as1-design.github.io/liveartefactseoi/word-break/'
+  qrBase:'https://as1-design.github.io/english-learning-activities/word-break.html'
 }, S.saved.settings);
 const CFG = () => S.saved.settings;
 S.timer.total = S.timer.remain = CFG().minutes * 60;
 const save = () => store.save();
+// Move saved settings from the old QR address (no copy of the tool there) to the published one.
+if (CFG().qrBase === 'https://as1-design.github.io/liveartefactseoi/word-break/'){ CFG().qrBase = 'https://as1-design.github.io/english-learning-activities/word-break.html'; save(); }
+const syncFooter = () => { const f = document.querySelector('.coc-footer'); if (f) f.classList.toggle('compact', S.screen !== 'home'); };
 const layout = () => (SOLO || innerWidth <= 760) ? 'phone' : 'big';
 const phone = () => layout() === 'phone';
 const teamsOn = () => !SOLO && CFG().play === 'teams' && layout() === 'big';
@@ -836,7 +865,7 @@ function bindBar(){
    ========================================================= */
 function home(){
   if (S.cleanup) S.cleanup(); S.cleanup = null; S.keys = null; TP.stop();
-  S.screen = 'home'; S.game = null; document.documentElement.style.setProperty('--accent', 'var(--tomato)');
+  S.screen = 'home'; syncFooter(); S.game = null; document.documentElement.style.setProperty('--accent', 'var(--tomato)');
   $('#ghost').textContent = '';
   const st = CFG();
   const art = {
@@ -880,7 +909,7 @@ function cupSVG(){
 function countFor(key, topic){ const d = dataFor(key, topic); return d[Object.keys(d)[0]].length; }
 function openTopics(key){
   if (S.cleanup) S.cleanup(); S.cleanup = null; S.keys = null; TP.stop();
-  S.screen = 'topics'; S.game = key; const g = GAMES[key];
+  S.screen = 'topics'; syncFooter(); S.game = key; const g = GAMES[key];
   document.documentElement.style.setProperty('--accent', g.colour); $('#ghost').textContent = g.ghost;
   const topics = topicsFor(key).filter(t => countFor(key, t) >= MIN[key]);
   const mode = SOLO ? 'class' : CFG().play;
@@ -923,7 +952,7 @@ function playLink(key, topic){
 function qrSVG(text){ const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize:8, margin:2, scalable:true }); }
 function showQR(key, topic){
   if (S.cleanup) S.cleanup(); S.cleanup = null; S.keys = null; TP.stop();
-  S.screen = 'qr'; const g = GAMES[key], link = playLink(key, topic), local = !/^https?:/.test(location.protocol);
+  S.screen = 'qr'; syncFooter(); const g = GAMES[key], link = playLink(key, topic), local = !/^https?:/.test(location.protocol);
   $('#app').innerHTML = `<div class="wrap">
     <div class="topbar">
       <button class="btn icon" id="back" aria-label="Back to topics">←</button>
@@ -959,7 +988,7 @@ function showQR(key, topic){
    ========================================================= */
 function openGame(key, topic = ''){
   if (S.cleanup) S.cleanup(); S.cleanup = null; S.keys = null;
-  S.screen = 'game'; S.game = key; S.topic = topic; const g = GAMES[key];
+  S.screen = 'game'; syncFooter(); S.game = key; S.topic = topic; const g = GAMES[key];
   S.saved.last[key] = topic; save();
   document.documentElement.style.setProperty('--accent', g.colour); $('#ghost').textContent = g.ghost;
   $('#app').innerHTML = `<div class="wrap">
