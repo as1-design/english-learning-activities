@@ -3,10 +3,15 @@
   Name:     Word Break · classroom brain breaks
   Purpose:  Five short word games (Connections, Missing Vowels, Word Ladder,
             Odd One Out, Kim's Game) for the whole class, teams or phones.
-  Version:  2.1 · 2026-11-02 (QR address fixed; generic default classes;
+  Version:  2.2 · 2026-11-02 (Settings › Content: teachers can use their own copy
+            of the sheet; the QR code passes it to students' phones; phones held
+            sideways use the phone layout)
+            2.1 · 2026-11-02 (QR address fixed; generic default classes;
             signature footer; larger toolbar buttons on phones and whiteboard)
-  Edit:     Game content comes from the Word Break Google Sheet, with a built-in
-            copy (SNAPSHOT) for offline use. Settings defaults are in S.saved.settings.
+  Edit:     Game content comes from the Word Break Google Sheet (DEFAULT_SHEET), with
+            a built-in copy (SNAPSHOT) for offline use. A teacher can switch to their
+            own copy of the sheet in Settings › Content; it is saved as settings.sheetId.
+            Settings defaults are in S.saved.settings.
   Credit:   Class of Coffee – with AI assistance
 -->
 <html lang="en-GB" data-mode="projector">
@@ -458,6 +463,14 @@ dialog.sheet{margin:0 0 0 auto;height:100vh;max-height:100vh;width:min(600px,100
 .gpick{border:0;background:none;font-size:1.3rem;width:2rem}
 .grouprow.on .field{border-color:var(--espresso)}
 .field.wide{width:100%}
+.own-steps{margin:.2rem 0 .7rem;padding-left:1.3rem;font-size:.92rem;line-height:1.5}
+.own-steps li{margin:.25rem 0}
+.own-steps a{color:inherit;font-weight:800}
+.own-row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.own-row .field{flex:1 1 16rem}
+.own-status{min-height:1.2em;font-weight:700}
+.own-status.bad{color:#B3261E}
+.own-status.good{color:#1C7C3C}
 .keys summary{font-weight:800;cursor:pointer;margin-top:.4rem}
 .keys table{margin-top:.5rem;font-size:.88rem;border-collapse:collapse}
 .keys td{padding:.25rem .6rem .25rem 0;vertical-align:top}
@@ -631,8 +644,20 @@ function oneApart(a, b){ if (a.length !== b.length) return false; let d = 0; for
 function diffIndex(a, b){ for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return i; return -1; }
 
 /* ---------- content: Google Sheet database ---------- */
-const SHEET_ID = '14EbRgJprIpBjTjZpmsc1Z9ag6gOZewzgWT877j5XVOU';
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+const DEFAULT_SHEET = '14EbRgJprIpBjTjZpmsc1Z9ag6gOZewzgWT877j5XVOU';   // the Class of Coffee sheet
+const sheetIdOk = id => /^[A-Za-z0-9_-]{20,100}$/.test(String(id || ''));
+/* A sheet passed in the address (?s=…) by the QR code wins; otherwise the teacher's
+   own sheet if they chose one in Settings › Content; otherwise the Class of Coffee sheet. */
+const SHEET_PARAM = (() => { const v = new URLSearchParams(location.search).get('s'); return sheetIdOk(v) ? v : ''; })();
+let OWN_SHEET = (() => { try { const st = (JSON.parse(localStorage.getItem('wordbreak.v2')) || {}).settings || {}; return st.source === 'own' && sheetIdOk(st.sheetId) ? st.sheetId : ''; } catch(e){ return ''; } })();
+const sheetId = () => SHEET_PARAM || OWN_SHEET || DEFAULT_SHEET;
+const usingOwn = () => sheetId() !== DEFAULT_SHEET;
+const sheetUrl = (id = sheetId()) => `https://docs.google.com/spreadsheets/d/${id}/edit`;
+const TEMPLATE_URL = `https://docs.google.com/spreadsheets/d/${DEFAULT_SHEET}/copy`;
+function parseSheetLink(text){
+  const t = String(text || '').trim(); const m = t.match(/\/spreadsheets\/d\/([A-Za-z0-9_-]+)/);
+  const id = m ? m[1] : t; return sheetIdOk(id) ? id : '';
+}
 const TABS = { connections:'Connections', vowels:'Missing Vowels', ladder:'Word Ladder', odd:'Odd One Out', kim:"Kim's Game" };
 const CACHE_KEY = 'wordbreak.content.v1';
 function parseCSV(text){
@@ -692,34 +717,62 @@ function normalise(raw){
 }
 const CONTENT = { db:null, source:'built-in', when:null, loading:false };
 function cacheLoad(){ try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch(e){ return null; } }
-function cacheSave(raw){ try { localStorage.setItem(CACHE_KEY, JSON.stringify({ raw, when:Date.now() })); } catch(e){} }
+function cacheSave(raw, sheet){ try { localStorage.setItem(CACHE_KEY, JSON.stringify({ raw, sheet, when:Date.now() })); } catch(e){} }
 (function initContent(){
   const c = cacheLoad();
-  if (c && c.raw){ CONTENT.db = normalise(c.raw); CONTENT.source = 'saved'; CONTENT.when = c.when; }
+  if (c && c.raw && (c.sheet || DEFAULT_SHEET) === sheetId()){ CONTENT.db = normalise(c.raw); CONTENT.source = 'saved'; CONTENT.when = c.when; }
   else { CONTENT.db = normalise(SNAPSHOT); CONTENT.source = 'built-in'; }
 })();
-async function fetchTab(name){
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(name)}&t=${Date.now()}`;
+async function fetchTab(id, name){
+  const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(name)}&t=${Date.now()}`;
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 10000);
-  try { const res = await fetch(url, { signal:ctl.signal }); if (!res.ok) throw new Error(res.status); return parseCSV(await res.text()); }
+  try {
+    const res = await fetch(url, { signal:ctl.signal }); if (!res.ok) throw new Error('http');
+    const text = await res.text(); if (/^\s*</.test(text)) throw new Error('not-shared');   // a sign-in page, not CSV
+    return parseCSV(text);
+  }
   finally { clearTimeout(t); }
+}
+/* Read all five tabs of a sheet. Resolves to { raw, db } or rejects with a reason:
+   'offline', 'not-shared' (cannot be opened) or 'empty' (opened, but no usable rows). */
+async function readSheet(id){
+  if (navigator.onLine === false) throw new Error('offline');
+  let entries;
+  try { entries = await Promise.all(Object.entries(TABS).map(async ([k, name]) => [k, await fetchTab(id, name)])); }
+  catch(e){ throw new Error(navigator.onLine === false ? 'offline' : 'not-shared'); }
+  const raw = Object.fromEntries(entries), db = normalise(raw);
+  if (Object.keys(TABS).every(k => !db[k].length)) throw new Error('empty');
+  return { raw, db };
 }
 async function loadSheet(){
   if (CONTENT.loading) return false; CONTENT.loading = true; paintSource();
+  const id = sheetId();
   try {
-    const entries = await Promise.all(Object.entries(TABS).map(async ([k, name]) => [k, await fetchTab(name)]));
-    const raw = Object.fromEntries(entries);
-    CONTENT.db = normalise(raw); CONTENT.source = 'sheet'; CONTENT.when = Date.now(); cacheSave(raw);
+    const { raw, db } = await readSheet(id);
+    if (id !== sheetId()) return false;   // the source changed while loading
+    CONTENT.db = db; CONTENT.source = 'sheet'; CONTENT.when = Date.now(); cacheSave(raw, id);
     return true;
   } catch(e){ return false; }
   finally { CONTENT.loading = false; paintSource(); }
 }
+const SHEET_PROBLEMS = {
+  offline:'You seem to be offline. Try again when you are connected.',
+  'not-shared':'Word Break could not open that sheet. In your copy, choose Share and set General access to “Anyone with the link” (Viewer), then press Load again.',
+  empty:'The sheet opened, but none of its rows could be used. Check that it still has the five tabs from the template, with the same names and column headings.',
+  link:'That does not look like a link to a Google Sheet. Copy the address of your sheet from the browser and paste it here.'
+};
+function contentReport(db){
+  const parts = Object.keys(TABS).map(k => { const n = db[k].length, u = GAMES[k].unit; return `${GAMES[k].name}: ${n} ${n === 1 ? u[0] : u[1]}`; });
+  const skipped = Object.values(db.skipped || {}).reduce((a, b) => a + b, 0);
+  return parts.join(' · ') + (skipped ? ` · ${skipped} row${skipped === 1 ? '' : 's'} skipped` : '');
+}
 function sourceText(){
   if (CONTENT.loading) return 'Loading the latest content…';
   const t = CONTENT.when ? new Date(CONTENT.when).toLocaleString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) : '';
-  if (CONTENT.source === 'sheet') return `Content up to date (${t})`;
-  if (CONTENT.source === 'saved') return `Offline: using the copy saved on ${t}`;
-  return 'Offline: using the built-in content';
+  const whose = usingOwn() ? 'your sheet' : 'the Class of Coffee sheet';
+  if (CONTENT.source === 'sheet') return `Words from ${whose}, up to date (${t})`;
+  if (CONTENT.source === 'saved') return `Offline: using the copy of ${whose} saved on ${t}`;
+  return usingOwn() ? 'Offline: using the built-in Class of Coffee words until your sheet loads' : 'Offline: using the built-in content';
 }
 function paintSource(){ $$('.source-text').forEach(el => el.textContent = sourceText()); $$('.refresh').forEach(b => b.disabled = CONTENT.loading); }
 function topicsFor(key){ const seen = []; for (const it of CONTENT.db[key]) if (!seen.includes(it.topic)) seen.push(it.topic); return seen; }
@@ -770,7 +823,8 @@ S.saved.settings = Object.assign({
   teams:TEAM_PALETTE.map((c, i) => ({ name:`Team ${i + 1}`, colour:c })),
   groups:[{ id:'g1', name:'Class 1' }, { id:'g2', name:'Class 2' }],
   group:'g1',
-  qrBase:'https://as1-design.github.io/english-learning-activities/word-break.html'
+  qrBase:'https://as1-design.github.io/english-learning-activities/word-break.html',
+  source:'coc', sheetId:''
 }, S.saved.settings);
 const CFG = () => S.saved.settings;
 S.timer.total = S.timer.remain = CFG().minutes * 60;
@@ -778,7 +832,7 @@ const save = () => store.save();
 // Move saved settings from the old QR address (no copy of the tool there) to the published one.
 if (CFG().qrBase === 'https://as1-design.github.io/liveartefactseoi/word-break/'){ CFG().qrBase = 'https://as1-design.github.io/english-learning-activities/word-break.html'; save(); }
 const syncFooter = () => { const f = document.querySelector('.coc-footer'); if (f) f.classList.toggle('compact', S.screen !== 'home'); };
-const layout = () => (SOLO || innerWidth <= 760) ? 'phone' : 'big';
+const layout = () => (SOLO || innerWidth <= 760 || innerHeight <= 520) ? 'phone' : 'big';
 const phone = () => layout() === 'phone';
 const teamsOn = () => !SOLO && CFG().play === 'teams' && layout() === 'big';
 const activeTeams = () => CFG().teams.slice(0, CFG().teamCount);
@@ -947,6 +1001,7 @@ function openTopics(key){
 function playLink(key, topic){
   const base = /^https?:/.test(location.protocol) ? location.origin + location.pathname : CFG().qrBase;
   const u = new URL(base); u.search = ''; u.searchParams.set('g', key); if (topic) u.searchParams.set('t', topic); u.searchParams.set('solo', '1');
+  if (usingOwn()) u.searchParams.set('s', sheetId());
   return u.toString();
 }
 function qrSVG(text){ const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize:8, margin:2, scalable:true }); }
@@ -1173,6 +1228,43 @@ const TP = {
 };
 
 /* =========================================================
+   CONTENT SOURCE — Class of Coffee sheet or the teacher's own copy
+   ========================================================= */
+function afterSourceChange(){
+  if (S.screen === 'topics') openTopics(S.game); else if (S.screen === 'home') home();
+}
+function useDefaultSheet(){
+  const st = CFG(); st.source = 'coc'; save(); OWN_SHEET = '';
+  const c = cacheLoad();
+  if (c && c.raw && (c.sheet || DEFAULT_SHEET) === DEFAULT_SHEET){ CONTENT.db = normalise(c.raw); CONTENT.source = 'saved'; CONTENT.when = c.when; }
+  else { CONTENT.db = normalise(SNAPSHOT); CONTENT.source = 'built-in'; CONTENT.when = null; }
+  loadSheet().then(() => afterSourceChange());
+}
+function chooseSource(v, rerender){
+  const st = CFG(); S.ownMsg = null;
+  if (v === 'coc'){ S.ownDraft = false; if (st.source === 'own') useDefaultSheet(); toast('Using the Class of Coffee words.'); return rerender(); }
+  if (st.sheetId && st.source !== 'own'){ S.ownDraft = true; rerender(); return loadOwnSheet(st.sheetId, rerender); }
+  S.ownDraft = true; rerender();
+  const f = $('#sheetLink', $('#dlg')); if (f) f.focus();
+}
+async function loadOwnSheet(text, rerender){
+  const id = parseSheetLink(text);
+  if (!id){ S.ownMsg = { cls:'bad', text:SHEET_PROBLEMS.link }; return rerender(); }
+  S.ownMsg = { cls:'', text:'Loading your sheet…' }; rerender();
+  try {
+    const { raw, db } = await readSheet(id);
+    const st = CFG(); st.source = 'own'; st.sheetId = id; save(); OWN_SHEET = id; S.ownDraft = false;
+    CONTENT.db = db; CONTENT.source = 'sheet'; CONTENT.when = Date.now(); cacheSave(raw, id); paintSource();
+    S.ownMsg = { cls:'good', text:'Loaded: ' + contentReport(db) + '.' };
+    sfx.good(); afterSourceChange();
+  } catch(e){
+    S.ownMsg = { cls:'bad', text:SHEET_PROBLEMS[e.message] || SHEET_PROBLEMS['not-shared'] };
+    sfx.bad();
+  }
+  if ($('#dlg') && $('#dlg').open) rerender();
+}
+
+/* =========================================================
    SETTINGS
    ========================================================= */
 function openSettings(focus){
@@ -1209,8 +1301,17 @@ function openSettings(focus){
       <div class="srow"><span>Sound effects</span>${segs('sound', [['true', 'On'], ['false', 'Off']], st.sound)}</div>`)}
     ${sec('phones', 'Phones', `<p class="shelp">The QR code sends students to this address, so the game must be uploaded there.${/^https?:/.test(location.protocol) ? ' You are using the online copy now, so its own address is used.' : ''}</p>
       <input class="field wide" id="qrBase" value="${esc(st.qrBase)}" aria-label="Online address of Word Break">`)}
-    ${sec('content', 'Content', `<div class="srow"><span class="source-text">${sourceText()}</span><button type="button" class="btn small refresh">↻ Refresh</button></div>
-      <p class="shelp"><a href="${SHEET_URL}" target="_blank" rel="noopener">Open the content Sheet</a></p>`)}
+    ${sec('content', 'Content', `<div class="srow"><span>Words come from</span>${segs('source', [['coc', 'Class of Coffee'], ['own', 'My own sheet']], S.ownDraft ? 'own' : (st.source || 'coc'))}</div>
+      ${(S.ownDraft || st.source === 'own') ? `<ol class="own-steps">
+        <li><a href="${TEMPLATE_URL}" target="_blank" rel="noopener">Make a copy of the template sheet</a>. It has the five tabs, one for each game, with example rows you can edit or delete.</li>
+        <li>In your copy, choose <b>Share</b> and set General access to <b>Anyone with the link</b> (Viewer).</li>
+        <li>Copy the address of your sheet, paste it here and press <b>Load</b>.</li>
+      </ol>
+      <div class="own-row"><input class="field" id="sheetLink" inputmode="url" autocomplete="off" placeholder="https://docs.google.com/spreadsheets/d/…" value="${st.source === 'own' && st.sheetId ? esc(sheetUrl(st.sheetId)) : ''}" aria-label="Link to your Google Sheet"><button type="button" class="btn small" id="loadOwn">Load</button></div>
+      <p class="shelp own-status ${S.ownMsg ? S.ownMsg.cls : ''}" role="status" aria-live="polite">${S.ownMsg ? esc(S.ownMsg.text) : ''}</p>` : ''}
+      <div class="srow"><span class="source-text">${sourceText()}</span><button type="button" class="btn small refresh">↻ Refresh</button></div>
+      <p class="shelp"><a href="${sheetUrl()}" target="_blank" rel="noopener">Open ${usingOwn() ? 'your' : 'the'} content sheet</a></p>
+      ${SHEET_PARAM ? '<p class="shelp">This copy of Word Break was opened with a QR code, so it uses the sheet that came with it.</p>' : ''}`)}
     </div></div>`;
   const d = modal(html, 'sheet');
   const rerender = () => { const y = $('.sbody', d).scrollTop; openSettings(); $('.sbody', $('#dlg')).scrollTop = y; };
@@ -1221,6 +1322,7 @@ function openSettings(focus){
     const sg = b.closest('[data-seg]');
     if (sg && b.dataset.v !== undefined){
       const key = sg.dataset.seg, v = b.dataset.v;
+      if (key === 'source'){ sfx.tap(); return chooseSource(v, rerender); }
       st[key] = ['teamCount', 'minutes'].includes(key) ? +v : (v === 'true' ? true : v === 'false' ? false : v);
       if (key === 'minutes') timerReset();
       save(); sfx.tap(); return rerender();
@@ -1231,14 +1333,16 @@ function openSettings(focus){
     if (b.dataset.gdel){ if (b.dataset.armed){ st.groups = st.groups.filter(x => x.id !== b.dataset.gdel); delete S.saved.played[b.dataset.gdel]; if (st.group === b.dataset.gdel) st.group = st.groups[0] ? st.groups[0].id : ''; save(); return rerender(); } b.dataset.armed = 1; b.textContent = 'Delete?'; b.classList.remove('icon'); return; }
     if (b.id === 'addGroup'){ const id = 'g' + uid(); st.groups.push({ id, name:`New group ${st.groups.length + 1}` }); if (!st.group) st.group = id; save(); rerender(); const inp = $(`[data-gname="${id}"]`, $('#dlg')); if (inp){ inp.focus(); inp.select(); } return; }
     if (b.classList.contains('refresh')) refresh();
+    if (b.id === 'loadOwn') loadOwnSheet($('#sheetLink', d).value, rerender);
   };
+  d.onkeydown = e => { if (e.key === 'Enter' && e.target.id === 'sheetLink'){ e.preventDefault(); loadOwnSheet(e.target.value, rerender); } };
   d.oninput = e => {
     const t = e.target;
     if (t.dataset.tname !== undefined){ st.teams[+t.dataset.tname].name = t.value.trim() || `Team ${+t.dataset.tname + 1}`; save(); }
     if (t.dataset.gname !== undefined){ const g = st.groups.find(x => x.id === t.dataset.gname); if (g){ g.name = t.value.trim() || 'Unnamed group'; save(); } }
     if (t.id === 'qrBase'){ st.qrBase = t.value.trim(); save(); }
   };
-  d.onclose = () => { d.onclose = null; if (S.screen === 'home') home(); else if (S.screen === 'topics') openTopics(S.game); else if (S.screen === 'game' && TP.on !== teamsOn()) openGame(S.game, S.topic); else if (S.screen === 'game'){ TP.paint(); } };
+  d.onclose = () => { d.onclose = null; S.ownDraft = false; S.ownMsg = null; if (S.screen === 'home') home(); else if (S.screen === 'topics') openTopics(S.game); else if (S.screen === 'game' && TP.on !== teamsOn()) openGame(S.game, S.topic); else if (S.screen === 'game'){ TP.paint(); } };
   if (focus){ const el = $('#set-' + focus, d); if (el) el.scrollIntoView({ block:'start' }); }
 }
 
