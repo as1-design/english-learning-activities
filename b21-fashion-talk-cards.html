@@ -1,0 +1,607 @@
+<!doctype html>
+<!--
+  Name:     Fashion Talk · B2.1 conversation cards
+  Purpose:  One card at a time for pair or small-group discussion about clothes
+            and fashion: right now, looking back, feelings and debate.
+            The deck is shuffled and every card appears once before it reshuffles.
+  Version:  1.0 · 2026-11-03
+  Edit:     All cards, colours and screen text are in the CONTENT section at the
+            top of the script. Change the text there; nothing else needs editing.
+  Credit:   Class of Coffee – with AI assistance
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fashion Talk · B2.1 conversation cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ================= tokens ================= */
+:root{
+  --bg:#FBF4EA; --paper:#FFFDF8; --ink:#1F1A33; --ink-soft:#5E5873; --line:#E8DCCB;
+  --accent:#E8456B;
+  --card:#FF5A5F; --card-ink:#1F1A33;            /* set per card by the script */
+  --display:'Bricolage Grotesque','Trebuchet MS',sans-serif;
+  --body:'Atkinson Hyperlegible',Verdana,sans-serif;
+  --r-s:10px; --r-m:18px; --r-l:30px;
+  --shadow:0 18px 40px -18px rgba(31,26,51,.45);
+  --spring:cubic-bezier(.34,1.56,.64,1); --ease:cubic-bezier(.25,.46,.45,.94);
+}
+/* ================= base ================= */
+*{box-sizing:border-box}
+html{touch-action:manipulation;height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font:400 1rem/1.5 var(--body);
+  background-image:radial-gradient(rgba(31,26,51,.07) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button{font:inherit;min-height:44px;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.screen{display:none}.screen.active{display:flex}
+h1,h2{font-family:var(--display);font-weight:800;line-height:1.05;margin:0}
+
+/* ================= start and end screens ================= */
+.page{min-height:100vh;min-height:100dvh;flex-direction:column}
+.page-inner{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1.2rem;padding:2rem 1.2rem;text-align:center;max-width:46rem;margin:0 auto;width:100%}
+.fan{position:relative;height:8.5rem;width:13rem;margin-bottom:.5rem}
+.fan span{position:absolute;left:50%;bottom:0;width:6.2rem;height:8rem;border-radius:16px;
+  display:grid;place-items:center;font-size:2.6rem;box-shadow:var(--shadow);transform-origin:50% 120%;
+  animation:fanIn .7s var(--spring) both}
+.fan span:nth-child(1){background:#FFC23D;transform:translateX(-50%) rotate(-18deg);animation-delay:.05s}
+.fan span:nth-child(2){background:#2EC4A6;transform:translateX(-50%) rotate(-6deg);animation-delay:.15s}
+.fan span:nth-child(3){background:#9A5BFF;transform:translateX(-50%) rotate(6deg);animation-delay:.25s}
+.fan span:nth-child(4){background:#FF5A5F;transform:translateX(-50%) rotate(18deg);animation-delay:.35s}
+@keyframes fanIn{from{opacity:0;translate:0 30px}to{opacity:1;translate:0 0}}
+.title{font-size:clamp(2.4rem,1.6rem + 4vw,4.6rem)}
+.title em{font-style:normal;color:var(--accent)}
+.level{display:inline-block;font:700 clamp(1rem,.9rem + .4vw,1.3rem)/1 var(--body);background:var(--ink);color:var(--paper);
+  padding:.45rem .8rem;border-radius:999px;letter-spacing:.04em}
+.howto{background:var(--paper);border:2px solid var(--line);border-radius:var(--r-m);padding:1rem 1.3rem;
+  text-align:left;max-width:36rem;font-size:clamp(1rem,.95rem + .3vw,1.2rem)}
+.howto p{margin:.35rem 0}
+.keys{color:var(--ink-soft);font-size:clamp(.95rem,.9rem + .3vw,1.15rem);margin:0}
+.btn-row{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+.btn{border:0;border-radius:999px;padding:.7rem 1.4rem;font:800 clamp(1.1rem,1rem + .4vw,1.4rem)/1.1 var(--display);
+  background:var(--paper);border:2px solid var(--ink);transition:transform .15s var(--spring)}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:scale(.96)}
+.btn.primary{background:var(--ink);color:var(--paper);font-size:1.25rem;padding:.85rem 1.8rem}
+.resume{font-size:1rem;color:var(--ink-soft);margin:0}
+
+/* ================= game screen ================= */
+#game{height:100vh;height:100dvh;flex-direction:column}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;padding:.6rem 1rem}
+.brand{font:800 clamp(1.05rem,.9rem + .5vw,1.5rem)/1 var(--display);margin-right:auto}
+.brand small{font:700 clamp(.8rem,.7rem + .4vw,1.15rem) var(--body);color:var(--ink-soft);margin-left:.4rem}
+.counter{font:700 clamp(1rem,.9rem + .4vw,1.35rem) var(--body)}
+.progress{flex-basis:100%;height:8px;background:var(--line);border-radius:99px;overflow:hidden;order:5}
+.progress i{display:block;height:100%;width:0;background:var(--ink);border-radius:99px;transition:width .4s var(--ease)}
+.icon-btn{min-width:44px;border-radius:12px;border:2px solid var(--line);background:var(--paper);font-size:clamp(1.1rem,1rem + .4vw,1.4rem)}
+
+.stage{flex:1;min-height:0;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:.4rem 1rem 1rem}
+.stage-inner{width:100%;max-width:60rem;transform-origin:50% 0;margin:auto 0}
+
+.card{position:relative;background:var(--card);color:var(--card-ink);border-radius:var(--r-l);
+  box-shadow:var(--shadow);padding:clamp(1.1rem,.8rem + 1.6vw,2.2rem);overflow:hidden}
+.card.deal{animation:deal .55s var(--spring) both}
+.card.dealBack{animation:dealBack .5s var(--spring) both}
+@keyframes deal{from{opacity:0;transform:translate(40px,30px) rotate(5deg) scale(.96)}to{opacity:1;transform:none}}
+@keyframes dealBack{from{opacity:0;transform:translate(-40px,20px) rotate(-5deg) scale(.96)}to{opacity:1;transform:none}}
+/* thick stitched seam inside the edge: a sewing detail */
+.card::before{content:"";position:absolute;inset:10px;border:2.5px dashed currentColor;opacity:.28;border-radius:22px;pointer-events:none}
+
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;position:relative}
+/* the category is a swing tag, like a label on new clothes */
+.tag{position:relative;display:inline-flex;align-items:center;gap:.45rem;background:var(--paper);color:var(--ink);
+  font:700 clamp(.95rem,.8rem + .6vw,1.5rem)/1 var(--body);padding:.55rem .9rem .55rem 1.7rem;
+  border-radius:6px 14px 14px 6px;clip-path:polygon(14px 0,100% 0,100% 100%,14px 100%,0 50%);
+  transform-origin:0 50%;animation:sway 6s ease-in-out infinite;margin-top:.3rem}
+.tag::before{content:"";position:absolute;left:12px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;
+  background:var(--card);box-shadow:inset 0 0 0 2px rgba(31,26,51,.35)}
+@keyframes sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+.emoji{font-size:clamp(3.4rem,2.6rem + 3.5vw,6.5rem);line-height:1;flex:none;
+  filter:drop-shadow(0 6px 0 rgba(31,26,51,.18));animation:pop .6s var(--spring) .12s both}
+@keyframes pop{from{transform:scale(.3) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+
+.question{font:800 clamp(1.45rem,1rem + 2.3vw,2.9rem)/1.15 var(--display);margin:.7rem 0 1.1rem;position:relative;
+  animation:rise .5s var(--ease) .2s both;max-width:30ch}
+.card.debate .question{font-size:clamp(1.35rem,.95rem + 2.1vw,2.6rem)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.panel{position:relative;background:var(--paper);color:var(--ink);border-radius:var(--r-m);
+  padding:clamp(.9rem,.7rem + .8vw,1.4rem);display:grid;gap:.9rem;animation:rise .5s var(--ease) .32s both}
+.followup{font-size:clamp(1.05rem,.95rem + .6vw,1.45rem);margin:0;font-style:italic}
+.followup b{font-style:normal;font-family:var(--display);font-weight:800;margin-right:.3rem}
+.lang-label{font:700 clamp(.9rem,.8rem + .45vw,1.25rem) var(--body);color:var(--ink-soft);margin:0 0 .4rem}
+.chunks{display:flex;flex-wrap:wrap;gap:.5rem}
+.chunk{min-height:42px;border:2px solid var(--ink);background:var(--paper);border-radius:12px;padding:.45rem .8rem;
+  font:700 clamp(1rem,.95rem + .4vw,1.25rem)/1.2 var(--body);text-align:left;transition:transform .15s var(--spring)}
+.chunk:hover{transform:translateY(-2px)}
+.chunk::after{content:" ＋";color:var(--ink-soft)}
+.chunk[aria-expanded="true"]{background:var(--ink);color:var(--paper)}
+.chunk[aria-expanded="true"]::after{content:" －";color:inherit}
+.defs{display:grid;gap:.4rem}
+.def{margin:0;padding:.55rem .8rem;border-left:5px solid var(--card);background:#F6EFE4;border-radius:0 10px 10px 0;
+  font-size:clamp(1rem,.95rem + .4vw,1.2rem);animation:rise .3s var(--ease) both}
+.def b{font-weight:700}
+.who{justify-self:start;display:inline-flex;gap:.4rem;align-items:center;background:var(--ink);color:var(--paper);
+  border-radius:18px;padding:.45rem .95rem;font:700 clamp(.95rem,.9rem + .3vw,1.15rem)/1.3 var(--body)}
+
+.controls{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;padding:.6rem 1rem 1rem}
+.controls .btn{min-width:7.5rem}
+.controls .next{background:var(--ink);color:var(--paper);min-width:10rem}
+.controls button:disabled{opacity:.4;cursor:default;transform:none}
+.note{min-height:1.4rem;text-align:center;font-size:.95rem;color:var(--ink-soft);margin:0 1rem}
+
+/* ================= end screen extras ================= */
+.end-emoji{font-size:5rem;line-height:1;animation:pop .7s var(--spring) both}
+.confetti{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:5}
+.confetti span{position:absolute;top:-3rem;font-size:1.8rem;animation:fall 1.6s var(--ease) forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg);opacity:.2}}
+
+/* ================= signature footer (copied unchanged from the brand kit) ================= */
+.coc-footer{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:4px 16px; padding:7px 20px;
+  background:var(--coc-tan,#E6C496); color:var(--coc-coffee-dark,#5A2D0C);
+  font-family:var(--coc-body,'Nunito','Segoe UI',Verdana,sans-serif); font-size:13px; line-height:1.4;
+}
+.coc-footer__brand{ display:flex; align-items:center; gap:10px; font-weight:600; }
+.coc-footer__mark{ width:30px; height:30px; flex:none; }
+.coc-footer a{ color:inherit; text-decoration:underline; text-underline-offset:3px;
+  display:inline-flex; align-items:center; min-height:40px; padding:0 4px; }
+.coc-footer a:focus-visible{ outline:2px solid var(--coc-coffee-dark,#5A2D0C); outline-offset:3px; border-radius:4px; }
+
+/* ================= wide screens (laptop, whiteboard) ================= */
+@media (min-width:1000px) and (min-aspect-ratio:4/3){
+  .stage-inner{max-width:84rem}
+  .card-body{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(1.2rem,2vw,2.4rem);align-items:start}
+  .question{margin-top:.4rem;max-width:none;font-size:clamp(2rem,1rem + 2.2vw,3.6rem)}
+  .card.debate .question{font-size:clamp(1.9rem,.9rem + 2vw,3.2rem)}
+  .followup{font-size:clamp(1.3rem,.8rem + .9vw,1.9rem)}
+  .chunk{font-size:clamp(1.15rem,.7rem + .75vw,1.65rem)}
+  .def{font-size:clamp(1.1rem,.7rem + .7vw,1.55rem)}
+  .who{font-size:clamp(1.05rem,.7rem + .6vw,1.45rem)}
+  .emoji{font-size:clamp(4.5rem,2rem + 4vw,8rem)}
+}
+/* ================= small screens ================= */
+@media (max-width:560px){
+  .topbar{padding:.5rem .7rem}
+  .brand small{display:none}
+  .stage{padding:.3rem .6rem .6rem}
+  .controls{padding:.5rem .6rem .8rem;gap:.45rem}
+  .controls .btn{min-width:0;flex:1;padding:.7rem .6rem}
+  .controls .next{flex:1.4}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .topbar{padding:.3rem .8rem}
+  .stage-inner{max-width:none}
+  .card-body{display:grid;grid-template-columns:1fr 1fr;gap:1rem;align-items:start}
+  .question{font-size:1.45rem;max-width:none;margin:.4rem 0 0}
+  .card.debate .question{font-size:1.35rem}
+  .controls{padding:.3rem .8rem .5rem}
+  .emoji{font-size:3rem}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app">
+
+  <section class="screen page active" id="start">
+    <div class="page-inner">
+      <div class="fan" aria-hidden="true"><span>👗</span><span>🧣</span><span>👟</span><span>👕</span></div>
+      <span class="level" data-text="level"></span>
+      <h1 class="title" data-text="titleHtml"></h1>
+      <div class="howto" data-text="howto"></div>
+      <p class="keys" data-text="keys"></p>
+      <p class="resume" id="resumeText" hidden></p>
+      <div class="btn-row" id="startButtons"></div>
+    </div>
+    <footer class="coc-footer">
+      <span class="coc-footer__brand">
+        <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+        <span>Class of Coffee – with AI assistance</span>
+      </span>
+      <a href="https://classofcoffee.com">classofcoffee.com</a>
+    </footer>
+  </section>
+
+  <section class="screen" id="game" aria-live="polite">
+    <div class="topbar">
+      <span class="brand"><span data-text="shortTitle"></span><small data-text="level"></small></span>
+      <span class="counter" id="counter"></span>
+      <button class="icon-btn" data-act="full" aria-label="Full screen" title="Full screen (F)">⛶</button>
+      <button class="icon-btn" data-act="home" aria-label="Back to the start screen" title="Start screen">🏠</button>
+      <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    </div>
+    <div class="stage" id="stage"><div class="stage-inner" id="cardHolder"></div></div>
+    <p class="note" id="note"></p>
+    <div class="controls">
+      <button class="btn" data-act="back" id="backBtn"></button>
+      <button class="btn" data-act="pass" id="passBtn"></button>
+      <button class="btn next" data-act="next" id="nextBtn"></button>
+    </div>
+  </section>
+
+  <section class="screen page" id="end">
+    <div class="page-inner">
+      <div class="end-emoji" aria-hidden="true">🎀</div>
+      <h2 class="title" data-text="endTitle"></h2>
+      <p class="howto" data-text="endText"></p>
+      <div class="btn-row">
+        <button class="btn primary" data-act="reshuffle" data-text="reshuffle"></button>
+        <button class="btn" data-act="home" data-text="toStart"></button>
+      </div>
+    </div>
+    <footer class="coc-footer">
+      <span class="coc-footer__brand">
+        <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+        <span>Class of Coffee – with AI assistance</span>
+      </span>
+      <a href="https://classofcoffee.com">classofcoffee.com</a>
+    </footer>
+  </section>
+</main>
+
+<script>
+/* ================= CONTENT (edit here) ================= */
+/*
+  TEXT: words shown on screen. titleHtml and howto may contain simple HTML.
+  CATEGORIES: the four kinds of card. The name is shown on every card's swing tag.
+  COLOURS: one background colour per card, used in order (card 1 gets the first colour).
+           The text colour (dark or white) is chosen automatically for contrast.
+           If you add cards, add colours too, or colours start again from the top.
+  CARDS: one object per card.
+    cat  = category id (now, past, feel, debate)
+    e    = the emoji
+    q    = the main question
+    f    = the follow-up question
+    lang = useful language: a list of [chunk, short definition]
+    who  = optional "who starts" line; leave it out for no line
+  The order of cards here does not matter: the deck is always shuffled.
+*/
+const TEXT = {
+  level: 'B2.1',
+  shortTitle: 'Fashion Talk',
+  titleHtml: 'Fashion <em>Talk</em>',
+  howto: '<p>Work in pairs or small groups.</p><p>Read the card aloud and answer the question. Then ask the follow-up question.</p><p>Tap a phrase under <b>Useful language</b> to see what it means, and try to use it.</p><p>If a card is not for you, press <b>Pass</b>. It will come back later.</p>',
+  keys: 'Keyboard: → next · ← back · F full screen',
+  start: 'Start',
+  continueBtn: 'Continue',
+  newDeck: 'New deck',
+  resume: n => `You stopped at card ${n.pos} of ${n.total}.`,
+  counter: (n, t) => `Card ${n} of ${t}`,
+  back: '← Back', pass: 'Pass ↷', next: 'Next →', finish: 'Finish ✓',
+  followLabel: 'And…',
+  langLabel: 'Useful language · tap to see the meaning',
+  whoLabel: 'Who starts:',
+  passNote: 'Passed. That card will come back later.',
+  lastNote: 'This is the last card, so it cannot be passed.',
+  endTitle: 'You’ve seen every card!',
+  endText: 'All the cards have been discussed. Reshuffle to start a new round in a different order.',
+  reshuffle: 'Reshuffle',
+  toStart: 'Start screen',
+};
+
+const CATEGORIES = {
+  now:    { name: 'Right now',    icon: '⏱️' },
+  past:   { name: 'Looking back', icon: '🕰️' },
+  feel:   { name: 'How it feels', icon: '💭' },
+  debate: { name: 'Debate',       icon: '⚖️' },
+};
+
+const COLOURS = [
+  '#FF5A5F','#FFC23D','#2EC4A6','#7B3FE4','#FF8A3D','#1FA2FF','#E04FD0','#9BD23C',
+  '#4453E6','#FF4F8B','#0E9AA7','#E8A33D','#7A4DE0','#3FB56B','#F25C2B','#2F67BC',
+  '#C2338E','#B8D43A','#00B3A1','#FF7A59','#6A4C93','#FF9F1C','#0B7393','#EF476F',
+  '#2BB673','#7342E6','#F0507A','#06A77D','#4C8DFF',
+];
+
+const CARDS = [
+  // ---- Right now ----
+  { id:'c01', cat:'now', e:'👕', q:'Describe what you are wearing today. Why did you choose it this morning?', f:'Is it typical of you?',
+    lang:[['throw something on','to put on clothes quickly, without much thought'],['a go-to outfit','the clothes you wear most often because you know they work']],
+    who:'The person who got up earliest today.' },
+  { id:'c02', cat:'now', e:'🧥', q:'Which item in your wardrobe do you wear most at the moment?', f:'What makes it your favourite?',
+    lang:[['wear something out','to use something so much that it becomes old and damaged'],['versatile','easy to combine with many other things']] },
+  { id:'c03', cat:'now', e:'👟', q:'Would you say you are a “comfort first” or a “style first” person these days?', f:'Has that changed over the years?',
+    lang:[['practical','useful and sensible rather than attractive'],['make an effort','to try harder than usual with your appearance']] },
+  { id:'c04', cat:'now', e:'🛍️', q:'Is there anything you would like to buy for your wardrobe at the moment?', f:'What is stopping you?',
+    lang:[['treat yourself','to buy something nice for yourself'],['be on the lookout for','to be searching for something']] },
+  { id:'c05', cat:'now', e:'🧣', q:'How does the season affect what you wear?', f:'Which season do you most enjoy dressing for?',
+    lang:[['wrap up warm','to wear enough clothes to stay warm'],['layers','several thin pieces of clothing worn one on top of another']] },
+  { id:'c06', cat:'now', e:'🪞', q:'How long does it usually take you to get dressed on a normal day?', f:'And for a special occasion?',
+    lang:[['dress up','to wear smarter clothes than usual'],['get ready','to prepare yourself to go out']] },
+  { id:'c07', cat:'now', e:'💼', q:'Do you dress differently for work or class, at home and at the weekend?', f:'Which version of you do you prefer?',
+    lang:[['smart casual','neat but not formal'],['dress code','the rules about what people should wear in a place']] },
+  { id:'c08', cat:'now', e:'🧦', q:'Is there a piece of clothing you own but never wear?', f:'Why do you keep it?',
+    lang:[['just in case','because it might be useful in the future'],['have a clear-out','to get rid of things you no longer need']] },
+
+  // ---- Looking back ----
+  { id:'c09', cat:'past', e:'🎉', q:'What did you wear to the most memorable celebration you have been to?', f:'Who chose it?',
+    lang:[['dressed to the nines','wearing very elegant clothes'],['an outfit','a set of clothes worn together']] },
+  { id:'c10', cat:'past', e:'🙈', q:'Have you ever worn something completely wrong for an occasion?', f:'What happened?',
+    lang:[['overdressed / underdressed','wearing clothes that are too formal, or not formal enough'],['stand out','to be very noticeable']],
+    who:'The person sitting nearest the door.' },
+  { id:'c11', cat:'past', e:'🏫', q:'Did you ever have to wear a uniform at school or at work?', f:'How did you feel about it at the time?',
+    lang:[['compulsory','something you have to do because of a rule'],['fit in','to feel accepted as part of a group']] },
+  { id:'c12', cat:'past', e:'🎁', q:'What is the best or worst item of clothing anyone has ever given you?', f:'Did you wear it?',
+    lang:[['not my style','not the kind of thing I usually like'],['it’s the thought that counts','the kind intention matters more than the gift']] },
+  { id:'c13', cat:'past', e:'🕺', q:'Was there a trend you followed when you were younger that you would never follow again?', f:'Do you think it will ever come back into fashion?',
+    lang:[['come back into fashion','to become popular again'],['out of date','no longer fashionable']] },
+  { id:'c14', cat:'past', e:'🧵', q:'Have you ever repaired a piece of clothing or made one yourself?', f:'How did it turn out?',
+    lang:[['sew on a button','to attach a button with a needle and thread'],['take something up','to make trousers or a skirt shorter']] },
+  { id:'c15', cat:'past', e:'👨‍👩‍👧', q:'Did you ever wear clothes passed down from older brothers, sisters or cousins?', f:'How did you feel about it?',
+    lang:[['hand-me-downs','clothes that belonged to an older relative before you'],['grow out of something','to become too big for your clothes']] },
+  { id:'c16', cat:'past', e:'✈️', q:'Have you noticed that people dress differently in another country or city?', f:'What surprised you?',
+    lang:[['catch someone’s eye','to attract someone’s attention'],['the local style','the way people from a place usually dress']],
+    who:'The person who has travelled furthest from home.' },
+  { id:'c17', cat:'past', e:'🛒', q:'Can you remember the first item of clothing you bought with your own money?', f:'Where did you buy it?',
+    lang:[['save up for something','to keep money until you have enough to buy it'],['pocket money','money that parents give children regularly']] },
+
+  // ---- How it feels ----
+  { id:'c18', cat:'feel', e:'😊', q:'Which item of clothing makes you feel most confident?', f:'Why do you think it has that effect?',
+    lang:[['it suits me','it looks good on me'],['feel like a million dollars','to feel extremely good about yourself']] },
+  { id:'c19', cat:'feel', e:'💛', q:'Do you own something with sentimental value?', f:'What is the story behind it?',
+    lang:[['sentimental value','importance because of memories, not money'],['bring back memories','to make you remember the past']] },
+  { id:'c20', cat:'feel', e:'😤', q:'What annoys you most about shopping for clothes, in a shop or online?', f:'What would make it better?',
+    lang:[['changing room','the small room in a shop where you try clothes on'],['send something back','to return something you bought']] },
+  { id:'c21', cat:'feel', e:'🤩', q:'How does it feel to wear something new for the first time?', f:'How long does that feeling last?',
+    lang:[['brand new','completely new and never used'],['the novelty wears off','something stops being exciting after a while']] },
+  { id:'c22', cat:'feel', e:'😌', q:'What do you wear when you want to relax completely after a long day?', f:'Would you ever wear it outside?',
+    lang:[['slip into something comfortable','to change quickly into relaxing clothes'],['baggy','loose and big']],
+    who:'The person who has had the longest day.' },
+  { id:'c23', cat:'feel', e:'🌈', q:'Do colours affect your mood?', f:'Which colours do you choose on a good day, and on a bad one?',
+    lang:[['cheer someone up','to make someone feel happier'],['go well with','to look good together']] },
+  { id:'c24', cat:'feel', e:'🤔', q:'Have you ever regretted buying something?', f:'What made you buy it in the first place?',
+    lang:[['an impulse buy','something you buy suddenly, without planning'],['a waste of money','something not worth what you paid']] },
+  { id:'c25', cat:'feel', e:'😅', q:'How would you feel if you arrived somewhere and another person was wearing exactly the same outfit as you?', f:'What would you do?',
+    lang:[['awkward','uncomfortable and embarrassing'],['laugh it off','to laugh about something so that it seems less serious']],
+    who:'The person wearing the most colours.' },
+  { id:'c26', cat:'feel', e:'👯', q:'Do you prefer shopping for clothes alone or with someone else?', f:'How does the company change the experience?',
+    lang:[['a second opinion','another person’s view to help you decide'],['browse','to look around without a clear plan to buy']] },
+
+  // ---- Debate ----
+  { id:'c27', cat:'debate', e:'⚖️', q:'“Fast fashion should be much more expensive, so that people buy less.” Do you agree?', f:'Who would benefit, and who would lose out?',
+    lang:[['fast fashion','cheap clothes made quickly to follow the latest trends'],['throwaway','made to be used for a short time and then thrown away']],
+    who:'The person whose birthday comes next.' },
+  { id:'c28', cat:'debate', e:'🏢', q:'“Employers should not be allowed to tell staff what to wear.” Do you agree?', f:'Are there any jobs where it is necessary?',
+    lang:[['freedom of expression','the right to show who you are and what you think'],['a matter of safety','something that is necessary to protect people']],
+    who:'The person who has spoken least so far.' },
+  { id:'c29', cat:'debate', e:'👀', q:'“You can tell a lot about a person from their clothes.” Is this true, fair, or both?', f:'Have you ever been wrong about someone?',
+    lang:[['judge a book by its cover','to judge someone only by their appearance'],['first impressions','the opinion you form when you first meet someone']],
+    who:'The person with the longest first name.' },
+];
+
+/* ================= state ================= */
+// S.order = card ids in dealing order; S.pos = index of the card on screen.
+let S = null;
+let open = new Set();      // chunks revealed on the current card (not saved)
+let lastMove = 'next';
+
+/* ================= logic ================= */
+const byId = Object.fromEntries(CARDS.map((c, i) => [c.id, { ...c, colour: COLOURS[i % COLOURS.length] }]));
+
+function shuffle(a){
+  a = a.slice();
+  for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function newDeck(){
+  const ids = CARDS.map(c => c.id);
+  let order = shuffle(ids);
+  // after a reshuffle, the cards that ended the last round stay out of the first few of the new one
+  if (S && S.order.length > 16){
+    const recent = S.order.slice(-8), rest = shuffle(ids.filter(id => !recent.includes(id)));
+    order = rest.slice(0, 8).concat(shuffle(rest.slice(8).concat(recent)));
+  }
+  S = { order, pos: 0, over: false };
+  open = new Set(); lastMove = 'next';
+}
+function current(){ return byId[S.order[S.pos]]; }
+function next(){
+  if (S.pos >= S.order.length - 1){ S.over = true; return 'end'; }
+  S.pos++; open = new Set(); lastMove = 'next'; return 'card';
+}
+function back(){
+  if (S.pos > 0){ S.pos--; open = new Set(); lastMove = 'back'; }
+}
+function pass(){
+  // the passed card moves to the end of the deck, so it comes back later
+  if (S.pos >= S.order.length - 1) return false;
+  const [id] = S.order.splice(S.pos, 1);
+  S.order.push(id); open = new Set(); lastMove = 'next';
+  return true;
+}
+// keep a saved deck valid if cards were added or removed in CONTENT
+function repair(saved){
+  if (!saved || !Array.isArray(saved.order)) return null;
+  const known = saved.order.filter(id => byId[id]);
+  const missing = CARDS.map(c => c.id).filter(id => !known.includes(id));
+  const order = known.concat(shuffle(missing));
+  const pos = Math.min(Math.max(0, saved.pos | 0), order.length - 1);
+  return order.length ? { order, pos, over: false } : null;
+}
+
+/* ================= display ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function show(id){ document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id)); }
+
+// pick dark or white text, whichever gives the higher contrast on the card colour
+function lum(hex){
+  const c = hex.replace('#','').match(/../g).map(h => { const v = parseInt(h,16)/255; return v <= .03928 ? v/12.92 : ((v+.055)/1.055)**2.4; });
+  return .2126*c[0] + .7152*c[1] + .0722*c[2];
+}
+function inkFor(hex){
+  const L = lum(hex), dark = lum('#1F1A33');
+  const cDark = (L + .05) / (dark + .05), cWhite = 1.05 / (L + .05);
+  return cDark >= cWhite ? '#1F1A33' : '#FFFFFF';
+}
+
+function fillText(){
+  document.querySelectorAll('[data-text]').forEach(el => {
+    const v = TEXT[el.dataset.text]; if (typeof v === 'string') el.innerHTML = v;
+  });
+  $('#backBtn').textContent = TEXT.back;
+  $('#passBtn').textContent = TEXT.pass;
+}
+
+function renderStart(){
+  const saved = repair(store.load());
+  const rt = $('#resumeText'), btns = $('#startButtons');
+  if (saved && saved.pos > 0){
+    rt.hidden = false; rt.textContent = TEXT.resume({ pos: saved.pos + 1, total: saved.order.length });
+    btns.innerHTML = `<button class="btn primary" data-act="continue">${esc(TEXT.continueBtn)}</button>
+                      <button class="btn" data-act="new">${esc(TEXT.newDeck)}</button>`;
+  } else {
+    rt.hidden = true;
+    btns.innerHTML = `<button class="btn primary" data-act="new">${esc(TEXT.start)}</button>`;
+  }
+  show('start');
+}
+
+function renderCard(){
+  const c = current(), cat = CATEGORIES[c.cat], total = S.order.length;
+  document.documentElement.style.setProperty('--card', c.colour);
+  document.documentElement.style.setProperty('--card-ink', inkFor(c.colour));
+  $('#counter').textContent = TEXT.counter(S.pos + 1, total);
+  $('#bar').style.width = ((S.pos + 1) / total * 100) + '%';
+  $('#backBtn').disabled = S.pos === 0;
+  $('#passBtn').disabled = S.pos >= total - 1;
+  $('#nextBtn').textContent = S.pos >= total - 1 ? TEXT.finish : TEXT.next;
+
+  const chunks = c.lang.map(([w], i) =>
+    `<button class="chunk" data-act="chunk" data-i="${i}" aria-expanded="${open.has(i)}">${esc(w)}</button>`).join('');
+  const defs = c.lang.map(([w, d], i) => open.has(i) ? `<p class="def"><b>${esc(w)}</b>: ${esc(d)}</p>` : '').join('');
+
+  $('#cardHolder').innerHTML = `
+    <article class="card ${lastMove === 'back' ? 'dealBack' : 'deal'} ${c.cat === 'debate' ? 'debate' : ''}">
+      <div class="card-head">
+        <span class="tag"><span aria-hidden="true">${cat.icon}</span>${esc(cat.name)}</span>
+        <span class="emoji" aria-hidden="true">${c.e}</span>
+      </div>
+      <div class="card-body">
+      <h2 class="question">${esc(c.q)}</h2>
+      <div class="panel">
+        <p class="followup"><b>${esc(TEXT.followLabel)}</b>${esc(c.f)}</p>
+        <div>
+          <p class="lang-label">${esc(TEXT.langLabel)}</p>
+          <div class="chunks">${chunks}</div>
+        </div>
+        ${defs ? `<div class="defs">${defs}</div>` : ''}
+        ${c.who ? `<span class="who"><span aria-hidden="true">👉</span>${esc(TEXT.whoLabel)} ${esc(c.who)}</span>` : ''}
+      </div>
+      </div>
+    </article>`;
+  show('game');
+  $('#stage').scrollTop = 0;
+  requestAnimationFrame(fitStage);
+}
+
+// redraw only the chunks and definitions, so the card does not re-animate
+function renderChunks(newest = null){
+  const c = current();
+  document.querySelectorAll('.chunk').forEach(b => b.setAttribute('aria-expanded', open.has(+b.dataset.i)));
+  const panel = $('.panel'); let defs = panel.querySelector('.defs');
+  const html = c.lang.map(([w, d], i) => open.has(i) ? `<p class="def"><b>${esc(w)}</b>: ${esc(d)}</p>` : '').join('');
+  if (!html){ defs?.remove(); }
+  else {
+    if (!defs){ defs = document.createElement('div'); defs.className = 'defs'; panel.querySelector('.who') ? panel.insertBefore(defs, panel.querySelector('.who')) : panel.appendChild(defs); }
+    defs.innerHTML = html;
+  }
+  requestAnimationFrame(() => {
+    fitStage();
+    // on phones the card may scroll: bring the newly opened meaning into view
+    if (newest !== null){ const d = [...document.querySelectorAll('.def')][[...open].sort().indexOf(newest)]; d?.scrollIntoView({ block:'nearest', behavior:'smooth' }); }
+  });
+}
+
+function note(msg){
+  const n = $('#note'); n.textContent = msg;
+  clearTimeout(note.t); note.t = setTimeout(() => { n.textContent = ''; }, 3500);
+}
+
+// on big screens, shrink the card slightly if it does not fit; below that, the stage scrolls
+function fitStage(){
+  const st = $('#stage'), inner = $('#cardHolder'); if (!inner) return;
+  inner.style.transform = ''; inner.style.marginBottom = '';
+  if (innerWidth < 1000) return;          // phones and tablets scroll instead, so tap targets keep their size
+  const avail = st.clientHeight - 16, need = inner.offsetHeight;
+  if (need > avail && avail > 0){
+    const k = Math.max(.72, avail / need);
+    inner.style.transform = `scale(${k.toFixed(3)})`;
+    inner.style.marginBottom = `${-(need * (1 - k)).toFixed(0)}px`;
+  }
+}
+addEventListener('resize', () => { if ($('#game').classList.contains('active')) requestAnimationFrame(fitStage); });
+
+function renderEnd(){
+  show('end');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const box = document.createElement('div'); box.className = 'confetti'; box.setAttribute('aria-hidden','true');
+  const bits = ['👕','👗','👟','🧣','🧦','🎀','👒','🧥'];
+  for (let i = 0; i < 40; i++){
+    const s = document.createElement('span'); s.textContent = bits[i % bits.length];
+    s.style.left = Math.random() * 100 + 'vw'; s.style.animationDelay = (Math.random() * .6) + 's';
+    s.style.fontSize = (1.2 + Math.random() * 1.4) + 'rem'; box.appendChild(s);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), 2600);
+}
+
+/* ================= saving ================= */
+const KEY = 'fashiontalk.v1';
+const store = {
+  load(){ try { const d = JSON.parse(localStorage.getItem(KEY)); return d && d.v === 1 ? d : null; } catch(e){ return null; } },
+  save(data){ try { localStorage.setItem(KEY, JSON.stringify({ v:1, savedAt:Date.now(), order:data.order, pos:data.pos })); } catch(e){} },
+  clear(){ try { localStorage.removeItem(KEY); } catch(e){} },
+};
+function save(){ if (S && !S.over) store.save(S); else store.clear(); }
+
+/* ================= classroom helpers ================= */
+function toggleFull(){
+  const d = document, el = d.documentElement;
+  try { (d.fullscreenElement ? d.exitFullscreen() : el.requestFullscreen()).catch(() => {}); } catch(e){}
+}
+let lock = null;
+async function keepAwake(on = true){
+  try { if (on && 'wakeLock' in navigator) lock = await navigator.wakeLock.request('screen');
+        else if (!on && lock){ await lock.release(); lock = null; } } catch(e){}
+}
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && $('#game').classList.contains('active')) keepAwake();
+  if (document.hidden && S) save();
+});
+
+/* ================= events ================= */
+const actions = {
+  new(){ S = null; newDeck(); save(); renderCard(); keepAwake(); },
+  continue(){ S = repair(store.load()) || (newDeck(), S); open = new Set(); lastMove = 'next'; renderCard(); keepAwake(); },
+  next(){ const r = next(); save(); if (r === 'end'){ keepAwake(false); renderEnd(); } else renderCard(); },
+  back(){ back(); save(); renderCard(); },
+  pass(){ if (pass()){ save(); renderCard(); note(TEXT.passNote); } else note(TEXT.lastNote); },
+  chunk(b){ const i = +b.dataset.i; if (open.has(i)){ open.delete(i); renderChunks(); } else { open.add(i); renderChunks(i); } },
+  reshuffle(){ newDeck(); save(); renderCard(); keepAwake(); },
+  home(){ save(); keepAwake(false); renderStart(); },
+  full(){ toggleFull(); },
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  actions[b.dataset.act]?.(b);
+});
+addEventListener('keydown', e => {
+  if (e.target.closest('input, textarea, [contenteditable]')) return;
+  if (e.key === 'f' || e.key === 'F'){ toggleFull(); return; }
+  if (!$('#game').classList.contains('active')) return;
+  if (e.key === 'ArrowRight'){ e.preventDefault(); actions.next(); }
+  if (e.key === 'ArrowLeft'){ e.preventDefault(); actions.back(); }
+});
+
+/* ================= start ================= */
+fillText();
+renderStart();
+</script>
+</body>
+</html>
