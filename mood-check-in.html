@@ -35,17 +35,17 @@ body{
   display:flex;flex-direction:column;line-height:1.15;padding-right:4px;min-width:0;
 }
 .today .lesson{font-weight:800;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.today .when{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;opacity:.55;white-space:nowrap}
+.today .when{font-size:.78rem;letter-spacing:.09em;text-transform:uppercase;opacity:.55;white-space:nowrap}
 .season-chip{
-  font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
   padding:5px 10px;border-radius:999px;background:var(--accent);color:var(--on-accent);
   white-space:nowrap;
 }
 button,select{
-  font:inherit;font-size:.86rem;font-weight:650;color:var(--ink);
+  font:inherit;font-size:.9rem;font-weight:650;color:var(--ink);
   background:color-mix(in srgb,var(--ink) 8%,transparent);
   border:1px solid color-mix(in srgb,var(--ink) 20%,transparent);
-  border-radius:9px;padding:8px 13px;cursor:pointer;
+  border-radius:9px;padding:8px 13px;min-height:40px;cursor:pointer;
   transition:transform .12s ease,background .2s ease;
 }
 button:hover,select:hover{background:color-mix(in srgb,var(--ink) 15%,transparent)}
@@ -79,7 +79,7 @@ button[disabled]{opacity:.4;cursor:not-allowed}
 @media (max-width:420px){.grid{grid-template-columns:1fr}}
 /* Cards flip: click, tap or press Enter to show the meaning on the back. */
 .card{
-  position:relative;height:clamp(140px,20vh,238px);
+  position:relative;height:clamp(140px,22vh,300px);
   perspective:1200px;cursor:pointer;
   animation:rise .42s cubic-bezier(.2,.9,.3,1) both;
 }
@@ -106,30 +106,30 @@ button[disabled]{opacity:.4;cursor:not-allowed}
 .back{transform:rotateY(180deg);-webkit-transform:rotateY(180deg)}
 .card .num{
   position:absolute;top:8px;left:11px;font-family:var(--num-font,var(--font));
-  font-size:clamp(.76rem,1.05vw,1rem);font-weight:800;color:var(--accent);line-height:1;
+  font-size:clamp(.85rem,1.3vw,1.6rem);font-weight:800;color:var(--accent);line-height:1;
 }
 .card .emoji{
-  font-size:clamp(2.1rem,4.8vw,3.8rem);line-height:1.05;
+  font-size:clamp(2.1rem,4.6vw,4.6rem);line-height:1.05;
   filter:drop-shadow(0 2px 3px rgba(0,0,0,.14));
 }
 .card .phrase{
-  font-size:clamp(.9rem,1.4vw,1.42rem);font-weight:var(--phrase-weight,650);
+  font-size:clamp(.95rem,1.55vw,1.9rem);font-weight:var(--phrase-weight,650);
   line-height:1.2;text-wrap:balance;color:var(--card-ink,var(--ink));padding:0 2px;
 }
 .back .term{
-  font-size:clamp(.7rem,.95vw,.92rem);font-weight:800;line-height:1.15;
+  font-size:clamp(.78rem,1vw,1.2rem);font-weight:800;line-height:1.15;
   color:var(--accent);text-wrap:balance;
 }
 .back .rule{width:24px;height:2px;border-radius:2px;background:var(--accent);opacity:.4}
 .back .def{
-  font-size:clamp(.86rem,1.3vw,1.34rem);font-weight:500;line-height:1.3;
+  font-size:clamp(.9rem,1.4vw,1.75rem);font-weight:500;line-height:1.3;
   text-wrap:balance;color:var(--card-ink,var(--ink));opacity:.93;
 }
 .card .flag{
   position:absolute;top:9px;right:10px;width:9px;height:9px;border-radius:50%;
   background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 24%,transparent);
 }
-.front .turn{position:absolute;bottom:6px;right:9px;font-size:.7rem;opacity:.22;line-height:1}
+.front .turn{position:absolute;bottom:6px;right:9px;font-size:max(12px,.8rem);opacity:.3;line-height:1}
 .legend{
   text-align:center;font-size:.76rem;letter-spacing:.05em;opacity:.55;
   display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;
@@ -138,7 +138,7 @@ button[disabled]{opacity:.4;cursor:not-allowed}
 .legend .pip{width:8px;height:8px;border-radius:50%;background:var(--accent)}
 .legend .sq{width:9px;height:9px;border-radius:3px;box-shadow:inset 0 0 0 2px var(--accent)}
 .footer{
-  text-align:center;padding:10px 16px 18px;font-size:.71rem;
+  text-align:center;padding:10px 16px 18px;font-size:.78rem;
   letter-spacing:.11em;text-transform:uppercase;opacity:.4;
 }
 .noclass{text-align:center;opacity:.6;font-size:1rem;padding:30px 0}
@@ -148,7 +148,7 @@ body.projecting .bar,body.projecting .footer{display:none}
 body.projecting .board{min-height:100vh}
 .exit-hint{
   display:none;position:fixed;bottom:14px;right:16px;z-index:40;
-  font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.28;
+  font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;opacity:.35;
 }
 body.projecting .exit-hint{display:block}
 
@@ -190,7 +190,10 @@ select.inline{font-size:.84rem;padding:6px 9px}
   font-size:.85rem;font-weight:650;z-index:80;
   transition:transform .32s cubic-bezier(.2,.9,.3,1);box-shadow:0 8px 24px rgba(0,0,0,.28);
 }
-.toast.show{transform:translateX(-50%) translateY(0)}
+.toast{opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+/* no Esc key on touch screens */
+@media (hover:none){.exit-hint{display:none!important}}
 
 @media print{
   .bar,.footer,.exit-hint,.scrim,.legend{display:none!important}
@@ -249,14 +252,16 @@ select.inline{font-size:.84rem;padding:6px 9px}
     </div>
 
     <h3>Add your own phrases</h3>
-    <p class="help">One per line: <code>phrase | emoji | register | definition</code>, where register
-      is <code>easy</code>, <code>core</code>, <code>idiom</code> or <code>slang</code>. The definition
-      is what students see when they flip the card — keep it well below the phrase's own level.</p>
+    <p class="help">One per line: <code>phrase | emoji | register | definition | mood | idea</code>.
+      Register is <code>reply</code>, <code>easy</code>, <code>core</code>, <code>idiom</code> or <code>slang</code>.
+      Mood is <code>+</code> (positive), <code>=</code> (neutral or mixed) or <code>-</code> (negative).
+      Idea is a one-word family such as <code>tired</code>, <code>busy</code> or <code>happy</code>; two cards from
+      the same family never appear in one grid. The definition is what students see when they flip the card.</p>
     <div class="row">
       <select id="bankLevel" class="inline"></select>
       <span id="bankCount" style="font-size:.78rem;opacity:.6"></span>
     </div>
-    <textarea id="bankBox" placeholder="running on biscuits | 🍪 | slang | kept going by snacks alone"></textarea>
+    <textarea id="bankBox" placeholder="running on biscuits | 🍪 | slang | kept going by snacks alone | = | tired"></textarea>
     <div class="row" style="margin-top:9px">
       <button class="primary" id="saveBankBtn">Save phrases</button>
     </div>
@@ -298,252 +303,341 @@ const TIMETABLE = [
 
 /* ████████████████████████████████████████████████████████████
    ② THE LANGUAGE BANKS
-   Format:  phrase | emoji | register
-   register = easy · core · idiom · slang
+   Format:  phrase | emoji | register | definition | mood | idea
+   register = reply · easy · core · idiom · slang
+   mood     = +  positive   ·   =  neutral or mixed   ·   -  negative
+   idea     = a one-word family (tired, busy, stress, happy, calm…).
+              A grid never shows two cards from the same family, so
+              "knackered" and "shattered" never appear side by side.
    ████████████████████████████████████████████████████████████ */
 
 const LEVELS = { b21:'B2.1', b22:'B2.2' };
 
+/* ---------- grid settings ----------
+   Which kind of card goes in each slot of the grid. In a themed week,
+   the first slots listed in THEMED_REPLACES give way to themed cards.  */
+const GRID = {
+  slots: { 9:['reply','reply','reply','core','core','idiom','idiom','slang','easy'],
+           6:['reply','reply','core','idiom','slang','easy'] },
+  themedReplaces: ['core','idiom','reply'],   // 3 themed cards in a grid of 9, 2 in a grid of 6
+  moodMin: 2,                                  // at least this many positive, neutral and negative cards
+};
+
 const BANKS = {
 b21:`
-tired|😴|easy|needing rest or sleep
-happy|🙂|easy|feeling good and pleased
-a bit sad|🙁|easy|a little unhappy
-calm|😌|easy|quiet and not worried
-busy|🏃|easy|having a lot to do
-fine, thanks|👍|easy|OK — nothing special, nothing wrong
-sleepy|🥱|easy|almost falling asleep
-excited|🤩|easy|full of happy energy about something
-bored|😑|easy|with nothing interesting to do
-relaxed|🛋️|easy|comfortable and not tense
-stressed|😣|easy|worried because of too much pressure
-nervous|😬|easy|worried about something that is coming
-in a good mood|😀|easy|feeling positive and pleasant today
-hungry|🍞|easy|needing food
-cold|🧊|easy|not warm enough
-running on very little sleep|☕|core|working after only a few hours in bed
-quietly pleased with myself|😏|core|secretly proud of something I did well
-overwhelmed but coping|🌊|core|it is too much, but I am managing
-dreading my afternoon|😖|core|afraid of what comes later today
-in need of a strong coffee|🫖|core|needing something to wake me up
-fairly upbeat, actually|🎈|core|more cheerful than you might expect
-a bit under the weather|🤧|core|slightly ill
-easily distracted today|🦋|core|unable to keep my attention on one thing
-looking forward to the weekend|🗓️|core|waiting for Saturday with pleasure
-struggling to concentrate|🌀|core|finding it hard to focus
-glad it's nearly Friday|🎉|core|happy the week is almost over
-slightly out of it|🌫️|core|not fully present or aware
-in a surprisingly good mood|☀️|core|happier than I expected to be
-not quite awake yet|🌅|core|my body is here, my brain is not
-feeling the Monday|😵|core|suffering from the start of the week
-pretty content, all things considered|⚖️|core|satisfied, given everything that is happening
-a little homesick|🏠|core|missing home and the people there
-secretly counting the hours|⏳|core|quietly waiting for the day to end
-up for anything|🎲|core|willing to try whatever comes
-dragging myself through the week|🐌|core|forcing myself forward with great effort
-mentally somewhere else|🪂|core|my thoughts are not here
-weirdly motivated|🚀|core|strangely full of energy to work
-getting there, slowly|🪜|core|making progress, but not fast
-desperate for a holiday|🏝️|core|badly needing time off
-unusually organised|📋|core|more in control than normal
-slightly panicking about everything|😰|core|a little afraid about all of it
-perfectly fine, honestly|🆗|core|genuinely OK — no problem at all
-buzzing with ideas|💡|core|full of new thoughts and plans
-flat out all week|🏁|core|working at maximum speed every day
-a bit of a mess today|🧶|core|disorganised and not at my best
-keeping my head above water|🏊|core|just managing not to fail
-hanging in there|🪢|core|continuing despite difficulty
-in need of a nap|🛏️|core|wanting a short sleep
-quietly hopeful|🌱|core|expecting good things, without saying much
-slightly frazzled|🔌|core|a little worn out and nervous
-full of good intentions|📝|core|planning to do well — we will see
-not feeling it today|🫠|core|without motivation or enthusiasm
-ready for whatever|💪|core|prepared for anything that happens
-a bit scatterbrained|🪺|core|forgetful and disorganised
-unusually cheerful|🌻|core|happier than I normally am
-somewhere between fine and awful|🎚️|core|neither good nor terrible
-craving something sweet|🍫|core|strongly wanting sugar
-slightly over it|🙄|core|a little tired of the whole thing
-pleased with how the week's going|📈|core|happy with my week so far
-struggling to get started|🪫|core|finding it hard to begin
-oddly calm about everything|🧘|core|strangely relaxed, given the situation
-worried about my to-do list|🗒️|core|anxious about everything I must do
-enjoying a slow morning|🌤️|core|liking an unhurried start to the day
-happy to be here, honestly|💐|core|genuinely glad to be in this room
-too warm to think|🥵|core|the heat is stopping my brain
-making it up as I go|🎺|core|working without a plan
-snowed under|❄️|idiom|having far too much work
-on top of things|🗻|idiom|in control of everything I have to do
-under the weather|🌧️|idiom|slightly ill
-over the moon|🌙|idiom|extremely happy
-down in the dumps|🗑️|idiom|sad and low for a while
-all over the place|🗺️|idiom|disorganised and unfocused
-full of beans|🫘|idiom|lively and full of energy
-on edge|⚡|idiom|nervous and easily upset
-out of sorts|🧩|idiom|not feeling quite right
-in good spirits|🥂|idiom|cheerful and positive
-at breaking point|🧨|idiom|unable to take any more
-fed up|😤|idiom|tired and annoyed with a situation
-miles away|🌍|idiom|not paying attention — lost in thought
-in the zone|🎯|idiom|completely focused and working well
-worn out|🧦|idiom|very tired after effort
-up to my ears|📚|idiom|with far too much to deal with
-on cloud nine|☁️|idiom|extremely happy
-in one piece|🧱|idiom|not damaged — I survived
-ready to drop|🥀|idiom|so tired I could fall over
-shattered|💥|idiom|completely exhausted
-chuffed|😁|idiom|very pleased about something
-run off my feet|👟|idiom|extremely busy with no time to stop
-in a rush|💨|idiom|having to hurry
-sick of it all|🤢|idiom|completely tired of the situation
-bright and early|🐓|idiom|awake and active very early
-under pressure|🗜️|idiom|with people expecting a lot from me
-in the mood for a chat|💬|idiom|wanting to talk with someone
-having a good day, touch wood|🪵|idiom|it is going well — I hope it continues
-knackered|😵‍💫|slang|extremely tired (informal)
-gutted|💔|slang|very disappointed (informal)
-buzzing|🐝|slang|excited and full of energy (informal)
-chilling|😎|slang|relaxing and doing nothing (informal)
-meh|😐|slang|not interested — neither good nor bad
-so done|🚪|slang|completely finished with something (informal)
-vibing|🎧|slang|enjoying the mood of the moment (informal)
-wiped out|🧹|slang|completely exhausted
-stressed out|🤯|slang|very worried and under pressure
-hyped|🔥|slang|very excited about something (informal)
-lowkey tired|🌘|slang|a bit tired, but not making a fuss (informal)
-not a morning person|🌄|slang|someone who hates waking up early
-living for Friday|🕺|slang|only the end of the week keeps me going
-running on coffee|⛽|slang|caffeine is my only fuel
-in my own little world|🫧|slang|lost in my own thoughts
-rough|🪨|slang|feeling bad — tired or unwell (informal)
-can't be bothered|🛑|slang|not willing to make the effort
-half-asleep|🌗|slang|barely awake
-dead tired|😪|slang|extremely tired
-starving|🍕|slang|extremely hungry
-all good|✌️|slang|everything is fine (informal)
-peak Monday energy|📅|slang|as bad as a Monday can get (informal)
+tired|😴|easy|needing rest or sleep|-|tired
+happy|🙂|easy|feeling good and pleased|+|happy
+a bit sad|🙁|easy|a little unhappy|-|low
+calm|😌|easy|quiet and not worried|+|calm
+busy|🏃|easy|having a lot to do|=|busy
+fine, thanks|👍|easy|OK — nothing special, nothing wrong|=|mixed
+sleepy|🥱|easy|almost falling asleep|=|tired
+excited|🤩|easy|full of happy energy about something|+|energy
+bored|😑|easy|with nothing interesting to do|-|bored
+relaxed|🛋️|easy|comfortable and not tense|+|calm
+stressed|😣|easy|worried because of too much pressure|-|stress
+nervous|😬|easy|worried about something that is coming|-|stress
+in a good mood|😀|easy|feeling positive and pleasant today|+|happy
+hungry|🍞|easy|needing food|=|food
+cold|🧊|easy|not warm enough|=|body
+running on very little sleep|☕|core|working after only a few hours in bed|-|tired
+quietly pleased with myself|😏|core|secretly proud of something I did well|+|content
+overwhelmed but coping|🌊|core|it is too much, but I am managing|=|coping
+dreading my afternoon|😖|core|afraid of what comes later today|-|stress
+in need of a strong coffee|🫖|core|needing something to wake me up|=|tired
+fairly upbeat, actually|🎈|core|more cheerful than you might expect|+|happy
+a bit under the weather|🤧|core|slightly ill|-|health
+easily distracted today|🦋|core|unable to keep my attention on one thing|=|focus
+looking forward to the weekend|🗓️|core|waiting for Saturday with pleasure|+|escape
+struggling to concentrate|🌀|core|finding it hard to focus|-|focus
+glad it's nearly Friday|🎉|core|happy the week is almost over|+|escape
+slightly out of it|🌫️|core|not fully present or aware|=|focus
+in a surprisingly good mood|☀️|core|happier than I expected to be|+|happy
+not quite awake yet|🌅|core|my body is here, my brain is not|=|tired
+feeling the Monday|😵|core|suffering from the start of the week|-|badday
+pretty content, all things considered|⚖️|core|satisfied, given everything that is happening|+|content
+a little homesick|🏠|core|missing home and the people there|-|low
+secretly counting the hours|⏳|core|quietly waiting for the day to end|=|escape
+up for anything|🎲|core|willing to try whatever comes|+|energy
+dragging myself through the week|🐌|core|forcing myself forward with great effort|-|tired
+mentally somewhere else|🪂|core|my thoughts are not here|=|focus
+weirdly motivated|🚀|core|strangely full of energy to work|+|motiv
+getting there, slowly|🪜|core|making progress, but not fast|=|coping
+desperate for a holiday|🏝️|core|badly needing time off|-|escape
+unusually organised|📋|core|more in control than normal|+|motiv
+slightly panicking about everything|😰|core|a little afraid about all of it|-|stress
+perfectly fine, honestly|🆗|core|genuinely OK — no problem at all|+|content
+buzzing with ideas|💡|core|full of new thoughts and plans|+|creative
+flat out all week|🏁|core|working at maximum speed every day|-|busy
+a bit of a mess today|🧶|core|disorganised and not at my best|-|badday
+keeping my head above water|🏊|core|just managing not to fail|=|coping
+hanging in there|🪢|core|continuing despite difficulty|=|coping
+in need of a nap|🛏️|core|wanting a short sleep|=|tired
+quietly hopeful|🌱|core|expecting good things, without saying much|+|hope
+slightly frazzled|🔌|core|a little worn out and nervous|-|stress
+full of good intentions|📝|core|planning to do well — we will see|+|motiv
+not feeling it today|🫠|core|without motivation or enthusiasm|-|motiv
+ready for whatever|💪|core|prepared for anything that happens|+|energy
+a bit scatterbrained|🪺|core|forgetful and disorganised|=|focus
+unusually cheerful|🌻|core|happier than I normally am|+|happy
+somewhere between fine and awful|🎚️|core|neither good nor terrible|=|mixed
+craving something sweet|🍫|core|strongly wanting sugar|=|food
+slightly over it|🙄|core|a little tired of the whole thing|-|fedup
+pleased with how the week's going|📈|core|happy with my week so far|+|content
+struggling to get started|🪫|core|finding it hard to begin|-|motiv
+oddly calm about everything|🧘|core|strangely relaxed, given the situation|+|calm
+worried about my to-do list|🗒️|core|anxious about everything I must do|-|stress
+enjoying a slow morning|🌤️|core|liking an unhurried start to the day|+|calm
+happy to be here, honestly|💐|core|genuinely glad to be in this room|+|social
+too warm to think|🥵|core|the heat is stopping my brain|-|body
+making it up as I go|🎺|core|working without a plan|=|unsure
+snowed under|❄️|idiom|having far too much work|-|busy
+on top of things|🗻|idiom|in control of everything I have to do|+|motiv
+under the weather|🌧️|idiom|slightly ill|-|health
+over the moon|🌙|idiom|extremely happy|+|happy
+down in the dumps|🗑️|idiom|sad and low for a while|-|low
+all over the place|🗺️|idiom|disorganised and unfocused|-|focus
+full of beans|🫘|idiom|lively and full of energy|+|energy
+on edge|⚡|idiom|nervous and easily upset|-|stress
+out of sorts|🧩|idiom|not feeling quite right|-|health
+in good spirits|🥂|idiom|cheerful and positive|+|happy
+at breaking point|🧨|idiom|unable to take any more|-|stress
+fed up|😤|idiom|tired and annoyed with a situation|-|fedup
+miles away|🌍|idiom|not paying attention — lost in thought|=|focus
+in the zone|🎯|idiom|completely focused and working well|+|motiv
+worn out|🧦|idiom|very tired after effort|-|tired
+up to my ears|📚|idiom|with far too much to deal with|-|busy
+on cloud nine|☁️|idiom|extremely happy|+|happy
+in one piece|🧱|idiom|not damaged — I survived|=|coping
+ready to drop|🥀|idiom|so tired I could fall over|-|tired
+shattered|💥|idiom|completely exhausted|-|tired
+chuffed|😁|idiom|very pleased about something|+|content
+run off my feet|👟|idiom|extremely busy with no time to stop|-|busy
+in a rush|💨|idiom|having to hurry|=|busy
+sick of it all|🤢|idiom|completely tired of the situation|-|fedup
+bright and early|🐓|idiom|awake and active very early|+|energy
+under pressure|🗜️|idiom|with people expecting a lot from me|-|stress
+in the mood for a chat|💬|idiom|wanting to talk with someone|+|social
+having a good day, touch wood|🪵|idiom|it is going well — I hope it continues|+|content
+knackered|😵‍💫|slang|extremely tired (informal)|-|tired
+gutted|💔|slang|very disappointed (informal)|-|low
+buzzing|🐝|slang|excited and full of energy (informal)|+|energy
+chilling|😎|slang|relaxing and doing nothing (informal)|+|calm
+meh|😐|slang|not interested — neither good nor bad|=|mixed
+so done|🚪|slang|completely finished with something (informal)|-|fedup
+vibing|🎧|slang|enjoying the mood of the moment (informal)|+|happy
+wiped out|🧹|slang|completely exhausted|-|tired
+stressed out|🤯|slang|very worried and under pressure|-|stress
+hyped|🔥|slang|very excited about something (informal)|+|energy
+lowkey tired|🌘|slang|a bit tired, but not making a fuss (informal)|=|tired
+not a morning person|🌄|slang|someone who hates waking up early|=|tired
+living for Friday|🕺|slang|only the end of the week keeps me going|=|escape
+running on coffee|⛽|slang|caffeine is my only fuel|=|tired
+in my own little world|🫧|slang|lost in my own thoughts|=|focus
+rough|🪨|slang|feeling bad — tired or unwell (informal)|-|health
+can't be bothered|🛑|slang|not willing to make the effort|-|motiv
+half-asleep|🌗|slang|barely awake|=|tired
+dead tired|😪|slang|extremely tired|-|tired
+starving|🍕|slang|extremely hungry|-|food
+all good|✌️|slang|everything is fine (informal)|+|content
+peak Monday energy|📅|slang|as bad as a Monday can get (informal)|-|badday
 `,
 
 b22:`
-tired|😴|easy|needing rest or sleep
-fine|👍|easy|OK — nothing special, nothing wrong
-calm|😌|easy|quiet and not worried
-busy|🏃|easy|having a lot to do
-happy|🙂|easy|feeling good and pleased
-stressed|😣|easy|worried because of too much pressure
-excited|🤩|easy|full of happy energy about something
-bored|😑|easy|with nothing interesting to do
-sleepy|🥱|easy|almost falling asleep
-relaxed|🛋️|easy|comfortable and not tense
-nervous|😬|easy|worried about something that is coming
-in a good mood|😀|easy|feeling positive and pleasant today
-a bit sad|🙁|easy|a little unhappy
-looking forward to the weekend|🗓️|easy|waiting for Saturday with pleasure
-hungry|🍞|easy|needing food
-running on fumes|⛽|core|continuing with almost no energy left
-at a bit of a loose end|🧵|core|with nothing particular to do
-dragging my heels|🦶|core|doing something slowly because I do not want to
-in two minds about everything|🪙|core|unable to decide anything
-frazzled but functioning|🔌|core|worn out, but still getting things done
-quietly thriving|🌿|core|doing really well, without announcing it
-clinging on until the weekend|🧗|core|holding on with difficulty until Saturday
-oddly serene|🕊️|core|strangely calm and peaceful
-firing on all cylinders|🏎️|core|working at full power
-barely keeping the plates spinning|🍽️|core|only just managing many things at once
-somewhere between coping and collapsing|🎚️|core|close to the limit, but not past it
-wired but exhausted|🔋|core|too tense to rest, yet very tired
-pleasantly surprised by myself|🎁|core|I did better than I expected
-bracing myself for the afternoon|🛡️|core|preparing mentally for something hard
-gently unravelling|🧶|core|slowly falling apart, calmly
-weirdly at peace with the chaos|🌪️|core|strangely calm despite the mess
-mildly allergic to Mondays|🤧|core|I react badly to the start of the week
-cautiously optimistic|🌤️|core|hopeful, but careful about it
-stretched a bit thin|📏|core|with too little time or energy for everything
-riding a small wave of motivation|🌊|core|enjoying a short burst of energy
-in desperate need of a long weekend|🏝️|core|badly needing extra days off
-nursing a low-level dread|🫗|core|carrying a quiet, constant worry
-unexpectedly sharp today|🗡️|core|thinking more clearly than usual
-treading water|🏊|core|staying in the same place, not progressing
-halfway out the door mentally|🚪|core|my mind has already left
-running on sheer willpower|💪|core|only determination is keeping me going
-quietly counting my blessings|🙏|core|privately grateful for what I have
-not firing on all cylinders|🛠️|core|not working at my full ability
-in a bit of a funk|🎷|core|in a low, unmotivated mood
-surprisingly on top of everything|🗻|core|unexpectedly in control of it all
-teetering|🪜|core|close to losing my balance or control
-fuelled entirely by caffeine|☕|core|coffee is the only thing keeping me going
-living for the small things today|🌸|core|finding joy in tiny pleasures
-running on autopilot|🛩️|core|doing things without thinking about them
-in a strangely good place|🧭|core|unexpectedly content with life
-making peace with my inbox|📥|core|accepting the emails I cannot answer
-raring to go|🏇|core|eager and impatient to start
-glad to be out of the house|🚶|core|happy to have left home
-slightly dreading my own to-do list|🗒️|core|a bit afraid of my own tasks
-quietly proud of this week|🏅|core|privately pleased with how the week went
-too many tabs open, mentally|🗂️|core|thinking about too many things at once
-operating at about 60 per cent|🔅|core|working well below my normal capacity
-hungry for something to happen|✨|core|wanting change or excitement
-snowed under|❄️|idiom|having far too much work
-at the end of my tether|🪢|idiom|with no patience or strength left
-on a roll|🎳|idiom|having a series of successes
-in the doldrums|⛵|idiom|flat, low and without energy
-burning the candle at both ends|🕯️|idiom|doing too much, late and early
-up to my eyes|👀|idiom|extremely busy with work
-under a cloud|☁️|idiom|low, or under suspicion from others
-on top of the world|🌍|idiom|feeling wonderful and successful
-out of steam|🚂|idiom|with no energy left to continue
-in a spin|🌀|idiom|confused and unable to think clearly
-off colour|🎨|idiom|not feeling well
-in high spirits|🥂|idiom|very cheerful and lively
-at a low ebb|🪸|idiom|at my weakest or least happy point
-walking on air|🎈|idiom|so happy I feel light
-bogged down|🥾|idiom|stuck and unable to make progress
-flat as a pancake|🥞|idiom|completely without energy
-fit as a fiddle|🎻|idiom|in excellent health
-like a deer in the headlights|🦌|idiom|frozen with shock, unable to react
-running on empty|🪫|idiom|continuing with no energy left
-picking myself up|🧎|idiom|recovering after something went wrong
-keeping my chin up|⬆️|idiom|staying positive in a hard situation
-a shadow of my former self|🫥|idiom|much weaker than I used to be
-in deep water|🌊|idiom|in serious trouble
-full steam ahead|🚄|idiom|moving forward with all my energy
-grinning and bearing it|🦷|idiom|accepting something unpleasant without complaining
-champing at the bit|🐎|idiom|impatient to start
-in a world of my own|🪐|idiom|absorbed in my own thoughts
-rushed off my feet|👟|idiom|extremely busy with no time to rest
-sitting pretty|🪑|idiom|in a comfortable, advantageous position
-having a wobble|🍮|idiom|a short moment of doubt or weakness
-on the mend|🩹|idiom|getting better after illness or trouble
-at sixes and sevens|🎰|idiom|confused and disorganised
-throwing in the towel|🏳️|idiom|giving up
-bright-eyed and bushy-tailed|🐿️|idiom|awake, fresh and full of energy
-hitting my stride|🏃‍♀️|idiom|reaching my best, most comfortable rhythm
-knackered|😵‍💫|slang|extremely tired (informal)
-shattered|💥|slang|completely exhausted
-buzzing|🐝|slang|excited and full of energy (informal)
-gutted|💔|slang|very disappointed (informal)
-chuffed to bits|😁|slang|extremely pleased (informal)
-rough|🪨|slang|feeling bad — tired or unwell (informal)
-made up|🎊|slang|delighted about something (informal)
-can't be bothered|🛑|slang|not willing to make the effort
-so over it|🙄|slang|completely tired of it (informal)
-vibing|🎧|slang|enjoying the mood of the moment (informal)
-lowkey struggling|🌘|slang|finding it hard, but not saying so loudly (informal)
-running on vibes|🔮|slang|continuing on feeling alone, with no real plan (informal)
-absolutely wrecked|🧨|slang|completely exhausted (informal)
-in bits|🧩|slang|very upset (informal)
-having a mare|🐴|slang|having a terrible day (informal)
-living my best life|🕺|slang|enjoying life to the full (informal)
-meh|😐|slang|not interested — neither good nor bad
-wiped|🧹|slang|completely exhausted (informal)
-peak Monday energy|📅|slang|as bad as a Monday can get (informal)
-touch and go|🎢|slang|uncertain — it could go either way
-sound|👌|slang|fine, good, no problem (informal)
-not with it today|🌫️|slang|unable to think clearly today
-on one|🌶️|slang|in a strange, excitable mood (informal)
-knackered but happy|🙃|slang|exhausted, and glad about it (informal)
-dead on my feet|🦵|slang|so tired I can hardly stand
+tired|😴|easy|needing rest or sleep|-|tired
+fine|👍|easy|OK — nothing special, nothing wrong|=|mixed
+calm|😌|easy|quiet and not worried|+|calm
+busy|🏃|easy|having a lot to do|=|busy
+happy|🙂|easy|feeling good and pleased|+|happy
+stressed|😣|easy|worried because of too much pressure|-|stress
+excited|🤩|easy|full of happy energy about something|+|energy
+bored|😑|easy|with nothing interesting to do|-|bored
+sleepy|🥱|easy|almost falling asleep|=|tired
+relaxed|🛋️|easy|comfortable and not tense|+|calm
+nervous|😬|easy|worried about something that is coming|-|stress
+in a good mood|😀|easy|feeling positive and pleasant today|+|happy
+a bit sad|🙁|easy|a little unhappy|-|low
+looking forward to the weekend|🗓️|easy|waiting for Saturday with pleasure|+|escape
+hungry|🍞|easy|needing food|=|food
+running on fumes|⛽|core|continuing with almost no energy left|-|tired
+at a bit of a loose end|🧵|core|with nothing particular to do|=|bored
+dragging my heels|🦶|core|doing something slowly because I do not want to|-|motiv
+in two minds about everything|🪙|core|unable to decide anything|=|unsure
+frazzled but functioning|🔌|core|worn out, but still getting things done|=|coping
+quietly thriving|🌿|core|doing really well, without announcing it|+|content
+clinging on until the weekend|🧗|core|holding on with difficulty until Saturday|-|escape
+oddly serene|🕊️|core|strangely calm and peaceful|+|calm
+firing on all cylinders|🏎️|core|working at full power|+|motiv
+barely keeping the plates spinning|🍽️|core|only just managing many things at once|-|busy
+somewhere between coping and collapsing|🎚️|core|close to the limit, but not past it|-|coping
+wired but exhausted|🔋|core|too tense to rest, yet very tired|-|tired
+pleasantly surprised by myself|🎁|core|I did better than I expected|+|content
+bracing myself for the afternoon|🛡️|core|preparing mentally for something hard|-|stress
+gently unravelling|🧶|core|slowly falling apart, calmly|-|coping
+weirdly at peace with the chaos|🌪️|core|strangely calm despite the mess|+|calm
+mildly allergic to Mondays|🤧|core|I react badly to the start of the week|-|badday
+cautiously optimistic|🌤️|core|hopeful, but careful about it|+|hope
+stretched a bit thin|📏|core|with too little time or energy for everything|-|busy
+riding a small wave of motivation|🌊|core|enjoying a short burst of energy|+|motiv
+in desperate need of a long weekend|🏝️|core|badly needing extra days off|-|escape
+nursing a low-level dread|🫗|core|carrying a quiet, constant worry|-|stress
+unexpectedly sharp today|🗡️|core|thinking more clearly than usual|+|focus
+treading water|🏊|core|staying in the same place, not progressing|=|coping
+halfway out the door mentally|🚪|core|my mind has already left|=|escape
+running on sheer willpower|💪|core|only determination is keeping me going|=|coping
+quietly counting my blessings|🙏|core|privately grateful for what I have|+|content
+not firing on all cylinders|🛠️|core|not working at my full ability|-|motiv
+in a bit of a funk|🎷|core|in a low, unmotivated mood|-|low
+surprisingly on top of everything|🗻|core|unexpectedly in control of it all|+|motiv
+teetering|🪜|core|close to losing my balance or control|-|coping
+fuelled entirely by caffeine|☕|core|coffee is the only thing keeping me going|=|tired
+living for the small things today|🌸|core|finding joy in tiny pleasures|+|happy
+running on autopilot|🛩️|core|doing things without thinking about them|=|focus
+in a strangely good place|🧭|core|unexpectedly content with life|+|content
+making peace with my inbox|📥|core|accepting the emails I cannot answer|=|busy
+raring to go|🏇|core|eager and impatient to start|+|energy
+glad to be out of the house|🚶|core|happy to have left home|+|social
+slightly dreading my own to-do list|🗒️|core|a bit afraid of my own tasks|-|stress
+quietly proud of this week|🏅|core|privately pleased with how the week went|+|content
+too many tabs open, mentally|🗂️|core|thinking about too many things at once|-|focus
+operating at about 60 per cent|🔅|core|working well below my normal capacity|=|tired
+hungry for something to happen|✨|core|wanting change or excitement|=|bored
+snowed under|❄️|idiom|having far too much work|-|busy
+at the end of my tether|🪢|idiom|with no patience or strength left|-|stress
+on a roll|🎳|idiom|having a series of successes|+|motiv
+in the doldrums|⛵|idiom|flat, low and without energy|-|low
+burning the candle at both ends|🕯️|idiom|doing too much, late and early|-|tired
+up to my eyes|👀|idiom|extremely busy with work|-|busy
+on top of the world|🌍|idiom|feeling wonderful and successful|+|happy
+out of steam|🚂|idiom|with no energy left to continue|-|tired
+in a spin|🌀|idiom|confused and unable to think clearly|-|focus
+off colour|🎨|idiom|not feeling well|-|health
+in high spirits|🥂|idiom|very cheerful and lively|+|happy
+at a low ebb|🪸|idiom|at my weakest or least happy point|-|low
+walking on air|🎈|idiom|so happy I feel light|+|happy
+bogged down|🥾|idiom|stuck and unable to make progress|-|busy
+fit as a fiddle|🎻|idiom|in excellent health|+|health
+like a deer in the headlights|🦌|idiom|frozen with shock, unable to react|-|stress
+running on empty|🪫|idiom|continuing with no energy left|-|tired
+picking myself up|🧎|idiom|recovering after something went wrong|=|coping
+keeping my chin up|⬆️|idiom|staying positive in a hard situation|=|coping
+a shadow of my former self|🫥|idiom|much weaker than I used to be|-|health
+in deep water|🌊|idiom|in serious trouble|-|stress
+full steam ahead|🚄|idiom|moving forward with all my energy|+|motiv
+grinning and bearing it|🦷|idiom|accepting something unpleasant without complaining|=|coping
+champing at the bit|🐎|idiom|impatient to start|+|energy
+in a world of my own|🪐|idiom|absorbed in my own thoughts|=|focus
+rushed off my feet|👟|idiom|extremely busy with no time to rest|-|busy
+sitting pretty|🪑|idiom|in a comfortable, advantageous position|+|content
+having a wobble|🍮|idiom|a short moment of doubt or weakness|-|stress
+on the mend|🩹|idiom|getting better after illness or trouble|+|health
+at sixes and sevens|🎰|idiom|confused and disorganised|-|focus
+throwing in the towel|🏳️|idiom|giving up|-|motiv
+bright-eyed and bushy-tailed|🐿️|idiom|awake, fresh and full of energy|+|energy
+hitting my stride|🏃‍♀️|idiom|reaching my best, most comfortable rhythm|+|motiv
+knackered|😵‍💫|slang|extremely tired (informal)|-|tired
+shattered|💥|slang|completely exhausted|-|tired
+buzzing|🐝|slang|excited and full of energy (informal)|+|energy
+gutted|💔|slang|very disappointed (informal)|-|low
+chuffed to bits|😁|slang|extremely pleased (informal)|+|happy
+rough|🪨|slang|feeling bad — tired or unwell (informal)|-|health
+made up|🎊|slang|delighted about something (informal)|+|happy
+can't be bothered|🛑|slang|not willing to make the effort|-|motiv
+so over it|🙄|slang|completely tired of it (informal)|-|fedup
+vibing|🎧|slang|enjoying the mood of the moment (informal)|+|happy
+lowkey struggling|🌘|slang|finding it hard, but not saying so loudly (informal)|-|coping
+running on vibes|🔮|slang|continuing on feeling alone, with no real plan (informal)|=|unsure
+absolutely wrecked|🧨|slang|completely exhausted (informal)|-|tired
+in bits|🧩|slang|very upset (informal)|-|low
+having a mare|🐴|slang|having a terrible day (informal)|-|badday
+living my best life|🕺|slang|enjoying life to the full (informal)|+|happy
+meh|😐|slang|not interested — neither good nor bad|=|mixed
+wiped|🧹|slang|completely exhausted (informal)|-|tired
+peak Monday energy|📅|slang|as bad as a Monday can get (informal)|-|badday
+sound|👌|slang|fine, good, no problem (informal)|+|content
+not with it today|🌫️|slang|unable to think clearly today|=|focus
+knackered but happy|🙃|slang|exhausted, and glad about it (informal)|+|tired
+dead on my feet|🦵|slang|so tired I can hardly stand|-|tired
 `};
+
+/* Everyday answers to "How are you?", "How are you feeling today?" and
+   "How's everything going?" — natural replies rather than idioms.
+   Shared by both levels; each class still has its own memory. */
+const REPLIES = `
+not bad at all, actually|🙂|reply|better than I expected|+|content
+pretty good, thanks|👍|reply|fine and happy|+|happy
+really well, thanks|😊|reply|very good|+|happy
+never better|🌟|reply|as good as I have ever been|+|happy
+couldn't be better|🥳|reply|as good as it can possibly be|+|happy
+things are looking up|📈|reply|life is getting better|+|hope
+on the up|⬆️|reply|getting better and better|+|hope
+better than yesterday|🌤️|reply|improving since yesterday|+|hope
+busy, but in a good way|🏃‍♀️|reply|lots to do, and I am enjoying it|+|busy
+in fine fettle|🌞|reply|healthy and full of energy|+|health
+right as rain|💧|reply|completely well again, especially after being ill|+|health
+happy as Larry|😄|reply|very happy (informal)|+|happy
+full of the joys of spring|🌼|reply|very cheerful|+|happy
+not too shabby|😎|reply|quite good (informal)|+|content
+all fine and dandy|🎩|reply|everything is fine (informal, sometimes jokey)|+|content
+in a good place|🏡|reply|content with life at the moment|+|content
+doing well, thanks for asking|🙏|reply|fine, and grateful that you asked|+|social
+good, now that I've had a coffee|☕|reply|fine, thanks to some caffeine|+|energy
+feeling fresh|🍃|reply|rested and full of energy|+|energy
+going well, thanks|✅|reply|everything is going well|+|content
+really enjoying the week|🎶|reply|this week has been a pleasure|+|happy
+not too bad, thanks|🌥️|reply|fine, maybe a little better than average|=|mixed
+can't complain|🤷|reply|things are fine, so I have no reason to complain|=|mixed
+mustn't grumble|🫖|reply|I am fine and should not complain (British, humorous)|=|mixed
+so-so|〰️|reply|neither good nor bad|=|mixed
+fair to middling|⚖️|reply|fairly good, but not very good|=|mixed
+OK, I suppose|🫤|reply|fine, but not enthusiastic|=|mixed
+a bit of a mixed bag|🛍️|reply|some things are good and some are not|=|mixed
+up and down|🎢|reply|some good moments and some bad ones|=|mixed
+could be worse|🌦️|reply|not great, but it could be a lot worse|=|mixed
+average, I'd say|📊|reply|normal; neither good nor bad|=|mixed
+same old, same old|🔁|reply|nothing has changed; it is the usual routine|=|routine
+ticking over|⏱️|reply|things are running smoothly, with no surprises|=|routine
+nothing much to report|📭|reply|life is quiet; there is no news|=|routine
+no news is good news|📰|reply|nothing has happened, and that is fine|=|routine
+living the dream|💭|reply|said as a joke: life is not very exciting|=|routine
+quietly getting on with things|🧺|reply|working calmly, without fuss|=|routine
+holding steady|⚓|reply|not better and not worse than before|=|routine
+getting by|🛶|reply|managing, but only just|=|coping
+surviving|🛟|reply|just managing to cope|=|coping
+plodding on|🐢|reply|carrying on slowly, with steady effort|=|coping
+muddling through|🤹|reply|managing, even without a clear plan|=|coping
+taking each day as it comes|🗓️|reply|dealing with today and not worrying about tomorrow|=|coping
+not too bad, considering|🌂|reply|fine, given everything that is happening|=|coping
+keeping busy|📌|reply|occupied, in a fairly positive way|=|busy
+busy as ever|🗃️|reply|as busy as I always am|=|busy
+ask me again on Friday|❓|reply|this week is hard, and I will know more later|=|escape
+waiting for the weekend|🌴|reply|the week is fine; I am just looking forward to Saturday|=|escape
+a bit up in the air|🎐|reply|things are uncertain and not decided yet|=|unsure
+still deciding|🤔|reply|I have not decided yet how today is going|=|unsure
+not sure yet, to be honest|🧐|reply|I do not know yet how I feel|=|unsure
+a bit quiet today|🔈|reply|not very talkative or energetic today|=|social
+in work mode|💻|reply|focused on work, nothing more|=|focus
+tired, but I'll survive|💤|reply|tired, but it is not serious|=|tired
+could be better|😕|reply|not great, but not terrible|-|mixed
+been better|😶|reply|not very well at the moment|-|low
+one of those days|☔|reply|a day when lots of small things go wrong|-|badday
+not great, to be honest|😞|reply|quite bad, if I am honest|-|low
+don't ask|🙈|reply|things are bad, and I would rather not talk about it|-|badday
+a bit rubbish, honestly|🚮|reply|not good (informal, British)|-|low
+struggling a bit|🥴|reply|finding things quite hard|-|coping
+it's been a long week|🕰️|reply|this week has felt tiring and endless|-|tired
+not my day|🙅|reply|everything is going wrong today|-|badday
+a bit stressed, to be honest|😓|reply|slightly worried and under pressure|-|stress
+wishing it was the weekend|🛌|reply|I want the week to be over|-|escape
+feeling a bit flat|🫓|reply|low, without energy or enthusiasm|-|low
+had better days|🌒|reply|today is worse than usual|-|badday
+worn to a frazzle|🧯|reply|completely exhausted (informal)|-|tired
+a bit run-down|🤒|reply|tired and low on energy, sometimes a little ill|-|health
+stressed to the max|🌋|reply|extremely stressed (informal)|-|stress
+not feeling great|🤕|reply|a bit unwell or low|-|health
+a bit fed up, actually|😒|reply|slightly annoyed and tired of things|-|fedup
+bored out of my mind|📺|reply|extremely bored|-|bored
+`;
 
 /* ████████████████████████████████████████████████████████████
    ③ SEASONS — themed cards blend into the grid, three of nine,
@@ -559,26 +653,26 @@ const SEASONS = [
       '--font':'Georgia,"Iowan Old Style",serif','--title-font':'Georgia,serif','--title-weight':'700',
       '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'600','--pattern':'none'},
     bank:`
-lost in a book|📖|core|so absorbed in reading that I forget everything else
-in a romantic mood|🌹|core|feeling affectionate and sentimental
-page-turning|📚|core|reading something so good I cannot stop
-smelling the roses|💐|idiom|taking time to enjoy small, good things
-bookish|🤓|slang|keen on books and reading (informal)
-full of stories|✍️|core|with a lot to tell
-a bit of a dragon today|🐉|core|fierce and easily angered today
-feeling poetic|🪶|core|in the mood for beautiful words
-swept off my feet|💘|idiom|suddenly filled with love or excitement
-knight-in-shining-armour energy|🛡️|slang|ready to rescue everyone (informal)
-word-drunk|🍷|core|intoxicated by language and writing
-in need of a good book|📕|easy|wanting something excellent to read
-soppy|💞|slang|sentimental in a silly, sweet way (informal)
-celebrating|🎊|easy|marking a happy occasion
-charmed|✨|core|delighted, as if under a lovely spell
-slaying my to-do list|🗡️|slang|destroying my tasks one by one (informal)
-quietly romantic|💌|core|tender, without showing it much
-between chapters|🔖|core|between one stage of life and the next
-inspired|💡|easy|full of new ideas and the wish to create
-browsing, not buying|🏷️|core|looking around without committing
+lost in a book|📖|core|so absorbed in reading that I forget everything else|+|creative
+in a romantic mood|🌹|core|feeling affectionate and sentimental|+|love
+ready to curl up with a book|📚|core|wanting to sit somewhere comfortable and read|+|calm
+smelling the roses|💐|idiom|taking time to enjoy small, good things|+|calm
+bookish|🤓|slang|keen on books and reading (informal)|=|creative
+full of stories|✍️|core|with a lot to tell|+|social
+like a bear with a sore head|🐻|idiom|in a bad mood and easily annoyed|-|fedup
+feeling poetic|🪶|core|in the mood for beautiful words|+|creative
+swept off my feet|💘|idiom|suddenly filled with love or excitement|+|love
+full of fighting spirit|🛡️|core|brave, determined and ready for a challenge|+|motiv
+can't put my book down|📖|core|enjoying a book so much that I keep reading|+|creative
+in need of a good book|📕|easy|wanting something excellent to read|=|bored
+soppy|💞|slang|sentimental in a silly, sweet way (informal)|+|love
+celebrating|🎊|easy|marking a happy occasion|+|social
+charmed|✨|core|delighted, as if under a lovely spell|+|happy
+slaying my to-do list|🗡️|slang|destroying my tasks one by one (informal)|+|motiv
+quietly romantic|💌|core|tender, without showing it much|+|love
+between chapters|🔖|core|between one stage of life and the next|=|unsure
+inspired|💡|easy|full of new ideas and the wish to create|+|creative
+in a funny mood|🌀|core|feeling a bit strange, and I am not sure why|=|unsure
 `},
 
   { id:'stpatricks', label:"St Patrick's",
@@ -589,26 +683,26 @@ browsing, not buying|🏷️|core|looking around without committing
       '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'820',
       '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'650','--pattern':'none'},
     bank:`
-feeling lucky|🍀|core|expecting good fortune today
-green with envy|💚|idiom|very jealous of someone
-in high spirits|🥂|idiom|very cheerful and lively
-having the craic|🎻|slang|having great fun with others (Irish, informal)
-chasing rainbows|🌈|idiom|hoping for something unlikely
-full of blarney|🗣️|idiom|talking charmingly, perhaps not truthfully
-lucky, touch wood|🪵|core|fortunate so far — I hope it lasts
-dancing|🕺|easy|moving happily to music
-pot-of-gold optimism|🪙|core|believing something wonderful is waiting
-grand, altogether|👌|slang|absolutely fine (Irish, informal)
-gone a bit green|🥬|slang|looking unwell, or very envious
-up for a singsong|🎵|core|in the mood to sing with others
-charmed|✨|core|delighted, as if under a lovely spell
-no luck today|🎲|easy|nothing is going my way
-in need of a sit-down|🪑|core|needing to rest for a moment
-cheerful|☘️|easy|visibly happy and positive
-the luck's holding|🤞|core|good fortune is continuing
-jigging along|💃|slang|moving happily and quickly (informal)
-away with the fairies|🧚|idiom|not paying attention to reality
-an Irish goodbye kind of day|🚪|slang|I want to leave without saying goodbye
+feeling lucky|🍀|core|expecting good fortune today|+|luck
+green with envy|💚|idiom|very jealous of someone|-|envy
+in high spirits|🥂|idiom|very cheerful and lively|+|happy
+having the craic|🎻|slang|having great fun with others (Irish, informal)|+|social
+chasing rainbows|🌈|idiom|hoping for something unlikely|=|hope
+full of blarney|🗣️|idiom|talking charmingly, perhaps not truthfully|+|playful
+lucky, touch wood|🪵|core|fortunate so far — I hope it lasts|+|luck
+dancing|🕺|easy|moving happily to music|+|energy
+looking on the bright side|🌈|idiom|choosing to see the positive part of things|+|hope
+grand, altogether|👌|slang|absolutely fine (Irish, informal)|+|content
+gone a bit green|🥬|slang|looking unwell, or very envious|-|health
+up for a singsong|🎵|core|in the mood to sing with others|+|social
+charmed|✨|core|delighted, as if under a lovely spell|+|happy
+no luck today|🎲|easy|nothing is going my way|-|luck
+in need of a sit-down|🪑|core|needing to rest for a moment|-|tired
+cheerful|☘️|easy|visibly happy and positive|+|happy
+the luck's holding|🤞|core|good fortune is continuing|+|luck
+kicking up my heels|💃|idiom|relaxing and enjoying myself in a lively way|+|energy
+away with the fairies|🧚|idiom|not paying attention to reality|=|focus
+fingers crossed for today|🫰|core|hoping things go well today|=|luck
 `},
 
   { id:'easter', label:'Setmana Santa',
@@ -620,26 +714,26 @@ an Irish goodbye kind of day|🚪|slang|I want to leave without saying goodbye
       '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'650',
       '--pattern':'radial-gradient(#27401f0a 1px,transparent 1px)'},
     bank:`
-ready for a break|🐣|core|needing time away from work
-counting down to the holidays|📆|core|waiting impatiently for the holiday
-cracking on|🥚|idiom|getting on with the work quickly (informal)
-blooming|🌷|core|flourishing, like a flower opening
-hopping about|🐰|core|moving around with restless energy
-full of chocolate|🍫|easy|having eaten a great deal of chocolate
-coming back to life|🌱|core|recovering energy after a flat period
-with a spring in my step|🌼|idiom|walking happily and energetically
-recharged|🔋|easy|with my energy restored
-back with a bump|💥|idiom|returning to reality suddenly and unpleasantly
-sun-starved|☀️|core|badly needing sunshine
-fresh as a daisy|🌻|idiom|clean, rested and full of energy
-in holiday mode already|🏖️|slang|mentally on holiday before it starts
-shaking off the winter|🧥|core|leaving the cold, dark months behind
-sweet-toothed|🍬|slang|loving sugary food (informal)
-out of hibernation|🐻|core|active again after a quiet period
-slow-starting|🐌|core|taking a long time to get going
-holiday brain|🧠|slang|unable to think about work (informal)
-pleasantly idle|🪁|core|happily doing nothing useful
-rested, for once|😌|easy|properly recovered, unusually
+ready for a break|🐣|core|needing time away from work|-|escape
+counting down to the holidays|📆|core|waiting impatiently for the holiday|=|escape
+cracking on|🥚|idiom|getting on with the work quickly (informal)|+|motiv
+blooming|🌷|core|flourishing, like a flower opening|+|happy
+hopping about|🐰|core|moving around with restless energy|+|energy
+full of chocolate|🍫|easy|having eaten a great deal of chocolate|=|food
+coming back to life|🌱|core|recovering energy after a flat period|+|energy
+with a spring in my step|🌼|idiom|walking happily and energetically|+|happy
+recharged|🔋|easy|with my energy restored|+|energy
+back with a bump|💥|idiom|returning to reality suddenly and unpleasantly|-|badday
+sun-starved|☀️|core|badly needing sunshine|-|body
+fresh as a daisy|🌻|idiom|clean, rested and full of energy|+|energy
+in holiday mode already|🏖️|slang|mentally on holiday before it starts|=|escape
+shaking off the winter|🧥|core|leaving the cold, dark months behind|+|hope
+sweet-toothed|🍬|slang|loving sugary food (informal)|=|food
+out of hibernation|🐻|core|active again after a quiet period|+|energy
+slow-starting|🐌|core|taking a long time to get going|=|tired
+holiday brain|🧠|slang|unable to think about work (informal)|=|focus
+pleasantly idle|🪁|core|happily doing nothing useful|+|calm
+rested, for once|😌|easy|properly recovered, unusually|+|calm
 `},
 
   { id:'carnival', label:'Carnestoltes',
@@ -652,26 +746,26 @@ rested, for once|😌|easy|properly recovered, unusually
       '--card-ink':'#2b1046',
       '--pattern':'linear-gradient(145deg,#2b1046 0%,#7b1d70 50%,#d4365f 100%)'},
     bank:`
-in disguise|🎭|core|dressed so nobody knows who I am
-pretending I'm fine|🙂|core|acting well when I am not
-up for anything|🎉|easy|willing to try whatever comes
-feeling colourful|🌈|core|bright, bold and full of life
-loud|📣|easy|making a lot of noise
-someone else entirely today|🪄|core|not behaving like my usual self
-dressed for it|👑|core|wearing exactly the right clothes
-a bit silly|🤡|easy|behaving in a foolish, playful way
-dancing through it|💃|core|getting through the day with joy
-off the leash|🎊|idiom|suddenly free to do as I like
-confetti brain|🎈|slang|my thoughts are scattered everywhere (informal)
-unrecognisable|🕶️|core|impossible to identify
-not myself today|🔄|core|behaving unlike my normal self
-party mode|🥳|slang|ready to celebrate (informal)
-masked up|🥸|core|wearing a mask, hiding my face
-full of mischief|😈|core|wanting to cause playful trouble
-noisy|🥁|easy|making a lot of sound
-out of character|🎬|core|behaving differently from usual
-costume regret|😬|slang|wishing I had chosen another outfit (informal)
-sardine-level chaos|🐟|slang|as crowded and wild as it gets (informal)
+in disguise|🎭|core|dressed so nobody knows who I am|=|playful
+pretending I'm fine|🙂|core|acting well when I am not|-|coping
+up for anything|🎉|easy|willing to try whatever comes|+|energy
+feeling colourful|🌈|core|bright, bold and full of life|+|happy
+loud|📣|easy|making a lot of noise|=|playful
+someone else entirely today|🪄|core|not behaving like my usual self|=|playful
+dressed for it|👑|core|wearing exactly the right clothes|+|content
+a bit silly|🤡|easy|behaving in a foolish, playful way|+|playful
+dancing through it|💃|core|getting through the day with joy|+|energy
+off the leash|🎊|idiom|suddenly free to do as I like|+|playful
+with my head in the clouds|☁️|idiom|dreaming and not paying attention to what is happening|=|focus
+unrecognisable|🕶️|core|impossible to identify|=|playful
+not myself today|🔄|core|behaving unlike my normal self|-|low
+party mode|🥳|slang|ready to celebrate (informal)|+|social
+masked up|🥸|core|wearing a mask, hiding my face|=|playful
+full of mischief|😈|core|wanting to cause playful trouble|+|playful
+noisy|🥁|easy|making a lot of sound|=|playful
+out of character|🎬|core|behaving differently from usual|=|unsure
+making a fool of myself|🤡|core|doing something that makes me look silly|-|embarrass
+packed like sardines|🐟|idiom|squeezed very tightly together in a crowd (informal)|-|busy
 `},
 
   { id:'valentines', label:"Valentine's",
@@ -682,24 +776,24 @@ sardine-level chaos|🐟|slang|as crowded and wild as it gets (informal)
       '--font':'system-ui,sans-serif','--title-font':'Georgia,serif','--title-weight':'700',
       '--title-transform':'none','--title-spacing':'-.015em','--phrase-weight':'620','--pattern':'none'},
     bank:`
-loved-up|💕|slang|happily in love (informal)
-single and thriving|💅|slang|alone and doing brilliantly (informal)
-a bit cynical today|🙄|core|doubting that any of this is sincere
-warm-hearted|🧡|core|kind and affectionate
-missing someone|💭|core|sad because a person is not here
-all heart|❤️|idiom|full of kindness and emotion
-unimpressed by the fuss|🥱|core|not interested in all the attention
-soppy|💌|slang|sentimental in a silly, sweet way (informal)
-blushing|😊|easy|going red in the face
-heart-eyed|😍|slang|looking at someone with adoration (informal)
-lonely but fine|🌙|core|alone, and managing well
-in love with my own company|🫖|core|enjoying being by myself
-over it|💔|slang|no longer caring about it (informal)
-secretly pleased|🤫|core|quietly happy, without showing it
-flowers, please|💐|easy|I would like to be given something lovely
-sweet on someone|🍬|idiom|attracted to a particular person
-not in the mood for romance|🚫|core|not wanting love or affection today
-quietly affectionate|🤍|core|loving, in a calm and private way
+loved-up|💕|slang|happily in love (informal)|+|love
+single and thriving|💅|slang|alone and doing brilliantly (informal)|+|content
+a bit cynical today|🙄|core|doubting that any of this is sincere|-|fedup
+warm-hearted|🧡|core|kind and affectionate|+|love
+missing someone|💭|core|sad because a person is not here|-|low
+all heart|❤️|idiom|full of kindness and emotion|+|love
+unimpressed by the fuss|🥱|core|not interested in all the attention|=|bored
+soppy|💌|slang|sentimental in a silly, sweet way (informal)|+|love
+blushing|😊|easy|going red in the face|=|love
+heart-eyed|😍|slang|looking at someone with adoration (informal)|+|love
+lonely but fine|🌙|core|alone, and managing well|=|low
+in love with my own company|🫖|core|enjoying being by myself|+|calm
+over it|💔|slang|no longer caring about it (informal)|-|fedup
+secretly pleased|🤫|core|quietly happy, without showing it|+|content
+flowers, please|💐|easy|I would like to be given something lovely|=|playful
+sweet on someone|🍬|idiom|attracted to a particular person|+|love
+not in the mood for romance|🚫|core|not wanting love or affection today|=|love
+quietly affectionate|🤍|core|loving, in a calm and private way|+|love
 `},
 
   { id:'halloween', label:'Halloween · Castanyada',
@@ -711,28 +805,28 @@ quietly affectionate|🤍|core|loving, in a calm and private way
       '--title-transform':'uppercase','--title-spacing':'-.02em','--phrase-weight':'620',
       '--pattern':'radial-gradient(circle at 80% 0%,#ff8a1f1a,transparent 55%)'},
     bank:`
-haunted by my inbox|👻|core|my unanswered emails follow me everywhere
-dead on my feet|💀|slang|so tired I can hardly stand
-in a bit of a daze|🕸️|core|confused and not fully aware
-scared of my own to-do list|😱|core|frightened by how much I must do
-running on sweets|🍬|slang|sugar is my only source of energy
-quietly dreading Monday|🎃|core|privately afraid of the week ahead
-back from the dead|🧟|idiom|recovered after feeling terrible
-spooked but smiling|🫣|core|a little frightened, but still cheerful
-a proper night owl today|🦉|idiom|someone who comes alive late at night
-a bit witchy|🧙|slang|mysterious and slightly wild (informal)
-cosy and candlelit|🕯️|core|warm, soft and comfortable
-sugar crash|🍭|slang|sudden tiredness after eating too much sugar
-something's brewing|🧪|idiom|something is developing, probably trouble
-creeping along|🕷️|core|moving forward very slowly and quietly
-warm and toasty|🌰|easy|pleasantly warm
-jumpy|😨|easy|nervous and easily startled
-mysteriously fine|🔮|core|OK, and I cannot explain why
-up past my bedtime|🌙|core|awake much later than I should be
-wrapped up warm|🧣|easy|dressed in plenty of warm clothes
-chestnut weather|🍂|core|cold enough for roasted chestnuts
-tricked, not treated|🍫|slang|I got the bad option, not the good one
-glowing|🪔|easy|shining with health or happiness
+haunted by my inbox|👻|core|my unanswered emails follow me everywhere|-|busy
+dead on my feet|💀|slang|so tired I can hardly stand|-|tired
+in a bit of a daze|🕸️|core|confused and not fully aware|=|focus
+scared of my own to-do list|😱|core|frightened by how much I must do|-|stress
+running on sweets|🍬|slang|sugar is my only source of energy|=|food
+quietly dreading Monday|🎃|core|privately afraid of the week ahead|-|stress
+back from the dead|🧟|idiom|recovered after feeling terrible|+|health
+spooked but smiling|🫣|core|a little frightened, but still cheerful|=|stress
+a proper night owl today|🦉|idiom|someone who comes alive late at night|=|tired
+spooked|🧙|easy|frightened or nervous (informal)|-|stress
+cosy and candlelit|🕯️|core|warm, soft and comfortable|+|calm
+sugar crash|🍭|slang|sudden tiredness after eating too much sugar|-|tired
+something's brewing|🧪|idiom|something is developing, probably trouble|=|unsure
+creeping along|🕷️|core|moving forward very slowly and quietly|=|coping
+warm and toasty|🌰|easy|pleasantly warm|+|body
+jumpy|😨|easy|nervous and easily startled|-|stress
+mysteriously fine|🔮|core|OK, and I cannot explain why|=|mixed
+up past my bedtime|🌙|core|awake much later than I should be|=|tired
+wrapped up warm|🧣|easy|dressed in plenty of warm clothes|+|body
+feeling the cold|🌰|core|noticing the low temperature a lot|-|body
+out of luck|🍫|idiom|unlucky; not getting what I hoped for|-|badday
+glowing|🪔|easy|shining with health or happiness|+|happy
 `},
 
   { id:'thanksgiving', label:'Thanksgiving',
@@ -744,26 +838,26 @@ glowing|🪔|easy|shining with health or happiness
       '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'640',
       '--pattern':'radial-gradient(#3d24140a 1px,transparent 1px)'},
     bank:`
-grateful|🙏|easy|thankful for what I have
-counting my blessings|🧮|idiom|deliberately noticing the good things in my life
-full to bursting|🦃|core|so full of food I cannot move
-warm-hearted|🧡|core|kind and affectionate
-glad to be here|🏡|easy|happy to be in this place with these people
-stuffed|🥧|slang|extremely full after eating (informal)
-missing home|✈️|core|sad because home is far away
-thankful for small things|🌼|core|grateful for little everyday pleasures
-happily surrounded|👨‍👩‍👧|core|glad to have people all around me
-in a food coma|😵|slang|sleepy and heavy after a big meal (informal)
-appreciating the quiet|🤍|core|enjoying the silence
-reflective|🍂|core|thinking quietly about life
-cosy|🛋️|easy|warm, soft and comfortable
-generous|🎁|easy|happy to give to others
-homesick|🏠|easy|missing home and the people there
-content|😌|easy|quietly satisfied with how things are
-a bit sentimental|🥹|core|easily moved by feelings and memories
-harvest mood|🌽|core|calm and grateful, as at the end of a season
-giving thanks, grudgingly|😅|slang|grateful, but not very willingly
-all talked out|💬|slang|with nothing left to say after much talking
+grateful|🙏|easy|thankful for what I have|+|content
+counting my blessings|🧮|idiom|deliberately noticing the good things in my life|+|content
+full to bursting|🦃|core|so full of food I cannot move|=|food
+warm-hearted|🧡|core|kind and affectionate|+|love
+glad to be here|🏡|easy|happy to be in this place with these people|+|social
+stuffed|🥧|slang|extremely full after eating (informal)|=|food
+missing home|✈️|core|sad because home is far away|-|low
+thankful for small things|🌼|core|grateful for little everyday pleasures|+|content
+happily surrounded|👨‍👩‍👧|core|glad to have people all around me|+|social
+in a food coma|😵|slang|sleepy and heavy after a big meal (informal)|=|food
+appreciating the quiet|🤍|core|enjoying the silence|+|calm
+reflective|🍂|core|thinking quietly about life|=|reflect
+cosy|🛋️|easy|warm, soft and comfortable|+|calm
+generous|🎁|easy|happy to give to others|+|social
+homesick|🏠|easy|missing home and the people there|-|low
+content|😌|easy|quietly satisfied with how things are|+|content
+a bit sentimental|🥹|core|easily moved by feelings and memories|=|reflect
+taking stock|🌽|idiom|stopping to think carefully about my situation|=|reflect
+giving thanks, grudgingly|😅|slang|grateful, but not very willingly|=|fedup
+all talked out|💬|slang|with nothing left to say after much talking|-|tired
 `},
 
   { id:'christmas', label:'Nadal',
@@ -775,28 +869,28 @@ all talked out|💬|slang|with nothing left to say after much talking
       '--title-transform':'none','--title-spacing':'-.02em','--phrase-weight':'630',
       '--pattern':'radial-gradient(circle at 15% 5%,#e8c45c14,transparent 50%)'},
     bank:`
-mentally in December|🎄|core|my mind is already on the holidays
-counting down the days|📆|core|waiting impatiently, day by day
-full of mince pies|🥧|slang|having eaten too many festive sweets
-glowing like a fairy light|✨|core|shining with happiness
-in full festive mode|🎅|core|completely in the Christmas spirit
-tired but tinselled|🎀|core|exhausted, but still decorated and cheerful
-dreading the family dinner|🍽️|core|afraid of the meal with relatives
-wrapped up warm|🧣|easy|dressed in plenty of warm clothes
-dreaming of time off|💤|core|longing for days without work
-over-catered|🍗|core|with far more food than anyone needs
-cosy by the radiator|🔥|easy|warm and comfortable beside the heating
-shopping-list panic|🛍️|core|anxious about everything still to buy
-quietly festive|🕯️|core|in a gentle holiday mood
-sparkling|🪩|slang|bright, lively and shining (informal)
-ready for a fresh start|🎆|core|wanting to begin again
-making resolutions I won't keep|📝|slang|promising changes I will abandon
-back to reality|⏰|idiom|returning to ordinary life after a break
-new year, same me|🙃|slang|the date changed, I did not (informal)
-hibernating|🐻|slang|staying in, warm and inactive (informal)
-full of good cheer|🥂|idiom|happy and spreading happiness
-out of holiday mode, just|🧳|core|only just back into working life
-jingling|🔔|slang|full of bright festive energy (informal)
+mentally in December|🎄|core|my mind is already on the holidays|=|escape
+counting down the days|📆|core|waiting impatiently, day by day|=|escape
+full of mince pies|🥧|slang|having eaten too many festive sweets|=|food
+merry|✨|easy|happy and cheerful, especially at Christmas|+|happy
+in full festive mode|🎅|core|completely in the Christmas spirit|+|social
+ready to put my feet up|🎀|idiom|ready to sit down and relax|=|tired
+dreading the family dinner|🍽️|core|afraid of the meal with relatives|-|stress
+wrapped up warm|🧣|easy|dressed in plenty of warm clothes|+|body
+dreaming of time off|💤|core|longing for days without work|=|escape
+stuffed to the gills|🍗|idiom|completely full after eating (informal)|=|food
+cosy by the radiator|🔥|easy|warm and comfortable beside the heating|+|calm
+in a last-minute panic|🛍️|core|worried because I have left everything too late|-|stress
+quietly festive|🕯️|core|in a gentle holiday mood|+|happy
+sparkling|🪩|slang|bright, lively and shining (informal)|+|energy
+ready for a fresh start|🎆|core|wanting to begin again|+|hope
+making resolutions I won't keep|📝|slang|promising changes I will abandon|=|playful
+back to reality|⏰|idiom|returning to ordinary life after a break|-|badday
+new year, same me|🙃|slang|the date changed, I did not (informal)|=|routine
+hibernating|🐻|slang|staying in, warm and inactive (informal)|=|calm
+full of good cheer|🥂|idiom|happy and spreading happiness|+|happy
+out of holiday mode, just|🧳|core|only just back into working life|=|routine
+in the Christmas spirit|🔔|idiom|full of the happy, friendly feeling of Christmas|+|social
 `},
 
   { id:'exams', label:'Exam season',
@@ -807,28 +901,28 @@ jingling|🔔|slang|full of bright festive energy (informal)
       '--font':'system-ui,sans-serif','--title-font':'system-ui,sans-serif','--title-weight':'800',
       '--title-transform':'none','--title-spacing':'-.025em','--phrase-weight':'640','--pattern':'none'},
     bank:`
-nervous but ready|📝|core|anxious, yet properly prepared
-cramming|📚|slang|studying intensively at the last minute (informal)
-burnt out|🕯️|idiom|exhausted after too much effort for too long
-nearly there|🏁|easy|almost finished
-running on adrenaline|⚡|core|kept going by nervous energy alone
-over-revised|🧠|core|having studied so much it stopped helping
-can't look at another verb tense|😵|slang|unable to study any more grammar (informal)
-counting the days|📆|core|waiting impatiently for it to be over
-relieved|😮‍💨|easy|glad that something worrying has ended
-dreading the results|📄|core|afraid of what the marks will be
-quietly confident|😎|core|sure it will go well, without boasting
-exhausted but finishing|🏃|core|very tired, but getting to the end
-out of steam|🚂|idiom|with no energy left to continue
-holding it together|🧷|core|just managing not to fall apart
-ready for it to be over|🚪|core|wanting the end to arrive
-proud of getting this far|🏅|core|pleased with how much I have achieved
-blank|⬜|easy|my mind is completely empty
-my brain is full|🫗|slang|unable to take in any more information
-sleep-deprived|🌙|core|not having had enough sleep for a long time
-taking it one day at a time|🗓️|idiom|not thinking beyond today
-too tired to panic|😴|slang|beyond worrying — simply exhausted
-looking forward to doing nothing|🏝️|core|waiting with pleasure for empty time
+nervous but ready|📝|core|anxious, yet properly prepared|=|stress
+cramming|📚|slang|studying intensively at the last minute (informal)|-|busy
+burnt out|🕯️|idiom|exhausted after too much effort for too long|-|tired
+nearly there|🏁|easy|almost finished|+|hope
+running on adrenaline|⚡|core|kept going by nervous energy alone|=|energy
+over-revised|🧠|core|having studied so much it stopped helping|-|tired
+can't look at another verb tense|😵|slang|unable to study any more grammar (informal)|-|fedup
+counting the days|📆|core|waiting impatiently for it to be over|=|escape
+relieved|😮‍💨|easy|glad that something worrying has ended|+|calm
+dreading the results|📄|core|afraid of what the marks will be|-|stress
+quietly confident|😎|core|sure it will go well, without boasting|+|hope
+exhausted but finishing|🏃|core|very tired, but getting to the end|=|tired
+out of steam|🚂|idiom|with no energy left to continue|-|tired
+holding it together|🧷|core|just managing not to fall apart|=|coping
+ready for it to be over|🚪|core|wanting the end to arrive|-|escape
+proud of getting this far|🏅|core|pleased with how much I have achieved|+|content
+blank|⬜|easy|my mind is completely empty|-|focus
+my brain is full|🫗|slang|unable to take in any more information|-|focus
+sleep-deprived|🌙|core|not having had enough sleep for a long time|-|tired
+taking it one day at a time|🗓️|idiom|not thinking beyond today|=|coping
+too tired to panic|😴|slang|beyond worrying — simply exhausted|=|tired
+looking forward to doing nothing|🏝️|core|waiting with pleasure for empty time|+|escape
 `},
 ];
 
@@ -946,8 +1040,10 @@ function parseBank(txt,prefix){
   return (txt||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
     const p=l.split('|').map(s=>s.trim());
     if(p.length<2||!p[0])return null;
+    const mood=['+','=','-'].includes(p[4])?p[4]:'=';
     return {id:(prefix?prefix+'-':'')+slug(p[0]),text:p[0],emoji:p[1]||'•',
-            reg:(p[2]||'core').toLowerCase(),def:p[3]||''};
+            reg:(p[2]||'core').toLowerCase(),def:p[3]||'',
+            mood, fam:(p[5]||'').toLowerCase()||('own-'+slug(p[0]))};
   }).filter(Boolean);
 }
 function dedupe(list){
@@ -956,7 +1052,7 @@ function dedupe(list){
   return out;
 }
 function bankFor(level){
-  return dedupe(parseBank(BANKS[level]).concat(parseBank(load(K.custom,{})[level])));
+  return dedupe(parseBank(BANKS[level]).concat(parseBank(REPLIES),parseBank(load(K.custom,{})[level])));
 }
 const seasonBank = s => parseBank(s.bank, s.id);
 
@@ -1003,82 +1099,103 @@ function lessonNow(now){
 
 /* ████████████████████████████████████████████████████████████
    ⑦ THE DEAL
-   Two cards per grid are new to that class; the rest come back
-   least-recently-seen first, so language recycles for retrieval
-   instead of vanishing after one lesson.
+   Rules for every grid, in order of importance:
+   1. at least GRID.moodMin positive, neutral and negative cards;
+   2. no two cards from the same idea family;
+   3. the slot mix in GRID.slots (everyday replies, core, idioms…).
+   Within those rules, phrases a class has never seen come first, and a
+   phrase only returns once the rest of its kind has had a turn.
    ████████████████████████████████████████████████████████████ */
 
-const MIXES={
-  9:[{easy:2,core:4,idiom:2,slang:1},{easy:2,core:3,idiom:2,slang:2},
-     {easy:1,core:4,idiom:3,slang:1},{easy:2,core:4,idiom:1,slang:2}],
-  6:[{easy:1,core:3,idiom:1,slang:1},{easy:1,core:2,idiom:2,slang:1},{easy:2,core:2,idiom:1,slang:1}]
-};
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r}
+const MOODS=['+','=','-'];
 
-function pickFrom(pool,n,state,preferNew){
-  if(n<=0||!pool.length) return [];
-  const unseen=shuffle(pool.filter(p=>state.seen[p.id]===undefined));
-  const seen=pool.filter(p=>state.seen[p.id]!==undefined).sort((a,b)=>state.seen[a.id]-state.seen[b.id]);
-  const out=[];
-  if(preferNew>0) out.push(...unseen.slice(0,Math.min(preferNew,n)));
-  const stale=shuffle(seen.slice(0,Math.max(3,Math.ceil(seen.length*0.55))));
-  for(const c of stale){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
-  for(const c of unseen){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
-  for(const c of shuffle(pool)){if(out.length>=n)break;if(!out.includes(c))out.push(c)}
-  return out.slice(0,n);
+// Least recently shown first; never shown counts as oldest. Ties are random.
+function byStaleness(pool,state){
+  return shuffle(pool).sort((a,b)=>(state.seen[a.id]??-1)-(state.seen[b.id]??-1));
+}
+
+// How many more cards are still needed to reach the mood minimum.
+function moodShortfall(counts,min){
+  return MOODS.reduce((s,m)=>s+Math.max(0,min-counts[m]),0);
+}
+
+function slotsFor(size,season){
+  const base=(GRID.slots[size]||GRID.slots[9]).slice();
+  if(!season) return base;
+  const themedN=size>=9?3:2, out=base.slice();
+  for(const reg of GRID.themedReplaces.slice(0,themedN)){
+    const i=out.indexOf(reg); if(i>-1) out.splice(i,1);
+  }
+  while(out.length>size-themedN) out.pop();
+  return Array(themedN).fill('theme').concat(out);
 }
 
 function buildDeal(level,size,state,season){
-  const themedN = season ? (size>=9?3:2) : 0;
-  const normalN = size - themedN;
-  const bank=bankFor(level), by={easy:[],core:[],idiom:[],slang:[]};
-  for(const it of bank)(by[it.reg]||by.core).push(it);
+  const bank=bankFor(level), by={};
+  for(const it of bank)(by[it.reg]=by[it.reg]||[]).push(it);
+  const themePool=season?seasonBank(season):[];
+  // scarce kinds are filled first; everyday replies (rich in neutrals) last
+  const ORDER=['theme','easy','slang','idiom','core','reply'];
+  const slots=slotsFor(size,season).sort((a,b)=>ORDER.indexOf(a)-ORDER.indexOf(b));
+  const min=Math.min(GRID.moodMin,Math.floor(size/3));
 
-  const base=rnd(MIXES[size]||MIXES[9]);
-  // scale the mix down to leave room for the themed cards
-  const mix={},keys=['core','idiom','slang','easy'];
-  let running=0;
-  keys.forEach((k,i)=>{
-    const want = i===keys.length-1 ? Math.max(0,normalN-running) : Math.round(base[k]*normalN/size);
-    mix[k]=want; running+=want;
+  const chosen=[], fams=new Set(), counts={'+':0,'=':0,'-':0};
+  const fits=(c,left,{family=true,mood=true}={})=>{
+    if(chosen.includes(c)) return false;
+    if(family && fams.has(c.fam)) return false;
+    if(mood){ const k={...counts}; k[c.mood]++; if(moodShortfall(k,min)>left) return false; }
+    return true;
+  };
+  const choose=(pool,left,rules)=>{
+    const ok=byStaleness(pool,state).filter(c=>fits(c,left,rules));
+    return ok.length?rnd(ok.slice(0,3)):null;   // a little variety among the stalest
+  };
+
+  slots.forEach((slot,i)=>{
+    const left=slots.length-i-1;
+    const own=slot==='theme'?themePool:(by[slot]||[]);
+    const any=slot==='theme'?themePool.concat(bank):bank;
+    // relax the slot mix first, then the family rule; never the mood balance unless nothing fits
+    const c=choose(own,left)||choose(any,left)||choose(any,left,{family:false})||choose(any,left,{family:false,mood:false});
+    if(!c) return;
+    if(slot==='theme'&&themePool.includes(c)) c.themed=true;
+    chosen.push(c); fams.add(c.fam); counts[c.mood]++;
   });
-
-  let cards=[],newBudget=2;
-  for(const reg of keys){
-    const got=pickFrom(by[reg],mix[reg],state,Math.min(newBudget,1));
-    newBudget-=got.filter(c=>state.seen[c.id]===undefined).length;
-    cards=cards.concat(got);
-  }
-  if(cards.length<normalN){
-    const rest=shuffle(bank.filter(b=>!cards.includes(b)));
-    cards=cards.concat(rest.slice(0,normalN-cards.length));
-  }
-  cards=cards.slice(0,normalN);
-
-  let themed=[];
-  if(season){
-    themed=pickFrom(seasonBank(season),themedN,state,1);
-    for(const t of themed) t.themed=true;
-  }
-  return shuffle(cards.concat(themed));
+  return shuffle(chosen);   // positions vary each lesson
 }
 
 function makeDeal(group,size,season){
   const state=getState(group.id);
-  let cards=null;
+  let cards=null, hash='';
   for(let a=0;a<40;a++){
-    const c=buildDeal(group.level,size,state,season);
-    const hash=c.map(x=>x.id).sort().join('~');
-    cards=c;
-    if(!state.combos.includes(hash)){state.combos.push(hash);break}
+    cards=buildDeal(group.level,size,state,season);
+    hash=cards.map(x=>x.id).sort().join('~');
+    if(!state.combos.includes(hash)) break;
   }
+  // remember exactly what this deal changed, so "Deal again" can undo it
+  const undo={n:state.n,seen:{},hash};
+  for(const c of cards) undo.seen[c.id]=state.seen[c.id]??null;
+  state.combos.push(hash);
   if(state.combos.length>500) state.combos=state.combos.slice(-500);
   const fresh=cards.filter(c=>state.seen[c.id]===undefined).map(c=>c.id);
   state.n+=1;
   for(const c of cards) state.seen[c.id]=state.n;
   setState(group.id,state);
-  return {cards:cards.map(c=>({id:c.id,text:c.text,emoji:c.emoji,def:c.def||'',themed:!!c.themed})),fresh};
+  return {cards:cards.map(c=>({id:c.id,text:c.text,emoji:c.emoji,def:c.def||'',themed:!!c.themed})),fresh,undo};
+}
+
+// A rejected deal should not count as shown: put the class memory back.
+function undoDeal(group,undo){
+  if(!undo||!undo.seen) return;
+  const state=getState(group.id);
+  state.n=undo.n;
+  for(const [id,prev] of Object.entries(undo.seen)){
+    if(prev===null) delete state.seen[id]; else state.seen[id]=prev;
+  }
+  const i=state.combos.lastIndexOf(undo.hash); if(i>-1) state.combos.splice(i,1);
+  setState(group.id,state);
 }
 
 /* ---------- deal of the day ----------
@@ -1088,9 +1205,11 @@ const todayKey=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMo
 
 function dealOfTheDay(group,force){
   const key=K.daily+group.id+'_'+todayKey();
+  const cached=load(key,null);
   if(!force){
-    const cached=load(key,null);
     if(cached&&cached.cards&&cached.cards.length) return cached;
+  } else if(cached&&cached.undo){
+    undoDeal(group,cached.undo);
   }
   const season=seasonFor(new Date());
   const deal=makeDeal(group,9,season);
