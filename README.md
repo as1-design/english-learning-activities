@@ -20,6 +20,7 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Present Perfect Board Game | B2.1 | Pass-the-phone board game for two to six players. Each square asks a question to answer with the present perfect simple or continuous. Scores are kept and a saved game can be resumed. | [Open](https://as1-design.github.io/english-learning-activities/B21-present-perfect-board-game.html) |
 | Crystal Ball | B2.2 | Speaking game in which a crystal ball reveals a question and the student speaks for as long as the vision lasts. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-crystal-ball.html) |
 | Expression Hand | B2.2 | Card game linked to Files 1 and 2: students talk about the topic on the board and try to use all the phrasal verbs and idioms in their hand. One view for the whiteboard and one for each phone. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-expression-hand.html) |
+Fashion Talk | B2.1 | One card at a time: discussion questions about clothes and fashion, with useful language. | [Open](https://as1-design.github.io/english-learning-activities/b21-fashion-talk-cards.html) 
 
 ## Vocabulary
 
