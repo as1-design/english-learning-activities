@@ -3,7 +3,9 @@
   Name:     Word Break · classroom brain breaks
   Purpose:  Five short word games (Connections, Missing Vowels, Word Ladder,
             Odd One Out, Kim's Game) for the whole class, teams or phones.
-  Version:  2.2 · 2026-11-02 (Settings › Content: teachers can use their own copy
+  Version:  2.3 · 2026-11-04 (Kim's Game: covered cards show their backs again,
+            not mirrored words)
+            2.2 · 2026-11-02 (Settings › Content: teachers can use their own copy
             of the sheet; the QR code passes it to students' phones; phones held
             sideways use the phone layout)
             2.1 · 2026-11-02 (QR address fixed; generic default classes;
@@ -267,7 +269,7 @@ input[type=range]{accent-color:var(--espresso);flex:1;min-width:140px}
 .kc .back{transform:rotateY(180deg);background-color:var(--roast);background-image:radial-gradient(ellipse 7px 10px at 50% 50%, var(--caramel) 0 60%, transparent 62%);background-size:26px 26px;box-shadow:0 5px 0 #3B2418}
 .kc.new .face{background:var(--mint)}
 .kc.gone .face{background:var(--tomato)}
-.kc.deal{animation:deal .5s var(--spring) both}
+.kc.deal{animation:deal .5s var(--spring) backwards}   /* not 'both': a filling animation flattens the 3D flip, so covered cards showed mirrored words */
 @keyframes deal{from{opacity:0;transform:translateY(-40px) rotate(-10deg)}to{opacity:1}}
 .countbar{height:12px;background:var(--foam);border-radius:999px;overflow:hidden;max-width:560px;margin:1rem auto 0}
 .countbar i{display:block;height:100%;background:var(--caramel);border-radius:999px;transform-origin:left}
