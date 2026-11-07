@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Table Talk · team generator</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Cabin+Sketch:wght@700&family=Figtree:wght@400;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -148,6 +147,7 @@ body[data-mood="table"] .title{color:#FFF0F6;text-shadow:0 0 3px #fff,0 0 10px #
 .tools{position:relative}
 .more{position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:250px;background:#fff;color:#1B1B3A;border:3px solid #1B1B3A;border-radius:18px;box-shadow:5px 5px 0 #1B1B3A;padding:8px;font-family:"Figtree",sans-serif}
 .more[hidden]{display:none}
+.more.from-left{right:auto;left:0}   /* when the ⋯ button sits near the left edge (phones, narrow windows) */
 .more hr{border:0;border-top:2px solid #EEE;margin:6px 4px}
 .m-row{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;border:0;background:none;text-align:left;padding:10px 10px;border-radius:10px;font-weight:700;font-size:15px;color:#1B1B3A}
 .m-row:hover{background:#F2F2F8}
@@ -1149,7 +1149,7 @@ function syncMore(){
   $("histNote").textContent=HIST.rounds?`Remembering ${HIST.rounds} ${HIST.rounds===1?"shuffle":"shuffles"} until the page is reloaded.`:"Remembers who has worked together until the page is reloaded.";
 }
 const moreBtn=$("moreBtn"),moreMenu=$("moreMenu");
-function toggleMore(open){moreMenu.hidden=!open;moreBtn.setAttribute("aria-expanded",String(open));if(open)syncMore();}
+function toggleMore(open){moreMenu.hidden=!open;moreBtn.setAttribute("aria-expanded",String(open));if(open){syncMore();moreMenu.classList.remove("from-left");if(moreMenu.getBoundingClientRect().left<8)moreMenu.classList.add("from-left");}}
 moreBtn.addEventListener("click",e=>{e.stopPropagation();toggleMore(moreMenu.hidden);});
 moreMenu.addEventListener("click",e=>e.stopPropagation());
 document.addEventListener("click",()=>{if(!moreMenu.hidden)toggleMore(false);});
