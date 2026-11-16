@@ -1,0 +1,654 @@
+<!doctype html>
+<!--
+  Name:     Common mistakes in writing · B2.1 lesson and practice
+  Purpose:  A short lesson on twelve common mistakes from B2.1 writing tasks
+            (formal emails and letters), followed by a three-round practice
+            and a "My mistakes" section that brings back wrong answers.
+  Version:  1.1 · 2026-11-16
+  Edit:     All lesson points and questions are in the CONTENT section at the
+            top of the script. Change the text there; nothing else needs editing.
+            In lesson text, **double asterisks** make words bold.
+  Credit:   Class of Coffee – with AI assistance
+-->
+<html lang="en-GB" data-roast="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Common mistakes in writing · B2.1</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>">
+<style>
+/* ================= tokens (Class of Coffee, light roast) ================= */
+:root{
+  --coc-coffee-dark:#5A2D0C; --coc-tan:#E6C496; --coc-cream:#F3E2BF;
+  --bg:#FFF6E8; --surface:#FFFFFF; --line:#F2B84B; --line-soft:#F1DFC2;
+  --heading:#5A2D0C; --text:#4A3524; --text-soft:#6B5340; --link:#7D3410;
+  --accent:#C2541B; --on-accent:#FFFFFF;
+  --honey:#F2B84B; --honey-soft:#FDEBC4;
+  --ok:#1C7C3C; --ok-soft:#E3F3E8; --no:#A3341A; --no-soft:#FBE6DF;
+  --font-heading:'Montserrat','Trebuchet MS',Arial,sans-serif;
+  --font-body:'Nunito','Segoe UI',Verdana,sans-serif;
+  --r-s:6px; --r-m:10px; --r-l:18px; --r-pill:999px;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --focus:0 0 0 3px var(--bg),0 0 0 5px var(--accent);
+  --fs:clamp(1rem,.9rem + .45vw,1.4rem);
+}
+/* ================= base ================= */
+*{box-sizing:border-box}
+html{touch-action:manipulation}
+body{margin:0;background:var(--bg);color:var(--text);font:400 var(--fs)/1.55 var(--font-body);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+h1,h2,h3{font-family:var(--font-heading);color:var(--heading);line-height:1.25;margin:0}
+button{font:inherit;color:inherit;cursor:pointer;min-height:44px}
+:where(button,a):focus-visible{outline:none;box-shadow:var(--focus);border-radius:var(--r-s)}
+.wrap{max-width:1440px;margin:0 auto;padding:0 clamp(14px,3vw,32px)}
+.narrow{max-width:980px}
+
+/* ================= header and tabs ================= */
+.top{padding:clamp(16px,3vw,28px) 0 10px}
+.top h1{font-size:clamp(1.4rem,1.1rem + 1.4vw,2.3rem)}
+.top .sub{margin:.2rem 0 0;color:var(--text-soft);font-weight:600}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.tab{border:2px solid var(--line);background:var(--surface);border-radius:var(--r-pill);
+  padding:6px 18px;font-family:var(--font-heading);font-weight:700;font-size:.95em;color:var(--heading)}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.badge{display:inline-block;min-width:1.6em;padding:0 .4em;margin-left:.35em;border-radius:var(--r-pill);
+  background:var(--honey);color:var(--text);font-size:.85em;text-align:center}
+.tab[aria-selected="true"] .badge{background:#fff}
+.view{display:none;padding-bottom:28px}
+.view.active{display:block}
+
+/* ================= lesson ================= */
+.intro{max-width:760px;margin:10px 0 6px}
+.group h2{font-size:clamp(1.1rem,1rem + .5vw,1.45rem);margin:26px 0 12px;padding-bottom:6px;border-bottom:3px solid var(--line)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-l);padding:18px 20px;
+  box-shadow:0 2px 0 var(--line-soft);scroll-margin-top:16px}
+.card.flash{box-shadow:0 0 0 4px var(--honey)}
+.card h3{font-size:1.08em;display:flex;gap:10px;align-items:baseline}
+.card h3 .num{flex:none;display:inline-grid;place-items:center;width:1.8em;height:1.8em;border-radius:50%;
+  background:var(--honey);color:var(--text);font-size:.85em}
+.card p{margin:.6em 0}
+.ex{margin:.7em 0;padding:10px 12px;border-radius:var(--r-m);background:var(--bg)}
+.ex p{margin:.25em 0;display:flex;gap:.5em;align-items:baseline}
+.ex .lab{flex:none}
+.lab{font-family:var(--font-heading);font-weight:700;font-size:.85em;margin-right:.35em}
+.lab.no{color:var(--no)} .lab.ok{color:var(--ok)}
+.ex .wrong{color:var(--no)}
+.note{font-size:.93em;color:var(--text-soft);border-left:4px solid var(--honey);padding-left:10px}
+.note b{color:var(--text)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 8px}
+
+/* ================= buttons ================= */
+.btn{white-space:nowrap;border:2px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:var(--r-pill);
+  padding:8px 22px;font-family:var(--font-heading);font-weight:700}
+.btn.ghost{background:var(--surface);color:var(--accent)}
+.btn[disabled]{background:#E9DCCB;border-color:#E9DCCB;color:#7A6656;cursor:not-allowed}
+.link{border:0;background:none;padding:0 2px;min-height:40px;color:var(--link);text-decoration:underline;
+  text-underline-offset:3px;font-weight:700}
+
+/* ================= practice ================= */
+.qcard{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--r-l);
+  padding:clamp(16px,3vw,30px);margin-top:12px}
+.enter{animation:enter .28s var(--ease)}
+@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.kicker{margin:0;font-family:var(--font-heading);font-weight:700;color:var(--accent);font-size:.9em;text-transform:uppercase;letter-spacing:.04em}
+.instr{margin:.3em 0 1em;color:var(--text-soft)}
+.keyhint{display:none;margin:-.6em 0 1em;font-size:.85em;color:var(--text-soft)}
+@media (hover:hover) and (pointer:fine){.keyhint{display:block}}
+.sentence{font-size:1.25em;margin:.4em 0 1em}
+.gap{display:inline-block;min-width:5.5em;border-bottom:3px solid var(--line);text-align:center;font-weight:700;color:var(--heading)}
+.opts{display:flex;flex-wrap:wrap;gap:10px}
+.opts.stack{flex-direction:column}
+.opt{flex:1 1 180px;text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:var(--r-m);
+  padding:10px 14px;display:flex;gap:10px;align-items:flex-start;white-space:pre-line}
+.opts.stack .opt{flex:none}
+.opt .key{flex:none;display:inline-grid;place-items:center;width:1.7em;height:1.7em;border-radius:50%;
+  background:var(--honey-soft);font-family:var(--font-heading);font-weight:700;font-size:.85em}
+.opt:not([disabled]):hover{background:var(--honey-soft)}
+.opt[disabled]{cursor:default;color:var(--text)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrongpick{border-color:var(--no);background:var(--no-soft)}
+.opt .otext{flex:1;min-width:0}
+.opt .mark{display:block;margin-top:2px;font-weight:700;font-size:.85em}
+.opt.right .mark{color:var(--ok)} .opt.wrongpick .mark{color:var(--no)}
+.fb{margin-top:16px;padding:12px 16px;border-radius:var(--r-m);border-left:6px solid}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.no{background:var(--no-soft);border-color:var(--no)}
+.fb p{margin:.3em 0}
+.fb .verdict{font-family:var(--font-heading);font-weight:700}
+.fb.ok .verdict{color:var(--ok)} .fb.no .verdict{color:var(--no)}
+
+/* letter */
+.task{background:var(--honey-soft);border-radius:var(--r-m);padding:12px 16px;margin-bottom:14px;font-size:.95em}
+.task p{margin:.2em 0}
+.task ul{margin:.3em 0 .2em;padding-left:1.3em}
+.task .task-h{font-family:var(--font-heading);font-weight:700;color:var(--heading)}
+.letter{border:1px solid var(--line-soft);border-radius:var(--r-m);padding:clamp(12px,2.5vw,24px);background:#FFFDF8}
+.letter p{margin:0 0 .8em}
+.slot{border-radius:var(--r-s);padding:1px 4px;background:var(--bg);border:1px dashed var(--line)}
+.slot .n{display:inline-grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;background:var(--honey);
+  font-family:var(--font-heading);font-weight:700;font-size:.85em;vertical-align:.1em}
+.slot.done{border-style:solid;border-color:var(--line-soft);background:#fff}
+.slot.cur{border:2px solid var(--accent);background:var(--honey-soft)}
+.letter .opts{margin:.4em 0 1em}
+
+/* end and mistakes */
+.score{list-style:none;padding:0;margin:12px 0}
+.score li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+.score b{font-family:var(--font-heading);white-space:nowrap}
+.empty{text-align:center;padding:10px 0}
+
+/* fixed Previous / Next bar */
+.navbar{position:fixed;right:clamp(12px,2vw,28px);bottom:calc(14px + env(safe-area-inset-bottom));z-index:5;
+  display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line-soft);
+  border-radius:var(--r-pill);padding:6px 6px 6px 16px;box-shadow:0 6px 20px rgba(90,45,12,.15)}
+.navbar[hidden]{display:none}
+.navbar .prog{font-size:.85em;font-weight:700;color:var(--text-soft);white-space:nowrap}
+body.has-bar .view.active{padding-bottom:110px}
+@media (max-width:640px), (max-height:500px){
+  .navbar{left:0;right:0;bottom:0;border-radius:0;border-width:1px 0 0;padding:8px 12px calc(8px + env(safe-area-inset-bottom));justify-content:flex-end}
+  .navbar .prog{margin-right:auto}
+  .navbar .btn{padding:8px 14px}
+  .navbar .prog{white-space:normal;font-size:.8em}
+}
+@media (max-width:640px){ .opt{flex-basis:100%} }
+
+/* ================= signature footer ================= */
+.coc-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;padding:7px 20px;
+  background:var(--coc-tan);color:var(--coc-coffee-dark);font-family:var(--font-body);font-size:13px;line-height:1.4;margin-top:24px;border-radius:var(--r-m)}
+.coc-footer__brand{display:flex;align-items:center;gap:10px;font-weight:600}
+.coc-footer__mark{width:30px;height:30px;flex:none}
+.coc-footer a{color:inherit;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:40px;padding:0 4px}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+    <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
+  </header>
+
+  <main>
+    <section class="view" id="v-lesson" role="tabpanel" aria-labelledby="tab-lesson"></section>
+    <section class="view narrow" id="v-practice" role="tabpanel" aria-labelledby="tab-practice"></section>
+    <section class="view narrow" id="v-mistakes" role="tabpanel" aria-labelledby="tab-mistakes"></section>
+  </main>
+</div>
+
+<div class="navbar" id="navbar" hidden>
+  <span class="prog" id="prog"></span>
+  <button class="btn ghost" data-act="prev" id="prevBtn">← Previous</button>
+  <button class="btn" data-act="next" id="nextBtn">Next →</button>
+</div>
+
+<template id="footerTpl">
+<footer class="coc-footer">
+  <span class="coc-footer__brand">
+    <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+    <span>Class of Coffee – with AI assistance</span>
+  </span>
+  <a href="https://classofcoffee.com">classofcoffee.com</a>
+</footer>
+</template>
+
+<script>
+/* ===================================================================
+   CONTENT (edit here)
+   - LESSON: groups of lesson points. Each point has an id (used by the
+     questions in "ref"), a title, a rule, a wrong and a better example,
+     an optional "also" example and an optional note for Catalan and
+     Spanish speakers, an optional tip and an optional history note. **double asterisks** make words bold.
+   - ROUNDS: the three practice rounds.
+       type "gap":    "text" contains ___ where the answer goes.
+       type "pick":   the options are whole sentences; \n starts a new line.
+       type "letter": the email is in "letter": a list of paragraphs; inside
+                      a paragraph, text is a string and a number is a gap
+                      (1 = first item of the round, 2 = second…).
+     "answer" is the position of the right option: 0 = first, 1 = second.
+     "ref" links the question to a lesson point.
+   =================================================================== */
+const CONTENT = {
+  title: 'Common mistakes in writing',
+  subtitle: 'B2.1 · Lesson and practice',
+  tabs: { lesson:'1 · Lesson', practice:'2 · Practice', mistakes:'My mistakes' },
+  lessonIntro: 'These are common mistakes from your recent writing tasks. Read each point and the examples. Then go to the practice.',
+  labels: { wrong:'✗ Wrong', right:'✓ Better', also:'Also', note:'Catalan and Spanish speakers', tip:'Tip', history:'A little history' },
+  correct: '✓ Correct.', incorrect: '✗ Not quite.',
+  keyHint: 'Keyboard: press 1 or 2 to choose, Enter or → for the next question and ← to go back.',
+  mistakesIntro: 'Here you can try your mistakes again. A question leaves the list when you answer it correctly the first time it comes back.',
+
+  LESSON: [
+    { group:'Words that are easy to confuse', points:[
+      { id:'doubt', title:'Doubt or question?',
+        rule:'A **question** is something you ask to get information. A **doubt** is a feeling that something may not be true or may not happen.',
+        wrong:'I have a doubt about the timetable.',
+        right:'I have a question about the timetable.',
+        also:'I have doubts that the new plan will work.',
+        note:'Catalan “tinc un dubte” and Spanish “tengo una duda” usually mean “I have a question”.' },
+      { id:'end', title:'At the end or in the end?',
+        rule:'**At the end (of)** is the last part of a period, an event or a place: at the end of the course, at the end of the street. **In the end** means “finally”, after some time, changes or problems. It is not followed by “of”.',
+        wrong:'In the end of the course, there is an exam.',
+        right:'At the end of the course, there is an exam.',
+        also:'We talked about it for hours. In the end, we decided to stay at home.',
+        note:'Catalan and Spanish use “al final” for both meanings.' },
+      { id:'couldwould', title:'Could or would?',
+        rule:'**Could** is about ability or possibility (“was able to”, “might”). **Would** is for imagined situations and for polite formulas such as “I would be grateful”.',
+        wrong:'I could be grateful if you sent me the information.',
+        right:'I would be grateful if you could send me the information.',
+        also:'I could not come because I was ill. (= I was not able to come.)',
+        note:'Catalan “podria” and Spanish “podría” are “could”. Other forms ending in -ria / -ría, such as “estaria” and “estaría”, are usually “would”.' },
+      { id:'attend', title:'Assist or attend?',
+        rule:'**Attend** means “go to” a class, a meeting or an event. **Assist** means “help”, and it is quite formal. Say “attend a meeting”, without “to”.',
+        wrong:'I could not assist the meeting.',
+        right:'I could not attend the meeting.',
+        note:'Catalan “assistir a” and Spanish “asistir a” are “attend” in English.' },
+      { id:'early', title:'Early or soon?',
+        rule:'**Early** means near the beginning of a period of time, or before the usual or expected time. **Soon** means “in a short time from now”.',
+        wrong:'I hope to hear from you early.',
+        right:'I hope to hear from you soon.',
+        also:'I got up early to catch the train.',
+        note:'Spanish “pronto” and Catalan “aviat” can have both meanings. In English, you arrive early, but you see someone soon.' }
+    ]},
+    { group:'Grammar patterns', points:[
+      { id:'beforeafter', title:'Before and after + -ing',
+        rule:'After **before** and **after**, use a verb with **-ing**, or a subject and a verb. Do not use “to” + verb or the base form.',
+        wrong:'After finish the course, I want to travel.',
+        right:'After finishing the course, I want to travel.',
+        also:'After I finish the course, I want to travel.',
+        note:'Catalan and Spanish use the infinitive here (“després d’acabar”, “después de terminar”). English uses -ing.' },
+      { id:'wouldlike', title:'Would like to',
+        rule:'**Would** on its own does not mean “want”. To say politely what you want, use **would like + to + verb**: I would like to ask…',
+        wrong:'I would to ask about the summer course.',
+        right:'I would like to ask about the summer course.',
+        note:'“M’agradaria” and “me gustaría” are “I would like”. Do not forget “like” or “to”.' }
+    ]},
+    { group:'Sentences and punctuation', points:[
+      { id:'punctuation', title:'Capital letters and commas',
+        rule:'Start every sentence with a capital letter and finish it with a full stop. In English, days, months, languages and nationalities always start with a capital letter. The pronoun **I** is always a capital letter, but other words that start with i, such as **if**, **in** and **it**, are not. Put a comma after a linker at the start of a sentence: “However, …”, “In addition, …”.',
+        wrong:'I start my english course on monday. However the timetable is not ideal.',
+        right:'I start my English course on Monday. However, the timetable is not ideal.',
+        also:'I will come to the meeting if I can.',
+        note:'In Catalan and Spanish, days, months and languages start with a small letter (dilluns, lunes, anglès, inglés). In English, they need a capital letter.',
+        history:'In Old English, “I” was “ic”, close to German “ich”. In Middle English, it became a single letter, “i”. A small “i” on its own was easy to miss or misread in handwritten texts, so scribes began to write it as a capital, and by the late 1300s this was the usual form. Historians are not completely sure why it happened, but this is the most common explanation.' },
+      { id:'runon', title:'Run-on sentences',
+        rule:'A run-on sentence joins two complete sentences with only a comma, or with nothing. Separate them with a full stop, or join them with a linker such as and, but, so or because.',
+        wrong:'The course was very useful, I learnt a lot of vocabulary.',
+        right:'The course was very useful. I learnt a lot of vocabulary.',
+        also:'The course was very useful, and I learnt a lot of vocabulary.',
+        tip:'If both parts could be sentences on their own, a comma alone is not enough.' }
+    ]},
+    { group:'Letters and emails', points:[
+      { id:'signoff', title:'Starting and finishing a formal letter',
+        rule:'If you know the person’s name, start with **Dear Ms Carter,** and finish with **Yours sincerely,**. If you do not know the name, start with **Dear Sir or Madam,** and finish with **Yours faithfully,**. It is always “Yours”, with an s. Put a comma after the greeting and after the closing phrase.',
+        wrong:'Dear Ms Carter … Your faithfully',
+        right:'Dear Ms Carter, … Yours sincerely,',
+        note:'“Sincerely,” on its own is American English. In British English, write “Yours sincerely,”.' },
+      { id:'excuses', title:'Giving reasons and excuses',
+        rule:'When a task asks you to explain why something happened, give a reason that is clear, specific and believable. Vague reasons such as “I was busy” or “I had a problem” sound as if you do not care. If you invent an excuse, make it a good one.',
+        wrong:'I could not come because I was busy.',
+        right:'I could not come because my son was ill and I had to take him to the doctor.' },
+      { id:'copying', title:'Use your own words, not the task’s',
+        rule:'Do not copy whole phrases from the instructions. The examiner wants to see your own language, so say the same idea with different words. The task says: “Explain why you could not attend.”',
+        wrong:'I am writing to explain why I could not attend the meeting.',
+        right:'I would like to tell you why I missed last Thursday’s meeting.',
+        tip:'Underline the key points in the task, then think of another way to say each one.' }
+    ]}
+  ],
+
+  ROUNDS: [
+    { title:'Choose the right word', type:'gap',
+      instruction:'Read the sentence. Choose the word or phrase that completes it.',
+      items:[
+        { id:'g1', ref:'doubt', text:'I have a ___ about the price of the course. Is lunch included?', options:['doubt','question'], answer:1,
+          why:'You want information, so it is a question. “Tinc un dubte / Tengo una duda” is “I have a question”.' },
+        { id:'g2', ref:'doubt', text:'I have serious ___ that the new timetable will work.', options:['doubts','questions'], answer:0,
+          why:'You are not sure that the timetable will work. This feeling is a doubt.' },
+        { id:'g3', ref:'end', text:'There is a short test ___ of every unit.', options:['at the end','in the end'], answer:0,
+          why:'Use “at the end of” for the last part of a period or an event: at the end of every unit.' },
+        { id:'g4', ref:'end', text:'We looked at five hotels and, ___, we chose the cheapest one.', options:['at the end','in the end'], answer:1,
+          why:'“In the end” means “finally, after some time”. Here it describes the result of a long search.' },
+        { id:'g5', ref:'couldwould', text:'I ___ be grateful if you could send me the timetable.', options:['could','would'], answer:1,
+          why:'The formula is “I would be grateful if you could…”. “Would” goes in the first part.' },
+        { id:'g6', ref:'couldwould', text:'I ___ not go to the meeting because my train was cancelled.', options:['could','would'], answer:0,
+          why:'“Could not” means “was not able to”. “Would not go” means that you decided not to go.' },
+        { id:'g7', ref:'attend', text:'Unfortunately, I was not able to ___ the meeting on Tuesday.', options:['assist','attend'], answer:1,
+          why:'You go to a meeting, so you attend it. “Assist” means “help”.' },
+        { id:'g8', ref:'attend', text:'Volunteers ___ older people with their shopping.', options:['assist','attend'], answer:0,
+          why:'“Assist” means “help”. The volunteers help older people.' },
+        { id:'g9', ref:'early', text:'I arrived ___, so I had a coffee before the class started.', options:['early','soon'], answer:0,
+          why:'“Early” means before the usual or expected time.' },
+        { id:'g10', ref:'early', text:'Thank you for your help. I look forward to hearing from you ___.', options:['early','soon'], answer:1,
+          why:'“Soon” means “in a short time from now”.' }
+      ]},
+    { title:'Which sentence is correct?', type:'pick',
+      instruction:'Read the two options. Choose the correct one.',
+      items:[
+        { id:'p1', ref:'beforeafter', options:['After finish my studies, I want to work abroad.','After finishing my studies, I want to work abroad.'], answer:1,
+          why:'After “after”, use the -ing form: after finishing.' },
+        { id:'p2', ref:'beforeafter', options:['Please read the instructions before starting the exam.','Please read the instructions before to start the exam.'], answer:0,
+          why:'“Before to start” is not possible. Use “before starting” or “before you start”.' },
+        { id:'p3', ref:'wouldlike', options:['I would like to ask about the summer course.','I would to ask about the summer course.'], answer:0,
+          why:'“Would” needs “like” here: I would like to ask.' },
+        { id:'p4', ref:'wouldlike', options:['I would like know if there are any places left.','I would like to know if there are any places left.'], answer:1,
+          why:'“Would like” is followed by “to” + verb: I would like to know.' },
+        { id:'p5', ref:'runon', options:['The teachers were very helpful, I learnt a lot.','The teachers were very helpful, so I learnt a lot.'], answer:1,
+          why:'Two complete sentences cannot be joined with only a comma. The linker “so” joins them correctly.' },
+        { id:'p6', ref:'runon', options:['The room was too small. We could not see the board.','The room was too small we could not see the board.'], answer:0,
+          why:'The second option joins two sentences with nothing between them. A full stop separates them.' },
+        { id:'p7', ref:'punctuation', options:['I have been studying English and German for two years.','I have been studying english and german for two years.'], answer:0,
+          why:'In English, languages always start with a capital letter.' },
+        { id:'p8', ref:'punctuation', options:['The course starts on monday, 3 march.','The course starts on Monday, 3 March.'], answer:1,
+          why:'In English, days of the week and months start with a capital letter.' },
+        { id:'p9', ref:'signoff', options:['Dear Sir or Madam,\n…\nYours faithfully,','Dear Sir or Madam,\n…\nYours sincerely,'], answer:0,
+          why:'When you do not know the person’s name (Dear Sir or Madam), finish with “Yours faithfully”.' },
+        { id:'p10', ref:'signoff', options:['Dear Ms Carter,\n…\nYour sincerely,','Dear Ms Carter,\n…\nYours sincerely,'], answer:1,
+          why:'It is “Yours”, with an s. Use “Yours sincerely” when you know the person’s name.' }
+      ]},
+    { title:'Fix the email', type:'letter',
+      instruction:'A student wrote this email for the task below. For each numbered part, choose the better option.',
+      task:{ heading:'Writing task',
+        intro:'Last week you missed a meeting for students at your language school. Write an email to the director, Ms Carter. In your email, you should:',
+        points:['apologise for not attending the meeting','explain why you could not attend','ask for information about what was discussed'] },
+      letter:[
+        [1],
+        [2, ' I know the meeting was important, and I really wanted to be there.'],
+        [3, ' ', 4, ' I am sorry that I could not warn you before the meeting started.'],
+        [5, ' I would also be grateful if you could send me any documents from the meeting.'],
+        ['Thank you for your understanding. ', 6],
+        [7],
+        ['Laura Puig']
+      ],
+      items:[
+        { id:'l1', ref:'signoff', options:['Dear Sir or Madam,','Dear Ms Carter,'], answer:1,
+          why:'You know the director’s name, so use it, with a comma after the greeting.' },
+        { id:'l2', ref:'copying', options:['I am very sorry that I missed the students’ meeting last Thursday.','I am writing to apologise for not attending the meeting.'], answer:0,
+          why:'The second option copies the words of the task. The first one says the same thing in the student’s own words.' },
+        { id:'l3', ref:'excuses', options:['I had a problem.','My train was cancelled because of a strike, and the next one arrived two hours late.'], answer:1,
+          why:'A good reason is clear and believable. “I had a problem” gives no information.' },
+        { id:'l4', ref:'runon', options:['I tried to phone the school, but nobody answered.','I tried to phone the school, nobody answered.'], answer:0,
+          why:'The second option joins two sentences with only a comma. “But” joins them correctly.' },
+        { id:'l5', ref:'copying', options:['Could you tell me what was decided about the new timetable?','I would like to ask for information about what was discussed.'], answer:0,
+          why:'The second option copies the task. The first asks the same thing in the student’s own words, and it is more specific.' },
+        { id:'l6', ref:'early', options:['I look forward to hearing from you early.','I look forward to hearing from you soon.'], answer:1,
+          why:'“Soon” means “in a short time from now”.' },
+        { id:'l7', ref:'signoff', options:['Yours faithfully,','Yours sincerely,'], answer:1,
+          why:'The email starts with “Dear Ms Carter”, so it finishes with “Yours sincerely”.' }
+      ]}
+  ]
+};
+
+/* ================= state ================= */
+const KEY = 'b21-common-writing-mistakes.v1';
+const ITEMS = CONTENT.ROUNDS.flatMap((r, ri) => r.items.map((it, ii) => ({ ...it, round:ri, num:ii + 1 })));
+const BY_ID = Object.fromEntries(ITEMS.map(it => [it.id, it]));
+const POINTS = CONTENT.LESSON.flatMap(g => g.points);
+const POINT = Object.fromEntries(POINTS.map(p => [p.id, p]));
+const fresh = () => ({ v:1, tab:'lesson', idx:0, ans:{}, mq:[], mCur:null });
+let S = fresh();
+
+/* ================= logic ================= */
+function setTab(t){ S.tab = t; save(); }
+function choose(i){
+  if (S.tab === 'practice'){
+    const it = ITEMS[S.idx]; if (!it || S.ans[it.id]) return;
+    const ok = i === it.answer;
+    S.ans[it.id] = { c:i, ok };
+    if (!ok && !S.mq.includes(it.id)) S.mq.push(it.id);
+  } else if (S.tab === 'mistakes'){
+    if (!S.mq.length || S.mCur) return;
+    S.mCur = { c:i, ok: i === BY_ID[S.mq[0]].answer };
+  }
+  save();
+}
+function next(){
+  if (S.tab === 'practice'){
+    const it = ITEMS[S.idx]; if (!it || !S.ans[it.id]) return;
+    S.idx = Math.min(S.idx + 1, ITEMS.length);
+  } else if (S.tab === 'mistakes'){
+    if (!S.mCur) return;
+    const id = S.mq.shift();
+    if (!S.mCur.ok) S.mq.push(id);
+    S.mCur = null;
+  }
+  save();
+}
+function prev(){ if (S.tab === 'practice' && S.idx > 0){ S.idx--; save(); } }
+function roundScores(){
+  return CONTENT.ROUNDS.map(r => ({ title:r.title, total:r.items.length,
+    right:r.items.filter(it => S.ans[it.id] && S.ans[it.id].ok).length }));
+}
+function restart(){ S = fresh(); S.tab = 'practice'; save(); }
+
+/* ================= display ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const footer = () => $('#footerTpl').innerHTML;
+let lastKey = '';
+
+function renderTabs(){
+  const n = S.mq.length;
+  $('#tabs').innerHTML = ['lesson','practice','mistakes'].map(t =>
+    `<button class="tab" role="tab" id="tab-${t}" aria-controls="v-${t}" aria-selected="${S.tab === t}" data-act="tab" data-tab="${t}">${esc(CONTENT.tabs[t])}${t === 'mistakes' ? `<span class="badge" aria-label="${n} questions">${n}</span>` : ''}</button>`).join('');
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'v-' + S.tab));
+}
+
+function renderLesson(){
+  let n = 0;
+  const L = CONTENT.labels;
+  $('#v-lesson').innerHTML = `<p class="intro">${fmt(CONTENT.lessonIntro)}</p>` +
+    CONTENT.LESSON.map(g => `<div class="group"><h2>${esc(g.group)}</h2><div class="grid">` +
+      g.points.map(p => `<article class="card" id="pt-${p.id}">
+        <h3><span class="num">${++n}</span><span>${esc(p.title)}</span></h3>
+        <p>${fmt(p.rule)}</p>
+        <div class="ex">
+          <p><span class="lab no">${L.wrong}</span><span class="wrong">${esc(p.wrong)}</span></p>
+          <p><span class="lab ok">${L.right}</span>${esc(p.right)}</p>
+          ${p.also ? `<p><span class="lab ok">${L.also}</span>${esc(p.also)}</p>` : ''}
+        </div>
+        ${p.note ? `<p class="note"><b>${L.note}:</b> ${fmt(p.note)}</p>` : ''}
+        ${p.tip ? `<p class="note"><b>${L.tip}:</b> ${fmt(p.tip)}</p>` : ''}
+        ${p.history ? `<p class="note"><b>${L.history}:</b> ${fmt(p.history)}</p>` : ''}
+      </article>`).join('') + `</div></div>`).join('') +
+    `<div class="cta"><button class="btn" data-act="tab" data-tab="practice">Start the practice →</button></div>` + footer();
+}
+
+function optButtons(it, st, stacked){
+  return `<div class="opts${stacked ? ' stack' : ''}" role="group" aria-label="Options">` + it.options.map((o, i) => {
+    let cls = '', mark = '';
+    if (st){
+      if (i === it.answer){ cls = ' right'; mark = st.c === i ? '✓ Your answer' : '✓ Correct answer'; }
+      else if (i === st.c){ cls = ' wrongpick'; mark = '✗ Your answer'; }
+    }
+    return `<button class="opt${cls}" data-act="choose" data-i="${i}"${st ? ' disabled' : ''}><span class="key" aria-hidden="true">${i + 1}</span><span class="otext">${esc(o)}${mark ? `<span class="mark">${mark}</span>` : ''}</span></button>`;
+  }).join('') + `</div>`;
+}
+
+function feedback(it, st, mode){
+  if (!st) return '';
+  const extra = mode === 'mistakes' ? (st.ok ? ' This question now leaves your list.' : ' This question will come back later.') : '';
+  return `<div class="fb ${st.ok ? 'ok' : 'no'}" id="fb" role="status">
+    <p><span class="verdict">${st.ok ? CONTENT.correct : CONTENT.incorrect}</span> ${esc(it.why)}${extra}</p>
+    <p>Lesson point: <button class="link" data-act="ref" data-ref="${it.ref}">${esc(POINT[it.ref].title)}</button></p>
+  </div>`;
+}
+
+function renderLetter(it, st, mode){
+  const r = CONTENT.ROUNDS[2];
+  const slot = k => {
+    const g = r.items[k - 1];
+    const cur = g.id === it.id;
+    const done = cur ? !!st : (mode === 'mistakes' || !!S.ans[g.id]);
+    return `<span class="slot${cur ? ' cur' : ''}${done ? ' done' : ''}"><span class="n">${k}</span> ${done ? esc(g.options[g.answer]) : '……………'}</span>`;
+  };
+  return `<div class="task"><p class="task-h">${esc(r.task.heading)}</p><p>${esc(r.task.intro)}</p><ul>${r.task.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>
+    <div class="letter">` + r.letter.map(par => {
+      const hasCur = par.some(x => typeof x === 'number' && r.items[x - 1].id === it.id);
+      return `<p>${par.map(x => typeof x === 'number' ? slot(x) : esc(x)).join('')}</p>` +
+        (hasCur ? `<p class="kicker" style="margin-top:.4em">Part ${it.num}</p>` + optButtons(it, st, true) + feedback(it, st, mode) : '');
+    }).join('') + `</div>`;
+}
+
+function itemCard(it, st, mode){
+  const r = CONTENT.ROUNDS[it.round];
+  let body = '';
+  if (r.type === 'gap'){
+    const parts = it.text.split('___');
+    const gap = `<span class="gap">${st ? esc(it.options[it.answer]) : '……'}</span>`;
+    body = `<p class="sentence">${esc(parts[0])}${gap}${esc(parts[1] || '')}</p>` + optButtons(it, st, false) + feedback(it, st, mode);
+  } else if (r.type === 'pick'){
+    body = optButtons(it, st, true) + feedback(it, st, mode);
+  } else {
+    body = renderLetter(it, st, mode);
+  }
+  const head = mode === 'mistakes'
+    ? `<p class="kicker">${esc(r.title)}</p>`
+    : `<p class="kicker">Round ${it.round + 1} of ${CONTENT.ROUNDS.length} · ${esc(r.title)}</p>`;
+  return `${head}<p class="instr">${esc(r.instruction)}</p><p class="keyhint">${esc(CONTENT.keyHint)}</p>${body}`;
+}
+
+function renderPractice(){
+  const v = $('#v-practice');
+  if (S.idx >= ITEMS.length){
+    const sc = roundScores(), tot = sc.reduce((a, b) => a + b.right, 0);
+    v.innerHTML = `<div class="qcard${lastKey !== 'end' ? ' enter' : ''}">
+      <h2>Your results</h2>
+      <ul class="score">${sc.map((s, i) => `<li><span>Round ${i + 1} · ${esc(s.title)}</span><b>${s.right} / ${s.total}</b></li>`).join('')}
+        <li><span><b>Total</b></span><b>${tot} / ${ITEMS.length}</b></li></ul>
+      <p>${S.mq.length ? `You have ${S.mq.length} question${S.mq.length > 1 ? 's' : ''} to try again in “My mistakes”.` : 'You have no mistakes to practise. Well done.'}</p>
+      <div class="cta">
+        ${S.mq.length ? `<button class="btn" data-act="tab" data-tab="mistakes">Practise my mistakes</button>` : ''}
+        <button class="btn ghost" data-act="review">Review answers</button>
+        <button class="btn ghost" data-act="tab" data-tab="lesson">Back to the lesson</button>
+        <button class="btn ghost" data-act="restart" id="restartBtn">Start again</button>
+      </div></div>` + footer();
+    lastKey = 'end';
+    return;
+  }
+  const it = ITEMS[S.idx];
+  const key = 'p-' + it.id;
+  v.innerHTML = `<div class="qcard${lastKey !== key ? ' enter' : ''}">${itemCard(it, S.ans[it.id], 'practice')}</div>`;
+  lastKey = key;
+}
+
+function renderMistakes(){
+  const v = $('#v-mistakes');
+  if (!S.mq.length){
+    const started = Object.keys(S.ans).length > 0;
+    v.innerHTML = `<div class="qcard empty"><h2>My mistakes</h2>
+      <p>${started ? 'There are no mistakes left to practise. Well done.' : 'When you make a mistake in the practice, the question appears here, so you can try it again.'}</p>
+      <div class="cta" style="justify-content:center"><button class="btn" data-act="tab" data-tab="practice">${started ? 'Back to the practice' : 'Go to the practice'}</button></div></div>`;
+    lastKey = 'm-empty';
+    return;
+  }
+  const it = BY_ID[S.mq[0]];
+  const key = 'm-' + it.id + '-' + S.mq.length + '-' + (S.mCur ? 1 : 0);
+  const keyBase = 'm-' + it.id;
+  v.innerHTML = `<p class="intro">${esc(CONTENT.mistakesIntro)}</p><div class="qcard${!lastKey.startsWith(keyBase) ? ' enter' : ''}">${itemCard(it, S.mCur, 'mistakes')}</div>`;
+  lastKey = key;
+}
+
+function renderBar(){
+  const bar = $('#navbar'), p = $('#prevBtn'), n = $('#nextBtn');
+  let show = false;
+  if (S.tab === 'practice' && S.idx < ITEMS.length){
+    const it = ITEMS[S.idx], r = CONTENT.ROUNDS[it.round];
+    show = true;
+    $('#prog').textContent = `Round ${it.round + 1} · ${it.num} of ${r.items.length}`;
+    p.disabled = S.idx === 0;
+    n.disabled = !S.ans[it.id];
+    n.textContent = S.idx === ITEMS.length - 1 ? 'See results →' : 'Next →';
+  } else if (S.tab === 'mistakes' && S.mq.length){
+    show = true;
+    $('#prog').textContent = `${S.mq.length} left`;
+    p.disabled = true;
+    n.disabled = !S.mCur;
+    n.textContent = 'Next →';
+  }
+  bar.hidden = !show;
+  document.body.classList.toggle('has-bar', show);
+}
+
+function render(){
+  renderTabs();
+  if (S.tab === 'practice') renderPractice();
+  if (S.tab === 'mistakes') renderMistakes();
+  renderBar();
+}
+
+function goToPoint(id){
+  setTab('lesson'); render();
+  const el = document.getElementById('pt-' + id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start' });
+  el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1600);
+}
+
+/* ================= saving ================= */
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){} }
+function load(){
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (!d || d.v !== 1) return;
+    const ok = x => x && typeof x === 'object';
+    S = fresh();
+    if (['lesson','practice','mistakes'].includes(d.tab)) S.tab = d.tab;
+    if (Number.isInteger(d.idx)) S.idx = Math.max(0, Math.min(d.idx, ITEMS.length));
+    if (ok(d.ans)) for (const id in d.ans){
+      const a = d.ans[id];
+      if (BY_ID[id] && ok(a) && Number.isInteger(a.c)) S.ans[id] = { c:a.c, ok: a.c === BY_ID[id].answer };
+    }
+    if (Array.isArray(d.mq)) S.mq = d.mq.filter((id, i, arr) => BY_ID[id] && arr.indexOf(id) === i);
+    if (ok(d.mCur) && Number.isInteger(d.mCur.c) && S.mq.length) S.mCur = { c:d.mCur.c, ok: d.mCur.c === BY_ID[S.mq[0]].answer };
+  } catch(e){ S = fresh(); }
+}
+
+/* ================= events ================= */
+let confirmRestart = false;
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  const act = b.dataset.act;
+  if (act === 'tab'){ setTab(b.dataset.tab); render(); window.scrollTo(0, 0); }
+  else if (act === 'choose'){
+    choose(+b.dataset.i); render();
+    const fb = $('#fb');
+    if (fb) fb.scrollIntoView({ block:'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    $('#nextBtn').focus({ preventScroll:true });
+  }
+  else if (act === 'next'){ next(); render(); window.scrollTo(0, 0); }
+  else if (act === 'prev'){ prev(); render(); window.scrollTo(0, 0); }
+  else if (act === 'ref'){ goToPoint(b.dataset.ref); }
+  else if (act === 'review'){ S.idx = 0; save(); render(); window.scrollTo(0, 0); }
+  else if (act === 'restart'){
+    if (!confirmRestart){ confirmRestart = true; b.textContent = 'Tap again to clear your answers'; return; }
+    confirmRestart = false; restart(); render(); window.scrollTo(0, 0);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (S.tab !== 'practice' && S.tab !== 'mistakes') return;
+  const k = e.key;
+  if (/^[1-9]$/.test(k)){
+    const b = document.querySelector(`.view.active .opt[data-i="${+k - 1}"]`);
+    if (b && !b.disabled){ e.preventDefault(); b.click(); }
+  } else if (k === 'ArrowRight' || (k === 'Enter' && !(document.activeElement && document.activeElement.closest('button')))){
+    const n = $('#nextBtn'); if (!$('#navbar').hidden && !n.disabled){ e.preventDefault(); n.click(); }
+  } else if (k === 'ArrowLeft'){
+    const p = $('#prevBtn'); if (!$('#navbar').hidden && !p.disabled){ e.preventDefault(); p.click(); }
+  }
+});
+
+/* ================= start ================= */
+$('#title').textContent = CONTENT.title;
+$('#subtitle').textContent = CONTENT.subtitle;
+document.title = CONTENT.title + ' · B2.1';
+load();
+renderLesson();
+render();
+</script>
+</body>
+</html>
