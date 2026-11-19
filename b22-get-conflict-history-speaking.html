@@ -1,0 +1,930 @@
+<!doctype html>
+<!--
+  Name:     Getting Through History · B2.2 speaking cards with get
+  Purpose:  Phone-based speaking deck for pairs or groups of three. Each group
+            uses one phone and moves through the cards at its own pace.
+            Reviews uses of get and phrases with get (English File Advanced,
+            File 3) through questions on conflict, war and history.
+  Version:  1.2 · 2026-11-19 · detailed flapping dove, one stop per card, map backdrop; 22 cards
+  Edit:     All cards, glosses, UK/US notes, era labels, "Starts:" lines and
+            interface text are in the CONTENT section at the top of the script.
+            Change the text there; nothing else needs editing.
+            In card text, **double asterisks** mark the get language in bold.
+  Credit:   Class of Coffee – with AI assistance
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Getting Through History · B2.2 speaking cards with get</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕊️</text></svg>">
+<style>
+/* ================= tokens ================= */
+:root{
+  /* palette */
+  --parchment:#F6ECD6; --parchment-deep:#EAD9B5; --grid:rgba(138,90,43,.13);
+  --ink:#1E2B45; --ink-soft:#4E5568;
+  --sepia:#8A5A2B; --sepia-ink:#6E4219; --brass:#C9973A; --brass-soft:#F3DDA5;
+  --blue:#2C4F86; --blue-paper:#F2F6FC; --blue-edge:#C6D4EA; --blue-soft:#E2EAF6;
+  --hist-paper:#FAEEDA; --hist-edge:#DCC08F;
+  --verdict:#A8261C; --verdict-paper:#FFF1EC; --verdict-edge:#EBC0B6;
+  --urgent:#8F4A05; --urgent-bg:#FFF0D6;
+  --ok:#1F6B3A; --ok-bg:#E3F3E8;
+  /* type */
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;
+  --sans:'Avenir Next',Avenir,'Segoe UI','Trebuchet MS','Helvetica Neue',sans-serif;
+  /* spacing: 4-point scale */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px;
+  --r-s:10px; --r-m:16px; --r-l:22px;
+  /* depth */
+  --lift-1:0 1px 2px rgba(60,40,15,.10);
+  --lift-2:0 3px 10px rgba(60,40,15,.12);
+  --lift-3:0 14px 34px rgba(60,40,15,.18), 0 3px 8px rgba(60,40,15,.10);
+  --ease:cubic-bezier(.25,.46,.45,.94); --spring:cubic-bezier(.34,1.56,.64,1);
+}
+/* ================= base ================= */
+*{box-sizing:border-box}
+html{touch-action:manipulation;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100dvh;color:var(--ink);font:500 1rem/1.5 var(--sans);
+  background:var(--parchment);
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+button{font:inherit;min-height:44px;cursor:pointer;color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.screen{display:none;position:relative}.screen.active{display:block}
+.wrap{max-width:42rem;margin:0 auto;padding:var(--s4) var(--s4) var(--s5)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ================= backdrop: map grid, paper and the brass clock ================= */
+.backdrop{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(120% 80% at 50% 0%,rgba(255,255,255,.55),transparent 60%),
+    radial-gradient(90% 70% at 100% 100%,rgba(201,151,58,.18),transparent 70%),
+    var(--parchment)}
+.clock{position:absolute;width:min(92vmin,640px);right:max(-30vmin,-210px);bottom:max(-26vmin,-190px);opacity:.30;color:var(--sepia)}
+.clock .h-amb{transform-box:view-box;transform-origin:100px 100px;animation:spin 720s linear infinite}
+.clock .m-amb{transform-box:view-box;transform-origin:100px 100px;animation:spin 60s linear infinite}
+.clock .warp{transform-box:view-box;transform-origin:100px 100px}
+.clock.warping .h-warp{animation:spin .9s var(--ease) 1}
+.clock.warping .m-warp{animation:spin .9s var(--ease) 2}
+.clock.rewind .h-warp{animation:spin .9s var(--ease) 1 reverse}
+.clock.rewind .m-warp{animation:spin .9s var(--ease) 2 reverse}
+.map{position:absolute;inset:0;width:100%;height:100%;opacity:.62}
+.map .shore{fill:none;stroke:var(--sepia);stroke-width:10;opacity:.16;stroke-linejoin:round}
+.map .land{fill:#E8D09B;stroke:var(--sepia);stroke-width:1.8;stroke-linejoin:round}
+.map .mtn{fill:#D5B97D;stroke:var(--sepia);stroke-width:1.3;stroke-linejoin:round}
+.map .river{fill:none;stroke:#5E83A8;stroke-width:1.8;stroke-linecap:round}
+.map .wave{fill:none;stroke:var(--sepia);stroke-width:1.3;stroke-linecap:round;opacity:.7}
+.map .lat{fill:none;stroke:var(--sepia);stroke-width:.8;stroke-dasharray:2 7;opacity:.55}
+.map .route{fill:none;stroke:var(--verdict);stroke-width:2;stroke-dasharray:4 7;stroke-linecap:round;opacity:.7}
+.map .sea{font:italic 600 15px Georgia,serif;fill:var(--sepia-ink);letter-spacing:.12em;opacity:.8}
+.compass{position:absolute;width:190px;left:-48px;top:70px;opacity:.38;color:var(--sepia);animation:spin 240s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ================= buttons ================= */
+.btn{border:2px solid var(--ink);background:#FFFBF2;color:var(--ink);border-radius:999px;
+  padding:var(--s2) var(--s4);font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 3px 0 var(--ink);transition:transform .08s var(--ease),box-shadow .08s var(--ease)}
+.btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+.btn.primary{background:var(--blue);border-color:var(--ink);color:#fff}
+.btn.quiet{border-color:transparent;background:transparent;box-shadow:none;color:var(--ink-soft);font-weight:700;padding-left:var(--s1)}
+.btn[disabled]{opacity:.4;cursor:default}
+.btn.big{font-size:1.1rem;min-height:54px;padding:var(--s2) var(--s5)}
+
+/* ================= start screen ================= */
+.hero{text-align:center;padding:var(--s4) var(--s2) var(--s2);border-radius:var(--r-l);background:radial-gradient(closest-side,rgba(246,236,214,.92),rgba(246,236,214,.75) 70%,rgba(246,236,214,0))}
+.kicker{display:inline-block;font-size:.8rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--sepia-ink);
+  border:2px solid var(--sepia);border-radius:999px;padding:2px 12px;background:rgba(255,251,242,.8)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.2rem,1.5rem + 3.4vw,3.4rem);line-height:1.02;margin:.35em 0 .1em;letter-spacing:-.01em}
+.hero h1 em{font-style:italic;color:var(--sepia)}
+.hero p{margin:0;color:var(--ink-soft)}
+.flightpath{display:block;width:min(100%,420px);height:90px;margin:var(--s1) auto 0;overflow:visible}
+.flightpath .route{fill:none;stroke:var(--sepia);stroke-width:2.2;stroke-dasharray:6 7;stroke-linecap:round}
+.flightpath .years text{font:700 12px var(--sans);fill:var(--sepia-ink)}
+.flightpath .years circle{fill:var(--brass);stroke:#fff;stroke-width:2}
+.panel{background:#FFFBF2;border:1px solid var(--parchment-deep);border-radius:var(--r-m);padding:var(--s4) var(--s4);margin:var(--s3) 0;box-shadow:var(--lift-2)}
+.panel h2{font-size:.85rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:0 0 var(--s2);color:var(--sepia-ink)}
+.cando{font-family:var(--serif);font-size:1.1rem;margin:0;line-height:1.4}
+.steps{margin:0;padding-left:1.4em}
+.steps li{margin:var(--s1) 0}
+.steps li::marker{color:var(--sepia);font-weight:800}
+.reassure{margin:var(--s3) 0 0;padding:var(--s2) var(--s3);border-radius:var(--r-s);background:var(--blue-soft);border-left:4px solid var(--blue);font-size:.95rem}
+.setrow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s2);margin:var(--s2) 0}
+.setrow .lbl{font-weight:700;min-width:9.5em}
+.chip{border:2px solid var(--parchment-deep);background:#fff;border-radius:999px;padding:6px 14px;min-height:44px;min-width:44px;font-weight:700}
+.chip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:var(--s3);justify-content:center;margin:var(--s5) 0 var(--s2)}
+.hint{font-size:.85rem;color:var(--ink-soft);text-align:center;margin:var(--s1) 0 0}
+.rise{animation:rise .5s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ================= card screen ================= */
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;padding-top:var(--s1)}
+.counter{font-weight:800;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+
+/* timeline with the travelling dove */
+.timeline{position:relative;margin:var(--s5) 34px var(--s2);height:46px}
+.timeline .track{position:absolute;left:0;right:0;top:30px;height:6px;border-radius:6px;background:var(--parchment-deep);box-shadow:inset 0 1px 2px rgba(60,40,15,.2)}
+.timeline .fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,var(--sepia),var(--brass));width:0;transition:width .9s var(--spring)}
+.timeline .stop{position:absolute;top:28.5px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#FFFBF2;border:2px solid var(--blue);transition:background .4s}
+.timeline .stop.t-H{border-color:var(--sepia)}
+.timeline .stop.t-V{border-color:var(--verdict);border-radius:1px;transform:rotate(45deg) scale(.92)}
+.timeline .stop.done.t-P{background:var(--blue)}
+.timeline .stop.done.t-H{background:var(--sepia)}
+.timeline .stop.done.t-V{background:var(--verdict)}
+.timeline .stop.skip{opacity:.4}
+.timeline .stop.cur{box-shadow:0 0 0 3px var(--brass-soft),0 0 0 4.5px var(--brass)}
+.timeline .dove{position:absolute;top:-30px;width:70px;height:59px;margin-left:-35px;left:0;transition:left .9s var(--ease);filter:drop-shadow(0 3px 2px rgba(60,40,15,.25))}
+.timeline .dove .dovesvg{animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-2deg)}}
+/* the dove's wings: a gliding pose, a slow glide when still, and a flap when it moves */
+.dovesvg{width:100%;height:100%;overflow:visible}
+.dovesvg .wing{transform-box:view-box;transform-origin:62px 38px}
+.dovesvg .wing.near{animation:glide 3.2s ease-in-out infinite}
+.dovesvg .wing.far{animation:glide 3.2s ease-in-out .15s infinite}
+@keyframes glide{50%{transform:rotate(-4deg) scaleY(.94)}}
+.flap .dovesvg .wing.near{animation:flapNear .34s ease-in-out 3}
+.flap .dovesvg .wing.far{animation:flapFar .34s ease-in-out .03s 3}
+.flapping .dovesvg .wing.near{animation:flapNear .36s ease-in-out 12}
+.flapping .dovesvg .wing.far{animation:flapFar .36s ease-in-out .03s 12}
+@keyframes flapNear{0%,100%{transform:none}45%{transform:scaleY(-.8) skewX(-10deg)}75%{transform:scaleY(.45)}}
+@keyframes flapFar{0%,100%{transform:none}45%{transform:scaleY(-.6)}75%{transform:scaleY(.4)}}
+
+.timerrow{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;margin:var(--s1) 0 var(--s3)}
+.timer{display:inline-flex;align-items:center;gap:6px;background:#FFFBF2;border:1px solid var(--parchment-deep);
+  border-radius:999px;padding:4px 6px 4px 12px;font-variant-numeric:tabular-nums;font-weight:800;font-size:.95rem;color:var(--ink-soft);
+  box-shadow:var(--lift-1);transition:font-size .3s var(--ease)}
+.timer .tbtn{min-height:40px;min-width:40px;border-radius:999px;border:0;background:var(--blue-soft);color:var(--blue);font-weight:800;padding:0 12px}
+.timer.paused .tval{opacity:.6}
+.timer.urgent{background:var(--urgent-bg);border-color:#E8B87A;color:var(--urgent);font-size:1.25rem}
+.timer.over{background:var(--verdict-paper);border-color:var(--verdict-edge);color:var(--verdict);font-size:1.1rem}
+.timesup{width:100%;text-align:right;font-weight:700;color:var(--verdict);font-size:.95rem;margin:0}
+
+/* the card */
+.card{position:relative;border-radius:var(--r-l);box-shadow:var(--lift-3);padding:var(--s5) var(--s5) var(--s5);
+  min-height:44vh;display:flex;flex-direction:column;gap:var(--s3);overflow:hidden;
+  background:var(--blue-paper);border:1px solid var(--blue-edge)}
+.card::before{content:"";position:absolute;inset:8px;border:1.5px dashed var(--blue-edge);border-radius:calc(var(--r-l) - 6px);pointer-events:none}
+.card.hist{background:
+    radial-gradient(130% 90% at 50% 40%,transparent 55%,rgba(138,90,43,.16) 100%),
+    var(--hist-paper);border-color:var(--hist-edge)}
+.card.hist::before{border-color:var(--hist-edge)}
+.card.verdict{background:var(--verdict-paper);border-color:var(--verdict-edge)}
+.card.verdict::before{border-color:var(--verdict-edge)}
+.card > *{position:relative}
+.card.fwd{animation:dealFwd .55s var(--spring)}
+.card.back{animation:dealBack .55s var(--spring)}
+@keyframes dealFwd{from{opacity:0;transform:translateX(60px) rotate(3deg) scale(.96)}to{opacity:1;transform:none}}
+@keyframes dealBack{from{opacity:0;transform:translateX(-60px) rotate(-3deg) scale(.96)}to{opacity:1;transform:none}}
+
+.cardhead{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s3);min-height:58px}
+.tag{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:3px 12px;
+  color:var(--blue);background:var(--blue-soft);border:1.5px solid var(--blue-edge)}
+.card.hist .tag{color:var(--sepia-ink);background:#F3DFBC;border-color:var(--hist-edge)}
+.stamp{font-weight:900;letter-spacing:.2em;font-size:1rem;text-transform:uppercase;color:var(--verdict);
+  border:3px solid var(--verdict);border-radius:8px;padding:2px 12px;transform:rotate(-5deg);margin:4px 0 0 4px;
+  box-shadow:inset 0 0 0 2px rgba(168,38,28,.15)}
+.card.verdict.fwd .stamp,.card.verdict.back .stamp{animation:thump .5s var(--spring) .25s both}
+@keyframes thump{from{opacity:0;transform:rotate(-5deg) scale(2.2)}to{opacity:1;transform:rotate(-5deg) scale(1)}}
+/* postmark with the era; it flicks through years when a card arrives */
+.era{flex:none;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;text-align:center;
+  border:2.5px solid var(--blue);color:var(--blue);transform:rotate(8deg);font-weight:900;line-height:1.05;padding:6px;
+  background:repeating-radial-gradient(circle at 50% 50%,transparent 0 30px,rgba(44,79,134,.18) 30px 31px)}
+.era span{font-size:.82rem;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.card.hist .era{border-color:var(--sepia);color:var(--sepia-ink);background:repeating-radial-gradient(circle,transparent 0 30px,rgba(138,90,43,.2) 30px 31px)}
+.card.verdict .era{border-color:var(--verdict);color:var(--verdict);background:repeating-radial-gradient(circle,transparent 0 30px,rgba(168,38,28,.18) 30px 31px)}
+.era.flick span{font-size:1rem}
+
+.starts{font-size:.95rem;color:var(--ink-soft);margin:0}
+.starts b{color:var(--ink)}
+.context{font-family:var(--serif);font-style:italic;font-size:1.02rem;color:var(--ink-soft);margin:0;line-height:1.45}
+.qtext{font-family:var(--serif);font-size:clamp(1.35rem,1.12rem + 1.2vw,1.8rem);line-height:1.33;margin:0;color:var(--ink)}
+.qtext strong,.context strong{color:var(--blue);background:linear-gradient(transparent 60%,var(--brass-soft) 60%);padding:0 2px;font-style:normal}
+.card.hist .qtext strong,.card.hist .context strong{color:var(--sepia-ink)}
+.card.verdict .qtext strong{color:var(--verdict)}
+.prompt{margin:0;padding:var(--s2) var(--s3);border-radius:var(--r-s);background:#fff;border:1px solid var(--verdict-edge);font-size:.98rem}
+.notes{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+.note{font-size:.88rem;color:var(--ink-soft);margin:0;padding:var(--s2) var(--s3);border-left:4px solid var(--brass);background:rgba(255,255,255,.8);border-radius:0 var(--r-s) var(--r-s) 0}
+.note b{color:var(--ink)}
+
+/* fixed navigation bar */
+.navbar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(246,236,214,.95);backdrop-filter:blur(6px);
+  border-top:2px solid var(--parchment-deep);padding:var(--s2) var(--s3) calc(var(--s3) + env(safe-area-inset-bottom))}
+.navbar .inner{max-width:42rem;margin:0 auto;display:flex;gap:var(--s2)}
+.navbar .btn{flex:1 1 0;padding:var(--s2) 10px}
+.navbar .btn.skip{flex:.9 1 0}
+#card .wrap{padding-bottom:7.5rem}
+@media (min-width:900px){
+  .navbar .inner{max-width:none;justify-content:flex-end;padding-right:var(--s3)}
+  .navbar .btn,.navbar .btn.skip{flex:none;min-width:9rem}
+}
+@media (min-width:1400px) and (min-height:760px){ html{font-size:21px} }
+
+/* ================= end screen ================= */
+.endhead{text-align:center;padding:var(--s4) 0 var(--s1)}
+.endhead .landed{width:120px;height:100px;margin:0 auto;display:block}
+.endhead h1{font-family:var(--serif);font-size:clamp(1.9rem,1.4rem + 2vw,2.6rem);margin:.1em 0}
+.endhead p{margin:0;color:var(--ink-soft)}
+.forms{display:flex;flex-wrap:wrap;gap:var(--s2);margin:6px 0 0}
+.form{border:2px solid var(--parchment-deep);background:#fff;border-radius:var(--r-s);padding:var(--s2) var(--s3);min-height:44px;text-align:left;font-weight:700;display:inline-flex;align-items:center;gap:var(--s2)}
+.form .box{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:2px solid var(--ink-soft);border-radius:6px;font-size:.9rem;flex:none}
+.form[aria-pressed="true"]{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+.form[aria-pressed="true"] .box{border-color:var(--ok);background:var(--ok);color:#fff}
+.tally{font-weight:800;margin:var(--s3) 0 0}
+
+/* ================= signature footer (brand kit, unchanged) ================= */
+.coc-footer{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:4px 16px; padding:7px 20px;
+  background:var(--coc-tan,#E6C496); color:var(--coc-coffee-dark,#5A2D0C);
+  font-family:var(--coc-body,'Nunito','Segoe UI',Verdana,sans-serif); font-size:13px; line-height:1.4;
+}
+.coc-footer__brand{ display:flex; align-items:center; gap:10px; font-weight:600; }
+.coc-footer__mark{ width:30px; height:30px; flex:none; }
+.coc-footer a{ color:inherit; text-decoration:underline; text-underline-offset:3px;
+  display:inline-flex; align-items:center; min-height:40px; padding:0 4px; }
+.coc-footer a:focus-visible{ outline:2px solid var(--coc-coffee-dark,#5A2D0C); outline-offset:3px; border-radius:4px; }
+.screen .coc-footer{margin-top:var(--s5)}
+
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ============ backdrop (decorative) ============ -->
+<div class="backdrop" aria-hidden="true">
+  <svg class="map" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice">
+    <path class="lat" d="M0 160 Q400 140 800 160 M0 320 Q400 300 800 320 M0 480 Q400 460 800 480 M0 640 Q400 620 800 640"/>
+    <path class="lat" d="M200 0 Q180 400 200 800 M400 0 Q400 400 400 800 M600 0 Q620 400 600 800"/>
+    <g id="landA"><path class="shore" d="M150 70 C190 40 250 60 280 50 C320 38 360 70 400 64 C430 60 440 100 420 130 C404 156 430 180 412 210 C396 238 360 230 350 262 C340 296 372 320 350 350 C330 378 290 372 270 392 C246 414 210 400 200 370 C190 340 160 336 150 300 C140 266 168 240 156 210 C144 180 120 160 130 130 C138 104 128 90 150 70 Z"/><path class="land" d="M150 70 C190 40 250 60 280 50 C320 38 360 70 400 64 C430 60 440 100 420 130 C404 156 430 180 412 210 C396 238 360 230 350 262 C340 296 372 320 350 350 C330 378 290 372 270 392 C246 414 210 400 200 370 C190 340 160 336 150 300 C140 266 168 240 156 210 C144 180 120 160 130 130 C138 104 128 90 150 70 Z"/></g>
+    <g id="landB"><path class="shore" d="M560 300 C600 280 650 300 690 290 C730 282 770 310 820 300 L820 660 C770 670 740 640 710 656 C680 672 650 650 620 660 C590 670 560 640 566 610 C572 580 500 560 508 530 C516 500 486 480 494 450 C502 420 490 396 510 370 C530 344 528 318 560 300 Z"/><path class="land" d="M560 300 C600 280 650 300 690 290 C730 282 770 310 820 300 L820 660 C770 670 740 640 710 656 C680 672 650 650 620 660 C590 670 560 640 566 610 C572 580 500 560 508 530 C516 500 486 480 494 450 C502 420 490 396 510 370 C530 344 528 318 560 300 Z"/></g>
+    <g id="landC"><path class="shore" d="M280 650 C300 630 340 636 360 650 C384 666 400 690 386 712 C372 734 340 744 312 736 C286 728 262 708 266 684 C268 668 270 660 280 650 Z"/><path class="land" d="M280 650 C300 630 340 636 360 650 C384 666 400 690 386 712 C372 734 340 744 312 736 C286 728 262 708 266 684 C268 668 270 660 280 650 Z"/></g>
+    <g id="landD"><path class="shore" d="M455 165 C470 150 500 156 505 172 C510 190 490 200 472 196 C456 192 446 178 455 165 Z"/><path class="land" d="M455 165 C470 150 500 156 505 172 C510 190 490 200 472 196 C456 192 446 178 455 165 Z"/></g>
+    <g id="landE"><path class="shore" d="M215 505 C228 494 252 500 254 516 C256 532 236 540 222 534 C208 528 204 514 215 505 Z"/><path class="land" d="M215 505 C228 494 252 500 254 516 C256 532 236 540 222 534 C208 528 204 514 215 505 Z"/></g>
+    <g id="landF"><path class="shore" d="M590 740 C610 726 646 734 650 752 C654 770 626 780 604 774 C584 768 576 752 590 740 Z"/><path class="land" d="M590 740 C610 726 646 734 650 752 C654 770 626 780 604 774 C584 768 576 752 590 740 Z"/></g>
+    <path class="river" d="M300 110 C290 160 322 190 302 230 C286 262 312 300 292 345"/>
+    <path class="river" d="M640 330 C630 380 660 420 640 470 C626 510 650 560 630 640"/>
+    <path class="mtn" d="M210 190 l9 -15 l9 15 Z M226 196 l9 -15 l9 15 Z M242 188 l8 -13 l8 13 Z M360 140 l9 -15 l9 15 Z M376 146 l8 -13 l8 13 Z M690 420 l9 -15 l9 15 Z M706 426 l9 -15 l9 15 Z M560 560 l8 -13 l8 13 Z M330 690 l8 -13 l8 13 Z"/>
+    <path class="wave" d="M460 100 q5 -5 10 0 q5 5 10 0 M520 230 q5 -5 10 0 q5 5 10 0 M440 300 q5 -5 10 0 q5 5 10 0 M455 420 q5 -5 10 0 q5 5 10 0 M380 560 q5 -5 10 0 q5 5 10 0 M230 610 q5 -5 10 0 q5 5 10 0 M500 700 q5 -5 10 0 q5 5 10 0 M120 470 q5 -5 10 0 q5 5 10 0 M610 210 q5 -5 10 0 q5 5 10 0 M700 120 q5 -5 10 0 q5 5 10 0 M110 650 q5 -5 10 0 q5 5 10 0 M300 470 q5 -5 10 0 q5 5 10 0 M420 760 q5 -5 10 0 q5 5 10 0 M560 30 q5 -5 10 0 q5 5 10 0"/>
+    <path class="route" d="M330 690 C380 600 450 570 450 480 C450 390 400 340 360 300"/>
+    <path d="M354 294 l12 12 M366 294 l-12 12" stroke="#A8261C" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+    <text class="sea" x="300" y="540">MARE MEMORIAE</text>
+  </svg>
+  <svg class="compass" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.5">
+    <circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="38" stroke-dasharray="2 4"/>
+    <path d="M50 6 L57 50 L50 94 L43 50 Z" fill="currentColor" fill-opacity=".35"/>
+    <path d="M6 50 L50 43 L94 50 L50 57 Z" fill="currentColor" fill-opacity=".15"/>
+    <text x="50" y="22" text-anchor="middle" font-size="9" font-weight="700" fill="currentColor" stroke="none">N</text>
+  </svg>
+  <svg class="clock" id="clock" viewBox="0 0 200 200" fill="none" stroke="currentColor">
+    <circle cx="100" cy="100" r="96" stroke-width="5"/>
+    <circle cx="100" cy="100" r="86" stroke-width="1.5"/>
+    <circle cx="100" cy="100" r="62" stroke-width="1" stroke-dasharray="1.5 5"/>
+    <g id="ticks" stroke-width="2"></g>
+    <g font-family="Georgia,serif" font-size="15" font-weight="700" fill="currentColor" stroke="none" text-anchor="middle">
+      <text x="100" y="34">XII</text><text x="170" y="105">III</text><text x="100" y="176">VI</text><text x="30" y="105">IX</text>
+    </g>
+    <g class="h-amb"><g class="warp h-warp"><path d="M100 100 L100 52" stroke-width="7" stroke-linecap="round"/></g></g>
+    <g class="m-amb"><g class="warp m-warp"><path d="M100 112 L100 26" stroke-width="4" stroke-linecap="round"/><circle cx="100" cy="36" r="5" fill="currentColor"/></g></g>
+    <circle cx="100" cy="100" r="7" fill="currentColor"/>
+  </svg>
+</div>
+
+
+<main id="app">
+
+  <!-- ============ START ============ -->
+  <section class="screen active" id="start" aria-labelledby="t-title">
+    <div class="wrap">
+      <header class="hero">
+        <span class="kicker" id="t-kicker"></span>
+        <h1 id="t-title"></h1>
+        <svg class="flightpath" viewBox="0 -20 420 90" aria-hidden="true">
+          <path class="route" d="M10 52 C 90 0, 160 70, 230 34 S 360 10, 410 30"/>
+          <g class="years">
+            <circle cx="10" cy="52" r="5"/><circle cx="150" cy="44" r="5"/><circle cx="300" cy="18" r="5"/><circle cx="410" cy="30" r="5"/>
+          </g>
+          <g class="heroDove" id="heroDove" transform="translate(410 30)"><g id="heroDoveArt"></g>
+            <animateMotion id="heroFly" dur="4.5s" begin="0s" fill="freeze" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".25 .46 .45 .94" path="M10 52 C 90 0, 160 70, 230 34 S 360 10, 410 30"/></g>
+        </svg>
+        <p id="t-sub"></p>
+      </header>
+      <div class="panel rise" style="animation-delay:.1s">
+        <h2 id="t-aimh"></h2>
+        <p class="cando" id="t-cando"></p>
+      </div>
+      <div class="panel rise" style="animation-delay:.2s">
+        <h2 id="t-howh"></h2>
+        <ol class="steps" id="t-steps"></ol>
+        <p class="reassure" id="t-reassure"></p>
+      </div>
+      <div class="panel rise" style="animation-delay:.3s">
+        <h2 id="t-seth"></h2>
+        <div class="setrow" id="minsRow"></div>
+        <div class="setrow" id="soundRow"></div>
+      </div>
+      <div class="actions" id="startActions"></div>
+      <p class="hint" id="startHint"></p>
+    </div>
+    <footer class="coc-footer">
+      <span class="coc-footer__brand">
+        <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+        <span>Class of Coffee – with AI assistance</span>
+      </span>
+      <a href="https://classofcoffee.com">classofcoffee.com</a>
+    </footer>
+  </section>
+
+  <!-- ============ CARD ============ -->
+  <section class="screen" id="card" aria-label="Speaking card">
+    <div class="wrap">
+      <div class="topbar">
+        <button class="btn quiet" data-act="home" id="b-home"></button>
+        <span class="counter" id="counter" aria-live="polite"></span>
+        <button class="btn" data-act="finish" id="b-finish"></button>
+      </div>
+      <div class="timeline" id="timeline" aria-hidden="true">
+        <div class="track"><div class="fill" id="tlFill"></div></div>
+        <div id="tlStops"></div>
+        <div class="dove" id="tlDove"></div>
+      </div>
+      <div class="timerrow">
+        <span class="timer" id="timer">
+          <span aria-hidden="true">⏱</span><span class="tval" id="tval">10:00</span>
+          <button class="tbtn" data-act="pause" id="b-pause"></button>
+        </span>
+        <p class="timesup" id="timesup" hidden></p>
+      </div>
+      <article class="card" id="cardBox"></article>
+    </div>
+    <nav class="navbar" aria-label="Card navigation">
+      <div class="inner">
+        <button class="btn" data-act="prev" id="b-prev"></button>
+        <button class="btn skip" data-act="skip" id="b-skip"></button>
+        <button class="btn primary" data-act="next" id="b-next"></button>
+      </div>
+    </nav>
+    <p class="sr" id="srStatus" aria-live="assertive"></p>
+  </section>
+
+  <!-- ============ END ============ -->
+  <section class="screen" id="end" aria-labelledby="e-title">
+    <div class="wrap">
+      <header class="endhead">
+        <div class="landed" id="endDove"></div>
+        <h1 id="e-title"></h1>
+        <p id="e-sub"></p>
+      </header>
+      <div class="panel" id="formsPanel">
+        <h2 id="e-formsh"></h2>
+        <p id="e-formsi" style="margin:0 0 6px"></p>
+        <div class="forms" id="forms"></div>
+        <p class="tally" id="tally" aria-live="polite"></p>
+      </div>
+      <div class="actions" id="endActions"></div>
+    </div>
+    <footer class="coc-footer">
+      <span class="coc-footer__brand">
+        <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+        <span>Class of Coffee – with AI assistance</span>
+      </span>
+      <a href="https://classofcoffee.com">classofcoffee.com</a>
+    </footer>
+  </section>
+</main>
+
+<script>
+/* ================= CONTENT (edit here) ================= */
+/*
+  Card fields:
+    id     unique short code (do not reuse an id for a different card)
+    type   'P' = personal question, 'H' = society and history question, 'V' = Verdict statement
+    light  true = an easy personal card that can open the deck (the first card is always one of these)
+    era    the label in the round postmark on the card (decorative)
+    context  optional short scene-setting text, shown smaller above the question
+    text   the question or statement; **double asterisks** mark the get language in bold
+    forms  the get language this card practises, shown on the end screen for students to tick
+    gloss  optional word help, shown as a small note
+    ukus   optional UK/US note, shown as a small note
+*/
+const CONTENT = {
+  saveKey: 'b22-get-conflict-history.v1',
+  defaultMinutes: 10,
+  minuteOptions: [5, 10, 15],
+
+  cards: [
+    // ---- personal questions ----
+    { id:'p1', type:'P', light:true, era:'Today',
+      text:'Did you **get the chance** to study much history at school? Which period interested you most?',
+      forms:['get the chance (to do something)'] },
+    { id:'p2', type:'P', light:true, era:'Today',
+      text:'Which historical figure would you like to **get to know** better, and why?',
+      forms:['get to know somebody'] },
+    { id:'p3', type:'P', light:true, era:'Today',
+      text:'How could a teacher **get students to care** about history?',
+      forms:['get somebody to do something'] },
+    { id:'p4', type:'P', light:true, era:'Today',
+      text:'Have you ever **got the wrong end of the stick** in an argument? How can a misunderstanding turn into a bigger conflict?',
+      forms:['get the wrong end of the stick'],
+      ukus:'<b>get the wrong end of the stick</b> is mainly British. American speakers might say <b>get the wrong idea</b>. They also say <b>have gotten</b> where British speakers say <b>have got</b>.' },
+    { id:'p5', type:'P', era:'Today',
+      text:'Have you ever seen a small disagreement **get worse and worse**? What made it turn into a real conflict?',
+      forms:['get + comparative (get worse)'] },
+    { id:'p6', type:'P', era:'Today',
+      text:'Have you ever **got your own back on** someone? Do countries do the same, and does it ever work?',
+      forms:['get your own back on somebody'],
+      ukus:'<b>get your own back</b> is mainly British. In American English, people often say <b>get back at</b> someone. They also say <b>have gotten</b> where British speakers say <b>have got</b>.' },
+    { id:'p7', type:'P', era:'Today',
+      text:'Does social media **get people angry** more quickly? Has a news story ever really **got you down**?',
+      forms:['get + adjective (get angry)', 'get somebody down'],
+      ukus:'British speakers say <b>has it got you down</b>. American speakers usually say <b>has it gotten you down</b>.' },
+    { id:'p8', type:'P', era:'Any era',
+      text:'If you could **get hold of** a diary written during a war, whose diary would you choose?',
+      forms:['get hold of something'] },
+
+    // ---- society and history questions ----
+    { id:'h1', type:'H', era:'1914',
+      context:'At Christmas 1914, during the First World War, some soldiers from opposite sides **got together** in no man’s land. They exchanged gifts and even played football.',
+      text:'Could enemies ever **get on like a house on fire**? What would need to happen first?',
+      forms:['get together', 'get on like a house on fire'],
+      gloss:'<b>no man’s land</b> = the land between two armies' },
+    { id:'h2', type:'H', era:'Any era',
+      text:'How long does it take a country to **get over** a war? Does a war still affect the grandchildren of the people who lived through it?',
+      forms:['get over something'] },
+    { id:'h4', type:'H', era:'1936–39',
+      context:'Some towns near Tarragona, such as Reus, Valls and Cambrils, have restored air-raid shelters from the Spanish Civil War. People can visit them.',
+      text:'Have you ever visited one? Should schools **get students to visit** places like these?',
+      forms:['get somebody to do something'],
+      gloss:'<b>air-raid shelter</b> = an underground place where people hid from bombs' },
+    { id:'h5', type:'H', era:'Today',
+      text:'When you read about wars happening now, do you **get the impression** that you’re **getting** the full story? Where do you **get** your news from?',
+      forms:['get the impression', 'get = receive or obtain'] },
+    { id:'h6', type:'H', era:'Any era',
+      context:'Imagine your city were under siege, with no way in or out.',
+      text:'How would people **get by** without electricity or fresh food?',
+      forms:['get by'],
+      gloss:'<b>under siege</b> = surrounded by an army' },
+    { id:'h7', type:'H', era:'Any era',
+      context:'Throughout history, many people **got arrested** for saying what they thought.',
+      text:'Is there any cause you would risk **getting into trouble with** the authorities for?',
+      forms:['get + past participle (get arrested)', 'get into trouble with somebody'] },
+    { id:'h8', type:'H', era:'Today',
+      text:'If you could **get a monument built or removed** in your town, what would it be?',
+      forms:['get something done (get a monument built)'] },
+    { id:'h9', type:'H', era:'Any era',
+      text:'Do you think people can ever **get used to** living in a war zone?',
+      forms:['get used to (doing) something'] },
+
+    // ---- Verdict statements ----
+    { id:'v1', type:'V', era:'Your call', text:'Countries should **get over** the past and stop talking about old wars.', forms:['get over something'] },
+    { id:'v2', type:'V', era:'Your call', text:'The winners of a war always **get their own way** when the history books are written.', forms:['get your own way'] },
+    { id:'v3', type:'V', era:'Your call', text:'Governments should **get rid of** statues of people who did terrible things.', forms:['get rid of something'] },
+    { id:'v4', type:'V', era:'Your call', text:'Ordinary people never **get the chance** to stop a war.', forms:['get the chance (to do something)'] },
+    { id:'v5', type:'V', era:'Your call', text:'If world leaders **got to know** each other personally, there would be fewer wars.', forms:['get to know somebody'] },
+    { id:'v6', type:'V', era:'Your call', text:'Nobody who starts a war should **get away with** it, however long ago it happened.', forms:['get away with something'] },
+  ],
+
+  // Who speaks first on each card. These rotate through the deck.
+  starters: [
+    'the person who woke up earliest today',
+    'the person sitting nearest the window',
+    'the person with the longest first name',
+    'the person whose birthday comes next',
+    'the person who spoke least on the last card',
+    'the person who is not holding the phone',
+    'the person who arrived at class last',
+    'the person who has travelled furthest from home',
+    'the person who had coffee most recently',
+    'the person with the shortest first name',
+    'the person who last read a history book or watched a history film',
+    'the person sitting on the left',
+  ],
+
+  text: {
+    kicker: 'Speaking cards · B2.2',
+    title: 'Getting Through <em>History</em>',      // written here, so it may contain <em>
+    sub: 'Uses and phrases with get · conflict, war and history',
+    aimHead: 'Aim',
+    cando: 'I can discuss history and conflict, give reasons for my opinions and use a range of expressions with get.',
+    howHead: 'How it works',
+    steps: [
+      'Work in a pair or a group of three with one phone.',
+      'Read the card aloud.',
+      'The person on the “Starts:” line speaks first.',
+      'Discuss the card together. Try to use the get language in bold.',
+      'On a Verdict card, each person says if they agree, disagree or think it depends, and gives a reason. Then try to agree as a group.',
+      'Tap Next when you are ready for a new card.',
+    ],
+    reassure: 'You can skip any card. You can also answer about a film, a book or someone else instead of yourself.',
+    setHead: 'Settings',
+    minsLabel: 'Countdown',
+    soundLabel: 'Sound at the end',
+    on: 'On', off: 'Off',
+    start: 'Start the journey',
+    cont: n => `Continue (card ${n})`,
+    newDeck: 'New deck',
+    newHint: 'The countdown setting is used when you start a new deck.',
+    home: '← Home',
+    finish: 'Finish',
+    counter: (n, t) => `Card ${n} of ${t}`,
+    pause: 'Pause', resume: 'Resume',
+    timesUp: 'Time’s up!',
+    timesUpMsg: 'Finish this card, then tap Finish.',
+    prev: '← Previous', skip: 'Skip this card', next: 'Next →', last: 'Finish →',
+    tagP: 'Your story',
+    tagH: 'History',
+    stamp: 'Verdict',
+    verdictPrompt: 'Agree, disagree or it depends? Give a reason. Then try to agree as a group.',
+    starts: 'Starts:',
+    glossLabel: 'Word help:',
+    ukusLabel: 'UK / US:',
+    endTitle: 'Well done!',
+    endSub: n => `You discussed ${n} card${n === 1 ? '' : 's'}.`,
+    endSubNone: 'You have not discussed any cards yet.',
+    formsHead: 'Which get language did you use?',
+    formsInstr: 'Tap the ones you used.',
+    tally: (u, t) => `You used ${u} of ${t}.`,
+    backToCards: '← Back to the cards',
+  },
+};
+
+/* ================= state ================= */
+let S = null;                                  // the current deck
+let P = { mins: CONTENT.defaultMinutes, sound: false };   // preferences
+let ticker = null;                             // countdown interval
+let lastShownId = null;                        // to animate only new cards
+let lastDir = 'fwd';                           // direction of travel for the card animation
+
+/* ================= logic ================= */
+const byId = id => CONTENT.cards.find(c => c.id === id);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const rand = (lo, hi) => lo + Math.floor(Math.random() * (hi - lo + 1));
+
+/* Deal: a light personal card first, then personal and history questions
+   alternate. Verdict cards are slotted in after every 2–3 questions,
+   starting at card 3, so two Verdicts never come together. */
+function dealOrder(){
+  const cards = CONTENT.cards;
+  const light = shuffle(cards.filter(c => c.type === 'P' && c.light));
+  const first = light[0];
+  const pers = [first, ...shuffle(cards.filter(c => c.type === 'P' && c !== first))];
+  const hist = shuffle(cards.filter(c => c.type === 'H'));
+  const verd = shuffle(cards.filter(c => c.type === 'V'));
+  const qs = [];
+  while (pers.length || hist.length){ if (pers.length) qs.push(pers.shift()); if (hist.length) qs.push(hist.shift()); }
+  const out = []; let nextV = 2;
+  qs.forEach((q, i) => {
+    out.push(q);
+    if (i + 1 === nextV && verd.length){ out.push(verd.shift()); nextV += rand(2, 3); }
+  });
+  while (verd.length) out.push(verd.shift());   // safety net; not reached with the current deck
+  return out.map(c => c.id);
+}
+
+function dealStarters(n){
+  const out = []; let pool = [];
+  while (out.length < n){
+    if (!pool.length){ pool = shuffle(CONTENT.starters); if (out.length && pool[0] === out[out.length - 1]) pool.push(pool.shift()); }
+    out.push(pool.shift());
+  }
+  return out;
+}
+
+function newDeck(){
+  const order = dealOrder();
+  S = { v:1, order, pos:0, status:{}, starters: dealStarters(order.length), used:{}, dur:P.mins * 60, left:P.mins * 60, done:false, finishedOn:null };
+  save();
+}
+
+function currentId(){ return S.order[S.pos]; }
+function markAndMove(status){
+  S.status[currentId()] = status;
+  if (S.pos < S.order.length - 1){ S.pos++; save(); return 'card'; }
+  save(); return 'end';
+}
+function goPrev(){ if (S.pos > 0){ S.pos--; save(); } }
+
+function discussedForms(){
+  const seen = [];
+  S.order.forEach(id => {
+    if (S.status[id] !== 'done') return;
+    byId(id).forms.forEach(f => { if (!seen.includes(f)) seen.push(f); });
+  });
+  return seen;
+}
+function discussedCount(){ return S.order.filter(id => S.status[id] === 'done').length; }
+
+/* ---- countdown (measured with Date.now(), not by counting ticks) ---- */
+let endAt = 0;
+function tRunning(){ return !!ticker; }
+function tStart(){
+  if (S.done || ticker) return;
+  endAt = Date.now() + S.left * 1000;
+  ticker = setInterval(tTick, 250); tTick();
+}
+function tPause(){
+  if (!ticker) return;
+  clearInterval(ticker); ticker = null;
+  S.left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000)); save(); drawTimer();
+}
+let lastSaved = 0, lastBeep = -1;
+function tTick(){
+  const left = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+  if (left !== S.left){
+    S.left = left;
+    if (left > 0 && left <= 5 && left !== lastBeep){ lastBeep = left; sfx.tick(); }
+    if (Date.now() - lastSaved > 5000){ save(); lastSaved = Date.now(); }
+  }
+  if (left <= 0) tTimeUp();
+  drawTimer();
+}
+function tTimeUp(){
+  clearInterval(ticker); ticker = null;
+  S.left = 0; S.done = true; save(); sfx.chime();
+  $('srStatus').textContent = T.timesUp + ' ' + T.timesUpMsg;
+}
+const mmss = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
+/* ================= sound (optional, off by default) ================= */
+let AC = null;
+function tone(freq, dur = .12, type = 'sine', gain = .08, when = 0){
+  if (!P.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t = AC.currentTime + when, o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(gain, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t + dur + .02);
+  } catch(e){}
+}
+const sfx = {
+  tick(){ tone(880, .05, 'triangle', .03); },
+  chime(){ [784, 988, 1175, 1568].forEach((f, i) => tone(f, .6, 'sine', .07, i * .18)); },
+};
+
+/* ================= display ================= */
+const T = CONTENT.text;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const bold = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');   // card text is written in CONTENT
+const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+  keepAwake(id === 'card');
+  window.scrollTo(0, 0);
+}
+
+/* ---- the dove illustration (built once, used in three places) ---- */
+function doveSVG(){
+  const S = '#6E4219';
+  // a feather as a rounded oval from its base to its tip
+  const feather = (bx, by, tx, ty, w, fill, sw = 1) => {
+    const cx = (bx + tx) / 2, cy = (by + ty) / 2, rx = Math.hypot(tx - bx, ty - by) / 2, a = Math.atan2(ty - by, tx - bx) * 180 / Math.PI;
+    return `<ellipse cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${w}" transform="rotate(${a.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})" fill="${fill}" stroke="${S}" stroke-width="${sw}"/>`;
+  };
+  const vane = (bx, by, tx, ty) => `<path d="M${bx} ${by} L${(bx + (tx - bx) * .85).toFixed(1)} ${(by + (ty - by) * .85).toFixed(1)}" stroke="${S}" stroke-width=".45" opacity=".55"/>`;
+  const prim = [[50,12,36,-10],[49,15,29,-5],[48,18,23,1],[47,21,19,8],[47,24,18,15],[47,27,19,22]];
+  const sec  = [[48,28,28,24],[51,31,31,30],[54,33,36,35],[58,35,43,38]];
+  const wing = (fill, shade, tip) =>
+    sec.map(f => feather(...f, 3.8, shade)).join('') +
+    prim.slice().reverse().map((f, i) => feather(...f, 4.6, i < 2 ? fill : tip)).join('') +
+    prim.map(f => vane(...f)).join('') +
+    `<path d="M64 39 C 66 28, 62 16, 52 8 C 46 12, 41 20, 40 27 C 42 30, 45 30, 47 30 C 49 33, 52 34, 54 34 C 56 37, 59 38, 61 37 C 62 39, 63 39, 64 39 Z" fill="${fill}" stroke="${S}" stroke-width="1.1" stroke-linejoin="round"/>` +
+    `<path d="M50 16 q3 3 8 2 M48 22 q4 3 10 2" fill="none" stroke="${S}" stroke-width=".55" opacity=".5"/>`;
+  return `<svg viewBox="0 -14 100 84" class="dovesvg" aria-hidden="true">
+  <g class="wing far"><g transform="rotate(16 63 38) translate(4 -2)">${wing('#ECE3D2', '#E0D5C1', '#E5DAC6')}</g></g>
+  ${feather(34,45,8,37,4.2,'#F3EDE1')}${feather(34,48,8,55,4.2,'#F3EDE1')}${feather(34,46.5,4,46,4.6,'#FFFFFF')}
+  <path d="M28 46 C 36 38, 52 34, 64 34 C 66 27, 72 22, 79 23 C 85 24, 88 29, 86 34 C 85 37, 83 39, 82 42 C 80 50, 66 56, 48 54 C 40 53, 33 50, 28 46 Z" fill="#FFFFFF" stroke="${S}" stroke-width="1.2"/>
+  <path d="M44 52 C 56 54, 70 51, 78 44" fill="none" stroke="#E6DBC8" stroke-width="3" stroke-linecap="round"/>
+  <path d="M57 54 l-2.5 4.5 M61 54 l-1.5 4.5" stroke="#C77B5A" stroke-width="1.4" stroke-linecap="round"/>
+  <path d="M86 30.5 L94 32.5 L86 34.6 Z" fill="#D9A35B" stroke="${S}" stroke-width=".9" stroke-linejoin="round"/>
+  <circle cx="80.5" cy="29" r="1.8" fill="#1E2B45"/><circle cx="81.1" cy="28.4" r=".55" fill="#fff"/>
+  <path d="M91 34 C 92 40, 90 45, 85 49" fill="none" stroke="#3F6B3A" stroke-width="1.3" stroke-linecap="round"/>
+  ${feather(91.5,38,97,35,1.7,'#6A9A50',.6)}${feather(90.5,42,96,43.5,1.7,'#6A9A50',.6)}${feather(88,46,89.5,52,1.7,'#6A9A50',.6)}
+  <g class="wing near">${wing('#FFFFFF', '#F1E9DB', '#F7F2E8')}</g>
+</svg>`;
+}
+
+function renderStatic(){
+  $('t-kicker').textContent = T.kicker; $('t-title').innerHTML = T.title; $('t-sub').textContent = T.sub;
+  $('t-aimh').textContent = T.aimHead; $('t-cando').textContent = T.cando;
+  $('t-howh').textContent = T.howHead;
+  $('t-steps').innerHTML = T.steps.map(s => `<li>${esc(s)}</li>`).join('');
+  $('t-reassure').textContent = T.reassure; $('t-seth').textContent = T.setHead;
+  $('b-home').textContent = T.home; $('b-finish').textContent = T.finish;
+  $('b-prev').textContent = T.prev; $('b-skip').textContent = T.skip;
+  $('e-formsh').textContent = T.formsHead; $('e-formsi').textContent = T.formsInstr;
+  // clock ticks
+  let t = ''; for (let i = 0; i < 60; i++){ const a = i * 6 * Math.PI / 180, long = i % 5 === 0, r1 = long ? 74 : 80;
+    t += `<line x1="${(100 + r1 * Math.sin(a)).toFixed(1)}" y1="${(100 - r1 * Math.cos(a)).toFixed(1)}" x2="${(100 + 86 * Math.sin(a)).toFixed(1)}" y2="${(100 - 86 * Math.cos(a)).toFixed(1)}" stroke-width="${long ? 3 : 1.2}"/>`; }
+  $('ticks').innerHTML = t;
+  // the dove in three places
+  $('tlDove').innerHTML = doveSVG();
+  $('endDove').innerHTML = doveSVG();
+  $('heroDoveArt').innerHTML = doveSVG().replace('<svg ', '<svg x="-38" y="-46" width="76" height="64" ');
+}
+
+function renderStart(){
+  $('minsRow').innerHTML = `<span class="lbl">${esc(T.minsLabel)}</span>` +
+    CONTENT.minuteOptions.map(m => `<button class="chip" data-act="mins" data-m="${m}" aria-pressed="${P.mins === m}">${m} min</button>`).join('');
+  $('soundRow').innerHTML = `<span class="lbl">${esc(T.soundLabel)}</span>` +
+    `<button class="chip" data-act="sound" data-s="1" aria-pressed="${P.sound}">${esc(T.on)}</button>` +
+    `<button class="chip" data-act="sound" data-s="0" aria-pressed="${!P.sound}">${esc(T.off)}</button>`;
+  const inProgress = S && (S.pos > 0 || Object.keys(S.status).length);
+  $('startActions').innerHTML = inProgress
+    ? `<button class="btn primary big" data-act="continue">${esc(T.cont(S.pos + 1))}</button><button class="btn big" data-act="new">${esc(T.newDeck)}</button>`
+    : `<button class="btn primary big" data-act="new">${esc(T.start)}</button>`;
+  $('startHint').textContent = inProgress ? T.newHint : '';
+}
+
+let doveAt = -1;
+function renderTimeline(){
+  const total = S.order.length, pc = i => total > 1 ? i / (total - 1) * 100 : 0;
+  $('tlFill').style.width = pc(S.pos) + '%';
+  $('tlStops').innerHTML = S.order.map((id, i) => {
+    const st = S.status[id];
+    return `<span class="stop t-${byId(id).type}${st === 'done' ? ' done' : st === 'skip' ? ' skip' : ''}${i === S.pos ? ' cur' : ''}" style="left:${pc(i).toFixed(2)}%"></span>`;
+  }).join('');
+  const dove = $('tlDove');
+  dove.style.left = pc(S.pos) + '%';
+  if (doveAt !== S.pos){                       // flap only when the dove actually moves
+    if (doveAt !== -1 && !calm()){
+      dove.classList.remove('flap'); void dove.offsetWidth; dove.classList.add('flap');
+      clearTimeout(renderTimeline.t); renderTimeline.t = setTimeout(() => dove.classList.remove('flap'), 1100);
+    }
+    doveAt = S.pos;
+  }
+}
+
+let flickTimer = null;
+function flickEra(el, label){
+  clearInterval(flickTimer);
+  if (calm()){ el.textContent = label; return; }
+  const box = el.parentElement; box.classList.add('flick');
+  const t0 = Date.now();
+  flickTimer = setInterval(() => {
+    if (Date.now() - t0 > 650){ clearInterval(flickTimer); el.textContent = label; box.classList.remove('flick'); return; }
+    el.textContent = String(rand(1066, 2026));
+  }, 55);
+}
+
+function warpClock(dir){
+  if (calm()) return;
+  const c = $('clock');
+  c.classList.remove('warping', 'rewind'); void c.getBoundingClientRect();
+  c.classList.add(dir === 'back' ? 'rewind' : 'warping');
+  clearTimeout(warpClock.t); warpClock.t = setTimeout(() => c.classList.remove('warping', 'rewind'), 1900);
+}
+
+function renderCard(){
+  const id = currentId(), c = byId(id), total = S.order.length;
+  $('counter').textContent = T.counter(S.pos + 1, total);
+  const box = $('cardBox');
+  const kind = c.type === 'V' ? 'verdict' : c.type === 'H' ? 'hist' : 'pers';
+  const isNew = lastShownId !== id;
+  box.className = 'card ' + kind;
+  let h = '<div class="cardhead">';
+  h += kind === 'verdict' ? `<span class="stamp">${esc(T.stamp)}</span>` : `<span class="tag">${esc(kind === 'hist' ? T.tagH : T.tagP)}</span>`;
+  h += `<span class="era" aria-hidden="true"><span id="eraTxt">${esc(c.era || '')}</span></span></div>`;
+  h += `<p class="starts"><b>${esc(T.starts)}</b> ${esc(S.starters[S.pos])}</p>`;
+  if (c.context) h += `<p class="context">${bold(c.context)}</p>`;
+  h += `<p class="qtext">${bold(c.text)}</p>`;
+  if (kind === 'verdict') h += `<p class="prompt">${esc(T.verdictPrompt)}</p>`;
+  if (c.gloss || c.ukus){
+    h += '<div class="notes">';
+    if (c.gloss) h += `<p class="note"><b>${esc(T.glossLabel)}</b> ${c.gloss}</p>`;      // written in CONTENT
+    if (c.ukus)  h += `<p class="note"><b>${esc(T.ukusLabel)}</b> ${c.ukus}</p>`;
+    h += '</div>';
+  }
+  box.innerHTML = h;
+  if (isNew){
+    void box.offsetWidth; box.classList.add(lastDir);
+    flickEra($('eraTxt'), c.era || '');
+    warpClock(lastDir);
+    lastShownId = id;
+  }
+  renderTimeline();
+  $('b-prev').disabled = S.pos === 0;
+  $('b-next').textContent = S.pos === total - 1 ? T.last : T.next;
+  drawTimer();
+}
+
+function drawTimer(){
+  if (!S) return;
+  const el = $('timer'), running = tRunning();
+  $('tval').textContent = S.done ? T.timesUp : mmss(S.left);
+  el.classList.toggle('urgent', !S.done && S.left <= 60);
+  el.classList.toggle('over', S.done);
+  el.classList.toggle('paused', !running && !S.done);
+  const pb = $('b-pause');
+  pb.hidden = S.done;
+  pb.textContent = running ? T.pause : T.resume;
+  const tu = $('timesup'); tu.hidden = !S.done; tu.textContent = S.done ? T.timesUpMsg : '';
+}
+
+function renderEnd(){
+  const n = discussedCount();
+  $('e-title').textContent = T.endTitle;
+  $('e-sub').textContent = n ? T.endSub(n) : T.endSubNone;
+  const forms = discussedForms();
+  $('formsPanel').hidden = !forms.length;
+  $('forms').innerHTML = forms.map((f, i) =>
+    `<button class="form" data-act="form" data-i="${i}" aria-pressed="${!!S.used[f]}"><span class="box" aria-hidden="true">${S.used[f] ? '✓' : ''}</span>${esc(f)}</button>`).join('');
+  $('tally').textContent = forms.length ? T.tally(forms.filter(f => S.used[f]).length, forms.length) : '';
+  const notAtEnd = S.pos < S.order.length - 1 || S.finishedOn === currentId();
+  $('endActions').innerHTML =
+    (notAtEnd ? `<button class="btn big" data-act="back">${esc(T.backToCards)}</button>` : '') +
+    `<button class="btn primary big" data-act="new">${esc(T.newDeck)}</button>`;
+}
+
+/* ================= saving ================= */
+function save(){
+  try { localStorage.setItem(CONTENT.saveKey, JSON.stringify({ v:1, S, P })); } catch(e){}
+}
+function load(){
+  try {
+    const d = JSON.parse(localStorage.getItem(CONTENT.saveKey) || 'null');
+    if (!d || d.v !== 1) return;
+    if (d.P && CONTENT.minuteOptions.includes(d.P.mins)) P.mins = d.P.mins;
+    if (d.P) P.sound = d.P.sound === true;
+    const s = d.S;
+    const ids = CONTENT.cards.map(c => c.id);
+    // a deck saved by an older version (different cards) is not resumed
+    const valid = s && Array.isArray(s.order) && s.order.length === ids.length && s.order.every(id => ids.includes(id))
+      && new Set(s.order).size === s.order.length
+      && Number.isInteger(s.pos) && s.pos >= 0 && s.pos < s.order.length
+      && Array.isArray(s.starters) && s.starters.length === s.order.length && s.starters.every(x => CONTENT.starters.includes(x));
+    if (!valid) return;
+    S = { v:1, order:s.order, pos:s.pos,
+          status: Object.fromEntries(Object.entries(s.status || {}).filter(([k, v]) => ids.includes(k) && (v === 'done' || v === 'skip'))),
+          starters:s.starters,
+          used: Object.fromEntries(Object.entries(s.used || {}).filter(([k, v]) => v === true && typeof k === 'string')),
+          dur: Number.isFinite(s.dur) ? s.dur : P.mins * 60,
+          left: Number.isFinite(s.left) ? Math.max(0, Math.min(3600, Math.round(s.left))) : P.mins * 60,
+          done: s.done === true,
+          finishedOn: ids.includes(s.finishedOn) ? s.finishedOn : null };
+  } catch(e){ S = null; }
+}
+
+/* ================= keep the screen awake ================= */
+let lock = null;
+async function keepAwake(on){
+  try {
+    if (on && 'wakeLock' in navigator && !lock) lock = await navigator.wakeLock.request('screen');
+    else if (!on && lock){ await lock.release(); lock = null; }
+  } catch(e){}
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden){ if (S) save(); lock = null; }
+  else if ($('card').classList.contains('active')) keepAwake(true);
+});
+
+/* ================= events ================= */
+const actions = {
+  new(){ tPause(); newDeck(); lastShownId = null; lastDir = 'fwd'; show('card'); renderCard(); tStart(); },
+  continue(){ lastShownId = null; lastDir = 'fwd'; show('card'); renderCard(); tStart(); drawTimer(); },
+  home(){ tPause(); renderStart(); show('start'); },
+  mins(b){ P.mins = +b.dataset.m; save(); renderStart(); },
+  sound(b){ P.sound = b.dataset.s === '1'; save(); renderStart(); if (P.sound) sfx.tick(); },
+  pause(){ tRunning() ? tPause() : tStart(); drawTimer(); },
+  prev(){ lastDir = 'back'; goPrev(); renderCard(); },
+  skip(){ lastDir = 'fwd'; if (markAndMove('skip') === 'end') return actions.finish(); renderCard(); },
+  next(){ lastDir = 'fwd'; if (markAndMove('done') === 'end') return actions.finish(); renderCard(); },
+  finish(){
+    // the card on screen counts as discussed unless it was skipped
+    if (!S.status[currentId()]){ S.status[currentId()] = 'done'; S.finishedOn = currentId(); }
+    tPause(); save(); renderEnd(); show('end');
+  },
+  back(){
+    if (S.finishedOn && S.finishedOn === currentId()) delete S.status[S.finishedOn];
+    S.finishedOn = null; lastShownId = null; lastDir = 'back'; save(); show('card'); renderCard(); tStart(); drawTimer();
+  },
+  form(b){
+    const f = discussedForms()[+b.dataset.i]; if (!f) return;
+    if (S.used[f]) delete S.used[f]; else S.used[f] = true;
+    save(); renderEnd();
+    const again = document.querySelector(`.form[data-i="${b.dataset.i}"]`); if (again) again.focus();
+  },
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  actions[b.dataset.act]?.(b);
+});
+document.addEventListener('keydown', e => {
+  if (!$('card').classList.contains('active') || e.target.closest('input,textarea')) return;
+  if (e.key === 'ArrowRight'){ e.preventDefault(); actions.next(); }
+  else if (e.key === 'ArrowLeft'){ e.preventDefault(); if (S.pos > 0) actions.prev(); }
+  else if (e.key === ' ' && !e.target.closest('button')){ e.preventDefault(); if (!S.done) actions.pause(); }
+});
+
+/* ================= start-up ================= */
+// the hero dove flies along its route, unless reduced motion is requested
+(() => { const g = $('heroDove'), m = $('heroFly');
+  if (calm()) m.remove();
+  else { g.removeAttribute('transform'); g.classList.add('flapping'); setTimeout(() => g.classList.remove('flapping'), 4500); } })();
+load();
+renderStatic();
+renderStart();
+</script>
+</body>
+</html>
