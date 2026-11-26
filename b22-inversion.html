@@ -1,0 +1,1012 @@
+<!doctype html>
+<!--
+  Name:     Inversion · B2.2 explanation hub
+  Purpose:  Interactive explanation of inversion (English File Advanced), for the
+            board in class and for self-study on phones. Six topics, each with
+            discovery, an animated word-order swap, the rule and quick checks,
+            plus a My mistakes section and links to further practice.
+  Version:  1.3 · 2026-11-26 (relative links to the companion files; green More practice, yellow My mistakes)
+  Edit:     All text is in the CONTENT section at the top of the script.
+            Mini-format inside sentences:
+              [words]  = the inverted words (shown highlighted)
+              ___      = the gap in a gap-fill
+              *words*  = italics in rules and notes
+            Option order is fixed: put the right answer in different positions.
+            Each check has an id (t3c2): keep ids unchanged, because saved
+            progress and the mistakes list use them.
+  Storage:  localStorage "b22-inversion.v1" (progress and mistakes; the practice
+            file can read the "mistakes" list of ids) and "b22-inversion.prefs".
+  Credit:   Class of Coffee – with AI assistance
+-->
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; media-src 'self' data: blob:; connect-src 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Inversion · B2.2</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🙃</text></svg>">
+<style>
+/* ================= tokens ================= */
+:root{
+  --bg:#FFF6E3; --paper:#FFFDF7; --ink:#2A2135; --soft:#5E5468; --line:#E8D9BC; --tan:#C9A06A; --tan-soft:#F3E4C8;
+  --accent:#C2255C; --accent-soft:#FBE3EC; --ok:#17706B; --ok-soft:#DDF2EE; --bad:#B3261E; --bad-soft:#FBE4E2;
+  --gold:#F2B33D;
+  --display:"Avenir Next","Segoe UI","Helvetica Neue",system-ui,-apple-system,Roboto,sans-serif;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --r-s:10px; --r-m:16px; --r-l:24px;
+  --spring:cubic-bezier(.34,1.56,.64,1); --ease:cubic-bezier(.25,.46,.45,.94);
+  --barH:76px;
+}
+/* ================= base ================= */
+*{box-sizing:border-box}
+html{touch-action:manipulation;font-size:clamp(16px,14px + .45vw,22px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.5 var(--body);min-height:100vh;display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
+button{font:inherit;color:inherit;cursor:pointer;min-height:44px;border-radius:var(--r-s)}
+button:disabled{cursor:default}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0}
+em{font-style:italic}
+#app{flex:1;width:100%;max-width:1100px;margin:0 auto;padding:1rem clamp(.8rem,3vw,2rem) 1.5rem}
+body.has-bar #app{padding-bottom:calc(var(--barH) + 1.5rem + env(safe-area-inset-bottom))}
+.btn{border:2px solid var(--ink);background:var(--paper);padding:.45rem 1rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:.4rem;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.ghost{border-color:var(--line);background:transparent}
+.btn:disabled{opacity:.45}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+mark.inv{background:var(--accent-soft);color:var(--accent);font-weight:800;text-decoration:underline 3px;text-underline-offset:.22em;padding:0 .12em;border-radius:4px}
+.gap{display:inline-block;min-width:5.5em;border-bottom:3px dashed var(--soft);margin:0 .15em}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ================= home ================= */
+.hero{position:relative;padding:1.2rem 0 1.4rem;overflow:hidden}
+.hero h1{font-size:clamp(2.6rem,2rem + 4vw,5rem);font-weight:800;letter-spacing:-.02em}
+.hero .echo{font-family:var(--display);font-size:clamp(2.6rem,2rem + 4vw,5rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;
+  transform:scaleY(-1);color:var(--tan);opacity:.35;margin-top:-.35em;height:.55em;overflow:hidden;user-select:none}
+.hero .sub{color:var(--soft);font-weight:600;margin:.2rem 0 0}
+.cando{background:var(--paper);border:2px solid var(--line);border-left:8px solid var(--accent);border-radius:var(--r-m);padding:.8rem 1rem;margin:.4rem 0 1.2rem}
+.cando b{display:block;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.start{margin:0 0 1.2rem}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:.9rem}
+.tile{position:relative;text-align:left;border:2px solid var(--ink);background:var(--paper);border-radius:var(--r-l);padding:1rem 1rem .9rem 4.4rem;
+  display:flex;flex-direction:column;gap:.35rem;min-height:9.5rem;transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+.tile:hover{transform:translateY(-2px);box-shadow:0 6px 0 var(--ink)}
+.tile .num{position:absolute;left:.9rem;top:.8rem;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--ink);color:var(--paper);
+  display:grid;place-items:center;font:800 1.35rem/1 var(--display)}
+.tile.done .num{background:var(--ok)}
+.tile h2{font-size:1.15rem}
+.tile .where{font-size:.85rem;color:var(--soft)}
+.tile .status{font-size:.85rem;font-weight:700;margin-top:auto}
+.tile.extra{border-style:dashed}
+.pill{display:inline-block;font-size:.82rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:99px;padding:.1rem .6rem;border:2px solid currentColor;width:max-content}
+.pill.use{color:var(--accent)}
+.pill.rec{color:var(--soft)}
+.home-more{margin-top:1.2rem}
+.btn.mistbtn{background:var(--gold);border-color:var(--gold);color:var(--ink)}
+.btn.morebtn{background:var(--ok);border-color:var(--ok);color:#fff}
+
+/* ================= topic ================= */
+.tophead{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem;margin-bottom:.8rem}
+.tophead h1{font-size:clamp(1.4rem,1.1rem + 1.2vw,2.1rem);flex:1;min-width:12rem}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:center;color:var(--soft);font-size:.9rem;margin-bottom:.8rem}
+.why{margin:-.3rem 0 .9rem;color:var(--soft)}
+.card{background:var(--paper);border:2px solid var(--ink);border-radius:var(--r-l);padding:clamp(1rem,2.5vw,1.8rem);box-shadow:0 6px 0 var(--tan)}
+.card.enter{animation:enter .35s var(--ease)}
+@keyframes enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kicker{font-size:.85rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 .4rem}
+.instr{margin:0 0 1rem;font-weight:600}
+.sent{font-size:clamp(1.3rem,1.05rem + 1.1vw,2.2rem);line-height:1.5;font-weight:600;margin:.2rem 0 1rem}
+.sent.quote{font-style:italic}
+.toks{display:flex;flex-wrap:wrap;gap:.35rem .35rem;align-items:baseline;font-size:clamp(1.2rem,1rem + 1vw,2rem);font-weight:600;margin:.4rem 0 1rem}
+.tok{border:2px solid var(--line);background:var(--bg);padding:.1rem .55rem;min-height:44px;min-width:44px;border-radius:var(--r-s);font-weight:600}
+.tok[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.tok.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.tok.miss{border-style:dashed;border-color:var(--accent);color:var(--accent)}
+.tok.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.punct{padding:0}
+.punct.t{margin-left:-.3rem}
+.punct.l{margin-right:-.3rem}
+.swapbox{position:relative}
+.swaplabel{font-weight:800;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);min-height:1.4rem}
+.swaplabel.on{color:var(--accent)}
+.wt{display:inline-block;padding:.1rem .3rem;border-radius:6px;transition:background .3s,color .3s}
+.wt.pu{padding-left:0;padding-right:0}
+.wt.hl{background:var(--accent-soft);color:var(--accent);font-weight:800;text-decoration:underline 3px;text-underline-offset:.22em}
+.wt.pop{animation:pop .6s var(--spring)}
+.wt.fresh{animation:fade .45s var(--ease)}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.28)}100%{transform:scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.btn.swap{min-width:13.5rem}
+.prompt{color:var(--soft);margin:.9rem 0 0}
+.rule p{margin:.2rem 0 .8rem;font-size:1.08rem}
+.formula{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.4rem 0 1rem}
+.chip{border:2px solid var(--ink);border-radius:99px;padding:.25rem .8rem;font-weight:800;background:var(--paper)}
+.chip.k{background:var(--accent);border-color:var(--accent);color:#fff}
+.plus{font-weight:800;color:var(--soft)}
+.note{border-radius:var(--r-m);padding:.7rem .9rem;margin:.6rem 0;border:2px solid var(--line);background:var(--bg)}
+.note h3{font-size:.95rem;margin-bottom:.2rem}
+.note.l1{border-color:var(--gold)}
+.note.us{border-color:#7AA6C8}
+.note p{margin:.15rem 0}
+.panelbtn{margin-top:.6rem}
+.listgrp{margin:0 0 1.2rem}
+.listgrp h3{font-size:1.05rem;margin:0 0 .2rem}
+.listgrp .intro{color:var(--soft);margin:0 0 .5rem}
+.trow{display:grid;grid-template-columns:minmax(8rem,14rem) 1fr;gap:.2rem 1rem;padding:.5rem 0;border-top:1px solid var(--line)}
+.trow b{font-weight:800}
+@media (max-width:560px){.trow{grid-template-columns:1fr}}
+.diagram{display:flex;flex-wrap:wrap;align-items:stretch;gap:.5rem;margin:0 0 1rem}
+.dpart{flex:1 1 13rem;border:2px solid var(--ink);border-radius:var(--r-m);padding:.6rem .8rem;background:var(--paper)}
+.dpart small{display:block;font-weight:800;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;color:var(--soft)}
+.dpart.two{border-color:var(--accent);background:var(--accent-soft)}
+.dpart.two small{color:var(--accent)}
+.dpart div{font-weight:700;font-size:1.1rem}
+.hinge{align-self:center;font-weight:800;font-size:1.4rem;color:var(--accent)}
+.diagram.pinned{font-size:.9rem}
+.opts{display:flex;flex-wrap:wrap;gap:.6rem;margin:.2rem 0 0}
+.opt{border:2px solid var(--ink);background:var(--paper);padding:.55rem 1rem;font-weight:700;min-height:48px;text-align:left}
+.opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.opt,.tok{position:relative}
+.badge{position:absolute;top:-.55rem;right:-.45rem;width:1.35rem;height:1.35rem;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:900;color:#fff;background:var(--ink);line-height:1}
+.right .badge,.ok .badge{background:var(--ok)}
+.wrong .badge,.bad .badge{background:var(--bad)}
+.miss .badge{background:var(--accent)}
+.fb{margin-top:1rem;border-radius:var(--r-m);padding:.8rem 1rem;border:2px solid var(--line);background:var(--bg)}
+.fb.good{border-color:var(--ok)}
+.fb.shown{border-color:var(--accent)}
+.fb.try{border-color:var(--bad)}
+.fb b.v{display:block;margin-bottom:.15rem}
+.fb p{margin:.25rem 0}
+.fb .fix{font-weight:700;font-size:1.1rem}
+.donecard{text-align:left}
+.donecard h2{font-size:clamp(1.4rem,1.1rem + 1vw,2rem);margin-bottom:.4rem}
+.linkcard{border:2px solid var(--ink);border-radius:var(--r-m);padding:.9rem 1rem;background:var(--paper);margin:.8rem 0}
+.linkcard h3{font-size:1.05rem;margin-bottom:.2rem}
+.linkcard p{margin:.1rem 0 .6rem;color:var(--soft)}
+.linkcard.soon{border-style:dashed;border-color:var(--tan)}
+.qrbox{margin-top:.8rem;display:flex;flex-direction:column;align-items:flex-start;gap:.4rem}
+.qrbox svg{width:min(16rem,70vw);height:auto;background:#fff;border-radius:8px}
+.qrbox.big svg{width:min(24rem,80vw,60vh)}
+.url{font-size:.85rem;color:var(--soft);word-break:break-all}
+.mistlist li{margin:.5rem 0}
+.mistlist .bad{color:var(--bad);text-decoration:line-through}
+
+/* ================= bottom bar ================= */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(255,246,227,.96);border-top:2px solid var(--line);
+  padding:.6rem clamp(.8rem,3vw,2rem) calc(.6rem + env(safe-area-inset-bottom));display:none}
+body.has-bar .bar{display:block}
+.bar .in{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:flex-end;gap:.6rem}
+.bar .pos{margin-right:auto;font-weight:700;color:var(--soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar .btn{width:9.5rem;white-space:nowrap}
+.bar .btn.next{width:11rem}
+@media (max-width:560px){
+  .bar .in{justify-content:space-between}
+  .bar .pos{margin:0;order:2;font-size:.85rem}
+  .bar .btn,.bar .btn.next{width:auto;flex:1;min-width:0}
+  .bar .prev{order:1}.bar .next{order:3}
+}
+
+@media (max-height:460px){ .bar{padding-top:.35rem;padding-bottom:calc(.35rem + env(safe-area-inset-bottom))} .bar .btn{min-height:40px;padding-top:.2rem;padding-bottom:.2rem} :root{--barH:56px} }
+
+/* ================= footer (Class of Coffee signature) ================= */
+.coc-footer{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 16px;padding:7px 20px;
+  background:var(--coc-tan,#E6C496);color:var(--coc-coffee-dark,#5A2D0C);font-family:var(--coc-body,'Nunito','Segoe UI',Verdana,sans-serif);font-size:13px;line-height:1.4}
+.coc-footer__brand{display:flex;align-items:center;gap:10px;font-weight:600}
+.coc-footer__mark{width:30px;height:30px;flex:none}
+.coc-footer a{color:inherit;text-decoration:underline;text-underline-offset:3px;display:inline-flex;align-items:center;min-height:40px;padding:0 4px}
+.coc-footer a:focus-visible{outline:2px solid var(--coc-coffee-dark,#5A2D0C);outline-offset:3px;border-radius:4px}
+body.has-bar .coc-footer{display:none}
+</style>
+</head>
+<body>
+<main id="app" aria-live="polite"></main>
+<nav class="bar" aria-label="Steps">
+  <div class="in">
+    <span class="pos" id="pos"></span>
+    <button class="btn prev" data-act="prev" id="prevBtn">← Previous</button>
+    <button class="btn primary next" data-act="next" id="nextBtn">Next →</button>
+  </div>
+</nav>
+<footer class="coc-footer">
+  <span class="coc-footer__brand">
+    <svg class="coc-footer__mark" xmlns="http://www.w3.org/2000/svg" viewBox="4 4 48 48" aria-hidden="true" focusable="false"><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L38.77 33.73A12.2 12.2 0 1 1 38.77 22.27Z" fill="#EDE3D6"/><path d="M42.57 20.25A16.5 16.5 0 1 0 42.57 35.75L40.89 34.85A14.6 14.6 0 1 1 40.89 21.15Z" fill="#D9C8B2"/><path d="M48.31 17.2A23 23 0 1 0 48.31 38.8A3.25 3.25 0 0 0 42.57 35.75A16.5 16.5 0 1 1 42.57 20.25A3.25 3.25 0 0 0 48.31 17.2Z" fill="#A2521A" stroke="#5A2D0C" stroke-width="1.8" stroke-linejoin="round"/><circle cx="28" cy="28" r="12.2" fill="#744823" stroke="#5A3517" stroke-width="1"/><path d="M32.5 22.64A7.0 7.0 0 1 0 32.5 33.36L32.64 32.21A5.5 5.5 0 1 1 32.64 23.79Z" fill="#F3E2BF" stroke="#F3E2BF" stroke-width="0.7" stroke-linejoin="round"/></svg>
+    <span>Class of Coffee – with AI assistance</span>
+  </span>
+  <a href="https://classofcoffee.com">classofcoffee.com</a>
+</footer>
+<script>
+/* ================= CONTENT (edit here) ================= */
+const CONTENT = {
+  title: 'Inversion',
+  subtitle: 'B2.2 · English File Advanced',
+  canDo: 'I can use inversion to make what I say and write more emphatic or more formal.',
+  publishedUrl: 'https://as1-design.github.io/english-learning-activities/b22-inversion.html',
+
+  // Fixed option labels for two kinds of check.
+  okOptions: ['Correct', 'Not correct'],
+  whereOptions: ['Straight after this part', 'Later, in the main clause'],
+
+  // Instructions shown above each kind of step.
+  instr: {
+    discover: 'Tap the words that are inverted, then tap Check.',
+    see: 'Tap the button to change the word order.',
+    choice: 'Choose the correct option.',
+    reply: 'Choose the best reply.',
+    ok: 'Is this sentence correct?',
+    where: 'Where does the inversion come? Read the beginning and decide.',
+  },
+
+  // Each topic: discover = sentences to explore, see = plain/inverted pairs,
+  // rule = explanation, checks = quick checks (types: choice, reply, ok, where).
+  topics: [
+    {
+      id: 't1', title: 'So do I / Neither can I', tag: 'use', where: 'Conversation, chats and messages',
+      why: 'You use this every day to agree with people quickly and naturally.',
+      discover: [
+        { s: '“I can’t stand queues.” “Neither [can I].”', why: 'After *Neither*, the modal *can* comes before the subject *I*.' },
+      ],
+      see: [
+        { plain: 'I do too.', inv: 'So [do I].', label: 'With inversion', prompt: 'Say both replies aloud. Both are correct, and *So do I* is very common.' },
+        { plain: 'I can’t either.', inv: 'Neither [can I].', label: 'With inversion', prompt: 'Notice that *can’t* becomes *can*: *Neither* already makes the reply negative.' },
+      ],
+      rule: {
+        text: [
+          'To agree with a positive statement, use *So*. To agree with a negative statement, use *Neither* or *Nor*.',
+          'Then use the same auxiliary, modal or *be* as the first speaker, and then the subject. If there is no auxiliary (present or past simple), use *do*, *does* or *did*.',
+          'To disagree, do not invert: “I love jazz.” “I don’t.” / “I can’t swim.” “I can.”',
+        ],
+        formula: ['So / Neither / Nor', 'auxiliary / modal / be', 'subject'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: 'You say *Jo també / Yo también* or *Jo tampoc / Yo tampoco*. In English the short reply needs a verb: *So do I*, *Neither can I*. *Neither I* is not correct.' },
+          { kind: 'us', title: 'UK and US', text: 'In informal speech, *Me too* and *Me neither* are common in both varieties. In informal American English you may also hear *Me either*.' },
+        ],
+      },
+      checks: [
+        { id: 't1c1', type: 'reply', s: '“I’d love to live by the sea.”', options: ['So do I.', 'So would I.', 'Neither would I.'], a: 1, why: '*I’d* = *I would*, so the reply uses *would*. The statement is positive, so use *So*.' },
+        { id: 't1c2', type: 'reply', s: '“I wasn’t at the meeting yesterday.”', options: ['So was I.', 'Neither did I.', 'Neither was I.'], a: 2, why: 'The statement is negative and uses *was*, so the reply is *Neither was I*.' },
+        { id: 't1c3', type: 'reply', s: '“Alex has already booked a ticket.”', options: ['So has Sam.', 'So did Sam.', 'Neither has Sam.'], a: 0, why: 'The statement uses the present perfect (*has booked*), so the reply uses *has*.' },
+        { id: 't1c4', type: 'reply', s: '“I can’t remember her surname.”', options: ['So can I.', 'Nor do I.', 'Nor can I.'], a: 2, why: 'The statement is negative and uses *can*, so the reply is *Nor can I* (or *Neither can I*).' },
+      ],
+    },
+    {
+      id: 't2', title: 'What is inversion?', tag: 'use', where: 'Questions and everyday conversation',
+      why: 'Inversion is the word order you already use in questions. Seeing this makes the other patterns easier.',
+      discover: [
+        { s: 'Where [are you] staying this weekend?', why: 'In a question, *be* (*are*) comes before the subject (*you*).' },
+        { s: '[Could you] tell me where you are staying?', why: 'The question starts with *Could you*. The second part (*where you are staying*) is an indirect question, so it keeps normal order.' },
+      ],
+      see: [
+        { plain: 'You are staying at a hotel.', inv: '[Are you] staying at a hotel?', label: 'Question', prompt: 'This is inversion: the verb comes before the subject.' },
+        { plain: 'I had never felt so welcome.', inv: 'Never [had I] felt so welcome.', label: 'With inversion', prompt: 'The same word order can appear in a statement. Say both aloud. Which one sounds more emphatic?' },
+      ],
+      rule: {
+        text: [
+          'Inversion means that the auxiliary, modal or *be* comes before the subject. You already do this in questions.',
+          'In an indirect question (*Do you know where…? Could you tell me what…?*) the second part keeps normal order: *Do you know where the station is?*',
+          'In statements, inversion makes the sentence more emphatic or more formal. It is more common in writing and speeches than in conversation.',
+        ],
+        formula: ['be / modal / auxiliary', 'subject', 'main verb'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: 'A question can keep normal order: *El teu germà ve? / ¿Tu hermano viene?* An English question needs the auxiliary before the subject: *Is your brother coming?*' },
+        ],
+      },
+      checks: [
+        { id: 't2c1', type: 'choice', s: 'Could you tell me what time ___ ?', options: ['the museum opens', 'does the museum open', 'opens the museum'], a: 0, why: 'After *Could you tell me…*, the second part is an indirect question, so it keeps normal order.' },
+        { id: 't2c2', type: 'ok', s: 'Do you know where is the station?', a: 1, fix: 'Do you know where the station [is]?', why: 'In an indirect question, the verb goes after the subject.' },
+        { id: 't2c3', type: 'choice', s: 'Where ___ last summer?', options: ['you went', 'did you go', 'went you'], a: 1, why: 'A direct question in the past simple needs *did* before the subject.' },
+      ],
+    },
+    {
+      id: 't3', title: 'Inversion straight after the word', tag: 'use', where: 'Reviews, speeches, formal emails and stories',
+      why: 'These words at the start of a sentence add emphasis. They are typical of formal writing, speeches and storytelling.',
+      discover: [
+        { s: 'Rarely [do we] get a chance like this.', why: '*Rarely* comes first, so *do* comes before the subject *we*.' },
+        { s: 'Not only [did we] miss the train, but we also lost our luggage.', why: 'After *Not only*, the first clause is inverted. The second clause (*but we also lost…*) keeps normal order.' },
+      ],
+      see: [
+        { plain: 'I have rarely seen such a beautiful sunset.', inv: 'Rarely [have I] seen such a beautiful sunset.', label: 'With inversion', prompt: 'Say both aloud. Which one sounds more emphatic?' },
+        { plain: 'I didn’t know that this was only the beginning.', inv: 'Little [did I] know that this was only the beginning.', label: 'With inversion', prompt: '*Little* means “not at all”. There is no auxiliary in *I didn’t know*, so the inverted version uses *did*.' },
+      ],
+      rule: {
+        text: [
+          'When a negative word or phrase (or a phrase with *only*) comes first, put the auxiliary, modal or *be* before the subject.',
+          'If there is no auxiliary, add *do*, *does* or *did*, and use the infinitive of the main verb: *Little did I know* (not *Little did I knew*).',
+          'If the negative word is not at the start, there is no inversion: *I have never seen…* / *Never have I seen…*',
+        ],
+        formula: ['Negative word', 'auxiliary / modal / be', 'subject', 'main verb'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: 'After *Mai / Nunca* the word order does not change: *Mai he vist… / Nunca he visto…* In English you need the auxiliary before the subject: *Never have I seen…* (*Never I have seen…* is not correct).' },
+        ],
+        panel: {
+          button: 'See all the words',
+          title: 'Words that invert straight after them',
+          groups: [
+            { h: 'Inversion straight after the word or phrase', intro: 'These words come first and the inversion follows immediately.', rows: [
+              ['Never / Never before / Never again', 'Never again [will I] lend Jordan my car.'],
+              ['Rarely / Seldom', 'Seldom [do we] get such clear skies in winter.'],
+              ['Little (with *know*, *realise*, *suspect*)', 'Little [did they] suspect that the shop was closing for good.'],
+              ['Not once / Not a single + noun', 'Not once [did the referee] look at the screen.'],
+              ['Nowhere', 'Nowhere [will you] find a better view of the bay.'],
+              ['At no point / At no time', 'At no point [did anyone] mention the extra charge.'],
+              ['Under no circumstances / On no account / In no way', 'On no account [should you] share your password.'],
+              ['Only then / Only later / Only now / Only recently', 'Only later [did we] find out the truth.'],
+            ]},
+            { h: 'The first clause inverts, the second keeps normal order', intro: 'These patterns have two parts. Only the first part is inverted.', rows: [
+              ['Not only … but (also)', 'Not only [is the flat] cheap, but it is also very central.'],
+              ['No sooner … than', 'No sooner [had I] closed my eyes than the phone rang.'],
+              ['Hardly / Scarcely / Barely … when / before', 'Barely [had the match] started when it began to pour.'],
+              ['So + adjective … that', 'So strong [was the wind] that the ferry was cancelled.'],
+              ['Such + be … that', 'Such [was the demand] that the tickets sold out in an hour.'],
+            ]},
+          ],
+        },
+      },
+      checks: [
+        { id: 't3c1', type: 'choice', s: 'Never ___ such a rude waiter.', options: ['had I met', 'I had met', 'I met'], a: 0, why: '*Never* comes first, so the auxiliary *had* comes before the subject *I*.' },
+        { id: 't3c2', type: 'choice', s: 'Little ___ that the house was haunted.', options: ['they knew', 'knew they', 'did they know'], a: 2, why: 'There is no auxiliary in *they knew*, so add *did* and use the infinitive *know*.' },
+        { id: 't3c3', type: 'ok', s: 'Under no circumstances you should leave the building.', a: 1, fix: 'Under no circumstances [should you] leave the building.', why: '*Under no circumstances* comes first, so the modal *should* goes before the subject.' },
+        { id: 't3c4', type: 'choice', s: 'No sooner had the film started ___ the lights came on.', options: ['when', 'than', 'that'], a: 1, why: '*No sooner* goes with *than*. *Hardly*, *Scarcely* and *Barely* go with *when* or *before*.' },
+        { id: 't3c5', type: 'choice', s: 'Not only ___ the exam, but she also got the highest mark.', options: ['she passed', 'did she pass', 'passed she'], a: 1, why: 'After *Not only*, the first clause is inverted with *did*. The second clause keeps normal order.' },
+        { id: 't3c6', type: 'ok', s: 'At no point did the manager apologise.', a: 0, fix: 'At no point [did the manager] apologise.', why: '*At no point* comes first, so *did* comes before the subject, and the main verb is in the infinitive.' },
+      ],
+      links: [
+        { title: 'Matching activity (LearningApps)', desc: 'Match each sentence with inversion to the same sentence without it.', url: 'https://learningapps.org/watch?v=p7ywnvhun22' },
+      ],
+    },
+    {
+      id: 't4', title: 'Inversion in the second clause', tag: 'use', where: 'Stories, news reports and formal writing',
+      why: 'With these patterns the inversion waits until the main clause, which builds suspense.',
+      diagram: { c1: 'Only when the lights came on', c2: '[did we] see the damage.' },
+      discover: [
+        { s: 'Not until the guests had left [did I] open the presents.', why: 'The first clause (*the guests had left*) keeps normal order. The inversion comes in the main clause: *did I open*.' },
+      ],
+      see: [
+        { plain: 'We only saw the damage when the lights came on.', inv: 'Only when the lights came on [did we] see the damage.', label: 'With inversion', prompt: 'Read the first part, pause, then read the second part. Where does the inversion come?' },
+        { plain: 'You will get a refund only if you keep the receipt.', inv: 'Only if you keep the receipt [will you] get a refund.', label: 'With inversion', prompt: 'The clause after *Only if* keeps normal order (*you keep*). The main clause is inverted (*will you get*).' },
+      ],
+      rule: {
+        text: [
+          '*Not until*, *Only when*, *Only after*, *Only if*, *Only once* and *Not since* are often followed by a full clause (subject + verb). That clause keeps normal order.',
+          'The inversion comes in the main clause, which is the second part of the sentence.',
+          'When these words are followed by a short phrase instead of a clause, the inversion comes straight after the phrase: *Not until Friday will we know.*',
+        ],
+        formula: ['Not until / Only when … + clause', 'auxiliary / modal / be', 'subject', 'main verb'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: '*Només quan va arribar me’n vaig adonar / Solo cuando llegó me di cuenta*: no inversion. In English the main clause is inverted: *Only when she arrived did I realise.*' },
+          { kind: 'us', title: 'UK and US', text: 'British English writes *realise*. American English writes *realize*. Both are correct.' },
+        ],
+        panel: {
+          button: 'See the complete list',
+          title: 'Where does the inversion come?',
+          groups: [
+            { h: '1. Followed by a clause: inversion in the main clause', intro: 'The clause after these words keeps normal order. The second part of the sentence is inverted.', rows: [
+              ['Not until / Not till', 'Not until the lights went out [did we] notice the storm.'],
+              ['Only when', 'Only when the results came out [did they] relax.'],
+              ['Only after', 'Only after everyone had left [did Robin] open the letter.'],
+              ['Only if', 'Only if you apologise [will Casey] speak to you again.'],
+              ['Only once (= only after)', 'Only once the contract is signed [can we] start.'],
+              ['Not since', 'Not since we moved here [have I] slept so well.'],
+            ]},
+            { h: '2. Followed by a phrase: inversion straight after the phrase', intro: 'With a short phrase and no clause, the inversion comes immediately.', rows: [
+              ['Not until + time', 'Not until Friday [will we] know the results.'],
+              ['Only after + noun', 'Only after the interview [did Sam] feel calm.'],
+              ['Only by + -ing', 'Only by working together [can we] finish on time.'],
+              ['Only with + noun', 'Only with a lot of help [did they] manage to move house.'],
+              ['Only in this way', 'Only in this way [will we] reduce waste.'],
+            ]},
+            { h: '3. The opposite: the first clause inverts', intro: 'With these patterns, the first part is inverted and the second part keeps normal order.', rows: [
+              ['No sooner … than', 'No sooner [had we] landed than it started to snow.'],
+              ['Hardly / Scarcely / Barely … when / before', 'Hardly [had I] sat down when the fire alarm went off.'],
+              ['Not only … but (also)', 'Not only [did Jamie] cook dinner, but they also did the washing-up.'],
+              ['So + adjective … that', 'So tired [were we] that we fell asleep on the bus.'],
+              ['Such + be … that', 'Such [was the noise] that nobody could hear the speech.'],
+            ]},
+            { h: '4. No inversion', intro: 'When *only* goes with the subject, the word order does not change.', rows: [
+              ['Only + subject', 'Only you can decide.'],
+            ]},
+          ],
+        },
+      },
+      checks: [
+        { id: 't4c1', type: 'where', first: 'Not until the plane landed', full: 'Not until the plane landed [did we] finally relax.', a: 1, why: '*Not until* is followed by a clause (*the plane landed*), so the inversion comes later, in the main clause.' },
+        { id: 't4c2', type: 'where', first: 'Only after midnight', full: 'Only after midnight [did the music] stop.', a: 0, why: '*Only after* is followed by a short phrase (*midnight*), not a clause, so the inversion comes straight after it.' },
+        { id: 't4c3', type: 'where', first: 'Only after the band had finished', full: 'Only after the band had finished [could we] hear each other.', a: 1, why: 'Here *Only after* is followed by a clause (*the band had finished*), so the main clause is inverted.' },
+        { id: 't4c4', type: 'choice', s: 'Only if you book in advance ___ a table.', options: ['you will get', 'will you get', 'you get'], a: 1, why: 'The clause after *Only if* keeps normal order. The main clause is inverted.' },
+        { id: 't4c5', type: 'choice', s: 'Not since we were at school ___ so much.', options: ['have we laughed', 'we have laughed', 'did we laugh'], a: 0, why: 'The main clause is inverted. *Since* needs the present perfect, so the answer is *have we laughed*.' },
+        { id: 't4c6', type: 'ok', s: 'Only when I got home I realised that I had lost my keys.', a: 1, fix: 'Only when I got home [did I] realise that I had lost my keys.', why: 'The main clause must be inverted. There is no auxiliary in *I realised*, so add *did* and use *realise*.' },
+      ],
+    },
+    {
+      id: 't5', title: 'Conditionals without if', tag: 'use', where: 'Formal emails, letters and official notices',
+      why: 'This is a formal way of writing conditionals. It is very common in formal emails and letters.',
+      discover: [
+        { s: '[Should you] have any questions, please contact reception.', why: '*Should you have…* means *If you have…*. *Should* comes before the subject *you*.' },
+      ],
+      see: [
+        { plain: 'If you need more information, please let us know.', inv: '[Should you] need more information, please let us know.', label: 'Formal', prompt: 'Which version would you expect in an email from a hotel?' },
+        { plain: 'If I had known about the strike, I would have taken the bus.', inv: '[Had I] known about the strike, I would have taken the bus.', label: 'Formal', prompt: '*If* disappears and *had* moves before the subject.' },
+        { plain: 'If I were in your position, I would accept the offer.', inv: '[Were I] in your position, I would accept the offer.', label: 'Formal', prompt: 'Say both aloud. Which one sounds more formal?' },
+      ],
+      rule: {
+        text: [
+          'In formal English, you can leave out *if* and put *should*, *were* or *had* before the subject.',
+          '*Should* + subject + infinitive = *if* + present (a possible situation, often in requests and offers).',
+          '*Were* + subject + *to* + infinitive = *if* + past (an unreal situation). With *be*, you can also say *Were I in your position…*',
+          '*Had* + subject + past participle = *if* + past perfect (an unreal past).',
+          'In the negative, put *not* after the subject: *Had I not known…* (not *Hadn’t I known…*).',
+        ],
+        formula: ['Should / Were / Had', 'subject', 'rest of the clause'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: 'Catalan and Spanish can do something similar with *de* + infinitive: *D’haver-ho sabut… / De haberlo sabido…* English uses *Had I known…*' },
+        ],
+      },
+      checks: [
+        { id: 't5c1', type: 'choice', s: '___ the weather be bad, the match will be postponed.', options: ['Should', 'Were', 'Had'], a: 0, why: '*Should* + subject + infinitive (*be*) describes a possible future situation.' },
+        { id: 't5c2', type: 'choice', s: '___ we left ten minutes earlier, we would have caught the train.', options: ['Should', 'Were', 'Had'], a: 2, why: 'This is about the past (*would have caught*), so use *Had* + past participle.' },
+        { id: 't5c3', type: 'choice', s: '___ I to win the lottery, I would buy a house in the mountains.', options: ['Should', 'Were', 'Had'], a: 1, why: '*Were* + subject + *to*-infinitive describes an unreal situation.' },
+        { id: 't5c4', type: 'ok', s: 'Hadn’t she warned us, we would have got lost.', a: 1, fix: '[Had she not] warned us, we would have got lost.', why: 'In the negative, *not* goes after the subject: *Had she not…*' },
+        { id: 't5c5', type: 'choice', s: '___ you require assistance, please call the number below.', options: ['Should', 'Were', 'Had'], a: 0, why: 'This is a formal offer of help about a possible situation, so use *Should*.' },
+      ],
+    },
+    {
+      id: 't6', title: 'Extra: place and movement', tag: 'rec', extra: true, where: 'Stories, descriptions and phrases like *Here comes…*',
+      why: 'You will meet this in stories and descriptions. You don’t need to use it yourself, but it helps to recognise it.',
+      discover: [
+        { s: 'Into the room [walked Jamie].', why: 'An expression of movement (*Into the room*) comes first, so the main verb *walked* comes before the subject *Jamie*. There is no *did*.' },
+      ],
+      see: [
+        { plain: 'A black cat sat on the wall.', inv: 'On the wall [sat a black cat].', label: 'With inversion', prompt: 'This order is typical of stories and descriptions.' },
+      ],
+      rule: {
+        text: [
+          'When an expression of place or movement comes first (*Here*, *There*, *Into the room*, *On the hill*, *Down the street*), the main verb can come before the subject.',
+          'There is no *do*, *does* or *did*. This is common with verbs such as *come*, *go*, *sit*, *stand*, *lie* and *walk*.',
+          'If the subject is a pronoun, do not invert: *Here it comes. There she goes.* (not *Here comes it*).',
+        ],
+        formula: ['Place or movement', 'main verb', 'subject (a noun)'],
+        notes: [
+          { kind: 'l1', title: 'Catalan and Spanish', text: 'The subject often goes after the verb: *Ja arriba l’autobús / Ahí viene el autobús.* English does this only in these patterns, and never with a pronoun.' },
+        ],
+      },
+      checks: [
+        { id: 't6c1', type: 'choice', s: 'Look, here ___ .', options: ['comes she', 'she comes', 'does she come'], a: 1, why: 'The subject is a pronoun (*she*), so there is no inversion: *Here she comes.*' },
+        { id: 't6c2', type: 'ok', s: 'Down the hill rolled the cheese.', a: 0, fix: 'Down the hill [rolled the cheese].', why: 'The expression of movement comes first and the subject is a noun, so the verb can come before it.' },
+        { id: 't6c3', type: 'choice', s: 'On the table ___ a pile of unopened letters.', options: ['did lie', 'lies it', 'lay'], a: 2, why: 'After a place expression, the main verb comes before the subject. There is no *did*.' },
+      ],
+      links: [
+        { title: 'Digital board game (Genially)', desc: 'Play the inversion board game in teams.', url: 'https://view.genially.com/6388a6d44d6ed6001ba92f7c/interactive-content-inversions' },
+      ],
+    },
+  ],
+
+  // Common mistakes at this level, shown in My mistakes.
+  commonMistakes: [
+    { bad: 'Never I have seen such a mess.', good: 'Never [have I] seen such a mess.', note: 'Catalan and Spanish keep normal order after *Mai / Nunca*. English inverts.' },
+    { bad: 'Only when he arrived did he realised.', good: 'Only when he arrived [did he] realise.', note: 'After *do*, *does* or *did*, use the infinitive.' },
+    { bad: 'Only when did I arrive I realised.', good: 'Only when I arrived [did I] realise.', note: 'With *Only when* + clause, the main clause is inverted.' },
+    { bad: 'Hadn’t I known, I would have come.', good: '[Had I not] known, I would have come.', note: 'In inverted conditionals, *not* goes after the subject.' },
+    { bad: '“I don’t eat meat.” “Neither I.”', good: '“I don’t eat meat.” “Neither [do I].”', note: 'Like *Jo tampoc / Yo tampoco*, but English needs the auxiliary.' },
+    { bad: 'Here comes it!', good: 'Here it comes!', note: 'No inversion when the subject is a pronoun.' },
+    { bad: 'Do you know where is the station?', good: 'Do you know where the station [is]?', note: 'Indirect questions keep normal order.' },
+  ],
+
+  // Further practice, shown in More practice.
+  // href = link opened from the page (relative, same folder); url = full address used for the QR code.
+  more: [
+    { title: 'Matching activity (LearningApps)', desc: 'Match each sentence with inversion to the same sentence without it.', url: 'https://learningapps.org/watch?v=p7ywnvhun22' },
+    { title: 'Digital board game (Genially)', desc: 'Play the inversion board game in teams.', url: 'https://view.genially.com/6388a6d44d6ed6001ba92f7c/interactive-content-inversions' },
+    { title: 'Inversion Conversion (speaking game)', desc: 'A card game for groups of three on one phone: change sentences to use inversion, then use it in short speeches and stories.', href: 'b22-inversion-conversion.html', url: 'https://as1-design.github.io/english-learning-activities/b22-inversion-conversion.html' },
+    { title: 'Practice and speaking', desc: 'Team mode for the board, Just me practice with My mistakes (including the ones from this hub), and a review speaking activity.', href: 'b22-inversion-practice.html', url: 'https://as1-design.github.io/english-learning-activities/b22-inversion-practice.html' },
+  ],
+};
+
+/* ================= state ================= */
+const KEY = 'b22-inversion.v1', PKEY = 'b22-inversion.prefs';
+// S is saved: ans = answers per check id, disc = discover answers, done = finished topics, mistakes = ids.
+let S = { v: 1, ans: {}, disc: {}, done: {}, mistakes: [] };
+let P = { sound: true };
+// V is the view (not saved): where we are and temporary display states.
+const V = { screen: 'home', t: 0, step: 0, panel: false, swapped: {}, qr: {}, mDeck: [], mAns: {}, confirmReset: false, lastKey: '' };
+
+/* ================= logic ================= */
+const T = i => CONTENT.topics[i];
+const allChecks = () => CONTENT.topics.flatMap(t => t.checks);
+const checkById = id => allChecks().find(c => c.id === id);
+const optionsOf = c => c.type === 'ok' ? CONTENT.okOptions : c.type === 'where' ? CONTENT.whereOptions : c.options;
+
+function stepsFor(t){
+  const st = [];
+  t.discover.forEach(d => st.push({ kind: 'discover', item: d }));
+  t.see.forEach((p, i) => st.push({ kind: 'see', item: p, key: t.id + 's' + i }));
+  st.push({ kind: 'rule', item: t.rule });
+  t.checks.forEach(c => st.push({ kind: 'check', item: c }));
+  st.push({ kind: 'done' });
+  return st;
+}
+function mistakeSteps(){
+  const st = [{ kind: 'mintro' }];
+  V.mDeck.forEach(id => { const c = checkById(id); if (c) st.push({ kind: 'check', item: c, mist: true }); });
+  if (V.mDeck.length) st.push({ kind: 'mdone' });
+  return st;
+}
+function currentSteps(){ return V.screen === 'mist' ? mistakeSteps() : stepsFor(T(V.t)); }
+function ansStore(mist){ return mist ? V.mAns : S.ans; }
+
+function pick(item, idx, mist){
+  const store = ansStore(mist);
+  const st = store[item.id] || { p: [], done: false, first: false, auto: false };
+  if (st.done || st.p.includes(idx)) return null;
+  st.p.push(idx);
+  const n = optionsOf(item).length;
+  if (idx === item.a){ st.done = true; st.first = st.p.length === 1; }
+  else if (n - st.p.length <= 1){ st.done = true; st.first = false; st.auto = true; }
+  store[item.id] = st;
+  if (st.done){
+    if (mist){ if (st.first) S.mistakes = S.mistakes.filter(x => x !== item.id); }
+    else if (!st.first && !S.mistakes.includes(item.id)) S.mistakes.push(item.id);
+  }
+  save();
+  return idx === item.a ? 'right' : (st.done ? 'shown' : 'wrong');
+}
+function toggleTok(id, i){
+  const d = S.disc[id] || { sel: [], checked: false };
+  if (d.checked) return;
+  d.sel = d.sel.includes(i) ? d.sel.filter(x => x !== i) : d.sel.concat(i);
+  S.disc[id] = d; save();
+}
+function checkDisc(id){ const d = S.disc[id] || { sel: [], checked: false }; d.checked = true; S.disc[id] = d; save(); }
+function topicScore(t){
+  let first = 0, answered = 0;
+  t.checks.forEach(c => { const a = S.ans[c.id]; if (a && a.done){ answered++; if (a.first) first++; } });
+  return { first, answered, total: t.checks.length };
+}
+function canGoNext(){
+  const steps = currentSteps(), s = steps[V.step];
+  if (!s) return false;
+  if (s.kind === 'check'){ const a = ansStore(s.mist)[s.item.id]; return !!(a && a.done); }
+  return true;
+}
+function go(delta){
+  const steps = currentSteps();
+  const ns = V.step + delta;
+  if (delta > 0 && !canGoNext()) return;
+  if (ns < 0) return;
+  if (ns >= steps.length){
+    if (V.screen === 'topic'){ if (V.t < CONTENT.topics.length - 1) openTopic(V.t + 1); else home(); }
+    else home();
+    return;
+  }
+  V.step = ns; V.panel = false;
+  if (V.screen === 'topic' && steps[ns].kind === 'done'){ S.done[T(V.t).id] = true; save(); }
+  render();
+}
+function openTopic(i){ V.screen = 'topic'; V.t = i; V.step = 0; V.panel = false; render(); scrollTo(0, 0); }
+function home(){ V.screen = 'home'; V.panel = false; render(); scrollTo(0, 0); }
+function openMist(){ V.screen = 'mist'; V.mDeck = S.mistakes.filter(id => checkById(id)); V.mAns = {}; V.step = 0; render(); scrollTo(0, 0); }
+function resetAll(){ S = { v: 1, ans: {}, disc: {}, done: {}, mistakes: [] }; V.swapped = {}; V.confirmReset = false; store.clear(); }
+
+/* ================= text helpers ================= */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// [x] → highlighted inverted words, *x* → italics, ___ → gap
+function fmt(s, fill){
+  let h = esc(s);
+  h = h.replace(/\[([^\]]+)\]/g, '<mark class="inv">$1</mark>');
+  h = h.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  h = h.replace(/_{3,}/g, fill != null ? `<mark class="inv">${esc(fill)}</mark>` : '<span class="gap" aria-label="gap"></span>');
+  return h;
+}
+// Split a sentence into word tokens. Returns [{w, hl, p}] where p = punctuation token.
+function tokens(s){
+  const out = []; let inB = false;
+  s.split(/\s+/).filter(Boolean).forEach(raw => {
+    let w = raw, end = false, punct = '';
+    const lead = w.match(/^[“"‘]+/); if (lead){ out.push({ w: lead[0], p: 'l' }); w = w.slice(lead[0].length); }
+    if (w.startsWith('[')){ inB = true; w = w.slice(1); }
+    const tail = w.match(/[.,!?;:”"]+$/); if (tail){ punct = tail[0]; w = w.slice(0, -punct.length); }
+    if (w.endsWith(']')){ end = true; w = w.slice(0, -1); }
+    if (w) out.push({ w, hl: inB });
+    if (end) inB = false;
+    if (punct) out.push({ w: punct, p: 't' });
+  });
+  return out;
+}
+
+/* ================= QR code (offline, byte mode, level M, versions 1–10) ================= */
+const QR = (() => {
+  const EC = [null,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],[16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44]];
+  const AL = [null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]];
+  const mul = (x, y) => { let z = 0; for (let i = 7; i >= 0; i--){ z = (z << 1) ^ ((z >>> 7) * 0x11D); z ^= ((y >>> i) & 1) * x; } return z & 255; };
+  const div = d => { const r = new Array(d).fill(0); r[d - 1] = 1; let root = 1; for (let i = 0; i < d; i++){ for (let j = 0; j < d; j++){ r[j] = mul(r[j], root); if (j + 1 < d) r[j] ^= r[j + 1]; } root = mul(root, 2); } return r; };
+  const rem = (data, dv) => { const r = dv.map(() => 0); for (const b of data){ const f = b ^ r.shift(); r.push(0); dv.forEach((c, i) => { r[i] ^= mul(c, f); }); } return r; };
+  return function make(text){
+    const bytes = Array.from(new TextEncoder().encode(text));
+    let ver = 0;
+    for (let v = 1; v <= 10; v++){ const e = EC[v], cap = e[1] * e[2] + e[3] * e[4]; const cb = v < 10 ? 8 : 16; if (4 + cb + bytes.length * 8 <= cap * 8){ ver = v; break; } }
+    if (!ver) return null;
+    const [ecl, b1, d1, b2, d2] = EC[ver], cap = b1 * d1 + b2 * d2, size = ver * 4 + 17;
+    const bits = []; const put = (val, n) => { for (let i = n - 1; i >= 0; i--) bits.push((val >>> i) & 1); };
+    put(4, 4); put(bytes.length, ver < 10 ? 8 : 16); bytes.forEach(b => put(b, 8));
+    put(0, Math.min(4, cap * 8 - bits.length)); while (bits.length % 8) bits.push(0);
+    const data = []; for (let i = 0; i < bits.length; i += 8) data.push(parseInt(bits.slice(i, i + 8).join(''), 2));
+    for (let p = 0xEC; data.length < cap; p ^= 0xEC ^ 0x11) data.push(p);
+    const blocks = []; let k = 0; const dv = div(ecl);
+    for (let i = 0; i < b1 + b2; i++){ const len = i < b1 ? d1 : d2; const d = data.slice(k, k + len); k += len; blocks.push({ d, e: rem(d, dv) }); }
+    const all = []; const maxD = Math.max(d1, d2);
+    for (let i = 0; i < maxD; i++) blocks.forEach(b => { if (i < b.d.length) all.push(b.d[i]); });
+    for (let i = 0; i < ecl; i++) blocks.forEach(b => all.push(b.e[i]));
+    const M = Array.from({ length: size }, () => new Array(size).fill(false));
+    const F = Array.from({ length: size }, () => new Array(size).fill(false));
+    const set = (x, y, v) => { M[y][x] = v; F[y][x] = true; };
+    for (let i = 0; i < size; i++){ set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    [[3, 3], [size - 4, 3], [3, size - 4]].forEach(([cx, cy]) => { for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++){ const x = cx + dx, y = cy + dy; if (x >= 0 && x < size && y >= 0 && y < size){ const d = Math.max(Math.abs(dx), Math.abs(dy)); set(x, y, d !== 2 && d !== 4); } } });
+    const al = AL[ver], last = al.length - 1;
+    al.forEach((ax, i) => al.forEach((ay, j) => { if ((i === 0 && j === 0) || (i === 0 && j === last) || (i === last && j === 0)) return; for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) set(ax + dx, ay + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1); }));
+    const fmtBits = mask => { const d = (0 << 3) | mask; let r = d; for (let i = 0; i < 10; i++) r = (r << 1) ^ ((r >>> 9) * 0x537); const b = ((d << 10) | r) ^ 0x5412; const g = i => ((b >>> i) & 1) === 1;
+      for (let i = 0; i <= 5; i++) set(8, i, g(i)); set(8, 7, g(6)); set(8, 8, g(7)); set(7, 8, g(8));
+      for (let i = 9; i < 15; i++) set(14 - i, 8, g(i));
+      for (let i = 0; i < 8; i++) set(size - 1 - i, 8, g(i));
+      for (let i = 8; i < 15; i++) set(8, size - 15 + i, g(i));
+      set(8, size - 8, true); };
+    fmtBits(0);
+    if (ver >= 7){ let r = ver; for (let i = 0; i < 12; i++) r = (r << 1) ^ ((r >>> 11) * 0x1F25); const b = (ver << 12) | r;
+      for (let i = 0; i < 18; i++){ const v = ((b >>> i) & 1) === 1, a = size - 11 + (i % 3), c = Math.floor(i / 3); set(a, c, v); set(c, a, v); } }
+    let bi = 0;
+    for (let right = size - 1; right >= 1; right -= 2){ if (right === 6) right = 5;
+      for (let vert = 0; vert < size; vert++) for (let j = 0; j < 2; j++){ const x = right - j, up = ((right + 1) & 2) === 0, y = up ? size - 1 - vert : vert;
+        if (!F[y][x] && bi < all.length * 8){ M[y][x] = ((all[bi >>> 3] >>> (7 - (bi & 7))) & 1) === 1; bi++; } } }
+    const masks = [(x, y) => (x + y) % 2 === 0, (x, y) => y % 2 === 0, (x) => x % 3 === 0, (x, y) => (x + y) % 3 === 0, (x, y) => (Math.floor(x / 3) + Math.floor(y / 2)) % 2 === 0, (x, y) => x * y % 2 + x * y % 3 === 0, (x, y) => (x * y % 2 + x * y % 3) % 2 === 0, (x, y) => ((x + y) % 2 + x * y % 3) % 2 === 0];
+    const apply = m => { for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (!F[y][x] && masks[m](x, y)) M[y][x] = !M[y][x]; };
+    const penalty = () => { let p = 0, dark = 0;
+      for (let y = 0; y < size; y++){ let run = 1, runV = 1; for (let x = 0; x < size; x++){ if (M[y][x]) dark++;
+        if (x > 0){ if (M[y][x] === M[y][x - 1]){ run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1;
+                    if (M[x][y] === M[x - 1][y]){ runV++; if (runV === 5) p += 3; else if (runV > 5) p++; } else runV = 1; }
+        if (x < size - 1 && y < size - 1 && M[y][x] === M[y][x + 1] && M[y][x] === M[y + 1][x] && M[y][x] === M[y + 1][x + 1]) p += 3; } }
+      p += Math.floor(Math.abs(dark * 20 - size * size * 10) / (size * size)) * 10; return p; };
+    let best = 0, bestP = Infinity;
+    for (let m = 0; m < 8; m++){ apply(m); fmtBits(m); const p = penalty(); if (p < bestP){ bestP = p; best = m; } apply(m); }
+    apply(best); fmtBits(best);
+    let path = ''; for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) if (M[y][x]) path += `M${x + 4} ${y + 4}h1v1h-1z`;
+    const n = size + 8;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR code"><rect width="${n}" height="${n}" fill="#fff"/><path d="${path}" fill="#000"/></svg>`;
+  };
+})();
+function pageUrl(){
+  if (/^https?:/.test(location.protocol)) return location.origin + location.pathname;
+  return CONTENT.publishedUrl;
+}
+
+/* ================= display ================= */
+const app = document.getElementById('app');
+function tagPill(t){ return t.tag === 'use' ? '<span class="pill use">Use it</span>' : '<span class="pill rec">Recognise it</span>'; }
+
+function render(){
+  document.body.classList.toggle('has-bar', V.screen === 'topic' || V.screen === 'mist');
+  if (V.screen === 'home') renderHome();
+  else if (V.screen === 'topic' || V.screen === 'mist') renderStep();
+  else if (V.screen === 'more') renderMore();
+  else if (V.screen === 'settings') renderSettings();
+  renderBar();
+}
+
+function renderHome(){
+  const tiles = CONTENT.topics.map((t, i) => {
+    const sc = topicScore(t), done = S.done[t.id];
+    const status = done ? `✓ Done · ${sc.first} of ${sc.total} right first time` : (sc.answered || Object.keys(S.disc).some(k => k.startsWith(t.id + 'd')) ? 'In progress' : 'Not started');
+    return `<button class="tile${done ? ' done' : ''}${t.extra ? ' extra' : ''}" data-act="topic" data-i="${i}">
+      <span class="num" aria-hidden="true">${i + 1}</span>
+      ${tagPill(t)}
+      <h2><span class="sr">Topic ${i + 1}: </span>${fmt(t.title)}</h2>
+      <span class="where">Where you’ll see it: ${fmt(t.where)}</span>
+      <span class="status">${status}</span>
+    </button>`;
+  }).join('');
+  const nextI = CONTENT.topics.findIndex(t => !S.done[t.id]);
+  const startLabel = nextI === -1 ? 'Start again from topic 1' : (nextI === 0 && !Object.keys(S.ans).length ? 'Start with topic 1' : `Continue with topic ${nextI + 1}`);
+  const n = S.mistakes.filter(id => checkById(id)).length;
+  app.innerHTML = `
+    <header class="hero">
+      <h1>${esc(CONTENT.title)}</h1>
+      <div class="echo" aria-hidden="true">${esc(CONTENT.title)}</div>
+      <p class="sub">${esc(CONTENT.subtitle)}</p>
+    </header>
+    <div class="cando"><b>Can do</b>${esc(CONTENT.canDo)}</div>
+    <div class="start row"><button class="btn primary" data-act="topic" data-i="${nextI === -1 ? 0 : nextI}">${startLabel} →</button></div>
+    <div class="tiles">${tiles}</div>
+    <div class="row home-more">
+      <button class="btn mistbtn" data-act="mist">My mistakes (${n})</button>
+      <button class="btn morebtn" data-act="more">More practice</button>
+      <button class="btn ghost" data-act="settings">⚙ Settings</button>
+    </div>`;
+  V.lastKey = 'home';
+}
+
+function stepCard(s, key, inner){
+  const fresh = key !== V.lastKey; V.lastKey = key;
+  return `<div class="card${fresh ? ' enter' : ''}">${inner}</div>`;
+}
+
+function renderStep(){
+  const steps = currentSteps(), s = steps[V.step];
+  const isMist = V.screen === 'mist';
+  const t = isMist ? null : T(V.t);
+  let head;
+  if (isMist){
+    head = `<div class="tophead"><button class="btn ghost" data-act="home">← Topics</button><h1>My mistakes</h1></div>`;
+  } else {
+    head = `<div class="tophead"><button class="btn ghost" data-act="home">← Topics</button><h1>${V.t + 1}. ${fmt(t.title)}</h1></div>
+      <div class="meta">${tagPill(t)}<span>Where you’ll see it: ${fmt(t.where)}</span></div>
+      ${V.step === 0 ? `<p class="why">${fmt(t.why)}</p>` : ''}`;
+  }
+  const key = V.screen + V.t + '-' + V.step + (V.panel ? 'p' : '');
+  let inner = '';
+  if (s.kind === 'discover') inner = discoverHTML(s.item, t.id + 'd' + t.discover.indexOf(s.item));
+  else if (s.kind === 'see') inner = seeHTML(s);
+  else if (s.kind === 'rule') inner = V.panel ? panelHTML(s.item.panel) : ruleHTML(s.item, t);
+  else if (s.kind === 'check') inner = (t && t.diagram ? diagramHTML(t.diagram, true) : '') + checkHTML(s.item, s.mist);
+  else if (s.kind === 'done') inner = doneHTML(t);
+  else if (s.kind === 'mintro') inner = mintroHTML();
+  else if (s.kind === 'mdone') inner = mdoneHTML();
+  app.innerHTML = head + stepCard(s, key, inner);
+}
+
+function discoverHTML(item, id){
+  const d = S.disc[id] || { sel: [], checked: false };
+  const toks = tokens(item.s);
+  const answer = toks.map((tk, i) => tk.hl ? i : -1).filter(i => i >= 0);
+  const exact = d.checked && answer.length === d.sel.length && answer.every(i => d.sel.includes(i));
+  const tk = toks.map((tk, i) => {
+    if (tk.p) return `<span class="punct ${tk.p}">${esc(tk.w)}</span>`;
+    const on = d.sel.includes(i);
+    let cls = 'tok', mark = '', sr = '';
+    if (d.checked){ if (tk.hl && on){ cls += ' ok'; mark = '✓'; sr = ' (right)'; } else if (tk.hl){ cls += ' miss'; mark = '!'; sr = ' (missed)'; } else if (on){ cls += ' bad'; mark = '✗'; sr = ' (not inverted)'; } }
+    return `<button class="${cls}" data-act="tok" data-id="${id}" data-i="${i}" aria-pressed="${on}"${d.checked ? ' disabled' : ''}>${esc(tk.w)}${mark ? `<span class="badge" aria-hidden="true">${mark}</span><span class="sr">${sr}</span>` : ''}</button>`;
+  }).join('');
+  let fb = '';
+  if (d.checked){
+    fb = `<div class="fb ${exact ? 'good' : 'shown'}"><b class="v">${exact ? 'Well spotted!' : 'Here are the inverted words:'}</b><p>${fmt(item.s)}</p><p>${fmt(item.why)}</p></div>`;
+  }
+  return `<p class="kicker">Spot it</p><p class="instr">${esc(CONTENT.instr.discover)}</p>
+    <div class="toks">${tk}</div>
+    <div class="row"><button class="btn primary" style="min-width:9rem" data-act="checkdisc" data-id="${id}"${d.checked ? ' disabled' : ''}>${d.checked ? 'Checked ✓' : 'Check'}</button></div>${fb}`;
+}
+
+function seeTokens(s, swapped){
+  const plain = tokens(s.item.plain), inv = tokens(s.item.inv);
+  const count = {};
+  plain.forEach(tk => { const k = tk.w.toLowerCase(); count[k] = (count[k] || 0) + 1; tk.key = k + '#' + count[k]; });
+  const used = {};
+  inv.forEach((tk, i) => { const k = tk.w.toLowerCase(); used[k] = (used[k] || 0) + 1; const key = k + '#' + used[k]; tk.key = plain.some(p => p.key === key) ? key : 'new' + i; });
+  return swapped ? inv : plain;
+}
+function seeSentenceHTML(s, swapped){
+  return seeTokens(s, swapped).map(tk => `<span class="wt${tk.p ? ' pu' : ''}${!tk.p && tk.hl && swapped ? ' hl' : ''}" data-k="${esc(tk.key)}">${esc(tk.w)}</span>`).join(' ')
+    .replace(/ (<span class="wt pu")/g, '$1');
+}
+function seeHTML(s){
+  const sw = !!V.swapped[s.key];
+  return `<p class="kicker">See it</p><p class="instr">${esc(CONTENT.instr.see)}</p>
+    <div class="swapbox"><div class="swaplabel${sw ? ' on' : ''}" id="swl">${sw ? esc(s.item.label) : 'Plain order'}</div>
+    <p class="sent" id="swsent">${seeSentenceHTML(s, sw)}</p></div>
+    <div class="row"><button class="btn primary swap" data-act="swap" data-k="${s.key}">${sw ? 'Show plain order' : 'Swap word order'}</button></div>
+    <p class="prompt">${fmt(s.item.prompt)}</p>`;
+}
+function doSwap(btn){
+  const steps = currentSteps(), s = steps[V.step]; if (!s || s.kind !== 'see') return;
+  const box = document.getElementById('swsent'); if (!box) return;
+  const before = {}; box.querySelectorAll('.wt').forEach(el => { before[el.dataset.k] = el.getBoundingClientRect(); });
+  V.swapped[s.key] = !V.swapped[s.key];
+  const sw = V.swapped[s.key];
+  box.innerHTML = seeSentenceHTML(s, sw);
+  const lab = document.getElementById('swl'); lab.textContent = sw ? s.item.label : 'Plain order'; lab.classList.toggle('on', sw);
+  btn.textContent = sw ? 'Show plain order' : 'Swap word order';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  box.querySelectorAll('.wt').forEach(el => {
+    const b = before[el.dataset.k];
+    if (reduce) return;
+    if (!b){ el.classList.add('fresh'); return; }
+    const a = el.getBoundingClientRect(), dx = b.left - a.left, dy = b.top - a.top;
+    if (dx || dy){ el.style.transform = `translate(${dx}px,${dy}px)`; el.style.transition = 'none';
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = 'transform .6s cubic-bezier(.34,1.3,.64,1)'; el.style.transform = ''; })); }
+    if (sw && el.classList.contains('hl')) setTimeout(() => el.classList.add('pop'), 450);
+  });
+  sfx.tap();
+}
+
+function noteHTML(n){ return `<div class="note ${n.kind}"><h3>${n.kind === 'l1' ? '🗣 ' : n.kind === 'us' ? '🇬🇧🇺🇸 ' : ''}${esc(n.title)}</h3><p>${fmt(n.text)}</p></div>`; }
+function formulaHTML(f){ return `<div class="formula" aria-label="Pattern">${f.map((c, i) => `${i ? '<span class="plus">+</span>' : ''}<span class="chip${i === 1 ? ' k' : ''}">${fmt(c)}</span>`).join('')}</div>`; }
+function diagramHTML(d, pinned){
+  return `<div class="diagram${pinned ? ' pinned' : ''}" aria-label="Two-part sentence"><div class="dpart"><small>Part 1 · normal order</small><div>${fmt(d.c1)}</div></div><span class="hinge" aria-hidden="true">→</span><div class="dpart two"><small>Part 2 · inversion</small><div>${fmt(d.c2)}</div></div></div>`;
+}
+function ruleHTML(r, t){
+  return `<p class="kicker">The rule</p>
+    ${t.diagram ? diagramHTML(t.diagram, false) : ''}
+    <div class="rule">${r.text.map(p => `<p>${fmt(p)}</p>`).join('')}</div>
+    ${formulaHTML(r.formula)}
+    ${r.notes.map(noteHTML).join('')}
+    ${r.panel ? `<div class="row panelbtn"><button class="btn" data-act="panel">${esc(r.panel.button)} →</button></div>` : ''}`;
+}
+function panelHTML(p){
+  return `<div class="row" style="margin-bottom:.8rem"><button class="btn" data-act="panelback">← Back to the rule</button></div>
+    <p class="kicker">Complete list</p><h2 style="margin-bottom:.8rem">${esc(p.title)}</h2>
+    ${p.groups.map(g => `<div class="listgrp"><h3>${esc(g.h)}</h3><p class="intro">${fmt(g.intro)}</p>
+      ${g.rows.map(r => `<div class="trow"><b>${fmt(r[0])}</b><span>${fmt(r[1])}</span></div>`).join('')}</div>`).join('')}`;
+}
+
+function checkHTML(c, mist){
+  const st = ansStore(mist)[c.id] || { p: [], done: false };
+  const opts = optionsOf(c);
+  let sent = '';
+  if (c.type === 'choice') sent = `<p class="sent">${fmt(c.s, st.done ? opts[c.a] : null)}</p>`;
+  else if (c.type === 'reply') sent = `<p class="sent quote">${fmt(c.s)}</p><p class="sent">→ ${st.done ? `<mark class="inv">${esc(opts[c.a])}</mark>` : '<span class="gap" aria-label="gap"></span>'}</p>`;
+  else if (c.type === 'ok') sent = `<p class="sent">${fmt(c.s)}</p>`;
+  else if (c.type === 'where') sent = `<p class="sent">${st.done ? fmt(c.full) : fmt(c.first) + ' …'}</p>`;
+  const ob = opts.map((o, i) => {
+    const tried = st.p.includes(i), right = i === c.a;
+    let cls = 'opt', mk = '';
+    if (right && st.done){ cls += ' right'; mk = '✓'; }
+    else if (tried){ cls += ' wrong'; mk = '✗'; }
+    return `<button class="${cls}" data-act="pick" data-i="${i}"${st.done || tried ? ' disabled' : ''}>${mk ? `<span class="badge" aria-hidden="true">${mk}</span>` : ''}${esc(o)}${mk === '✓' ? '<span class="sr"> (correct answer)</span>' : mk === '✗' ? '<span class="sr"> (wrong)</span>' : ''}</button>`;
+  }).join('');
+  let fb = '';
+  if (st.done){
+    const verdict = st.auto ? 'Here is the answer.' : st.first ? 'Right!' : 'Right, on a second try.';
+    const extra = c.type === 'ok' && c.fix ? `<p class="fix">${c.a === 1 ? 'Correct version: ' : ''}${fmt(c.fix)}</p>` : '';
+    const note = mist ? (st.first ? '<p>This one has been removed from your mistakes.</p>' : '<p>This one stays in your mistakes for next time.</p>') : (!st.first ? '<p>It has been added to My mistakes.</p>' : '');
+    fb = `<div class="fb ${st.first ? 'good' : 'shown'}" role="status"><b class="v">${verdict}</b>${extra}<p>${fmt(c.why)}</p>${note}</div>`;
+  } else if (st.p.length){
+    fb = `<div class="fb try" role="status"><b class="v">Not quite. Try again.</b></div>`;
+  }
+  const instr = CONTENT.instr[c.type];
+  const from = mist ? CONTENT.topics.findIndex(t => t.checks.includes(c)) : -1;
+  return `<p class="kicker">Quick check${from >= 0 ? ` · from topic ${from + 1}` : ''}</p><p class="instr">${esc(instr)}</p>${sent}<div class="opts">${ob}</div>${fb}`;
+}
+
+function linkCard(l, key){
+  if (l.soon) return `<div class="linkcard soon"><h3>${esc(l.title)}</h3><p>${esc(l.desc)}</p></div>`;
+  const open = !!V.qr[key];
+  return `<div class="linkcard"><h3>${esc(l.title)}</h3><p>${esc(l.desc)}</p>
+    <div class="row">${l.href ? `<a class="btn primary" href="${esc(l.href)}">Open →</a>` : `<a class="btn primary" href="${esc(l.url)}" target="_blank" rel="noopener">Open ↗</a>`}
+    <button class="btn" style="min-width:10rem" data-act="qr" data-k="${esc(key)}">${open ? 'Hide QR code' : 'Show QR code'}</button></div>
+    ${open ? `<div class="qrbox">${QR(l.url) || ''}<span class="url">${esc(l.url)}</span></div>` : ''}</div>`;
+}
+function doneHTML(t){
+  const sc = topicScore(t), last = V.t === CONTENT.topics.length - 1;
+  return `<div class="donecard"><p class="kicker">Topic ${V.t + 1} finished</p><h2>${fmt(t.title)}</h2>
+    <p>You answered <b>${sc.first} of ${sc.total}</b> quick checks right the first time.${sc.first < sc.total ? ' The others are in My mistakes.' : ''}</p>
+    ${(t.links || []).map((l, i) => linkCard(l, t.id + 'l' + i)).join('')}
+    <div class="row" style="margin-top:1rem"><button class="btn" data-act="home">← All topics</button>${last ? '<button class="btn" data-act="more">More practice</button>' : ''}</div></div>`;
+}
+function mintroHTML(){
+  const n = V.mDeck.length;
+  return `<p class="kicker">Your mistakes</p>
+    <p>${n ? `You have <b>${n}</b> ${n === 1 ? 'question' : 'questions'} to practise again. Answer each one right the first time to remove it from the list. Tap Next to start.` : 'You have no saved mistakes. Questions you answer wrongly in the topics will appear here.'}</p>
+    <p class="kicker" style="margin-top:1.2rem">Common mistakes at this level</p>
+    <ul class="mistlist">${CONTENT.commonMistakes.map(m => `<li><span class="bad">${esc(m.bad)}</span><br><b>${fmt(m.good)}</b><br><small>${fmt(m.note)}</small></li>`).join('')}</ul>`;
+}
+function mdoneHTML(){
+  const left = S.mistakes.filter(id => checkById(id)).length;
+  return `<div class="donecard"><p class="kicker">Finished</p><h2>${left ? `${left} still to practise` : 'All cleared!'}</h2>
+    <p>${left ? 'The questions you did not get right the first time stay in My mistakes for next time.' : 'You have no mistakes left. Well done.'}</p>
+    <div class="row" style="margin-top:1rem"><button class="btn" data-act="home">← All topics</button></div></div>`;
+}
+
+function renderMore(){
+  app.innerHTML = `<div class="tophead"><button class="btn ghost" data-act="home">← Topics</button><h1>More practice</h1></div>
+    ${CONTENT.more.map((l, i) => linkCard(l, 'm' + i)).join('')}`;
+  V.lastKey = 'more';
+}
+function renderSettings(){
+  const open = !!V.qr.page, url = pageUrl();
+  app.innerHTML = `<div class="tophead"><button class="btn ghost" data-act="home">← Topics</button><h1>Settings</h1></div>
+    <div class="card">
+      <div class="linkcard"><h3>QR code for this page</h3><p>Show it on the board so that students can open the hub on their phones.</p>
+        <button class="btn" style="min-width:10rem" data-act="qr" data-k="page">${open ? 'Hide QR code' : 'Show QR code'}</button>
+        ${open ? `<div class="qrbox big">${QR(url) || ''}<span class="url">${esc(url)}</span></div>` : ''}</div>
+      <div class="linkcard"><h3>Sound</h3><p>Short sounds for right and wrong answers.</p>
+        <button class="btn" style="min-width:8rem" data-act="sound">${P.sound ? 'Sound: on' : 'Sound: off'}</button></div>
+      <div class="linkcard"><h3>Full screen</h3><p>Useful on the classroom board. You can also press F.</p>
+        <button class="btn" data-act="full">⛶ Full screen</button></div>
+      <div class="linkcard"><h3>Reset my progress</h3><p>This deletes your answers and your mistakes on this device.</p>
+        <button class="btn" style="min-width:14rem" data-act="reset">${V.confirmReset ? 'Tap again to confirm' : 'Reset my progress'}</button></div>
+    </div>`;
+  V.lastKey = 'settings';
+}
+
+function renderBar(){
+  if (!(V.screen === 'topic' || V.screen === 'mist')) return;
+  const steps = currentSteps(), n = steps.length;
+  document.getElementById('pos').textContent = `Step ${V.step + 1} of ${n}`;
+  const prev = document.getElementById('prevBtn'), next = document.getElementById('nextBtn');
+  prev.disabled = V.step === 0;
+  const atEnd = V.step === n - 1;
+  next.textContent = atEnd ? (V.screen === 'topic' && V.t < CONTENT.topics.length - 1 ? 'Next topic →' : 'Topics') : 'Next →';
+  next.disabled = !canGoNext();
+}
+
+/* ================= sound ================= */
+let AC = null;
+function tone(freq, dur = .12, type = 'sine', gain = .06, when = 0){
+  if (!P.sound) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const t = AC.currentTime + when, o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(gain, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t + dur + .02);
+  } catch(e){}
+}
+const sfx = {
+  tap(){ tone(660, .06, 'triangle', .04); },
+  good(){ [523, 659, 784].forEach((f, i) => tone(f, .16, 'triangle', .06, i * .07)); },
+  bad(){ tone(220, .18, 'triangle', .05); },
+};
+
+/* ================= saving ================= */
+const store = {
+  load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch(e){ return null; } },
+  save(){ try { localStorage.setItem(KEY, JSON.stringify({ ...S, v: 1, savedAt: Date.now() })); } catch(e){} },
+  clear(){ try { localStorage.removeItem(KEY); } catch(e){} },
+};
+function save(){ store.save(); }
+function savePrefs(){ try { localStorage.setItem(PKEY, JSON.stringify(P)); } catch(e){} }
+// Only accept saved data in the expected shape: ids that exist and numbers.
+function loadSaved(){
+  const d = store.load(); if (!d || typeof d !== 'object' || d.v !== 1) return;
+  const ids = new Set(allChecks().map(c => c.id));
+  const isIdx = x => Number.isInteger(x) && x >= 0 && x < 10;
+  if (d.ans && typeof d.ans === 'object') for (const [id, a] of Object.entries(d.ans)){
+    if (ids.has(id) && a && Array.isArray(a.p) && a.p.every(isIdx)) S.ans[id] = { p: a.p.slice(0, 4), done: !!a.done, first: !!a.first, auto: !!a.auto };
+  }
+  const discIds = new Set(CONTENT.topics.flatMap(t => t.discover.map((_, i) => t.id + 'd' + i)));
+  if (d.disc && typeof d.disc === 'object') for (const [id, a] of Object.entries(d.disc)){
+    if (discIds.has(id) && a && Array.isArray(a.sel) && a.sel.every(x => Number.isInteger(x) && x >= 0 && x < 40)) S.disc[id] = { sel: a.sel, checked: !!a.checked };
+  }
+  if (d.done && typeof d.done === 'object') CONTENT.topics.forEach(t => { if (d.done[t.id] === true) S.done[t.id] = true; });
+  if (Array.isArray(d.mistakes)) S.mistakes = [...new Set(d.mistakes.filter(id => ids.has(id)))];
+}
+function loadPrefs(){ try { const p = JSON.parse(localStorage.getItem(PKEY)); if (p && typeof p.sound === 'boolean') P.sound = p.sound; } catch(e){} }
+
+/* ================= events ================= */
+function toggleFull(){ const d = document, el = d.documentElement; try { (d.fullscreenElement ? d.exitFullscreen() : el.requestFullscreen()).catch(() => {}); } catch(e){} }
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b || b.disabled) return;
+  const act = b.dataset.act;
+  if (act === 'topic') openTopic(+b.dataset.i);
+  else if (act === 'home') home();
+  else if (act === 'more'){ V.screen = 'more'; render(); scrollTo(0, 0); }
+  else if (act === 'settings'){ V.screen = 'settings'; V.confirmReset = false; render(); scrollTo(0, 0); }
+  else if (act === 'mist') openMist();
+  else if (act === 'next') go(1);
+  else if (act === 'prev') go(-1);
+  else if (act === 'tok'){ toggleTok(b.dataset.id, +b.dataset.i); sfx.tap(); render(); }
+  else if (act === 'checkdisc'){ checkDisc(b.dataset.id); render(); }
+  else if (act === 'swap') doSwap(b);
+  else if (act === 'panel'){ V.panel = true; render(); }
+  else if (act === 'panelback'){ V.panel = false; render(); }
+  else if (act === 'pick'){
+    const s = currentSteps()[V.step]; if (!s || s.kind !== 'check') return;
+    const r = pick(s.item, +b.dataset.i, s.mist);
+    if (r === 'right') sfx.good(); else if (r) sfx.bad();
+    render();
+  }
+  else if (act === 'qr'){ V.qr[b.dataset.k] = !V.qr[b.dataset.k]; render(); }
+  else if (act === 'sound'){ P.sound = !P.sound; savePrefs(); render(); }
+  else if (act === 'full') toggleFull();
+  else if (act === 'reset'){ if (V.confirmReset){ resetAll(); } else V.confirmReset = true; render(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  if (e.key === 'ArrowRight' && (V.screen === 'topic' || V.screen === 'mist')) go(1);
+  else if (e.key === 'ArrowLeft' && (V.screen === 'topic' || V.screen === 'mist')) go(-1);
+  else if (e.key === 'f' || e.key === 'F') toggleFull();
+});
+
+/* ================= start ================= */
+loadPrefs(); loadSaved();
+(() => { const m = location.hash.match(/^#t(\d)$/); if (m && T(+m[1] - 1)){ V.screen = 'topic'; V.t = +m[1] - 1; } })();
+render();
+</script>
+</body>
+</html>
