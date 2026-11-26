@@ -20,7 +20,10 @@ Interactive HTML activities for EOI students. Click any link to open the activit
 | Present Perfect Board Game | B2.1 | Pass-the-phone board game for two to six players. Each square asks a question to answer with the present perfect simple or continuous. Scores are kept and a saved game can be resumed. | [Open](https://as1-design.github.io/english-learning-activities/B21-present-perfect-board-game.html) |
 | Crystal Ball | B2.2 | Speaking game in which a crystal ball reveals a question and the student speaks for as long as the vision lasts. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-crystal-ball.html) |
 | Expression Hand | B2.2 | Card game linked to Files 1 and 2: students talk about the topic on the board and try to use all the phrasal verbs and idioms in their hand. One view for the whiteboard and one for each phone. | [Open](https://as1-design.github.io/english-learning-activities/B22-speaking-expression-hand.html) |
-Fashion Talk | B2.1 | One card at a time: discussion questions about clothes and fashion, with useful language. | [Open](https://as1-design.github.io/english-learning-activities/b21-fashion-talk-cards.html) 
+| Fashion Talk | B2.1 | One card at a time: discussion questions about clothes and fashion, with useful language. | [Open](https://as1-design.github.io/english-learning-activities/b21-fashion-talk-cards.html) |
+| Would You Rather — Air Travel | B2.1 | Air-travel dilemmas (lost luggage, long-haul flights, delays, security…) with a twist on each one, using the travel words from the coursebook. Five starred dilemmas first, then keep going. Timer, full-screen and a QR code for phones. | [Open](https://as1-design.github.io/english-learning-activities/b21-air-travel-would-you-rather.html) |
+| Memory Map | B2.1 | Speaking task for Unit 3A: students draw a plan of a place from their past, give their group a tour of it with used to, answer the listeners’ question cards and tell a story that happened there. One phone per group, or the teacher leads from the big screen. | [Open](https://as1-design.github.io/english-learning-activities/b21-memory-map.html) |
+| Getting Through History — Speaking Cards with get | B2.2 | Discussion cards on history and conflict that use phrases with get (get the chance, get your own back, get worse and worse…). Includes a timer. | [Open](https://as1-design.github.io/english-learning-activities/b22-get-conflict-history-speaking.html) |
 
 ## Vocabulary
 
@@ -47,6 +50,10 @@ Fashion Talk | B2.1 | One card at a time: discussion questions about clothes and
 | Auxiliary Verbs — Team Quiz | B2.2 | Tile-board quiz for two teams on auxiliary verbs (English File B2.2). Some tiles hide surprise cards that change the score. Full-screen mode for the whiteboard. | [Open](https://as1-design.github.io/english-learning-activities/auxiliary-verbs-team-quiz.html) |
 | Linker Border Control | B2.2 | Game in which students act as border officers and only let through sentences whose linkers have the right meaning, form and register. Career mode with stars, plus a timed rush-hour mode. | [Open](https://as1-design.github.io/english-learning-activities/linker-border-control.html) |
 | Loop the Loop | B2.1 | Card-chain activity: the number beside each answer points to the next card, and six right answers bring the player back to the start. | [Open](https://as1-design.github.io/english-learning-activities/loop-the-loop1.html) |
+| At, on, in — Prepositions of Time and Place | B2 | Rules and practice for at, on and in with times, dates and places, with notes on UK and US use and on common slips for Catalan and Spanish speakers. | [Open](https://as1-design.github.io/english-learning-activities/b2-prepositions-time-place.html) |
+| Inversion | B2.2 | Lesson on inversion (English File Advanced), from So do I / Neither can I to inversion after negative and limiting words, with notes for Catalan and Spanish speakers and on UK and US use. | [Open](https://as1-design.github.io/english-learning-activities/b22-inversion.html) |
+| Inversion Practice | B2.2 | Practice that follows the Inversion lesson: right or wrong, choose the form, fix it, build it, and a speaking task in class (a rave or rant review), with a film-trailer voice-over as an extra. | [Open](https://as1-design.github.io/english-learning-activities/b22-inversion-practice.html) |
+| Inversion Conversion | B2.2 | Card game for groups of three with one phone: the reader reads a sentence, the next player says it again with inversion, and the third player can steal the card. Three sets of cards. | [Open](https://as1-design.github.io/english-learning-activities/b22-inversion-conversion.html) |
 
 ## Writing
 
@@ -63,6 +70,7 @@ Fashion Talk | B2.1 | One card at a time: discussion questions about clothes and
 |---|---|---|---|
 | Spot the Error | B2.2 | Error correction activity with 27 sentences. Students identify and correct the error in each sentence, with immediate feedback. | [Open](https://as1-design.github.io/english-learning-activities/spot-the-error%20B2.html) |
 | Error Correction Activity | B2.1 | Multiple choice error correction activity organised by grammar category, including tense consistency and other key B2.1 structures. | [Open](https://as1-design.github.io/english-learning-activities/error_correction_activity%20B2.1.html) |
+| Common Mistakes in Writing | B2.1 | Lesson and practice on mistakes from the students’ own writing tasks (doubt or question, at the end or in the end, could or would, assist or attend…), with notes on Catalan and Spanish. Mistakes come back until they are right. | [Open](https://as1-design.github.io/english-learning-activities/b21-common-writing-mistakes.html) |
 
 ## Mediation & Skills
 
