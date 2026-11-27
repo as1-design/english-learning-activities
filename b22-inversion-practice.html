@@ -6,7 +6,7 @@
             mode for phones (six sections with review and My mistakes, including
             the hub's mistakes) and a speaking section (Rave or rant review, and
             the Trailer voice-over as an extra).
-  Version:  1.0 · 2026-11-26
+  Version:  1.1 · 2026-11-27 (title reflection fixed)
   Edit:     All text is in the CONTENT section at the top of the script.
             Mini-format: [words] = inverted words (highlighted), ___ = gap,
             *words* = italics. Option order is fixed: put the right answer in
@@ -69,9 +69,7 @@ mark.inv{background:var(--accent-soft);color:var(--accent);font-weight:800;text-
 
 /* ================= mode / menus ================= */
 .hero{padding:1rem 0 1rem;overflow:hidden}
-.hero h1{font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em}
-.hero .echo{font-family:var(--display);font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;
-  transform:scaleY(-1);color:var(--tan);opacity:.35;margin-top:-.35em;height:.55em;overflow:hidden;user-select:none}
+.hero h1{font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em;-webkit-box-reflect:below -.12em linear-gradient(transparent 55%,rgba(0,0,0,.22));margin-bottom:.5em}
 .cando{background:var(--paper);border:2px solid var(--line);border-left:8px solid var(--accent);border-radius:var(--r-m);padding:.8rem 1rem;margin:.4rem 0 1.2rem}
 .cando b{display:block;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));gap:.9rem}
@@ -674,7 +672,7 @@ function modeBtn(){ return `<button class="btn ghost" data-act="mode">← Modes<
 function rMode(){
   const inGame = S.teams && !S.teams.over;
   app.innerHTML = `
-    <header class="hero"><h1>${esc(CONTENT.title)}</h1><div class="echo" aria-hidden="true">${esc(CONTENT.title)}</div>
+    <header class="hero"><h1>${esc(CONTENT.title)}</h1>
       <p class="muted" style="margin:.2rem 0 0;font-weight:600">${esc(CONTENT.subtitle)}</p></header>
     <div class="cando"><b>Can do</b>${esc(CONTENT.canDo)}</div>
     <div class="tiles">

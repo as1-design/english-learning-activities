@@ -6,7 +6,7 @@
             the third player can steal the card. Part 2: short speeches and
             stories with inversion, with planning and speaking timers.
             Print cards for a paper version. Goes with b22-inversion.html.
-  Version:  1.0 · 2026-11-26
+  Version:  1.1 · 2026-11-27 (title reflection fixed)
   Edit:     All cards and prompts are in the CONTENT section at the top of
             the script. Mini-format: [words] = inverted words (highlighted).
             Keep the number of cards in each set divisible by 3, so that
@@ -67,9 +67,7 @@ mark.inv{background:var(--accent-soft);color:var(--accent);font-weight:800;text-
 
 /* ================= setup ================= */
 .hero{padding:1rem 0 1rem;overflow:hidden}
-.hero h1{font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em}
-.hero .echo{font-family:var(--display);font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.15;
-  transform:scaleY(-1);color:var(--tan);opacity:.35;margin-top:-.35em;height:.55em;overflow:hidden;user-select:none}
+.hero h1{font-size:clamp(2.2rem,1.6rem + 3.6vw,4.4rem);font-weight:800;letter-spacing:-.02em;-webkit-box-reflect:below -.12em linear-gradient(transparent 55%,rgba(0,0,0,.22));margin-bottom:.5em}
 .cando{background:var(--paper);border:2px solid var(--line);border-left:8px solid var(--accent);border-radius:var(--r-m);padding:.8rem 1rem;margin:.4rem 0 1.2rem}
 .cando b{display:block;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .section{margin:0 0 1.2rem}
@@ -416,7 +414,7 @@ function renderSetup(){
   const total = S.sets.reduce((a, id) => a + counts[id], 0), playable = Math.floor(total / S.n) * S.n;
   const names = Array.from({ length: S.n }, (_, i) => `<label>Player ${i + 1}<input data-name="${i}" maxlength="12" autocomplete="off" placeholder="First name (optional)" value="${esc(S.names[i])}"></label>`).join('');
   app.innerHTML = `
-    <header class="hero"><h1>${esc(CONTENT.title)}</h1><div class="echo" aria-hidden="true">${esc(CONTENT.title)}</div>
+    <header class="hero"><h1>${esc(CONTENT.title)}</h1>
       <p class="muted" style="margin:.2rem 0 0;font-weight:600">${esc(CONTENT.subtitle)}</p></header>
     <div class="cando"><b>Can do</b>${esc(CONTENT.canDo)}</div>
     ${V.resumeOffer ? `<div class="resume"><p style="margin:0 0 .6rem"><b>There is a game in progress on this phone.</b></p>
